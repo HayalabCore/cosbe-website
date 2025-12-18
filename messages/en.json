@@ -1,0 +1,25 @@
+{
+  "navbar": {
+    "companyOverview": "Company Overview",
+    "aiTransformation": "AI Transformation",
+    "cosbeAiTransformation": "CosBe's AI transformation",
+    "fastAiLab": "Fast AI Lab",
+    "aiPartnerRecruitment": "AI Partner Recruitment",
+    "usefulInfo": "Useful Information",
+    "caseStudies": "Case studies",
+    "usefulInformation": "Useful information",
+    "aiAgents": "AI Agents",
+    "notice": "Notice",
+    "button": "Consult about AI (Free)"
+  },
+  "hero": {
+    "brand": "Cosnia",
+    "tagline": "AI transformation agent",
+    "jpLine1": "“Can AI solve this?”",
+    "jpLine2": "A teammate you can rely on",
+    "characterAlt": "Cosbe character",
+    "formPlaceholderTitle": "HubSpot form",
+    "formPlaceholderBody": "This area is reserved for the embedded HubSpot form."
+  }
+}
+

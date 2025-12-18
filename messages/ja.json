@@ -1,0 +1,25 @@
+{
+  "navbar": {
+    "companyOverview": "会社概要",
+    "aiTransformation": "AIトランスフォーメーション",
+    "cosbeAiTransformation": "CosBeのAIトランスフォーメーション",
+    "fastAiLab": "Fast AI Lab",
+    "aiPartnerRecruitment": "AIパートナー募集",
+    "usefulInfo": "お役立ち情報",
+    "caseStudies": "Case studies",
+    "usefulInformation": "お役立ち情報",
+    "aiAgents": "AI Agents",
+    "notice": "お知らせ",
+    "button": "AIの課題を相談する（無料）"
+  },
+  "hero": {
+    "brand": "Cosnia",
+    "tagline": "AI transformation agent",
+    "jpLine1": "「これ、AIで解決できる？」に",
+    "jpLine2": "応えられるチームメイト",
+    "characterAlt": "Cosbeキャラクター",
+    "formPlaceholderTitle": "HubSpotフォーム",
+    "formPlaceholderBody": "ここはHubSpotフォーム埋め込み用のスペースです。"
+  }
+}
+
