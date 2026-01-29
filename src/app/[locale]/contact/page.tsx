@@ -1,77 +1,240 @@
 import { getTranslations } from 'next-intl/server';
-import HubSpotForm from '@/components/HubSpotForm';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default async function ContactPage() {
   const t = await getTranslations('contact');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/20 to-white pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white pt-20 pb-16">
+      {/* Language Switcher */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div className="flex justify-end">
+          <LanguageSwitcher />
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 bg-clip-text text-transparent mb-4">
-            {t('title')}
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 font-semibold max-w-3xl mx-auto">
-            {t('subtitle')}
+        <div className="mb-12">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <div>{t('pageTitlePrefix')}</div>
+              <div className="text-blue-500 underline decoration-2 underline-offset-4">{t('pageTitleInquiry')}</div>
+            </h1>
+          </div>
+          <p className="text-lg text-gray-700 leading-relaxed">
+            {t('description')}
           </p>
         </div>
 
-        {/* Contact Form */}
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl ring-1 ring-blue-100/50 border border-white/20">
-            <div className="mb-8">
-              <p className="text-lg text-slate-700 leading-relaxed">
-                {t('description')}
-              </p>
-            </div>
-            <HubSpotForm />
-          </div>
+        {/* Progress Tracker */}
+        <div className="mb-12">
+          <ol className="flex items-center justify-center space-x-4 md:space-x-8">
+            <li className="flex items-center">
+              <div className="flex items-center">
+                <div className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full font-semibold">
+                  1
+                </div>
+                <span className="ml-3 text-sm font-medium text-gray-900">
+                  {t('form.progressTracker.input')}
+                </span>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <div className="flex items-center">
+                <div className="flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-600 rounded-full font-semibold">
+                  2
+                </div>
+                <span className="ml-3 text-sm font-medium text-gray-500">
+                  {t('form.progressTracker.confirm')}
+                </span>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <div className="flex items-center">
+                <div className="flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-600 rounded-full font-semibold">
+                  3
+                </div>
+                <span className="ml-3 text-sm font-medium text-gray-500">
+                  {t('form.progressTracker.complete')}
+                </span>
+              </div>
+            </li>
+          </ol>
         </div>
 
-        {/* Contact Info */}
-        <div className="max-w-5xl mx-auto mt-16">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 border border-blue-100 text-center">
-              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-4 mx-auto">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
+        {/* Contact Form */}
+        <div className="bg-white">
+          <form className="space-y-6">
+            {/* Full Name */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('form.fields.fullname.label')}
+                  <span className="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-0.5 rounded">
+                    {t('form.fields.required')}
+                  </span>
+                </label>
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-2">
-                {t('email.title')}
-              </h3>
-              <p className="text-slate-600">
-                {t('email.description')}
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 border border-blue-100 text-center">
-              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-4 mx-auto">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div className="md:col-span-2">
+                <input
+                  type="text"
+                  name="fullname"
+                  placeholder={t('form.fields.fullname.placeholder')}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-2">
-                {t('response.title')}
-              </h3>
-              <p className="text-slate-600">
-                {t('response.description')}
-              </p>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 border border-blue-100 text-center">
-              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-4 mx-auto">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
+
+            {/* Company Name */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('form.fields.companyname.label')}
+                  <span className="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-0.5 rounded">
+                    {t('form.fields.required')}
+                  </span>
+                </label>
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-2">
-                {t('support.title')}
-              </h3>
-              <p className="text-slate-600">
-                {t('support.description')}
-              </p>
+              <div className="md:col-span-2">
+                <input
+                  type="text"
+                  name="companyname"
+                  placeholder={t('form.fields.companyname.placeholder')}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
             </div>
-          </div>
+
+            {/* Position */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('form.fields.position.label')}
+                </label>
+              </div>
+              <div className="md:col-span-2">
+                <input
+                  type="text"
+                  name="position"
+                  placeholder={t('form.fields.position.placeholder')}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('form.fields.email.label')}
+                  <span className="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-0.5 rounded">
+                    {t('form.fields.required')}
+                  </span>
+                </label>
+              </div>
+              <div className="md:col-span-2">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder={t('form.fields.email.placeholder')}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('form.fields.tel.label')}
+                  <span className="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-0.5 rounded">
+                    {t('form.fields.required')}
+                  </span>
+                </label>
+                <p className="mt-1 text-xs text-gray-500">
+                  {t('form.fields.tel.description')}
+                </p>
+              </div>
+              <div className="md:col-span-2">
+                <input
+                  type="tel"
+                  name="tel"
+                  placeholder={t('form.fields.tel.placeholder')}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Inquiry Type */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('form.fields.inquiryType.label')}
+                  <span className="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-0.5 rounded">
+                    {t('form.fields.required')}
+                  </span>
+                </label>
+              </div>
+              <div className="md:col-span-2">
+                <select
+                  name="inquiryType"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">{t('form.fields.inquiryType.options.default')}</option>
+                  <option value="ai-development">{t('form.fields.inquiryType.options.aiDevelopment')}</option>
+                  <option value="service-inquiry">{t('form.fields.inquiryType.options.serviceInquiry')}</option>
+                  <option value="recruitment">{t('form.fields.inquiryType.options.recruitment')}</option>
+                  <option value="other">{t('form.fields.inquiryType.options.other')}</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Message */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('form.fields.message.label')}
+                  <span className="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-0.5 rounded">
+                    {t('form.fields.required')}
+                  </span>
+                </label>
+              </div>
+              <div className="md:col-span-2">
+                <textarea
+                  name="message"
+                  rows={5}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                ></textarea>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-center pt-6">
+              <button
+                type="submit"
+                className="px-12 py-4 bg-gray-600 text-white font-medium rounded-md hover:bg-gray-700 transition-colors"
+              >
+                {t('form.submitButton')}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Privacy Policy */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-600">
+            <a href="/privacy-policy" className="text-blue-600 hover:underline">
+              {t('form.privacyPolicy')}
+            </a>
+            {t('form.privacyPolicyAgree')}
+          </p>
         </div>
       </div>
     </div>

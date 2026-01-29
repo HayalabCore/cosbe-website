@@ -19,7 +19,1332 @@
     "jpLine2": "A teammate you can rely on",
     "characterAlt": "Cosbe character",
     "formPlaceholderTitle": "HubSpot form",
-    "formPlaceholderBody": "This area is reserved for the embedded HubSpot form."
+    "formPlaceholderBody": "This area is reserved for the embedded HubSpot form."  },
+  "company": {
+    "title": "Company Overview",
+    "subtitle": "About CosBe",
+    "description": "CosBe is a leading AI transformation partner helping businesses leverage artificial intelligence to solve real-world challenges.",
+    "mission": {
+      "title": "Our Mission",
+      "content": "To empower organizations with AI solutions that drive innovation and create sustainable value."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "content": "A world where AI technology is accessible and beneficial to every business, regardless of size or industry."
+    },
+    "values": {
+      "title": "Our Values",
+      "innovation": "Innovation",
+      "innovationDesc": "Continuously pushing the boundaries of what's possible with AI",
+      "collaboration": "Collaboration",
+      "collaborationDesc": "Working together with our clients as trusted partners",
+      "excellence": "Excellence",
+      "excellenceDesc": "Delivering high-quality solutions that exceed expectations"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "address": "Company Address",
+      "email": "Email",
+      "phone": "Phone"
+    }
+  },
+  "companyPage": {
+    "pageTitle": "Company Profile Page (About CosBE)",
+    "about": {
+      "title": "About CosBE",
+      "heading": "An AI transformation company creating the future",
+      "message": "CosBE's mission is to accelerate corporate business transformation by utilizing cutting-edge AI technology. We do not simply provide technology; we aim to be a partner that deeply understands our customers' business challenges and creates the future together. With the power of AI, we will provide society with unprecedented value and possibilities.",
+      "ceo": "Founder & CEO Kenjiro Momi",
+      "ceoPhotoAlt": "CEO Photo"
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "We will help close the AI gap and empower small and medium-sized business owners to accelerate transformation by leveraging AI in their management and business.",
+      "imageAlt": "Vision of the future with AI"
+    },
+    "history": {
+      "title": "History",
+      "event1": {
+        "date": "November 2022",
+        "title": "Established CosBE Incorporated",
+        "description": "Global management business launched"
+      },
+      "event2": {
+        "date": "May 2024",
+        "title": "Released Hayaku AI Lab",
+        "description": "Immediately bring to life managers' AI ideas"
+      },
+      "event3": {
+        "date": "December 2024",
+        "title": "Focusing on AI transformation",
+        "description": "Accompanying business managers in their AI transformation"
+      }
+    },
+    "overview": {
+      "title": "Company Overview",
+      "companyName": "Company Name",
+      "location": "Location",
+      "established": "Established",
+      "establishedDate": "November 2022",
+      "representative": "Representative",
+      "representativeName": "Founder & CEO Kenjiro Momi",
+      "business": "Business",
+      "business1": "Hayaku AI Lab (AI MVP Development)",
+      "business2": "AI Transformation Support",
+      "business3": "AI Consulting"
+    },
+    "globalTeam": {
+      "title": "Global One Team",
+      "subtitle": "CosBE operates without any barriers around the world and supports our customers.",
+      "mapAlt": "World map with locations",
+      "teamTitle": "CosBE's all-remote team, creating the future together",
+      "description1": "He is a veteran consultant who has advised business leaders in 16 countries and 32 industries around the world, a former entrepreneur who has been active in Japan, the US, Thailand, Nepal, and other countries, an AI researcher recognized by international academic societies, and an IT engineer who has developed a variety of software in the US, the UK, and India.",
+      "description2": "Furthermore, we have business partners all over the world, including Japan, the US, the UK, India, Thailand, China, Bangladesh, Bulgaria, Indonesia, Canada, Brazil, and Estonia.",
+      "description3": "We are an all-remote, global team with members from all over the world working together to bring our challengers' visions to life."
+    },
+    "cta": {
+      "title": "We will support your business in various aspects.",
+      "subtitle": "Please feel free to contact us.",
+      "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
+      "button": "Inquire about Hayaku AI Lab"
+    }
+  },
+  "aiTransformation": {
+    "title": "AI Transformation",
+    "subtitle": "Transform Your Business with AI",
+    "description": "We help businesses integrate AI technology seamlessly into their operations, driving efficiency and innovation.",
+    "benefits": {
+      "title": "Benefits of AI Transformation",
+      "efficiency": {
+        "title": "Increased Efficiency",
+        "description": "Automate repetitive tasks and streamline workflows"
+      },
+      "insights": {
+        "title": "Data-Driven Insights",
+        "description": "Make informed decisions based on AI-powered analytics"
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Stay ahead of the competition with cutting-edge AI solutions"
+      },
+      "scalability": {
+        "title": "Scalability",
+        "description": "Grow your business with AI that scales with your needs"
+      }
+    },
+    "process": {
+      "title": "Our Process",
+      "step1": {
+        "title": "Discovery",
+        "description": "Understanding your business challenges and opportunities"
+      },
+      "step2": {
+        "title": "Strategy",
+        "description": "Developing a customized AI transformation roadmap"
+      },
+      "step3": {
+        "title": "Implementation",
+        "description": "Deploying AI solutions with minimal disruption"
+      },
+      "step4": {
+        "title": "Optimization",
+        "description": "Continuous improvement and support"
+      }
+    },
+    "cta": "Start Your AI Transformation"
+  },
+  "aiTransformationPage": {
+    "breadcrumb": "CosBE's AI Transformation",
+    "title": "CosBE's AI Transformation",
+    "subtitle": "From solving management and business issues to introducing cutting-edge technology, CosBE has unique strengths that will lead our customers to successful utilization of AI.",
+    "strengths": {
+      "title": "CosBE's Strengths"
+    },
+    "section1": {
+      "title": "Planning and conceptual capabilities for realizing AI from a management perspective",
+      "description": "Rather than just introducing AI superficially, we pursue the use of AI to contribute to solving essential management and business issues for our customers.",
+      "point1": "Strategic planning incorporating the perspective of management and business consultants",
+      "point2": "Reduce risks and maximize benefits through thorough consulting from the PoC (proof of concept) stage",
+      "point3": "We work closely with our customers to understand their business challenges and propose truly valuable AI applications.",
+      "imageAlt": "Strategic AI Planning"
+    },
+    "section2": {
+      "title": "Flexibility and speed through agile development",
+      "description": "We employ a fast and flexible development process to adapt to the ever-changing business environment.",
+      "point1": "An agile development system that easily reflects customer situations and feedback",
+      "point2": "Faster value delivery with prioritized phased releases",
+      "point3": "Responding flexibly to specification changes and leading projects to success",
+      "imageAlt": "Agile Development"
+    },
+    "section3": {
+      "title": "Cutting-edge technology and unique knowledge",
+      "description": "We always keep up with the latest technological trends and work to solve problems with our unique perspectives and technical capabilities that other companies do not have.",
+      "point1": "The latest technical information and knowledge available from global networks, including Silicon Valley",
+      "point2": "Unique solutions based on a research approach that goes beyond the limits of existing technology",
+      "point3": "Solid implementation capabilities by a team of engineers with advanced expertise",
+      "imageAlt": "Cutting-edge Technology"
+    },
+    "info": {
+      "title": "Learn more about CosBE's AI solutions",
+      "description": "We have prepared a document summarizing specific examples and service details on how CosBE can support your company's AI transformation.",
+      "button": "Download CosBE materials (free)"
+    },
+    "cta2": {
+      "title": "We will support your business in various aspects.",
+      "subtitle": "Please feel free to contact us.",
+      "description": "For more information about our services or to request a quote, please fill out the form.",
+      "additionalText": "We will respond flexibly to your situation, so please feel free to contact us first.",
+      "button": "Inquiries about Hayaku AI Lab"
+    }
+  },
+  "aiLab": {
+    "hero": {
+      "badge": "Hayaku AI Lab",
+      "title": "Concrete AI results in just 2 months",
+      "subtitle": "From \"Can AI solve this?\" to a working MVP that proves value",
+      "description": "Hayaku AI Lab is a rapid AI experimentation lab for executives who want to move from ideas to concrete results fast. In as little as two months, we turn your AI concepts into working services, validate them with real data, and create a foundation for full-scale rollout.",
+      "primaryCta": "Consult about Hayaku AI Lab (Free)",
+      "secondaryCta": "Download detailed materials",
+      "imageAlt": "Visual of AI brain connected to digital infrastructure"
+    },
+    "offerings": {
+      "title": "What you can do with Hayaku AI Lab",
+      "description": "We design and build AI solutions that directly connect to management and business outcomes. Here are three representative projects realized through Hayaku AI Lab.",
+      "resume": {
+        "label": "HR / Talent",
+        "title": "Generate Japanese resumes from English CVs",
+        "description": "Automatically convert English resumes from overseas candidates into Japanese-style resumes, dramatically reducing screening time for global hiring.",
+        "result": "90% faster document screening for overseas applicants",
+        "imageAlt": "Slide showing generation of Japanese resumes from English CVs"
+      },
+      "trainingAgent": {
+        "label": "Training / HR Development",
+        "title": "Training support AI agent",
+        "description": "An AI agent that supports in‑house training by answering questions, creating exercises, and providing personalized feedback, even when professional instructors are scarce.",
+        "result": "80% reduction in preparation time for training programs",
+        "imageAlt": "Slide describing training support AI agent"
+      },
+      "newBusiness": {
+        "label": "New Business",
+        "title": "Make new business concrete in 2 months",
+        "description": "From idea discovery to MVP release, we support you in concretizing and testing new AI businesses in a short period with small, low‑risk starts.",
+        "result": "From concept to AI service MVP in about 2 months",
+        "imageAlt": "Slide stating new business realized in 2 months"
+      }
+    },
+    "flow": {
+      "badge": "How the lab works",
+      "title": "From management issues to AI MVP in 3 steps",
+      "description": "We proceed in small, fast cycles so that executives can see concrete results while minimizing risk.",
+      "imageAlt": "Graph showing business growth supported by AI",
+      "steps": {
+        "step1": {
+          "title": "Clarify issues and define hypotheses",
+          "description": "We interview management and on‑site members to identify issues worth solving with AI and define hypotheses for what an MVP should verify."
+        },
+        "step2": {
+          "title": "Develop and iterate the MVP",
+          "description": "We rapidly build an AI prototype, connect it with your actual data and operations, and iteratively refine it based on feedback."
+        },
+        "step3": {
+          "title": "Measure results and design the next step",
+          "description": "We measure concrete effects, summarize learnings, and design the roadmap toward full‑scale rollout or additional use cases."
+        }
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Clarify issues and define hypotheses",
+        "description": "Understand your business and define what we want to prove with AI in this project."
+      },
+      "step2": {
+        "title": "Develop and iterate the AI MVP",
+        "description": "Quickly build and improve an AI prototype that can be tried by the actual team."
+      },
+      "step3": {
+        "title": "Measure results and plan expansion",
+        "description": "Evaluate business impact and decide on the path to full‑scale implementation."
+      }
+    },
+    "ctaSection": {
+      "title": "Turn your \"someday\" AI ideas into concrete results now",
+      "description": "If you have even a rough idea such as \"Could AI help with this?\", please feel free to talk with us. Together we will design an AI MVP that is realistic for your organization and create visible results within a short time frame.",
+      "button": "Ask about Hayaku AI Lab (Free)"
+    }
+  },
+  "aiLabPage": {
+    "hero": {
+      "title": "Hayaku AI Lab",
+      "subtitle": "AI-Specialized Agile Development Service \"Hayaku AI Lab\"",
+      "description1": "Hayaku AI Lab is a service that rapidly develops prototypes of products and services utilizing AI.",
+      "description2": "For example, it's ideal for companies and entrepreneurs who have concerns such as \"I have an idea for a new AI app but don't know how to create it\" or \"I'm thinking of an AI-powered service but can't move forward because we don't have experts.\"",
+      "description3": "By teaming up with our customers, we can achieve flexible and rapid development, with AI consultants who are knowledgeable about new businesses and world-class AI engineers.",
+      "imageAlt": "AI development concept image"
+    },
+    "challenges": {
+      "title": "Are you struggling with these",
+      "titleHighlight": "issues ?",
+      "titleEnd": "",
+      "challenge1": {
+        "title": "Not enough time to prepare requirements specifications etc.",
+        "description": "You are struggling to identify the appropriate improvement measures because it is unclear which part of your business needs improvement and what specific steps you should take. You want to move on to the next phase after obtaining proof of concept and budget/funding, but for various reasons, time just seems to be passing by.",
+        "imageAlt": "Challenge image 1"
+      },
+      "challenge2": {
+        "title": "Lack of resources and knowledge regarding AI technology and app development",
+        "description": "We want to introduce and utilize AI and app development, but we lack specialized personnel within the company, and we are concerned about selecting and communicating with external resources. We are finding it difficult to assign engineers suitable for development, and we are keenly aware of our lack of knowledge and experience regarding AI.",
+        "imageAlt": "Challenge image 2"
+      },
+      "challenge3": {
+        "title": "Budget Concerns",
+        "description": "I'm worried because I can't get an accurate estimate of how much agile development will cost. I want to create an MVP to explain to stakeholders, but I'm not sure what to verify with my limited budget.",
+        "imageAlt": "Challenge image 3"
+      }
+    },
+    "transition": {
+      "cosbeName": "CosBe",
+      "text": " will help you solve these problems."
+    },
+    "features": {
+      "title": "Features of \"Hayaku AI Lab,\" an agile development service specializing in AI",
+      "feature1": {
+        "title": "Quickly turn ideas into reality",
+        "description": "We can start development immediately from your idea, without the hassle of creating a requirements specification document, and provide you with an MVP as quickly as possible.",
+        "imageAlt": "Idea realization image"
+      },
+      "feature2": {
+        "title": "The world's leading AI consultant",
+        "description": "Our AI consultants, who have extensive business and AI knowledge, and our global AI engineers, who are well versed in cutting-edge AI technology, will provide strong support for lean and agile development in both business and product areas.",
+        "imageAlt": "AI consultant image"
+      },
+      "feature3": {
+        "title": "Development at the lowest possible cost",
+        "description": "Since development is done by narrowing down the requirements in a short period of time, it can be carried out with the minimum necessary budget.",
+        "imageAlt": "Cost reduction image"
+      }
+    },
+    "benefits": {
+      "title": "\"Hayaku AI Lab,\" an agile development service specializing in AI",
+      "benefit1": {
+        "title": "Realize your ideas in as little as two months! Quickly turn your ideas into reality.",
+        "point1": "We can start development immediately from your idea, without the hassle of creating a requirements specification document, and provide you with an MVP as quickly as possible.",
+        "point2": "Rapid agile development allows development steps to be carried out while being verified, leading to improved work efficiency and a significant reduction in unnecessary development costs.",
+        "point3": "We will support your ideas and ensure a quick start that differentiates you from your competitors.",
+        "imageAlt": "Development image 1"
+      },
+      "benefit2": {
+        "title": "The secret to speedy development : \"AI LaaS\"",
+        "point1": "\"AILaaS\" stands for AI Laboratory as a Service. We provide a service that acts as your company's AI laboratory.",
+        "point2": "Just as knowledgeable researchers use cutting-edge experimental equipment in a real laboratory and conduct trial and error daily,",
+        "point2Bold": "Hayaku AI Lab will develop prototypes of your services within CosBE's well-equipped development environment.",
+        "point3": "Our AI consultants will propose an MVP based on your idea, and our AI engineers will quickly develop the first product. During your time at the Hayaku AI Lab, we will work with you to actually operate and improve the product, verifying your idea.",
+        "imageAlt": "AI LaaS image"
+      },
+      "benefit3": {
+        "title": "The best price for \"development and consulting\" at the lowest possible cost",
+        "point1": "We provide consistent support from consulting to development. Since we focus on requirements in a short period of time, we can implement the project with the minimum budget required.",
+        "point2": "We offer quality that exceeds expectations while keeping prices low.",
+        "point3": "Even first-time customers can place an order with confidence.",
+        "imageAlt": "Cost performance image"
+      }
+    },
+    "aiAgentLink": {
+      "text": "/AI Agents provided by Hayaku AI Lab/",
+      "button": "Learn more about AI Agents"
+    },
+    "pricing": {
+      "title": "Consulting + development at this price. Grow your business with high quality and affordability!",
+      "lowPrice": {
+        "title": "Low prices, no compromises. Best prices for development and consulting!",
+        "point1": "We provide consistent support from consulting to development.",
+        "point2": "We cater to a wide range of clients, from startups to large corporations, and have received positive feedback. We offer quality that exceeds expectations while keeping prices low.",
+        "point3": "Even first-time customers can place an order with confidence.",
+        "imageAlt": "Pricing image"
+      },
+      "table": {
+        "badge": "Usage fees provided by CosBE",
+        "title": "We promise high-quality business growth at unbeatable prices"
+      },
+      "amount": {
+        "development": "Fee: 1.5 million yen per month",
+        "developmentNote": "(Development, consulting, server, and various tool costs included *Minimum 2 months)",
+        "maintenance": "Maintenance and operation: from 50,000 yen per month",
+        "maintenanceNote": "(Depending on the product, such as number of users and usage)"
+      },
+      "comparison": {
+        "title": "Service and price comparison with other companies",
+        "subtitle": "We are here to support your new challenges, so we offer the lowest prices in the industry.",
+        "text1": "We have worked alongside many startups and new businesses.",
+        "text2": "Having supported many challenges, we put growth first and provide the most effective methods at the best prices.",
+        "text3": "We will eliminate the anxiety of startups and accelerate new businesses.",
+        "companyA": "Company A",
+        "companyB": "Company B",
+        "agile": "Agile Development",
+        "consulting": "Consulting",
+        "serverTools": "Use of various server tools",
+        "price": "price",
+        "cosbePrice": "1.5 million yen per month",
+        "cosbeNote": "* Minimum 2 months",
+        "companyAPrice": "10 million yen and up",
+        "companyANote": "(development only)",
+        "companyBPrice": "15 million yen -",
+        "companyBNote": "Initial costs and development only"
+      }
+    },
+    "caseStudies": {
+      "subtitle": "Case study of \"Hayaku AI Lab,\" an agile development service specializing in AI",
+      "title": "Cross-industry AI solutions provided by Hayaku AI Lab",
+      "description": "CosBE has highly skilled AI engineers active internationally, and can flexibly handle a wide range of projects, from manufacturing, construction, and retail to IT.",
+      "viewAll": "To the list of achievement",
+      "case1": {
+        "category": "Human Resources and Organizational Improvement",
+        "title": "[Case Study] Solving the problem of a lack of professional instructors!",
+        "date": "August 31, 2024",
+        "imageAlt": "KANDO case"
+      },
+      "case2": {
+        "category": "New Businesses and Innovations",
+        "title": "[Implementation Case] AI service realized in 2 months! Speed and small start create new business potential",
+        "date": "February 26, 2025",
+        "imageAlt": "2-month realization case"
+      },
+      "case3": {
+        "category": "Human Resources and Organizational Improvement",
+        "title": "[Case Study] Solving the document screening issues of foreign resumes!",
+        "date": "August 31, 2024",
+        "imageAlt": "CosBE case"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": {
+        "question": "Can I continue to implement it after verification?",
+        "answer": "Yes, it is possible. We will discuss the implementation environment and pricing plan after verification separately."
+      },
+      "q2": {
+        "question": "How much will the total cost be?",
+        "answer": "During the interview, we will provide you with a quote based on your requests, including implementation after verification. Please feel free to contact us for more information."
+      }
+    },
+    "finalCta": {
+      "title": "We will support your business from various aspects",
+      "subtitle": "Please feel free to contact us first",
+      "description": "For detailed service information, consultations, or estimates, please use the form.",
+      "additionalText": "We will respond flexibly to your situation, so please feel free to contact us first.",
+      "button": "Inquire about Hayaku AI Lab"
+    }
+  },
+  "caseStudies": {
+    "title": "Case Studies",
+    "subtitle": "Success Stories",
+    "description": "Discover how we've helped businesses transform with AI",
+    "viewAll": "View All Case Studies",
+    "readMore": "Read More",
+    "categories": {
+      "all": "All",
+      "retail": "Retail",
+      "manufacturing": "Manufacturing",
+      "healthcare": "Healthcare",
+      "finance": "Finance",
+      "logistics": "Logistics"
+    }
+  },
+  "usefulInfo": {
+    "title": "Useful Information",
+    "subtitle": "Resources & Insights",
+    "description": "Stay informed with the latest AI trends, guides, and best practices",
+    "categories": {
+      "all": "All",
+      "guides": "Guides",
+      "tutorials": "Tutorials",
+      "news": "News",
+      "whitepapers": "Whitepapers"
+    },
+    "latest": "Latest Articles",
+    "popular": "Popular Articles",
+    "readMore": "Read More"
+  },
+  "aiAgents": {
+    "title": "AI Agents",
+    "subtitle": "Intelligent Automation Solutions",
+    "description": "Deploy AI agents that work autonomously to solve complex business problems",
+    "types": {
+      "title": "Types of AI Agents",
+      "customer": {
+        "title": "Customer Service Agents",
+        "description": "24/7 automated customer support"
+      },
+      "data": {
+        "title": "Data Analysis Agents",
+        "description": "Automated data processing and insights"
+      },
+      "process": {
+        "title": "Process Automation Agents",
+        "description": "Streamline business workflows"
+      },
+      "monitoring": {
+        "title": "Monitoring Agents",
+        "description": "Real-time system monitoring and alerts"
+      }
+    },
+    "benefits": "Benefits of AI Agents",
+    "cta": "Implement AI Agents"
+  },
+  "recruitment": {
+    "title": "AI Partner Recruitment",
+    "subtitle": "Join Our Team",
+    "description": "Be part of the AI revolution. We're looking for talented individuals passionate about AI transformation.",
+    "positions": {
+      "title": "Open Positions",
+      "engineer": "AI Engineer",
+      "consultant": "AI Consultant",
+      "researcher": "AI Researcher",
+      "manager": "Project Manager"
+    },
+    "benefits": {
+      "title": "Why Join CosBe",
+      "growth": "Professional Growth",
+      "projects": "Cutting-edge Projects",
+      "culture": "Innovative Culture",
+      "balance": "Work-Life Balance"
+    },
+    "apply": "Apply Now",
+    "viewPosition": "View Position"
+  },
+  "notice": {
+    "title": "Notice",
+    "subtitle": "Latest Updates",
+    "description": "Stay updated with our latest announcements and company news",
+    "categories": {
+      "all": "All",
+      "product": "Product Updates",
+      "company": "Company News",
+      "events": "Events",
+      "press": "Press Releases"
+    },
+    "readMore": "Read More",
+    "viewAll": "View All Notices"
+  },
+  "common": {
+    "learnMore": "Learn More",
+    "contactUs": "Contact Us",
+    "getStarted": "Get Started",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "backToHome": "Back to Home",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "download": "Download",
+    "share": "Share"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in Touch with Our AI Experts",
+    "pageTitle": "Contact",
+    "pageTitlePrefix": "Contact",
+    "pageTitleInquiry": "Inquiry",
+    "description": "Thank you for your interest in CosBE. Please feel free to ask questions or consult with us using the form below. Our representative will contact you back.",
+    "form": {
+      "progressTracker": {
+        "input": "Input screen",
+        "confirm": "Confirmation screen",
+        "complete": "Completion screen"
+      },
+      "fields": {
+        "required": "Required",
+        "fullname": {
+          "label": "Full Name",
+          "placeholder": "Taro Yamada"
+        },
+        "companyname": {
+          "label": "Company/Organization Name",
+          "placeholder": "CosBE Incorporated"
+        },
+        "position": {
+          "label": "Position",
+          "placeholder": "CEO / CTO / Manager"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "sample@cosbe.jp"
+        },
+        "tel": {
+          "label": "Telephone Number",
+          "description": "If you have any other contact details, such as a mobile number, please include it in your inquiry.",
+          "placeholder": "080-1234-5678"
+        },
+        "inquiryType": {
+          "label": "Inquiry Type",
+          "options": {
+            "default": "Please select",
+            "aiDevelopment": "About AI development request",
+            "serviceInquiry": "Questions and consultations about services",
+            "recruitment": "About recruitment",
+            "other": "Other"
+          }
+        },
+        "message": {
+          "label": "Inquiry Details"
+        }
+      },
+      "submitButton": "To the confirmation screen",
+      "privacyPolicy": "Privacy Policy",
+      "privacyPolicyAgree": " - You are deemed to have agreed to it."
+    },
+    "email": {
+      "title": "Email Support",
+      "description": "Get answers to your questions via email"
+    },
+    "response": {
+      "title": "Quick Response",
+      "description": "We respond within 24 hours on business days"
+    },
+    "support": {
+      "title": "Dedicated Support",
+      "description": "Professional team ready to help"
+    }
+  },
+  "aiAgent": {
+    "title": "AI Agent",
+    "subtitle": "AI autonomously performs tasks, allowing people to focus on maximizing value that AI cannot provide",
+    "description": "AI Agent is your partner that autonomously performs recognition, judgment, and execution. We flexibly build custom AI tailored to your company's objectives and operations, such as inquiry response, inventory forecasting, and decision-making support.",
+    "whatIs": {
+      "title": "What is an AI Agent?",
+      "description": "Rather than executives instructing everything, AI takes over routine tasks and judgments on-site, ultimately supporting executives to make only 'important decisions'",
+      "point1": "AI Agent is an 'autonomous' AI system that automatically generates and executes necessary tasks",
+      "point2": "Supports executives to regain their strategic perspective by delegating miscellaneous tasks"
+    },
+    "process": {
+      "title": "How AI Agent Works",
+      "step1": {
+        "number": "Step 1",
+        "title": "Data Formatting",
+        "description": "AI acquires business data and automatically formats it"
+      },
+      "step2": {
+        "number": "Step 2",
+        "title": "Situation Analysis",
+        "description": "AI Agent analyzes information and identifies tasks"
+      },
+      "step3": {
+        "number": "Step 3",
+        "title": "Decision Making",
+        "description": "Executes tasks and issues instructions automatically"
+      },
+      "step4": {
+        "number": "Step 4",
+        "title": "Execution Support",
+        "description": "Leaders use AI-generated reports for decisions"
+      }
+    },
+    "industries": {
+      "title": "Implementation by Industry",
+      "manufacturing": {
+        "title": "Manufacturing",
+        "description": "AI Agents support production planning and quality control",
+        "benefit1": "Optimize production schedules",
+        "benefit2": "Improve quality control with AI"
+      },
+      "retail": {
+        "title": "Retail",
+        "description": "AI Agents assist with inventory and customer service",
+        "benefit1": "Optimize inventory levels",
+        "benefit2": "Enhance customer experience"
+      },
+      "construction": {
+        "title": "Construction",
+        "description": "AI Agents help with project management and tracking",
+        "benefit1": "Accelerate project timelines",
+        "benefit2": "Reduce supervisor overtime significantly"
+      }
+    },
+    "pricing": {
+      "title": "Implementation Cost Guide",
+      "development": "Monthly ¥1.5M",
+      "developmentNote": "(All costs included, minimum 2 months)",
+      "maintenance": "Monthly ¥50,000~",
+      "maintenanceNote": "(Depends on users and usage)"
+    },
+    "cta": {
+      "title": "Ready to Get Started with AI Agents?",
+      "button": "Contact Us for Free Consultation"
+    }
+  },
+  "caseStudiesPage": {
+    "heroTitle": "Case",
+    "heroSubtitle": "Studies",
+    "title": "Case Studies",
+    "subtitle": "Success Stories from Our Clients",
+    "description": "Discover how we've helped businesses transform with AI technology across various industries.",
+    "noArticles": "No articles found.",
+    "breadcrumb": {
+      "home": "Home",
+      "caseStudies": "Case studies"
+    },
+    "categories": {
+      "all": "Case studies",
+      "efficiency": "Business efficiency",
+      "hrImprovement": "Human Resources and Organizational Improvement",
+      "innovation": "New Businesses and Innovations",
+      "customerMarketing": "Customer service and marketing support"
+    },
+    "case1": {
+      "category": "Case studies",
+      "title": "[Implementation Case] AI service realized in 2 months! Speed and small start create new business potential",
+      "date": "February 26, 2025",
+      "author": "Kenjiro Momi"
+    },
+    "case2": {
+      "category": "Case studies",
+      "title": "[Case Study] Solving the problem of a lack of professional instructors!",
+      "date": "August 31, 2024",
+      "author": "Kenjiro Momi"
+    },
+    "case3": {
+      "category": "Case studies",
+      "title": "[Case Study] Solving the document screening issues of foreign resumes!",
+      "date": "August 31, 2024",
+      "author": "Kenjiro Momi"
+    },
+    "cta": {
+      "title": "We will support your business in various aspects.",
+      "subtitle": "Please feel free to contact us.",
+      "description": "For more information about our services or to request a quote, please fill out the form.",
+      "message": "We will respond flexibly to your situation, so please feel free to contact us first.",
+      "button": "Inquiries about Hayaku AI Lab"
+    }
+  },
+  "caseStudyDetails": {
+    "kando": {
+      "title": "[Case Study] Solving the problem of a lack of professional instructors!",
+      "categoryName": "Human Resources and Organizational Improvement",
+      "publishDate": "August 31, 2024",
+      "heroImage": "/case-studies/details/kando-hero.png",
+      "tableOfContents": {
+        "title": "Table of Contents",
+        "background": "Background of the issue",
+        "solution": "Solution Overview",
+        "benefits": "Benefits of implementation",
+        "summary": "Summary"
+      },
+      "section1": {
+        "title": "Background of the issue",
+        "subtitle": "Difficulty in securing professional instructors restricts company growth",
+        "challenge1": "KANDO faced the challenge of finding professional instructors.",
+        "challenge2": "Specifically, there were not enough instructors and training that required multiple interviews could not be scaled up, which resulted in increased work hours and limited the company's sales capacity.",
+        "challenge3": "As a result, the company's growth became too dependent on people, which became a major bottleneck in management."
+      },
+      "companyInfo": {
+        "title": "Company Information",
+        "name": "Company name",
+        "nameValue": "KANDO Co., Ltd.",
+        "location": "Location",
+        "locationValue": "2-101 Kanda Awajicho, Chiyoda-ku, Tokyo 101-0063",
+        "url": "URL",
+        "urlValue": "https://www.kando-inc.com/",
+        "aiModel": "Implemented AI model",
+        "aiAgent": "AI Agents",
+        "llm": "LLM (Large Scale Language Model)",
+        "challenges": "Key challenges",
+        "challengesValue": "Increased work hours, limited sales capacity, lack of instructors, and training operations dependent on people"
+      },
+      "section2": {
+        "title": "Solution Overview",
+        "subtitle": "Improving instructor productivity with AI agents",
+        "description": "\"Hayaku AI Lab\" is a system that utilizes an interactive AI agent to streamline the \"pre-preparation\" stage before training participants consult with instructors, significantly reducing the burden on instructors.",
+        "feature1Title": "AI technology",
+        "feature1Item1": "We have introduced an AI agent based on a large-scale language model (LLM) and refined requests and issues through repeated dialogue with users.",
+        "feature2Title": "Specific functions and approaches",
+        "feature2Item1": "Organizing user thoughts through dialogue with AI",
+        "feature2Item2": "AI agents present multiple options and suggestions",
+        "feature2Item3": "Optimize the number of meetings with the instructor by clarifying the training theme and objectives in advance",
+        "imageAlt": "AI Agent Interface",
+        "note": "Initially, development began with the goal of creating an AI that could do the same things as the company president, but through trial and error, its role evolved into an agent that would maximize the strengths of instructors. Thanks to our flexible development structure, we welcomed changes even during the project and increased its value through actual user experiences."
+      },
+      "section3": {
+        "title": "Benefits of implementation",
+        "benefit1Title": "Training productivity increased approximately twice",
+        "benefit1Description": "The pre-training interview process, which previously required multiple exchanges, can now be completed in just two exchanges. This reduces instructors' working hours and allows them to focus on more advanced consulting and instruction.",
+        "benefit2Title": "Make the most of your instructors' expertise",
+        "benefit2Description": "By interacting with an AI agent beforehand, students can organize their thoughts, allowing instructors more time to provide advanced expertise.",
+        "benefit3Title": "Creating new business opportunities",
+        "benefit3Description": "The functionality has grown significantly from what was initially envisioned, and a model for selling the AI agent itself as a separate service is now in sight. This flexible project approach is creating new business opportunities for both our clients and our company.",
+        "keyPointsIntro": "KANDO introduced \"Hayaku AI Lab\" to prepare for corporate training and achieved the following benefits:",
+        "keyPoint1": "Participants can freely consult with the AI, allowing for thorough advance preparation.",
+        "keyPoint2": "Previously, one instructor would conduct multiple pre-interviews, but this has now been reduced to one or two.",
+        "keyPoint3": "Instructors can now focus on highly specialized areas, improving the quality of the training itself."
+      },
+      "section4": {
+        "title": "Summary",
+        "paragraph1": "\"Hayaku AI Lab\" solved KANDO's problem of a lack of professional instructors and achieved the great result of doubling training productivity.",
+        "paragraph2": "Going forward, we will continue to provide flexible AI solutions that meet the changing needs and business ideas of our customers, supporting their corporate growth and new value creation.",
+        "ctaText": "Why not improve your business efficiency with AI?",
+        "ctaButton": "Free consultation here"
+      },
+      "shareText": "Please share if you like!",
+      "author": {
+        "title": "The author of this article",
+        "name": "Kenjiro Momi",
+        "position": "President and CEO",
+        "bio": "After obtaining his CPA qualification while studying at the School of Commerce at Waseda University, he worked for 18 years at Deloitte Tohmatsu, providing advisory services to top management. He then served as Representative Director of Toyoko for approximately five years, helping the company grow into a global enterprise. In 2022, he founded the US corporation CosBE Inc., and is currently engaged in activities to support business leaders."
+      },
+      "relatedArticles": {
+        "title": "Related articles",
+        "article1Title": "[Case Study] Solving the document screening issues of foreign resumes!",
+        "article1Date": "August 31, 2024",
+        "article2Title": "[Implementation Case] AI service realized in 2 months! Speed and small start create new business potential",
+        "article2Date": "February 26, 2025"
+      }
+    },
+    "cosbe": {
+      "title": "[Case Study] Solving the document screening issues of foreign resumes!",
+      "categoryName": "Human Resources and Organizational Improvement",
+      "publishDate": "August 31, 2024",
+      "heroImage": "/case-studies/resume-screening.png",
+      "tableOfContents": {
+        "title": "Table of Contents",
+        "background": "Background of the issue",
+        "solution": "Solution Overview",
+        "benefits": "Benefits of implementation",
+        "summary": "Summary"
+      },
+      "section1": {
+        "title": "Background of the issue",
+        "subtitle": "Challenges posed by diverse resume formats in overseas recruitment",
+        "challenge1": "Our company (CosBE) employs foreign talent in our global management division. However, resume formats are not standardized overseas, and it was common for application documents to be 100 to 200 pages long.",
+        "challenge2": "This meant that our recruiters had to spend a huge amount of time checking documents each time, which reduced work efficiency and increased the risk of making incorrect selections.",
+        "challenge3": "Furthermore, translating information into Japanese and organizing it required a lot of time and effort, putting pressure on the work that recruiters should be doing. Therefore, we decided to develop and implement 'Fast AI Lab' in-house to solve this problem."
+      },
+      "companyInfo": {
+        "title": "Company Information",
+        "name": "Company name",
+        "nameValue": "CosBE Incorporated",
+        "location": "Location",
+        "locationValue": "3 East Third Ave, San Mateo, CA, USA",
+        "url": "URL",
+        "urlValue": "https://jp.cosbe.inc/",
+        "aiModel": "Implemented AI model",
+        "aiAgent": "LLM (Large Scale Language Model)",
+        "llm": "Machine Translation",
+        "challenges": "Key challenges",
+        "challengesValue": "Inefficient job application screening, inconsistent resumes, language barriers"
+      },
+      "section2": {
+        "title": "Solution Overview",
+        "subtitle": "Automatically convert foreign language resumes into standard Japanese formats",
+        "description": "Our 'Fast AI Lab' streamlines recruitment operations using the following process:",
+        "feature1Title": "Analyzes various foreign language resumes",
+        "feature1Item1": "Automatically extracts necessary information (name, academic background, work history, skills, etc.)",
+        "feature2Title": "Conversion and output process",
+        "feature2Item1": "The extracted information is translated into Japanese, converted into a standard format, and output immediately.",
+        "feature2Item2": "This allows recruiters to view each resume in the same style.",
+        "feature2Item3": "Even if the person in charge is not confident in their English, they can grasp the main points in Japanese, making it possible to conduct document screening accurately and in a short amount of time.",
+        "imageAlt": "Resume Conversion AI Interface",
+        "note": "This allows recruiters to view each resume in the same style. Furthermore, even if the person in charge is not confident in their English, they can grasp the main points in Japanese, making it possible to conduct document screening accurately and in a short amount of time."
+      },
+      "section3": {
+        "title": "Benefits of implementation",
+        "benefit1Title": "Document review time reduced from several days to about one hour",
+        "benefit1Description": "Previously, it took several days to review the resumes of around 100 applicants, but after the implementation, batch processing by AI has made it possible to complete the process in about an hour.",
+        "benefit2Title": "Reduced burden on staff and improved quality of recruitment work",
+        "benefit2Description": "Even staff who are not good at English can easily grasp important information, which has significantly reduced stress. This frees up time for more value-added tasks, such as interviews and training.",
+        "benefit3Title": "Expand your company's know-how externally and acquire leads",
+        "benefit3Description": "We are also offering this solution free of charge to external parties, in the hopes of meeting the needs of other companies with similar challenges and creating new business opportunities.",
+        "keyPointsIntro": "We provide this AI agent for free to convert English resumes into Japanese resumes. Please take this opportunity to try it out.",
+        "keyPoint1": "The time it takes for hiring managers to review documents has been reduced from several days to about one hour.",
+        "keyPoint2": "Staff burden reduced and recruitment quality improved.",
+        "keyPoint3": "Know-how expanded externally to acquire new leads."
+      },
+      "section4": {
+        "title": "Summary",
+        "paragraph1": "The newly developed and implemented 'Hayaku AI Lab' has solved a major issue for the Global Management Division of our company, namely document screening for foreign recruitment, shortening the selection process from several days to just one hour. This has enabled recruitment staff to focus on more strategic tasks, contributing to the global expansion of the company as a whole.",
+        "paragraph2": "This function has the potential to convert not only resumes but also various other documents into a unified format. For example, it could convert purchase orders that have different formats for each client into a single unified format. We provide flexible AI solutions that meet customer needs, so please feel free to contact us if you have any problems.",
+        "ctaText": "Why not improve your business efficiency with AI?",
+        "ctaButton": "Free consultation here"
+      },
+      "shareText": "Please share if you like!",
+      "author": {
+        "title": "The author of this article",
+        "name": "Kenjiro Momi",
+        "position": "President and CEO",
+        "bio": "After obtaining his CPA qualification while studying at the School of Commerce at Waseda University, he worked for 18 years at Deloitte Tohmatsu, providing advisory services to top management. He then served as Representative Director of Toyoko for approximately five years, helping the company grow into a global enterprise. In 2022, he founded the US corporation CosBE Inc., and is currently engaged in activities to support business leaders."
+      },
+      "relatedArticles": {
+        "title": "Related articles",
+        "article1Title": "[Case Study] Solving the problem of a lack of professional instructors!",
+        "article1Date": "August 31, 2024",
+        "article2Title": "[Implementation Case] AI service realized in 2 months! Speed and small start create new business potential",
+        "article2Date": "February 26, 2025"
+      }
+    },
+    "2month-ai-mvp": {
+      "title": "[Implementation Case] AI service realized in 2 months! Speed and small start create new business potential",
+      "categoryName": "Innovation",
+      "publishDate": "February 26, 2025",
+      "heroImage": "/case-studies/new-business-2months.png",
+      "tableOfContents": {
+        "title": "Table of Contents",
+        "background": "Background of the issue",
+        "solution": "Solution Overview",
+        "benefits": "Benefits of implementation",
+        "summary": "Summary"
+      },
+      "section1": {
+        "title": "Background of the issue",
+        "subtitle": "Need for rapid market validation",
+        "challenge1": "The client needed to validate a new AI-based business idea quickly before making significant investments.",
+        "challenge2": "Traditional development approaches would take 6-12 months and require substantial upfront costs.",
+        "challenge3": "The risk of building a full-scale product without market validation was too high."
+      },
+      "companyInfo": {
+        "title": "Company Information",
+        "name": "Company name",
+        "nameValue": "Confidential (Manufacturing Industry)",
+        "location": "Location",
+        "locationValue": "Tokyo, Japan",
+        "url": "URL",
+        "urlValue": "N/A",
+        "aiModel": "Implemented AI model",
+        "aiAgent": "AI Agents",
+        "llm": "LLM (Large Scale Language Model)",
+        "challenges": "Key challenges",
+        "challengesValue": "Need for speed, budget constraints, market uncertainty, minimal viable product approach"
+      },
+      "section2": {
+        "title": "Solution Overview",
+        "subtitle": "Rapid MVP development in 2 months",
+        "description": "We developed a minimum viable product (MVP) in just 2 months, allowing the client to test their business concept with real users quickly.",
+        "feature1Title": "AI technology",
+        "feature1Item1": "Leveraged pre-trained AI models to accelerate development",
+        "feature2Title": "Specific functions and approaches",
+        "feature2Item1": "Agile development with weekly sprints",
+        "feature2Item2": "Focus on core features only for MVP",
+        "feature2Item3": "Continuous user feedback integration",
+        "imageAlt": "MVP Development Process",
+        "note": "Our approach prioritized speed and learning over perfection, allowing the client to validate their business idea with minimal risk and investment."
+      },
+      "section3": {
+        "title": "Benefits of implementation",
+        "benefit1Title": "2-month time to market",
+        "benefit1Description": "The client was able to launch their service in just 2 months, gaining valuable market insights early.",
+        "benefit2Title": "80% cost reduction",
+        "benefit2Description": "By building an MVP first, the client avoided unnecessary features and reduced initial investment by 80%.",
+        "benefit3Title": "Validated business model",
+        "benefit3Description": "Real user feedback confirmed market demand, giving confidence for further investment and development.",
+        "keyPointsIntro": "Key outcomes of the rapid MVP approach:",
+        "keyPoint1": "Launched in just 2 months with core features",
+        "keyPoint2": "Saved 80% on initial development costs",
+        "keyPoint3": "Validated market demand with real user feedback"
+      },
+      "section4": {
+        "title": "Summary",
+        "paragraph1": "The 2-month MVP approach allowed the client to validate their AI business idea quickly and cost-effectively.",
+        "paragraph2": "This case demonstrates the power of rapid prototyping and iterative development in AI projects.",
+        "ctaText": "Start your AI project with a rapid MVP",
+        "ctaButton": "Free consultation here"
+      },
+      "shareText": "Please share if you like!",
+      "author": {
+        "title": "The author of this article",
+        "name": "Kenjiro Momi",
+        "position": "President and CEO",
+        "bio": "After obtaining his CPA qualification while studying at the School of Commerce at Waseda University, he worked for 18 years at Deloitte Tohmatsu, providing advisory services to top management. He then served as Representative Director of Toyoko for approximately five years, helping the company grow into a global enterprise. In 2022, he founded the US corporation CosBE Inc., and is currently engaged in activities to support business leaders."
+      },
+      "relatedArticles": {
+        "title": "Related articles",
+        "article1Title": "[Case Study] Solving the problem of a lack of professional instructors!",
+        "article1Date": "August 31, 2024",
+        "article2Title": "[Case Study] Solving the document screening issues of foreign resumes!",
+        "article2Date": "August 31, 2024"
+      }
+    }
+  },
+  "recruitPage": {
+    "heroTitle": "Partner",
+    "heroSubtitle": "Recruitment",
+    "title": "Looking for business partners",
+    "subtitle": "We are looking for partners to grow together and create new value.",
+    "description1": "We aim to create new businesses using AI technology and are looking for partner companies with whom we can grow together. We welcome collaboration in a variety of fields, regardless of industry, and will promote initiatives that utilize the strengths of each company.",
+    "description2": "Through this partnership, we believe we can provide broader value by sharing the latest technologies and knowledge, promoting operational efficiency, and creating new business opportunities. Furthermore, by mutually leveraging our resources, we will deliver innovative solutions to many customers.",
+    "benefits": {
+      "title": "Support we provide",
+      "management": {
+        "title": "Project management support",
+        "description": "Professional project management support"
+      },
+      "marketing": {
+        "title": "Conducting joint marketing",
+        "description": "Collaborative marketing activities"
+      },
+      "technical": {
+        "title": "Providing technical support and know-how",
+        "description": "Latest AI technology sharing"
+      }
+    },
+    "lookingFor": {
+      "title": "What to look for in a partner",
+      "flexibility": {
+        "title": "Flexible response to meet customer needs",
+        "description": "Flexibility to respond to customer needs"
+      },
+      "innovation": {
+        "title": "Willingness to create new value together",
+        "description": "Enthusiasm to create innovative solutions"
+      },
+      "technology": {
+        "title": "Proactive approach to new technologies",
+        "description": "Active engagement with new technologies"
+      }
+    },
+    "contactText": "For partner recruitment, please contact us below.",
+    "cta": {
+      "title": "Interested in Partnership?",
+      "subtitle": "Let's discuss opportunities",
+      "button": "Please contact us for detailed recruitment requirements."
+    }
+  },
+  "usefulInfoPage": {
+    "title": "Useful Information",
+    "subtitle": "AI Insights & Best Practices",
+    "description": "Stay informed with latest AI trends and expert insights for your transformation journey.",
+    "readMore": "Read More",
+    "categories": {
+      "all": "All",
+      "aiBasics": "AI Basics",
+      "implementation": "Implementation",
+      "trends": "Trends",
+      "bestPractices": "Best Practices"
+    },
+    "featured": {
+      "label": "Featured",
+      "title": "Complete AI Transformation Guide",
+      "excerpt": "Everything you need to know about implementing AI in your business"
+    },
+    "article1": {
+      "category": "Implementation",
+      "title": "5 Steps to Successful AI Integration",
+      "excerpt": "Essential steps for seamlessly integrating AI into operations",
+      "date": "Jan 15, 2026",
+      "readTime": "8 min read"
+    },
+    "article2": {
+      "category": "Trends",
+      "title": "AI Trends in 2026",
+      "excerpt": "Latest developments in AI technology",
+      "date": "Jan 10, 2026",
+      "readTime": "6 min read"
+    },
+    "article3": {
+      "category": "Best Practices",
+      "title": "Maximizing ROI from AI",
+      "excerpt": "Strategies to ensure measurable business value",
+      "date": "Jan 5, 2026",
+      "readTime": "10 min read"
+    },
+    "newsletter": {
+      "title": "Subscribe to Newsletter",
+      "description": "Get latest AI insights delivered",
+      "placeholder": "Enter your email",
+      "button": "Subscribe"
+    }
+  },
+  "usefulVideoPage": {
+    "title": "Useful Videos",
+    "subtitle": "Learn Through Visual Content",
+    "description": "Watch curated videos covering AI tutorials, case studies, webinars, and demos.",
+    "categories": {
+      "all": "All",
+      "tutorials": "Tutorials",
+      "casestudies": "Case Studies",
+      "webinars": "Webinars",
+      "demos": "Demos"
+    },
+    "featured": {
+      "label": "Featured",
+      "title": "AI Transformation Journey",
+      "description": "See how companies transform with AI",
+      "duration": "45:30",
+      "views": "12.5K views"
+    },
+    "video1": {
+      "category": "Tutorial",
+      "title": "Getting Started with AI Agents",
+      "description": "Learn the basics of AI agents",
+      "duration": "15:20",
+      "views": "8.2K views"
+    },
+    "video2": {
+      "category": "Case Study",
+      "title": "Manufacturing AI Success",
+      "description": "80% efficiency improvement story",
+      "duration": "12:45",
+      "views": "6.8K views"
+    },
+    "video3": {
+      "category": "Webinar",
+      "title": "AI Trends 2026 Panel",
+      "description": "Experts discuss AI future",
+      "duration": "58:30",
+      "views": "15.3K views"
+    },
+    "subscribe": {
+      "title": "Subscribe for More",
+      "description": "Get notified of new content",
+      "button": "Subscribe"
+    }
+  },
+  "noticePage": {
+    "title": "Notice",
+    "subtitle": "Latest Updates",
+    "description": "Stay updated with our news, updates, and announcements.",
+    "important": "Important",
+    "readMore": "Read More",
+    "viewArchive": "View All",
+    "categories": {
+      "all": "All",
+      "product": "Product Updates",
+      "company": "Company News",
+      "events": "Events",
+      "press": "Press"
+    },
+    "notice1": {
+      "category": "Product Update",
+      "title": "New AI Agent Features",
+      "excerpt": "Major updates including advanced NLP and improved integrations",
+      "date": "Jan 20, 2026"
+    },
+    "notice2": {
+      "category": "Company News",
+      "title": "CosBE Expands to Europe",
+      "excerpt": "Expanding operations to better serve European clients",
+      "date": "Jan 15, 2026"
+    },
+    "notice3": {
+      "category": "Event",
+      "title": "Free AI Webinar Series",
+      "excerpt": "Register for upcoming webinars on AI transformation",
+      "date": "Jan 10, 2026"
+    },
+    "newsletter": {
+      "title": "Never Miss an Update",
+      "description": "Subscribe to receive latest news",
+      "placeholder": "Enter your email",
+      "button": "Subscribe"
+    }
+  },
+  "downloadPage": {
+    "pageTitle": "Material details page",
+    "documentTitle": "CosBE in 3 minutes",
+    "reveals": {
+      "title": "This document reveals the following",
+      "point1": "CosBE's strengths in promoting AI-driven business transformation from a management perspective",
+      "point2": "Gain insights and case studies into AI solutions that address challenges in a variety of industries",
+      "point3": "How to create an AI prototype in as little as two months while minimizing risk"
+    },
+    "overview": {
+      "title": "Document Overview",
+      "description": "Are your AI ideas lying dormant? CosBE promotes business transformation with a management perspective and cutting-edge technology. We can turn your MVP into reality in as little as two months and provide AI solutions to a variety of industry challenges. We will lead your business into the future."
+    },
+    "form": {
+      "lastname": {
+        "label": "Last name",
+        "placeholder": "Suzuki"
+      },
+      "givenname": {
+        "label": "given name",
+        "placeholder": "Taro"
+      },
+      "company": {
+        "label": "Company Name",
+        "placeholder": "Sample Corporation"
+      },
+      "industry": {
+        "label": "Industry",
+        "placeholder": "please select",
+        "options": {
+          "it": "IT / Technology",
+          "manufacturing": "Manufacturing",
+          "retail": "Retail / E-commerce",
+          "finance": "Finance / Banking",
+          "healthcare": "Healthcare",
+          "education": "Education",
+          "other": "Other"
+        }
+      },
+      "position": {
+        "label": "post",
+        "placeholder": "please select",
+        "options": {
+          "executive": "Executive / Management",
+          "manager": "Manager",
+          "staff": "Staff / Employee",
+          "other": "Other"
+        }
+      },
+      "email": {
+        "label": "email address",
+        "placeholder": "sample@cosbe.inc"
+      },
+      "phone": {
+        "label": "telephone number",
+        "placeholder": "090-1234-5678"
+      },
+      "privacyPolicy": "Privacy Policy",
+      "privacyAgree": " - You are deemed to have agreed to it.",
+      "submitButton": "Download the document (free)"
+    },
+    "cta": {
+      "title": "We will support your business in various aspects.",
+      "subtitle": "Please feel free to contact us.",
+      "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
+      "button": "Inquiries about Hayaku AI Lab"
+    }
+  },
+  "footer": {
+    "tagline": "The Cosmopolitan Business Engine",
+    "businessContent": "Business content",
+    "companyProfile": "Company Profile",
+    "caseStudies": "Case studies",
+    "usefulColumn": "Useful Column",
+    "announcement": "Announcement",
+    "homePage": "Home Page",
+    "privacyPolicy": "Privacy Policy",
+    "inquiry": "inquiry",
+    "copyright": "© CosBE Incorporated"
+  },
+  "caseStudy2MonthAI": {
+    "title": "[Implementation Case] AI Service Launched in 2 Months! Speed and a Small Start Create New Business Potential",
+    "meta": {
+      "description": "We introduce a small-start case study that shaped a new AI-based service in just 2 months. Here are the key points for accelerating development and completing an MVP flexibly and quickly using the approach of 'building while thinking' without being constrained by requirements definition.",
+      "keywords": "AI Transformation, MVP, RAG, LLM, New Business"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "caseStudies": "Case studies",
+      "innovation": "New Businesses and Innovations"
+    },
+    "publishedDate": "February 26, 2025",
+    "categories": ["Case studies", "New Businesses and Innovations"],
+    "tags": ["LLM (Large Language Model)", "RAG (Retrieval Augmented Generation)"],
+    "tableOfContents": "Table of contents",
+    "sections": {
+      "introduction": {
+        "title": "Introduction: Challenges in AI implementation and solutions",
+        "paragraph1": "'We want to use AI in a new business, but development takes too long...' 'The requirements haven't been finalized, and the project isn't moving forward...'",
+        "paragraph2": "There are many companies that have such concerns. Company S, which we will introduce here, was also facing exactly this issue.",
+        "paragraph3": "However, by taking a small-start approach of 'first making something that works,' they were able to complete a prototype of their AI service in just two months, and quickly bring it to market.",
+        "paragraph4": "Let's take a closer look at how this was achieved."
+      },
+      "overview": {
+        "title": "Overall Overview: Project Success Factors",
+        "intro": "The greatest feature of this case is that a new business idea was realized as an AI service in just two months.",
+        "description": "It is not uncommon for AI implementation to take several months to over a year. However, Company S was able to successfully develop a prototype in a short period of time by focusing on the following three points:",
+        "factors": [
+          "Speed of initial response: Business validation can be carried out early, and feedback can be gathered quickly from both inside and outside the company.",
+          "Flexible requirement changes: Brush up on ideas while creating something that 'just works'",
+          "Utilizing AI technology (RAG x LLM): Automatically generate highly accurate content with minimal input"
+        ],
+        "mvpDefinition": {
+          "title": "What is an MVP (Minimum Viable Product)?",
+          "description": "A prototype that implements only the minimum necessary functions. It is useful in the early stages of a new business where testing and improvement are repeated."
+        }
+      },
+      "issuesBackground": {
+        "title": "Issues and Background: Current Status and Issues of AI Implementation",
+        "speedIsKey": {
+          "title": "Speed is key in this new business",
+          "paragraph1": "Recently, new services that utilize AI have been emerging one after another, and for companies and organizations trying to enter the market later, the key is 'how quickly they can release a prototype.'",
+          "paragraph2": "However, there are also some common challenges, such as:",
+          "challenges": [
+            "Delays in defining requirements: The newer the idea, the fewer definite items there are, and time is wasted just considering it.",
+            "Internal and external coordination costs: The more people involved in a project, the more time it takes to get approvals and communicate.",
+            "Technical unknowns: The AI field evolves rapidly, so specifications are likely to change during development."
+          ],
+          "clientSituation": "The client in this case had a strong desire to quickly create a solution and get user feedback, but was troubled by the uncertainty of the requirements and the adjustment process."
+        },
+        "companyInfo": {
+          "title": "Company information",
+          "companyName": "Company S",
+          "location": "private",
+          "url": "private",
+          "implementedAI": "Implemented AI model",
+          "keyChallenges": "Uncertain requirements, internal and external coordination costs, and technical unknowns"
+        }
+      },
+      "solutions": {
+        "title": "Solutions: Development approaches and measures",
+        "approach": {
+          "title": "A successful approach to development in a short period of time",
+          "intro": "In a new business, the very question of 'how far the business will go' is an unknown. With the traditional method of starting development only after solidifying all requirements, there is a risk that work will stall at the specification formulation stage.",
+          "paragraph": "Therefore, the following policy was adopted for this project:",
+          "policies": [
+            "Minimum viable product (MVP) release in 2 months",
+            "Rather than aiming for perfect specifications, the first priority was to complete a working prototype",
+            "Try out prototypes and improve them in real time"
+          ]
+        },
+        "ragLlm": {
+          "title": "Utilizing RAG×LLM and its effects",
+          "intro": "The core technology of the AI service developed in this case is an automatic text generation function that combines RAG (Retrieval Augmented Generation) and LLM (Large Language Model).",
+          "mainFlow": "The main flow is as follows:",
+          "steps": [
+            "The user enters the minimum required information",
+            "RAG finds and extracts relevant data sources",
+            "LLM generates sentences based on the extracted information and integrates them into the content"
+          ],
+          "conclusion": "By combining highly accurate language models and search technology, we aimed to design a system that could quickly output text and content that is valuable to users.",
+          "definitions": [
+            "What is RAG (Retrieval Augmented Generation)? It is a system that extracts relevant information from a specified database and combines it with sentence generation.",
+            "What is an LLM (Large Language Model)? An AI model that learns from large amounts of text and performs highly accurate natural language processing."
+          ]
+        }
+      },
+      "results": {
+        "title": "Implementation Results: Project Impact and Results",
+        "prototype": {
+          "title": "A working prototype completed in two months",
+          "paragraph1": "By prioritizing 'something that at least works' even when all the requirements were not met, they succeeded in creating a prototype AI service in just two months. The greatest achievement was that they were able to release it without compromising on 'speed,' which is the most important factor in new business.",
+          "paragraph2": "The key point is that this has been significantly shortened, as in the past it could have taken several months just to define the requirements."
+        },
+        "smallStart": {
+          "title": "Start small to reduce risk",
+          "paragraph1": "If we proceed with large-scale development all at once, there is a greater risk that the finished product will not meet our expectations. By starting small and testing an MVP first in the market and internally, we were able to significantly reduce the risk of investing too much in unnecessary features.",
+          "paragraph2": "Another advantage is that you can collect real reactions from users at the MVP stage, which makes it easier to clarify future directions."
+        },
+        "flexibleImprovement": {
+          "title": "Flexible improvement cycle",
+          "paragraph": "Unexpected new ideas and bug fixes were smoothly implemented even in the middle of development. By leaving room in the development process, we have a system in place that ensures that innovative ideas that arise along the way are not overlooked."
+        }
+      },
+      "summary": {
+        "title": "Summary: Putting ideas into practice in a short space of time",
+        "intro": "Starting small and thinking while you're creating is an approach that's particularly suited to areas with many uncertainties, such as new businesses and AI projects. By keeping the following points in mind, you can speed things up more effectively.",
+        "keyPoints": [
+          "Don't expect 100% perfection from the start. Release early and conduct field tests.",
+          "Creating a system that allows for quick response to specification changes and additional requests through a short-term feedback loop",
+          "Creating a system that produces results with minimal input, such as utilizing RAG×LLM, which actively incorporates AI technology"
+        ],
+        "conclusion1": "In this case study, we introduced the process of quickly turning a customer's idea into a prototype that can be tested in the market.",
+        "conclusion2": "Even in a project with many uncertainties, the bold policy of 'creating an MVP in two months' proved effective, and we were able to successfully release a highly refined prototype while minimizing risk.",
+        "conclusion3": "We hope that these examples will provide hints for companies and organizations developing AI services to achieve both speed and flexibility."
+      }
+    },
+    "cta": {
+      "title": "\\Why not improve your business efficiency with AI?/",
+      "button": "Free consultation here"
+    },
+    "shareText": "Please share if you like!",
+    "authorTitle": "The author of this article",
+    "relatedArticlesTitle": "Related articles"
   }
 }
 
