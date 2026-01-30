@@ -66,7 +66,7 @@ export default function AiTransformationPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-80 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl overflow-hidden">
               <Image
-                src="/vision.png"
+                src="/ai-transformation/vision1.png"
                 alt={t('section1.imageAlt')}
                 fill
                 className="object-contain p-8"
@@ -124,7 +124,7 @@ export default function AiTransformationPage() {
             </div>
             <div className="relative h-80 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl overflow-hidden">
               <Image
-                src="/vision.png"
+                src="/ai-transformation/vision2.png"
                 alt={t('section2.imageAlt')}
                 fill
                 className="object-contain p-8"
@@ -138,7 +138,7 @@ export default function AiTransformationPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-80 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl overflow-hidden">
               <Image
-                src="/vision.png"
+                src="/ai-transformation/vision3.png"
                 alt={t('section3.imageAlt')}
                 fill
                 className="object-contain p-8"

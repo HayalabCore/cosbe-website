@@ -10,15 +10,15 @@ export default function AiLabPage() {
   const locale = useLocale();
 
   const challenges = [
-    { key: 'challenge1', image: '/ai-lab/challenge1.png' },
-    { key: 'challenge2', image: '/ai-lab/challenge2.png' },
-    { key: 'challenge3', image: '/ai-lab/challenge3.png' },
+    { key: 'challenge1', image: '/ai-lab/challenge1.webp' },
+    { key: 'challenge2', image: '/ai-lab/challenge2.webp' },
+    { key: 'challenge3', image: '/ai-lab/challenge3.webp' },
   ];
 
   const features = [
-    { key: 'feature1', image: '/ai-lab/feature1.png' },
-    { key: 'feature2', image: '/ai-lab/feature2.png' },
-    { key: 'feature3', image: '/ai-lab/feature3.png' },
+    { key: 'feature1', image: '/ai-lab/feature1.webp' },
+    { key: 'feature2', image: '/ai-lab/feature2.jpeg' },
+    { key: 'feature3', image: '/ai-lab/feature3.jpeg' },
   ];
 
   const caseStudies = [
@@ -212,7 +212,7 @@ export default function AiLabPage() {
               </div>
               <div className="flex justify-center md:justify-end">
                 <Image
-                  src="/ai-lab/benefit1.png"
+                  src="/ai-lab/benefit1.jpg"
                   alt={t('benefits.benefit1.imageAlt')}
                   width={300}
                   height={225}
@@ -241,7 +241,7 @@ export default function AiLabPage() {
               </div>
               <div className="flex justify-center md:justify-end">
                 <Image
-                  src="/ai-lab/benefit2.png"
+                  src="/ai-lab/benefit2.jpg"
                   alt={t('benefits.benefit2.imageAlt')}
                   width={300}
                   height={225}
@@ -267,7 +267,7 @@ export default function AiLabPage() {
               </div>
               <div className="flex justify-center md:justify-end">
                 <Image
-                  src="/ai-lab/benefit3.png"
+                  src="/ai-lab/benefit3.jpg"
                   alt={t('benefits.benefit3.imageAlt')}
                   width={300}
                   height={225}
