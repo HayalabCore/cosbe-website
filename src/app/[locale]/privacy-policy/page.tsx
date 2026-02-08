@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/company/AdobeStock_578648891_Preview.jpeg"
+            src="/company/privacy-hero.jpeg"
             alt="Privacy Policy Background"
             fill
             className="object-cover"
@@ -347,7 +347,7 @@ export default function PrivacyPolicyPage() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <Image
-            src="/company/AdobeStock_588248272_1_1.jpg"
+            src="/company/cta-background.jpg"
             alt="CTA Background"
             fill
             className="object-cover"

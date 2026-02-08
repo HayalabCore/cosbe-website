@@ -26,7 +26,7 @@ export default async function DownloadPage() {
             {/* Document Image */}
             <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
               <Image
-                src="/material download/40ca12643395d30bafe5d70cb8beb77b.png"
+                src="/material-download/download-preview.png"
                 alt={t('documentTitle')}
                 width={600}
                 height={400}

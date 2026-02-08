@@ -8,67 +8,67 @@ export default async function UsefulVideoPage() {
   const videos = [
     {
       id: 1,
-      image: '/Useful-video/maxresdefault-7-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-01.jpg',
       title: t('video1.title'),
       date: t('video1.date'),
       author: t('video1.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
     {
       id: 2,
-      image: '/Useful-video/maxresdefault-6-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-02.jpg',
       title: t('video2.title'),
       date: t('video2.date'),
       author: t('video2.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
     {
       id: 3,
-      image: '/Useful-video/maxresdefault-5-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-03.jpg',
       title: t('video3.title'),
       date: t('video3.date'),
       author: t('video3.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
     {
       id: 4,
-      image: '/Useful-video/maxresdefault-4-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-04.jpg',
       title: t('video4.title'),
       date: t('video4.date'),
       author: t('video4.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
     {
       id: 5,
-      image: '/Useful-video/maxresdefault-3-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-05.jpg',
       title: t('video5.title'),
       date: t('video5.date'),
       author: t('video5.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
     {
       id: 6,
-      image: '/Useful-video/maxresdefault-2-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-06.jpg',
       title: t('video6.title'),
       date: t('video6.date'),
       author: t('video6.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
     {
       id: 7,
-      image: '/Useful-video/maxresdefault-1-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-07.jpg',
       title: t('video7.title'),
       date: t('video7.date'),
       author: t('video7.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
     {
       id: 8,
-      image: '/Useful-video/maxresdefault-1-1024x576.jpg',
+      image: '/useful-video/video-thumbnail-07.jpg',
       title: t('video8.title'),
       date: t('video8.date'),
       author: t('video8.author'),
-      authorImage: '/Useful-video/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg',
+      authorImage: '/useful-video/author-portrait.jpg',
     },
   ];
 
@@ -76,7 +76,7 @@ export default async function UsefulVideoPage() {
     <div className="min-h-screen bg-white">
       {/* Hero Section with Background */}
       <div className="relative bg-gradient-to-r from-blue-500/80 to-blue-600/80 py-16 pt-32">
-        <div className="absolute inset-0 bg-[url('/Useful-video/maxresdefault-7-1024x576.jpg')] bg-cover bg-center opacity-30"></div>
+        <div className="absolute inset-0 bg-[url('/useful-video/video-thumbnail-01.jpg')] bg-cover bg-center opacity-30"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {t('heroTitle')}
@@ -194,7 +194,7 @@ export default async function UsefulVideoPage() {
       <div className="relative py-16 bg-gray-800">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed opacity-40"
-          style={{ backgroundImage: "url('/Useful-video/maxresdefault-7-1024x576.jpg')" }}
+          style={{ backgroundImage: "url('/useful-video/video-thumbnail-01.jpg')" }}
         ></div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">

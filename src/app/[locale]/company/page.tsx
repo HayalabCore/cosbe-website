@@ -27,7 +27,7 @@ export default async function CompanyPage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto items-start">
             <div className="flex justify-center">
               <Image
-                src="/KEN_photo.png"
+                src="/ceo-photo.png"
                 alt={t('about.ceoPhotoAlt')}
                 width={300}
                 height={400}
@@ -233,7 +233,7 @@ export default async function CompanyPage() {
           {/* World Map */}
           <div className="max-w-5xl mx-auto mb-12 bg-gray-50 rounded-2xl p-8">
             <Image
-              src="/CosBE_worldmap.png"
+              src="/cosbe-worldmap.png"
               alt={t('globalTeam.mapAlt')}
               width={1200}
               height={700}

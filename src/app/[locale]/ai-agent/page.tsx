@@ -74,7 +74,7 @@ export default function AiAgentPage() {
               <div className="rounded-3xl overflow-hidden shadow-2xl">
                 {/* Hero Image */}
                 <Image 
-                  src="/ai-agent/AdobeStock_1221848534.jpg" 
+                  src="/ai-agent/hero-banner.jpg" 
                   alt="AI Agent Visual" 
                   width={600} 
                   height={400}
@@ -292,7 +292,7 @@ export default function AiAgentPage() {
                       {/* Construction Image */}
                       <div className="rounded-xl overflow-hidden">
                         <Image 
-                          src="/ai-agent/AdobeStock_501222037.jpg" 
+                          src="/ai-agent/consulting-service.jpg" 
                           alt="Construction Industry" 
                           width={500} 
                           height={320}
@@ -358,7 +358,7 @@ export default function AiAgentPage() {
                       {/* Retail Image */}
                       <div className="rounded-xl overflow-hidden">
                         <Image 
-                          src="/ai-agent/AdobeStock_599853965.jpg" 
+                          src="/ai-agent/development-service.jpg" 
                           alt="Retail Industry" 
                           width={500} 
                           height={320}
@@ -424,7 +424,7 @@ export default function AiAgentPage() {
                       {/* Manufacturing Image */}
                       <div className="rounded-xl overflow-hidden">
                         <Image 
-                          src="/ai-agent/AdobeStock_599853965.jpg" 
+                          src="/ai-agent/development-service.jpg" 
                           alt="Manufacturing Industry" 
                           width={500} 
                           height={320}
@@ -499,7 +499,7 @@ export default function AiAgentPage() {
           
           <div className="mb-8 rounded-xl overflow-hidden shadow-lg">
             <Image 
-              src="/ai-agent/AdobeStock_1362892047-scaled.jpeg" 
+              src="/ai-agent/integration-service.jpeg" 
               alt="AI Agent Features" 
               width={1200} 
               height={500}

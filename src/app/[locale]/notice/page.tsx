@@ -11,70 +11,70 @@ export default async function NoticePage() {
       title: t('notice1.title'),
       date: t('notice1.date'),
       author: t('author'),
-      image: '/Notice/file-1024x683.jpeg',
+      image: '/notice/notice-01.jpeg',
     },
     {
       id: 2,
       title: t('notice2.title'),
       date: t('notice2.date'),
       author: t('author'),
-      image: '/Notice/file-1024x576.png',
+      image: '/notice/notice-02.png',
     },
     {
       id: 3,
       title: t('notice3.title'),
       date: t('notice3.date'),
       author: t('author'),
-      image: '/Notice/cover-QRi0RwRzS2fRNAi0BxxDJ8r1dO46cOQ3.jpeg',
+      image: '/notice/notice-03.jpeg',
     },
     {
       id: 4,
       title: t('notice4.title'),
       date: t('notice4.date'),
       author: t('author'),
-      image: '/Notice/e2bf0c7924c3de5c4fd208be249511b1-1024x576.png',
+      image: '/notice/notice-04.png',
     },
     {
       id: 5,
       title: t('notice5.title'),
       date: t('notice5.date'),
       author: t('author'),
-      image: '/Notice/181835915fcbbfa33cf8bec49d78a8cd-1024x576.png',
+      image: '/notice/notice-05.png',
     },
     {
       id: 6,
       title: t('notice6.title'),
       date: t('notice6.date'),
       author: t('author'),
-      image: '/Notice/306ccae5503a964aa65889105b1e8474-1024x576.jpg',
+      image: '/notice/notice-06.jpg',
     },
     {
       id: 7,
       title: t('notice7.title'),
       date: t('notice7.date'),
       author: t('author'),
-      image: '/Notice/1cd139abcbfde1f7c6744fa33c534a20-1024x576.jpg',
+      image: '/notice/notice-07.jpg',
     },
     {
       id: 8,
       title: t('notice8.title'),
       date: t('notice8.date'),
       author: t('author'),
-      image: '/Notice/daf8b85ba262b08a7346978140ffed59-1024x576.jpg',
+      image: '/notice/notice-08.jpg',
     },
     {
       id: 9,
       title: t('notice9.title'),
       date: t('notice9.date'),
       author: t('author'),
-      image: '/Notice/54e3d281699655eda0dd6598e38fd8b1-1024x576.jpg',
+      image: '/notice/notice-09.jpg',
     },
     {
       id: 10,
       title: t('notice10.title'),
       date: t('notice10.date'),
       author: t('author'),
-      image: '/Notice/4495bed8051fcc9fd4ac4bababda36e3.png',
+      image: '/notice/notice-10.png',
     },
   ];
 
@@ -84,7 +84,7 @@ export default async function NoticePage() {
       <section className="relative min-h-[240px] md:min-h-[280px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/Notice/AdobeStock_389250400-scaled-e1735225994794.jpeg"
+            src="/notice/hero-background.jpeg"
             alt="Notice background"
             fill
             className="object-cover"
@@ -167,7 +167,7 @@ export default async function NoticePage() {
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
                         <Image
-                          src="/Notice/DJI_20241205111013_0078_D-scaled-e1733880357340.jpg"
+                          src="/notice/author-portrait.jpg"
                           alt={notice.author}
                           width={32}
                           height={32}
@@ -201,7 +201,7 @@ export default async function NoticePage() {
       <section className="relative py-16 md:py-20">
         <div className="absolute inset-0">
           <Image
-            src="/ai-lab/AdobeStock_588248272-1-scaled.jpeg"
+            src="/ai-lab/cta-background.jpeg"
             alt="CTA background"
             fill
             className="object-cover"
