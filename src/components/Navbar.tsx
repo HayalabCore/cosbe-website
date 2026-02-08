@@ -72,15 +72,13 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
             <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
               {/* 1. Company Overview */}
-              <a
-                href="https://www.jp.cosbe.inc/company/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/company"
                 className="text-gray-600 hover:text-blue-600 transition-all duration-200 text-xs lg:text-sm font-medium relative group whitespace-nowrap"
               >
                 {t('companyOverview')}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-200 group-hover:w-full"></span>
-              </a>
+              </Link>
 
               {/* 2. AI Transformation - Dropdown */}
               <div 
@@ -97,36 +95,32 @@ export default function Navbar() {
                 </button>
                 {aiTransformationOpen && (
                   <div className="absolute top-full left-0 mt-1 pt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <a
-                      href="https://www.jp.cosbe.inc/document/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href="/ai-transformation"
                       className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setAiTransformationOpen(false)}
                     >
                       {t('cosbeAiTransformation')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/ailabo/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/ai-lab"
                       className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setAiTransformationOpen(false)}
                     >
                       {t('fastAiLab')}
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>
 
               {/* 3. AI Partner Recruitment */}
-              <a
-                href="https://www.jp.cosbe.inc/recruit/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/recruit"
                 className="text-gray-600 hover:text-blue-600 transition-all duration-200 text-xs lg:text-sm font-medium relative group whitespace-nowrap"
               >
                 {t('aiPartnerRecruitment')}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-200 group-hover:w-full"></span>
-              </a>
+              </Link>
 
               {/* 4. Useful Information - Dropdown */}
               <div 
@@ -143,38 +137,42 @@ export default function Navbar() {
                 </button>
                 {usefulInfoOpen && (
                   <div className="absolute top-full left-0 mt-1 pt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <a
-                      href="https://www.jp.cosbe.inc/category/case-studies/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href="/case-studies"
                       className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setUsefulInfoOpen(false)}
                     >
                       {t('caseStudies')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/category/useful-info/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/useful-column"
                       className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setUsefulInfoOpen(false)}
                     >
                       {t('usefulInformation')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/ailabo/ai-agent/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/useful-video"
                       className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setUsefulInfoOpen(false)}
+                    >
+                      {t('useful-video')}
+                    </Link>
+                    <Link
+                      href="/ai-agent"
+                      className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setUsefulInfoOpen(false)}
                     >
                       {t('aiAgents')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/category/news/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/notice"
                       className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setUsefulInfoOpen(false)}
                     >
                       {t('notice')}
-                    </a>
+                    </Link>
+                    
                   </div>
                 )}
               </div>
@@ -194,9 +192,9 @@ export default function Navbar() {
               </span>
             </button>
 
-            <button className="px-4 md:px-5 lg:px-6 py-2 md:py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200 text-xs md:text-sm font-semibold whitespace-nowrap transform hover:scale-[1.02]">
+            <Link href="/contact" className="px-4 md:px-5 lg:px-6 py-2 md:py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200 text-xs md:text-sm font-semibold whitespace-nowrap transform hover:scale-[1.02]">
               {t('button')}
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -244,15 +242,13 @@ export default function Navbar() {
           <div className="md:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md">
             <div className="px-4 md:px-6 py-6 md:py-8 space-y-0 max-w-2xl md:mx-auto">
               {/* 1. Company Overview */}
-              <a
-                href="https://www.jp.cosbe.inc/company/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/company"
                 className="block py-3 md:py-4 text-base md:text-lg text-gray-700 hover:text-blue-600 transition-colors font-medium border-b border-gray-100"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {t('companyOverview')}
-              </a>
+              </Link>
 
               {/* 2. AI Transformation - Dropdown */}
               <div className="border-b border-gray-100">
@@ -272,38 +268,32 @@ export default function Navbar() {
                 </button>
                 {mobileDropdownOpen === 'ai' && (
                   <div className="pl-4 pb-2 space-y-2">
-                    <a
-                      href="https://www.jp.cosbe.inc/document/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href="/ai-transformation"
                       className="block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {t('cosbeAiTransformation')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/ailabo/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/ai-lab"
                       className="block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {t('fastAiLab')}
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>
 
               {/* 3. AI Partner Recruitment */}
-              <a
-                href="https://www.jp.cosbe.inc/recruit/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/recruit"
                 className="block py-3 md:py-4 text-base md:text-lg text-gray-700 hover:text-blue-600 transition-colors font-medium border-b border-gray-100"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {t('aiPartnerRecruitment')}
-              </a>
+              </Link>
 
               {/* 4. Useful Information - Dropdown */}
               <div className="border-b border-gray-100">
@@ -323,49 +313,49 @@ export default function Navbar() {
                 </button>
                 {mobileDropdownOpen === 'useful' && (
                   <div className="pl-4 pb-2 space-y-2">
-                    <a
-                      href="https://www.jp.cosbe.inc/category/case-studies/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href="/case-studies"
                       className="block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {t('caseStudies')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/category/useful-info/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/useful-column"
                       className="block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {t('usefulInformation')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/ailabo/ai-agent/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/useful-video"
+                      className="block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {t('useful-video')}
+                    </Link>
+                    <Link
+                      href="/ai-agent"
                       className="block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {t('aiAgents')}
-                    </a>
-                    <a
-                      href="https://www.jp.cosbe.inc/category/news/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </Link>
+                    <Link
+                      href="/notice"
                       className="block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {t('notice')}
-                    </a>
+                    </Link>
+                    
                   </div>
                 )}
               </div>
 
-              <button className="w-full mt-4 md:mt-6 px-6 py-3 md:py-3.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200 text-sm md:text-base font-semibold">
+              <Link href="/contact" className="block w-full mt-4 md:mt-6 px-6 py-3 md:py-3.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200 text-sm md:text-base font-semibold text-center" onClick={() => setMobileMenuOpen(false)}>
                 {t('button')}
-              </button>
+              </Link>
             </div>
           </div>
         )}

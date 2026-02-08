@@ -1,41 +1,14 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
 
 export default function AiTransformationPage() {
   const t = useTranslations('aiTransformationPage');
-  const locale = useLocale();
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Language Toggle */}
-      <div className="fixed top-20 right-8 z-50 flex gap-2">
-        <Link
-          href="/ai-transformation"
-          locale="ja"
-          className={`px-4 py-2 rounded-full font-semibold transition-all ${
-            locale === 'ja'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-blue-50'
-          }`}
-        >
-          日本語
-        </Link>
-        <Link
-          href="/ai-transformation"
-          locale="en"
-          className={`px-4 py-2 rounded-full font-semibold transition-all ${
-            locale === 'en'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-blue-50'
-          }`}
-        >
-          English
-        </Link>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         {/* Breadcrumb */}
         <div className="mb-8 text-sm text-gray-600">

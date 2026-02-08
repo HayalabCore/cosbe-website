@@ -1,13 +1,12 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
 import type { Locale } from '@/i18n/routing';
 
 export default function AiLabPage() {
   const t = useTranslations('aiLabPage');
-  const locale = useLocale();
 
   const challenges = [
     { key: 'challenge1', image: '/ai-lab/challenge1.webp' },
@@ -29,32 +28,6 @@ export default function AiLabPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Language Toggle */}
-      <div className="fixed top-20 right-8 z-50 flex gap-2">
-        <Link
-          href="/ai-lab"
-          locale="ja"
-          className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-            locale === 'ja'
-              ? 'bg-blue-600 text-white shadow-md'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-blue-50'
-          }`}
-        >
-          日本語
-        </Link>
-        <Link
-          href="/ai-lab"
-          locale="en"
-          className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-            locale === 'en'
-              ? 'bg-blue-600 text-white shadow-md'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-blue-50'
-          }`}
-        >
-          English
-        </Link>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         {/* Hero Section */}
         <section className="mb-16">

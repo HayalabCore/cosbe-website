@@ -7,9 +7,12 @@
     "aiPartnerRecruitment": "AI Partner Recruitment",
     "usefulInfo": "Useful Information",
     "caseStudies": "Case studies",
-    "usefulInformation": "Useful information",
+    "usefulInformation": "Useful Column",
     "aiAgents": "AI Agents",
     "notice": "Notice",
+    "Useful-vedio": "Useful-vedio",
+    "useful-video": "Useful Video",
+    "download": "Download",
     "button": "Consult about AI (Free)"
   },
   "hero": {
@@ -543,7 +546,7 @@
     "search": "Search",
     "filter": "Filter",
     "sort": "Sort",
-    "download": "Download",
+    "Useful-vedio": "Useful-vedio",
     "share": "Share"
   },
   "contact": {
@@ -614,69 +617,190 @@
     }
   },
   "aiAgent": {
-    "title": "AI Agent",
-    "subtitle": "AI autonomously performs tasks, allowing people to focus on maximizing value that AI cannot provide",
-    "description": "AI Agent is your partner that autonomously performs recognition, judgment, and execution. We flexibly build custom AI tailored to your company's objectives and operations, such as inquiry response, inventory forecasting, and decision-making support.",
+    "heroTitle": "AI Agent | Fast AI Lab",
+    "breadcrumb": {
+      "home": "Home",
+      "aiLab": "Fast AI Lab",
+      "current": "AI Agent | Fast AI Lab"
+    },
+    "badge": "Fast AI Lab",
+    "title": "AI Agents",
+    "subtitle": "AI will carry out tasks autonomously, and humans will focus on maximizing added value that AI cannot provide.",
+    "intro1": "\"I want to introduce AI, but it seems like it will be difficult to operate...\"",
+    "intro2": "\"AI Agent\" is the answer to such concerns of business managers.",
+    "agentDescription": "An AI agent is a partner that autonomously perceives, judges, and acts.",
+    "agentDetail1": "We flexibly build dedicated AI to support on-site operations, such as responding to inquiries, forecasting inventory, and supporting decision-making, in accordance with a company's objectives and operations.",
+    "agentDetail2": "We will resolve the labor shortages and inefficiencies that are issues in a wide range of industries, including construction, retail, and manufacturing, and simultaneously achieve business improvement and cost reduction.",
+    "problems": {
+      "title": "Do you have any of these concerns?",
+      "item1": "I want to embark on a new initiative (DX or business expansion), but I'm unsure where to start.",
+      "item2": "We understand the importance of human resource shortages and streamlining operations, but we are constantly being asked for help from the field.",
+      "item3": "Because the IT department is not well-equipped, it is difficult to determine how much to spend on AI implementation.",
+      "item4": "I want to regain my perspective as a top executive. I want to delegate miscellaneous tasks and spend more time focusing on strategic decisions and new developments."
+    },
+    "ctaConsult": "Get a free consultation about introducing AI",
     "whatIs": {
-      "title": "What is an AI Agent?",
-      "description": "Rather than executives instructing everything, AI takes over routine tasks and judgments on-site, ultimately supporting executives to make only 'important decisions'",
-      "point1": "AI Agent is an 'autonomous' AI system that automatically generates and executes necessary tasks",
-      "point2": "Supports executives to regain their strategic perspective by delegating miscellaneous tasks"
+      "badge": "What is an AI Agent?",
+      "title": "What are AI agents?",
+      "subtitle": "AI will autonomously carry out tasks and give back \"truly valuable work\" to managers",
+      "point1": "AI Agent is an \"autonomous\" AI system that utilizes internal data and existing systems to automatically generate and execute required tasks.",
+      "point2": "Instead of the CEO having to give all the instructions, AI will take over routine tasks and make decisions on the ground, ultimately supporting the CEO to make only the \"important decisions.\""
     },
     "process": {
       "title": "How AI Agent Works",
       "step1": {
         "number": "Step 1",
         "title": "Data Formatting",
-        "description": "AI acquires business data and automatically formats it"
+        "description": "AI acquires internal business data and document information and automatically formats it into an easy-to-use format."
       },
       "step2": {
         "number": "Step 2",
-        "title": "Situation Analysis",
-        "description": "AI Agent analyzes information and identifies tasks"
+        "title": "Situation analysis",
+        "description": "The AI agent analyzes the situation based on the information and automatically identifies the tasks that need to be performed."
       },
       "step3": {
         "number": "Step 3",
-        "title": "Decision Making",
-        "description": "Executes tasks and issues instructions automatically"
+        "title": "decision making",
+        "description": "Execute the identified tasks and issue instructions to the person in charge. The processing results are automatically reported."
       },
       "step4": {
         "number": "Step 4",
-        "title": "Execution Support",
-        "description": "Leaders use AI-generated reports for decisions"
+        "title": "Implementation support",
+        "description": "Managers can use AI-generated reports to make important decisions and take next steps."
       }
     },
     "industries": {
-      "title": "Implementation by Industry",
-      "manufacturing": {
-        "title": "Manufacturing",
-        "description": "AI Agents support production planning and quality control",
-        "benefit1": "Optimize production schedules",
-        "benefit2": "Improve quality control with AI"
+      "title": "Implementation image and benefits",
+      "description": "In particular, by having AI agents support the desk work of white-collar workers, such as administrative professionals, high-class personnel will be able to focus on areas where they can demonstrate their value as people, such as communication.",
+      "construction": {
+        "title": "construction industry",
+        "problemTitle": "Example assignment",
+        "problem1": "The site supervisor is overwhelmed with the enormous amount of paperwork and reporting required.",
+        "problem2": "On-site progress and trouble reports are subjective, which delays understanding the overall situation.",
+        "solutionTitle": "AI agent introduction image",
+        "solution1": "Multiple AI agents work together to provide powerful support for construction management, including an AI agent that executes process planning and management, and an AI agent that creates daily reports through voice dialogue.",
+        "solution2": "Supports multiple input formats such as photos, videos, and audio, and minimizes process downtime with weather forecasts and preventive maintenance of equipment and goods.",
+        "benefitTitle": "merit",
+        "benefit1": "Site supervisors can significantly reduce overtime hours and focus on safety management and quality control, which are their primary focus.",
+        "benefit2": "This allows for quicker response to problems and rework, leading to shorter overall construction times and improved management quality."
       },
       "retail": {
         "title": "Retail",
-        "description": "AI Agents assist with inventory and customer service",
-        "benefit1": "Optimize inventory levels",
-        "benefit2": "Enhance customer experience"
+        "problemTitle": "Example assignment",
+        "problem1": "Store management tasks still rely on paper, fax, and other personnel, and the work is highly dependent on individuals.",
+        "problem2": "However, due to the intensifying competition for talent, there is a shortage of store staff and managers, and managers are being forced to take on positions even if they lack the skills.",
+        "solutionTitle": "AI agent introduction image",
+        "solution1": "AI agents on customers' devices improve the customer experience by guiding them to stores and providing recommendations.",
+        "solution2": "AI agents assist store managers with management tasks such as optimal staffing, shift management, and product management based on store visit predictions.",
+        "benefitTitle": "merit",
+        "benefit1": "UX that improves both customer satisfaction and in-store customer service capacity",
+        "benefit2": "Overcoming the shortage of store managers and supervisors and the lack of skills"
       },
-      "construction": {
-        "title": "Construction",
-        "description": "AI Agents help with project management and tracking",
-        "benefit1": "Accelerate project timelines",
-        "benefit2": "Reduce supervisor overtime significantly"
+      "manufacturing": {
+        "title": "manufacturing industry",
+        "problemTitle": "Example assignment",
+        "problem1": "Risk of not being able to take over design, quality control, and other tasks that are highly dependent on experienced personnel due to aging",
+        "problem2": "There seems to be a lot of waste due to bottleneck processes such as waste in production schedules and in-process inventory that have not been resolved.",
+        "solutionTitle": "AI agent introduction image",
+        "solution1": "AI agents also assist skilled workers in processes such as design and quality control",
+        "solution2": "AI will provide powerful support to factory managers in areas such as production schedule management, shift management, inventory optimization, and preventative maintenance of machinery based on demand forecasts.",
+        "benefitTitle": "merit",
+        "benefit1": "Individual AI apps and AI agents autonomously carry out and assist with tasks that depend on individual skills",
+        "benefit2": "Factory executives focus on future strategies based on digital data"
       }
     },
-    "pricing": {
-      "title": "Implementation Cost Guide",
-      "development": "Monthly ¥1.5M",
-      "developmentNote": "(All costs included, minimum 2 months)",
-      "maintenance": "Monthly ¥50,000~",
-      "maintenanceNote": "(Depends on users and usage)"
+    "features": {
+      "badge": "Our Strengths",
+      "title": "Features of the \"Soku AI Lab\" AI Agent",
+      "subtitle": "Achieving both quick implementation and flexible expansion. An AI agent that supports top management strategies.",
+      "feature1": {
+        "title": "Agile development that allows prototyping in as little as two months",
+        "description": "No need for extensive requirements definition. Even with limited resources, you can start small and quickly.",
+        "benefit": "merit",
+        "point1": "Reduce investment risk and see results in a short period of time",
+        "point2": "It's easy to share your vision of success within the company"
+      },
+      "feature2": {
+        "title": "Nested AI agents make it easy to add features later",
+        "description": "Small-scale AIs work together, flexibly responding to business expansion and changes",
+        "benefit": "merit",
+        "point1": "Even as a company grows, it can proceed with DX in stages without undergoing large-scale system modifications."
+      },
+      "feature3": {
+        "title": "Reinforcement learning UI that grows the more you use it",
+        "description": "Even though the AI is still in the learning stage at first, it can be entrusted with tasks little by little.",
+        "benefit": "merit",
+        "point1": "Adjust course based on results and steadily expand AI use",
+        "point2": "By effectively linking the workplace with AI, we can raise the productivity of the entire organization."
+      },
+      "feature4": {
+        "title": "Support with an emphasis on business perspective",
+        "description": "We not only provide support for IT implementation, but also provide consulting services with an eye on business strategies and profit generation.",
+        "benefit": "merit",
+        "point1": "Custom development tailored to your company → Avoid wasteful IT investments that don't fit your goals",
+        "point2": "Post-implementation support and additional development are also provided on an ongoing basis."
+      }
     },
-    "cta": {
-      "title": "Ready to Get Started with AI Agents?",
-      "button": "Contact Us for Free Consultation"
+    "deployment": {
+      "badge": "Deployment Steps",
+      "title": "Implementation process",
+      "description1": "Our AI agent implementation starts with very simple initial requirements, and we build a working prototype (MVP) in as little as two months.",
+      "description2": "This short-term prototyping will allow us to quickly gather feedback from the field, and from the third month onwards we will improve the accuracy and usability of the AI and add new functions based on actual operational data.",
+      "description3": "Ultimately, through these improvements, we will develop a system that can be stably operated across the company, creating an environment in which management can focus on strategic decision-making.",
+      "step1": "Concept",
+      "step2": "MVP Development",
+      "step3": "Verification",
+      "step4": "Improvement",
+      "step5": "Add Features",
+      "step6": "Business Adaptation"
+    },
+    "pricing": {
+      "badge": "Price",
+      "title": "Information on installation costs",
+      "description": "Hayaku AI Lab provides consistent support to maximize your business impact, with an optimal price design that allows you to start small.",
+      "feeLabel": "Fee",
+      "fee": "1.5 million yen per month",
+      "feeNote": "(Development, consulting, server, and various tool costs included *Minimum 2 months)",
+      "maintenanceLabel": "Maintenance and operation",
+      "maintenance": "from 50,000 yen per month",
+      "maintenanceNote": "(Depending on the product, such as number of users and usage)",
+      "companyA": "Company A",
+      "companyB": "Company B",
+      "agileDev": "Agile Development",
+      "consulting": "Consulting",
+      "serverTools": "Use of various server tools",
+      "priceLabel": "price",
+      "minMonths": "* Minimum 2 months",
+      "cosbePriceMain": "1.5 million yen per",
+      "cosbePriceSub": "month",
+      "companyAPrice": "10 million yen and",
+      "companyAPriceSub": "up (development only)",
+      "companyBPrice": "15 million yen -",
+      "companyBPriceSub": "Initial costs and development only"
+    },
+    "faq": {
+      "badge": "Q&A",
+      "title": "Frequently Asked Questions",
+      "q1": "How much does it cost to deploy an AI agent?",
+      "a1": "An MVP (minimum functionality initial product) can be developed in 2 months (3 million yen) or more.",
+      "q2": "How much does it cost to operate monthly?",
+      "a2": "If you run it in the CosBE cloud environment, it will cost from 50,000 yen/month (depending on the load).",
+      "q3": "How long will it take to get started?",
+      "a3": "As we will be working in an agile style, implementation will take as little as two months.",
+      "q4": "Is it really possible to implement AI even if there are no personnel with AI expertise in-house?",
+      "a4": "No in-house AI expertise is required. Because of our agile approach, AI knowledge is acquired naturally as the project progresses.",
+      "q5": "I'm concerned about the security of having AI agents handle my company's confidential data. Is there a risk of data leakage?",
+      "a5": "Depending on your company's security requirements, we will determine the cloud security level and build a local LLM within your company's closed environment.",
+      "q6": "How long will it take to see results after installation?",
+      "a6": "For a minimal product, understanding gradually increases from the third month of use. In cases where development has continued for about six months, the effects are clearly noticeable.",
+      "q7": "How cost-effective can you expect it to be?",
+      "a7": "It depends on the scale of your problem. The more work that is done by humans using paper or computers, the greater the effect can be expected."
+    },
+    "finalCta": {
+      "title": "We support your business from various aspects\nPlease feel free to consult with us",
+      "description1": "For consultations on detailed service content and estimates, please use the form.",
+      "description2": "We respond flexibly according to the situation, so please feel free to contact us first.",
+      "button": "Contact about Fast AI Lab"
     }
   },
   "caseStudiesPage": {
@@ -1058,87 +1182,116 @@
     }
   },
   "usefulVideoPage": {
-    "title": "Useful Videos",
-    "subtitle": "Learn Through Visual Content",
-    "description": "Watch curated videos covering AI tutorials, case studies, webinars, and demos.",
-    "categories": {
-      "all": "All",
-      "tutorials": "Tutorials",
-      "casestudies": "Case Studies",
-      "webinars": "Webinars",
-      "demos": "Demos"
+    "heroTitle": "Useful Videos",
+    "heroSubtitle": "AI Transformation Solutions for SME Management Challenges | CosBE Inc.",
+    "breadcrumb": {
+      "home": "Home",
+      "usefulVideo": "Useful Videos"
     },
-    "featured": {
-      "label": "Featured",
-      "title": "AI Transformation Journey",
-      "description": "See how companies transform with AI",
-      "duration": "45:30",
-      "views": "12.5K views"
-    },
+    "pageTitle": "Useful Videos",
+    "category": "Useful Videos",
+    "readMore": "READ MORE",
     "video1": {
-      "category": "Tutorial",
-      "title": "Getting Started with AI Agents",
-      "description": "Learn the basics of AI agents",
-      "duration": "15:20",
-      "views": "8.2K views"
+      "title": "ROI (Cost-Effectiveness) 200% Achieved: Behind the Scenes of AI Implementation | What Executives Need to Know About \"AI Utilization in the Field\" - YouTube Video Released",
+      "date": "February 6, 2026",
+      "author": "Kenjiro Momi"
     },
     "video2": {
-      "category": "Case Study",
-      "title": "Manufacturing AI Success",
-      "description": "80% efficiency improvement story",
-      "duration": "12:45",
-      "views": "6.8K views"
+      "title": "【AI Transformation】4 Steps to Avoid \"Regretting in 3 Years\" for Companies That Don't Adopt AI - YouTube Video Released",
+      "date": "February 5, 2026",
+      "author": "Kenjiro Momi"
     },
     "video3": {
-      "category": "Webinar",
-      "title": "AI Trends 2026 Panel",
-      "description": "Experts discuss AI future",
-      "duration": "58:30",
-      "views": "15.3K views"
+      "title": "【10 Question Diagnosis】Is Your Company Ready for AI Implementation? Success Probability Checklist | AI Transformation - YouTube Video Released",
+      "date": "February 4, 2026",
+      "author": "Kenjiro Momi"
     },
-    "subscribe": {
-      "title": "Subscribe for More",
-      "description": "Get notified of new content",
-      "button": "Subscribe"
+    "video4": {
+      "title": "How Much Does \"AI Transformation\" Really Cost? Complete Cost-Effectiveness Analysis Revealed! - YouTube Video Released",
+      "date": "February 3, 2026",
+      "author": "Kenjiro Momi"
+    },
+    "video5": {
+      "title": "【Shocking】Why ChatGPT Tells \"Plausible Lies\"? Essential Limitations You Must Know for AI Utilization - YouTube Video Released",
+      "date": "February 2, 2026",
+      "author": "Kenjiro Momi"
+    },
+    "video6": {
+      "title": "【AI Transformation】Learning from AI Call Center Failures: Strategies Every Executive Should Know - YouTube Video Released",
+      "date": "January 30, 2026",
+      "author": "Kenjiro Momi"
+    },
+    "video7": {
+      "title": "【Warning】Millions Wasted on \"Garbage Systems\"!? Real Examples of AI Implementation Scams and How to Avoid Them",
+      "date": "January 29, 2026",
+      "author": "Kenjiro Momi"
+    },
+    "video8": {
+      "title": "The Key to Success with Manufacturing × AI | CosBE's Approach to Preventing Failures - YouTube Video Released",
+      "date": "January 28, 2026",
+      "author": "Kenjiro Momi"
+    },
+    "cta": {
+      "title": "We support your business from various perspectives. Please feel free to contact us first.",
+      "description1": "Please use the form for consultations and quotes regarding detailed service content.",
+      "description2": "We will respond flexibly according to your situation, so please feel free to contact us.",
+      "button": "Inquiries about Hayaku AI Lab"
     }
   },
   "noticePage": {
-    "title": "Notice",
-    "subtitle": "Latest Updates",
-    "description": "Stay updated with our news, updates, and announcements.",
-    "important": "Important",
-    "readMore": "Read More",
-    "viewArchive": "View All",
-    "categories": {
-      "all": "All",
-      "product": "Product Updates",
-      "company": "Company News",
-      "events": "Events",
-      "press": "Press"
+    "heroTitle": "News",
+    "heroSubtitle": "Announcement",
+    "breadcrumb": {
+      "home": "Home",
+      "notice": "Notice"
     },
+    "category": "Notice",
+    "author": "Kenjiro Momi",
     "notice1": {
-      "category": "Product Update",
-      "title": "New AI Agent Features",
-      "excerpt": "Major updates including advanced NLP and improved integrations",
-      "date": "Jan 20, 2026"
+      "title": "[Award Report] CEO Kenjiro Shigemi receives the \"Outstanding Entrepreneur Award\" at the global conference \"Founders 2.0\"",
+      "date": "January 15, 2026"
     },
     "notice2": {
-      "category": "Company News",
-      "title": "CosBE Expands to Europe",
-      "excerpt": "Expanding operations to better serve European clients",
-      "date": "Jan 15, 2026"
+      "title": "[Free Release] We have released a practical white paper on \"AI Transformation\" for business managers.",
+      "date": "January 15, 2026"
     },
     "notice3": {
-      "category": "Event",
-      "title": "Free AI Webinar Series",
-      "excerpt": "Register for upcoming webinars on AI transformation",
-      "date": "Jan 10, 2026"
+      "title": "[Jan. 22nd in Sendai] Announcement of presentation at Startup Management Seminar in the Age of Ultra-Productive AI",
+      "date": "January 14, 2026"
     },
-    "newsletter": {
-      "title": "Never Miss an Update",
-      "description": "Subscribe to receive latest news",
-      "placeholder": "Enter your email",
-      "button": "Subscribe"
+    "notice4": {
+      "title": "CosBE was introduced as a \"recommended AI consulting company\" on \"Consulting GO,\" a media outlet operated by Free Consulting Co., Ltd.",
+      "date": "November 20, 2025"
+    },
+    "notice5": {
+      "title": "[Event Information] Announcement of AI Transformation Study Group to be held on November 21st (Friday)",
+      "date": "October 28, 2025"
+    },
+    "notice6": {
+      "title": "We have released a YouTube video on \"The Results of AI Transformation\" and the creation of new businesses.",
+      "date": "September 9, 2025"
+    },
+    "notice7": {
+      "title": "We have released a YouTube video on \"The Results of AI Transformation\" and how it will improve management.",
+      "date": "August 31, 2025"
+    },
+    "notice8": {
+      "title": "We have released a YouTube video on \"AI Transformation Results\" and how it creates customer value.",
+      "date": "August 24, 2025"
+    },
+    "notice9": {
+      "title": "\"Results of AI Transformation\" YouTube video released on unprecedented productivity improvement",
+      "date": "August 17, 2025"
+    },
+    "notice10": {
+      "title": "[Speaker Information] CosBE CEO Kenjiro Shigemi will be speaking at the \"Manufacturing Automation & DX Webinar Week 2025\" to discuss the cutting edge of \"AI Transformation\"!",
+      "date": "September 3, 2025"
+    },
+    "cta": {
+      "title": "We will support your business in various aspects. Please feel free to contact us.",
+      "description1": "For more information about our services or to request a quote, please fill out the form.",
+      "description2": "We will respond flexibly to your situation, so please feel free to contact us first.",
+      "button": "Inquiries about Hayaku AI Lab"
     }
   },
   "downloadPage": {
@@ -1345,6 +1498,256 @@
     "shareText": "Please share if you like!",
     "authorTitle": "The author of this article",
     "relatedArticlesTitle": "Related articles"
+  },
+  "usefulColumnPage": {
+    "heroTitle": "Useful Information",
+    "heroSubtitle": "– Useful Information –",
+    "breadcrumb": {
+      "home": "Home",
+      "usefulColumn": "Useful Information"
+    },
+    "readMore": "READ MORE »",
+    "articles": {
+      "article1": {
+        "category": "Useful Information",
+        "title": "From \"Waiting for Instructions\" to \"Achieving Goals\": Autonomous Management for SMEs through AI Agents",
+        "date": "February 6, 2026",
+        "author": "Kenjiro Momi"
+      },
+      "article2": {
+        "category": "Useful Information",
+        "title": "AI \"Nurturing\" Management Strategy: Achieving AI Adoption and Accuracy Improvement with \"User-Integrated Approach\"",
+        "date": "February 4, 2026",
+        "author": "Kenjiro Momi"
+      },
+      "article3": {
+        "category": "Useful Information",
+        "title": "No Large Investment Needed for AI Transformation! How to Minimize Risk with \"Small-Scale AI Strategy\"",
+        "date": "February 2, 2026",
+        "author": "Kenjiro Momi"
+      },
+      "article4": {
+        "category": "Useful Information",
+        "title": "Escaping the \"AI-First\" Trap: Issue-First Thinking to Transform Management",
+        "date": "January 29, 2026",
+        "author": "Kenjiro Momi"
+      },
+      "article5": {
+        "category": "Useful Information",
+        "title": "4 Innovative Values AI Transformation Brings to SMEs: Visualizing the Winning Strategy in the AI Era",
+        "date": "January 19, 2026",
+        "author": "Kenjiro Momi"
+      },
+      "article6": {
+        "category": "Useful Information",
+        "title": "Don't Fail at AI Implementation! How SME Managers Can Pioneer the Future with \"Empiricism\"",
+        "date": "September 29, 2025",
+        "author": "Kenjiro Momi"
+      },
+      "article7": {
+        "category": "Useful Information",
+        "title": "What is the \"AI Gap\" That Determines Success or Failure of AI Implementation? Why SMEs Should Work on AI Now",
+        "date": "September 16, 2025",
+        "author": "Kenjiro Momi"
+      },
+      "article8": {
+        "category": "Useful Information",
+        "title": "Why Your Company's ChatGPT Usage Won't Lead to \"True Business Transformation\"?",
+        "date": "September 16, 2025",
+        "author": "Kenjiro Momi"
+      },
+      "article9": {
+        "category": "Useful Information",
+        "title": "[Complete Guide] CosBE's 4-Step AI Transformation Implementation Process",
+        "date": "August 14, 2025",
+        "author": "Manako Obuchi"
+      },
+      "article10": {
+        "category": "Useful Information",
+        "title": "[Case Study] Keys to AI Transformation Success and Common Pitfalls",
+        "date": "August 8, 2025",
+        "author": "Manako Obuchi"
+      }
+    },
+    "cta": {
+      "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
+      "description1": "For detailed service inquiries and estimates, please use the form.",
+      "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
+      "button": "Inquiries about Hayaku AI Lab"
+    }
+  },
+  "privacyPolicyPage": {
+    "heroTitle": "Privacy Policy",
+    "heroSubtitle": "– Protecting Your Personal Information –",
+    "breadcrumb": {
+      "home": "Home",
+      "privacyPolicy": "Privacy Policy"
+    },
+    "sections": {
+      "collecting": {
+        "title": "Collecting and Using Your Personal Data"
+      },
+      "typesOfData": {
+        "title": "Types of Data Collected"
+      },
+      "personalData": {
+        "title": "Personal Data",
+        "description": "While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:",
+        "items": {
+          "email": "Email address",
+          "name": "First name and last name",
+          "phone": "Phone number",
+          "address": "Address, State, Province, ZIP/Postal code, City",
+          "usageData": "Usage Data"
+        }
+      },
+      "usageData": {
+        "title": "Usage Data",
+        "description1": "Usage Data is collected automatically when using the Service.",
+        "description2": "Usage Data may include information such as Your Device's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data.",
+        "description3": "When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet browser You use, unique device identifiers and other diagnostic data."
+      },
+      "tracking": {
+        "title": "Tracking Technologies and Cookies",
+        "description": "We use Cookies and similar tracking technologies to track the activity on Our Service and store certain information. Tracking technologies used are beacons, tags, and scripts to collect and track information and to improve and analyze Our Service. The technologies We use may include:",
+        "cookies": {
+          "title": "Cookies or Browser Cookies.",
+          "description": "A cookie is a small file placed on Your Device. You can instruct Your browser to refuse all Cookies or to indicate when a Cookie is being sent. However, if You do not accept Cookies, You may not be able to use some parts of our Service. Unless you have adjusted Your browser setting so that it will refuse Cookies, our Service may use Cookies."
+        },
+        "webBeacons": {
+          "title": "Web Beacons.",
+          "description": "Certain sections of our Service and our emails may contain small electronic files known as web beacons (also referred to as clear gifs, pixel tags, and single-pixel gifs) that permit the Company, for example, to count users who have visited those pages or opened an email and for other related website statistics (for example, recording the popularity of a certain section and verifying system and server integrity)."
+        }
+      },
+      "cookieTypes": {
+        "description": "Cookies can be \"Persistent\" or \"Session\" Cookies. Persistent Cookies remain on Your personal computer or mobile device when You go offline, while Session Cookies are deleted as soon as You close Your web browser.",
+        "useBoth": "We use both Session and Persistent Cookies for the purposes set out below:",
+        "necessary": {
+          "title": "Necessary / Essential Cookies",
+          "type": "Type: Session Cookies",
+          "admin": "Administered by: Us",
+          "purpose": "Purpose: These Cookies are essential to provide You with services available through the Website and to enable You to use some of its features. They help to authenticate users and prevent fraudulent use of user accounts. Without these Cookies, the services that You have asked for cannot be provided, and We only use these Cookies to provide You with those services."
+        },
+        "acceptance": {
+          "title": "Cookies Policy / Notice Acceptance Cookies",
+          "type": "Type: Persistent Cookies",
+          "admin": "Administered by: Us",
+          "purpose": "Purpose: These Cookies identify if users have accepted the use of cookies on the Website."
+        },
+        "functionality": {
+          "title": "Functionality Cookies",
+          "type": "Type: Persistent Cookies",
+          "admin": "Administered by: Us",
+          "purpose": "Purpose: These Cookies allow us to remember choices You make when You use the Website, such as remembering your login details or language preference. The purpose of these Cookies is to provide You with a more personal experience and to avoid You having to re-enter your preferences every time You use the Website."
+        },
+        "performance": {
+          "title": "Tracking and Performance Cookies",
+          "type": "Type: Persistent Cookies",
+          "admin": "Administered by: Third-Parties",
+          "purpose": "Purpose: These Cookies are used to track information about traffic to the Website and how users use the Website. The information gathered via these Cookies may directly or indirectly identify you as an individual visitor. This is because the information collected is typically linked to a pseudonymous identifier associated with the device you use to access the Website. We may also use these Cookies to test new pages, features or new functionality of the Website to see how our users react to them."
+        },
+        "moreInfo": "For more information about the cookies we use and your choices regarding cookies, please visit our Cookies Policy or the Cookies section of our Privacy Policy."
+      },
+      "useOfData": {
+        "title": "Use of Your Personal Data",
+        "description": "The Company may use Personal Data for the following purposes:",
+        "purposes": {
+          "provide": "To provide and maintain our Service, including to monitor the usage of our Service.",
+          "manage": "To manage Your Account: to manage Your registration as a user of the Service. The Personal Data You provide can give You access to different functionalities of the Service that are available to You as a registered user.",
+          "contract": "For the performance of a contract: the development, compliance and undertaking of the purchase contract for the products, items or services You have purchased or of any other contract with Us through the Service.",
+          "contact": "To contact You: To contact You by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application's push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.",
+          "news": "To provide You with news, special offers and general information about other goods, services and events which we offer that are similar to those that you have already purchased or enquired about unless You have opted not to receive such information.",
+          "requests": "To manage Your requests: To attend and manage Your requests to Us.",
+          "transfers": "For business transfers: We may use Your information to evaluate or conduct a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of Our assets, whether as a going concern or as part of bankruptcy, liquidation, or similar proceeding, in which Personal Data held by Us about our Service users is among the assets transferred.",
+          "other": "For other purposes: We may use Your information for other purposes, such as data analysis, identifying usage trends, determining the effectiveness of our promotional campaigns and to evaluate and improve our Service, products, services, marketing and your experience."
+        }
+      },
+      "sharing": {
+        "description": "We may share Your personal information in the following situations:",
+        "serviceProviders": "With Service Providers: We may share Your personal information with Service Providers to monitor and analyze the use of our Service, for payment processing, to contact You.",
+        "businessTransfers": "For business transfers: We may share or transfer Your personal information in connection with, or during negotiations of, any merger, sale of Company assets, financing, or acquisition of all or a portion of Our business to another company.",
+        "affiliates": "With Affiliates: We may share Your information with Our affiliates, in which case we will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and any other subsidiaries, joint venture partners or other companies that We control or that are under common control with Us.",
+        "partners": "With business partners: We may share Your information with Our business partners to offer You certain products, services or promotions.",
+        "users": "With other users: when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside.",
+        "consent": "With Your consent: We may disclose Your personal information for any other purpose with Your consent."
+      },
+      "retention": {
+        "title": "Retention of Your Personal Data",
+        "description1": "The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.",
+        "description2": "The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods."
+      },
+      "transfer": {
+        "title": "Transfer of Your Personal Data",
+        "description1": "Your information, including Personal Data, is processed at the Company's operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.",
+        "description2": "Your consent to this Privacy Policy followed by Your submission of such information represents Your agreement to that transfer.",
+        "description3": "The Company will take all steps reasonably necessary to ensure that Your data is treated securely and in accordance with this Privacy Policy and no transfer of Your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of Your data and other personal information."
+      },
+      "disclosure": {
+        "title": "Disclosure of Your Personal Data",
+        "business": {
+          "title": "Business Transactions",
+          "description": "If the Company is involved in a merger, acquisition or asset sale, Your Personal Data may be transferred. We will provide notice before Your Personal Data is transferred and becomes subject to a different Privacy Policy."
+        },
+        "lawEnforcement": {
+          "title": "Law enforcement",
+          "description": "Under certain circumstances, the Company may be required to disclose Your Personal Data if required to do so by law or in response to valid requests by public authorities (e.g. a court or a government agency)."
+        },
+        "otherLegal": {
+          "title": "Other legal requirements",
+          "description": "The Company may disclose Your Personal Data in the good faith belief that such action is necessary to:",
+          "items": {
+            "comply": "Comply with a legal obligation",
+            "protect": "Protect and defend the rights or property of the Company",
+            "prevent": "Prevent or investigate possible wrongdoing in connection with the Service",
+            "safety": "Protect the personal safety of Users of the Service or the public",
+            "liability": "Protect against legal liability"
+          }
+        }
+      },
+      "security": {
+        "title": "Security of Your Personal Data",
+        "description": "The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security."
+      },
+      "serviceProviders": {
+        "title": "Detailed Information on the Processing of Your Personal Data",
+        "description": "The Service Providers We use may have access to Your Personal Data. These third-party vendors collect, store, use, process and transfer information about Your activity on Our Service in accordance with their Privacy Policies."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "We may use third-party Service providers to monitor and analyze the use of our Service."
+      },
+      "emailMarketing": {
+        "title": "Email Marketing",
+        "description": "We may use Your Personal Data to contact You with newsletters, marketing or promotional materials and other information that may be of interest to You. You may opt-out of receiving any, or all, of these communications from Us by following the unsubscribe link or instructions provided in any email We send or by contacting Us."
+      },
+      "payments": {
+        "title": "Payments",
+        "description": "We may provide paid products and/or services within the Service. In that case, we may use third-party services for payment processing (e.g. payment processors). We will not store or collect Your payment card details. That information is provided directly to Our third-party payment processors whose use of Your personal information is governed by their Privacy Policy. These payment processors adhere to the standards set by PCI-DSS as managed by the PCI Security Standards Council, which is a joint effort of brands like Visa, Mastercard, American Express and Discover. PCI-DSS requirements help ensure the secure handling of payment information."
+      },
+      "links": {
+        "title": "Links to Other Websites",
+        "description1": "Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy of every site You visit.",
+        "description2": "We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services."
+      },
+      "changes": {
+        "title": "Changes to this Privacy Policy",
+        "description1": "We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page.",
+        "description2": "We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the \"Last updated\" date at the top of this Privacy Policy.",
+        "description3": "You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "description": "If you have any questions about this Privacy Policy, You can contact us:",
+        "website": "By visiting this page on our website:",
+        "email": "By sending us an email:"
+      }
+    },
+    "cta": {
+      "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
+      "description1": "For detailed service inquiries and estimates, please use the form.",
+      "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
+      "button": "Inquiries about Hayaku AI Lab"
+    }
   }
 }
 
