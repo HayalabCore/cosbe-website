@@ -1,12 +1,13 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
 import type { Locale } from '@/i18n/routing';
 
 export default function AiLabPage() {
   const t = useTranslations('aiLabPage');
+  const locale = useLocale() as Locale;
 
   const challenges = [
     { key: 'challenge1', image: '/ai-lab/challenge1.webp' },
