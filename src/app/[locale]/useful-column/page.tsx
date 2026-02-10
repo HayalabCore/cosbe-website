@@ -120,7 +120,7 @@ export default async function UsefulColumnPage() {
         }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-blue-500/40"></div>
+        <div className="absolute inset-0 bg-[#5FA4E6]/40"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 pt-28">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
@@ -136,7 +136,7 @@ export default async function UsefulColumnPage() {
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center text-sm text-gray-600">
-            <Link href="/" className="hover:text-blue-600 flex items-center">
+            <Link href="/" className="hover:text-[#5FA4E6] flex items-center">
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
@@ -168,7 +168,7 @@ export default async function UsefulColumnPage() {
                 />
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4">
-                  <span className="inline-flex items-center px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded"
+                  <span className="inline-flex items-center px-3 py-1 bg-[#5FA4E6] text-white text-xs font-medium rounded"
                     style={{
                       backgroundImage: 'repeating-linear-gradient(-45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 6px, transparent 6px, transparent 12px)'
                     }}
@@ -183,7 +183,7 @@ export default async function UsefulColumnPage() {
               
               {/* Content */}
               <div className="p-6">
-                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4 line-clamp-2 group-hover:text-[#5FA4E6] transition-colors">
                   {article.title}
                 </h2>
                 
@@ -212,7 +212,7 @@ export default async function UsefulColumnPage() {
                 
                 {/* Read More Indicator */}
                 <div className="mt-4 pt-4 border-t border-gray-100">
-                  <span className="text-blue-600 text-sm font-medium group-hover:text-blue-700 transition-colors flex items-center">
+                  <span className="text-[#5FA4E6] text-sm font-medium group-hover:text-[#4A8FD1] transition-colors flex items-center">
                     {t('readMore')}
                     <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -236,37 +236,30 @@ export default async function UsefulColumnPage() {
       </div>
 
       {/* CTA Section */}
-      <div 
-        className="relative py-16 md:py-20"
-        style={{
-          backgroundImage: 'url(/ai-transformation/cta-background.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        <div className="absolute inset-0 bg-gray-900/80"></div>
+      <section className="relative py-20 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 whitespace-pre-line">
             {t('cta.title')}
           </h2>
-          <p className="text-white/90 mb-2">
+          <p className="text-white/80 mb-2 text-base">
             {t('cta.description1')}
           </p>
-          <p className="text-white/90 mb-8">
+          <p className="text-white/80 mb-10 text-base">
             {t('cta.description2')}
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             {t('cta.button')}
           </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

@@ -19,7 +19,7 @@ export default function LanguageSwitcher() {
         onClick={() => switchLocale('en')}
         className={`px-3 py-1 rounded ${
           locale === 'en'
-            ? 'bg-blue-600 text-white'
+            ? 'bg-[#5FA4E6] text-white'
             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
         }`}
       >
@@ -29,7 +29,7 @@ export default function LanguageSwitcher() {
         onClick={() => switchLocale('ja')}
         className={`px-3 py-1 rounded ${
           locale === 'ja'
-            ? 'bg-blue-600 text-white'
+            ? 'bg-[#5FA4E6] text-white'
             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
         }`}
       >

@@ -33,19 +33,19 @@ export default function CaseStudy2MonthAI() {
         <div className="container mx-auto px-4">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <Link href="/" className="text-blue-600 hover:underline">
+              <Link href="/" className="text-[#5FA4E6] hover:underline">
                 {t('breadcrumb.home')}
               </Link>
             </li>
             <li className="text-gray-500">/</li>
             <li>
-              <Link href="/case-studies" className="text-blue-600 hover:underline">
+              <Link href="/case-studies" className="text-[#5FA4E6] hover:underline">
                 {t('breadcrumb.caseStudies')}
               </Link>
             </li>
             <li className="text-gray-500">/</li>
             <li>
-              <span className="text-blue-600">{t('breadcrumb.innovation')}</span>
+              <span className="text-[#5FA4E6]">{t('breadcrumb.innovation')}</span>
             </li>
             <li className="text-gray-500">/</li>
             <li className="text-gray-700">{t('title')}</li>
@@ -59,7 +59,7 @@ export default function CaseStudy2MonthAI() {
           {/* Sidebar */}
           <aside className="lg:col-span-1 order-2 lg:order-1">
             <div className="sticky top-24 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-              <h3 className="font-bold text-lg mb-4 text-blue-600">
+              <h3 className="font-bold text-lg mb-4 text-[#5FA4E6]">
                 {t('tableOfContents')}
               </h3>
               <nav>
@@ -68,7 +68,7 @@ export default function CaseStudy2MonthAI() {
                     <li key={item.id}>
                       <a
                         href={`#${item.id}`}
-                        className="text-sm text-gray-700 hover:text-blue-600 transition-colors block"
+                        className="text-sm text-gray-700 hover:text-[#5FA4E6] transition-colors block"
                       >
                         {item.title}
                       </a>
@@ -84,7 +84,7 @@ export default function CaseStudy2MonthAI() {
             {/* Header */}
             <header className="mb-8">
               <div className="mb-4">
-                <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mr-2">
+                <span className="inline-block bg-[#5FA4E6]/15 text-[#3A7AB8] text-xs font-semibold px-3 py-1 rounded-full mr-2">
                   {t('categories.0')}
                 </span>
                 <span className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
@@ -110,8 +110,8 @@ export default function CaseStudy2MonthAI() {
             </div>
 
             {/* Table of Contents - Mobile */}
-            <div className="lg:hidden bg-blue-50 border-t-4 border-b-4 border-blue-600 rounded-lg p-6 mb-8">
-              <h2 className="font-bold text-lg mb-4 text-blue-600 flex items-center">
+            <div className="lg:hidden bg-[#5FA4E6]/10 border-t-4 border-b-4 border-[#5FA4E6] rounded-lg p-6 mb-8">
+              <h2 className="font-bold text-lg mb-4 text-[#5FA4E6] flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"/>
@@ -121,7 +121,7 @@ export default function CaseStudy2MonthAI() {
               <ol className="space-y-2 list-decimal list-inside">
                 {tableOfContents.map((item) => (
                   <li key={item.id}>
-                    <a href={`#${item.id}`} className="text-gray-700 hover:text-blue-600">
+                    <a href={`#${item.id}`} className="text-gray-700 hover:text-[#5FA4E6]">
                       {item.title}
                     </a>
                   </li>
@@ -133,7 +133,7 @@ export default function CaseStudy2MonthAI() {
             <div className="prose prose-lg max-w-none">
               {/* Introduction */}
               <section id="introduction" className="mb-12 scroll-mt-24">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                   {t('sections.introduction.title')}
                 </h2>
                 <div className="space-y-4 text-gray-700">
@@ -146,7 +146,7 @@ export default function CaseStudy2MonthAI() {
 
               {/* Overview */}
               <section id="overview" className="mb-12 scroll-mt-24">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                   {t('sections.overview.title')}
                 </h2>
                 <div className="space-y-4 text-gray-700">
@@ -155,15 +155,15 @@ export default function CaseStudy2MonthAI() {
                   <ul className="space-y-3 my-6">
                     {[0, 1, 2].map((i) => (
                       <li key={i} className="flex items-start">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold mr-3 flex-shrink-0">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#5FA4E6] text-white font-bold mr-3 flex-shrink-0">
                           {i + 1}
                         </span>
                         <span className="pt-1">{t(`sections.overview.factors.${i}`)}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
-                    <h3 className="font-bold text-blue-900 mb-2 flex items-center">
+                  <div className="bg-[#5FA4E6]/10 border-l-4 border-[#5FA4E6] p-6 rounded-r-lg">
+                    <h3 className="font-bold text-[#2E6699] mb-2 flex items-center">
                       <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                       </svg>
@@ -176,12 +176,12 @@ export default function CaseStudy2MonthAI() {
 
               {/* Issues Background */}
               <section id="issues-background" className="mb-12 scroll-mt-24">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                   {t('sections.issuesBackground.title')}
                 </h2>
                 <div className="space-y-6 text-gray-700">
                   <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">
+                    <h3 className="text-xl font-bold text-[#5FA4E6] mb-4">
                       {t('sections.issuesBackground.speedIsKey.title')}
                     </h3>
                     <p className="mb-4">{t('sections.issuesBackground.speedIsKey.paragraph1')}</p>
@@ -216,10 +216,10 @@ export default function CaseStudy2MonthAI() {
                           <td className="py-3 pr-4 font-semibold bg-gray-100">{t('sections.issuesBackground.companyInfo.implementedAI')}</td>
                           <td className="py-3">
                             <div className="flex flex-wrap gap-2">
-                              <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                              <span className="inline-block bg-[#5FA4E6]/15 text-[#3A7AB8] text-xs px-2 py-1 rounded">
                                 {t('tags.0')}
                               </span>
-                              <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                              <span className="inline-block bg-[#5FA4E6]/15 text-[#3A7AB8] text-xs px-2 py-1 rounded">
                                 {t('tags.1')}
                               </span>
                             </div>
@@ -237,12 +237,12 @@ export default function CaseStudy2MonthAI() {
 
               {/* Solutions */}
               <section id="solutions" className="mb-12 scroll-mt-24">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                   {t('sections.solutions.title')}
                 </h2>
                 <div className="space-y-6 text-gray-700">
                   <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">
+                    <h3 className="text-xl font-bold text-[#5FA4E6] mb-4">
                       {t('sections.solutions.approach.title')}
                     </h3>
                     <p className="mb-4">{t('sections.solutions.approach.intro')}</p>
@@ -260,7 +260,7 @@ export default function CaseStudy2MonthAI() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">
+                    <h3 className="text-xl font-bold text-[#5FA4E6] mb-4">
                       {t('sections.solutions.ragLlm.title')}
                     </h3>
                     <p className="mb-4">{t('sections.solutions.ragLlm.intro')}</p>
@@ -268,7 +268,7 @@ export default function CaseStudy2MonthAI() {
                     <ol className="space-y-3 mb-4">
                       {[0, 1, 2].map((i) => (
                         <li key={i} className="flex items-start">
-                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold mr-3 flex-shrink-0">
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#5FA4E6] text-white font-bold mr-3 flex-shrink-0">
                             {i + 1}
                           </span>
                           <span className="pt-1">{t(`sections.solutions.ragLlm.steps.${i}`)}</span>
@@ -276,11 +276,11 @@ export default function CaseStudy2MonthAI() {
                       ))}
                     </ol>
                     <p className="mb-4">{t('sections.solutions.ragLlm.conclusion')}</p>
-                    <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg space-y-3">
+                    <div className="bg-[#5FA4E6]/10 border-l-4 border-[#5FA4E6] p-6 rounded-r-lg space-y-3">
                       {[0, 1].map((i) => (
                         <div key={i}>
                           <p className="text-gray-700">
-                            <strong className="text-blue-900">
+                            <strong className="text-[#2E6699]">
                               {t(`sections.solutions.ragLlm.definitions.${i}`).split('?')[0]}?
                             </strong>
                             {' '}
@@ -295,12 +295,12 @@ export default function CaseStudy2MonthAI() {
 
               {/* Results */}
               <section id="results" className="mb-12 scroll-mt-24">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                   {t('sections.results.title')}
                 </h2>
                 <div className="space-y-6 text-gray-700">
                   <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">
+                    <h3 className="text-xl font-bold text-[#5FA4E6] mb-4">
                       {t('sections.results.prototype.title')}
                     </h3>
                     <p className="mb-4">{t('sections.results.prototype.paragraph1')}</p>
@@ -308,7 +308,7 @@ export default function CaseStudy2MonthAI() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">
+                    <h3 className="text-xl font-bold text-[#5FA4E6] mb-4">
                       {t('sections.results.smallStart.title')}
                     </h3>
                     <p className="mb-4">{t('sections.results.smallStart.paragraph1')}</p>
@@ -316,7 +316,7 @@ export default function CaseStudy2MonthAI() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-bold text-blue-600 mb-4">
+                    <h3 className="text-xl font-bold text-[#5FA4E6] mb-4">
                       {t('sections.results.flexibleImprovement.title')}
                     </h3>
                     <p>{t('sections.results.flexibleImprovement.paragraph')}</p>
@@ -326,7 +326,7 @@ export default function CaseStudy2MonthAI() {
 
               {/* Summary */}
               <section id="summary" className="mb-12 scroll-mt-24">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                   {t('sections.summary.title')}
                 </h2>
                 <div className="space-y-4 text-gray-700">
@@ -334,7 +334,7 @@ export default function CaseStudy2MonthAI() {
                   <ol className="space-y-3 my-6">
                     {[0, 1, 2].map((i) => (
                       <li key={i} className="flex items-start">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold mr-3 flex-shrink-0">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#5FA4E6] text-white font-bold mr-3 flex-shrink-0">
                           {i + 1}
                         </span>
                         <span className="pt-1">{t(`sections.summary.keyPoints.${i}`)}</span>
@@ -349,21 +349,28 @@ export default function CaseStudy2MonthAI() {
             </div>
 
             {/* CTA Section */}
-            <div className="mt-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-8 text-white text-center">
-              <p className="text-xl font-bold mb-4">{t('cta.title')}</p>
-              <Link
-                href="/contact"
-                className="inline-block bg-white text-blue-600 font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors"
-              >
-                {t('cta.button')}
-              </Link>
+            <div className="relative mt-12 py-16 md:py-20 overflow-hidden">
+              <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+              <div className="absolute inset-0 bg-black/60" />
+              <div className="relative z-10 text-center px-8">
+                <p className="text-xl font-bold text-white mb-6">{t('cta.title')}</p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-3 px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {t('cta.button')}
+                </Link>
+              </div>
             </div>
 
             {/* Share Section */}
             <div className="mt-8 border-t border-gray-200 pt-6">
               <p className="text-center text-gray-600 mb-4">{t('shareText')}</p>
               <div className="flex justify-center space-x-4">
-                <button className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700">
+                <button className="bg-[#5FA4E6] text-white p-3 rounded-full hover:bg-[#4A8FD1]">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                   </svg>

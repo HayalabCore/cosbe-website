@@ -2,11 +2,20 @@
 
 @theme {
   --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+
+  /* ── Brand Color Palette ── */
+  --color-brand-blue: #5FA4E6;
+  --color-brand-hover: #4A8FD1;
+  --color-brand-bg: #FFFFFF;
+  --color-brand-alt: #EBF7FF;
+  --color-brand-heading: #0F172A;
+  --color-brand-body: #334155;
+  --color-brand-footer: #5FA4E6;
 }
 
 body {
-  background: #ffffff;
-  color: #000000;
+  background: var(--color-brand-bg);
+  color: var(--color-brand-body);
   font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
   font-weight: 400;
 }
@@ -69,10 +78,10 @@ h1, h2, h3, h4, h5, h6 {
 .hubspot-form-container .hs-input:focus,
 .hubspot-form-container select:focus,
 .hubspot-form-container textarea:focus {
-  border-color: #60a5fa !important;
+  border-color: #5FA4E6 !important;
   background: #ffffff !important;
   outline: none !important;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(95, 164, 230, 0.1) !important;
   color: #1e293b !important;
 }
 
@@ -106,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Submit button */
 .hubspot-form-container .hs-button {
-  background: linear-gradient(to right, #60a5fa, #3b82f6) !important;
+  background: linear-gradient(to right, #7AB5ED, #5FA4E6) !important;
   color: white !important;
   border: none !important;
   border-radius: 0.75rem !important;
@@ -117,12 +126,12 @@ h1, h2, h3, h4, h5, h6 {
   transition: all 0.3s !important;
   width: 100% !important;
   margin-top: 1rem !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(95, 164, 230, 0.2) !important;
 }
 
 .hubspot-form-container .hs-button:hover {
-  background: linear-gradient(to right, #3b82f6, #2563eb) !important;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3) !important;
+  background: linear-gradient(to right, #5FA4E6, #4A8FD1) !important;
+  box-shadow: 0 8px 20px rgba(95, 164, 230, 0.3) !important;
   transform: translateY(-1px) !important;
 }
 

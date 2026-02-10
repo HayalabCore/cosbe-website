@@ -343,36 +343,21 @@ export default function PrivacyPolicyPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-20">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src="/company/cta-background.jpg"
-            alt="CTA Background"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gray-900/80"></div>
-        </div>
-
-        {/* CTA Content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-4 whitespace-pre-line">
+      <section className="relative py-20 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 whitespace-pre-line">
             {t("cta.title")}
           </h2>
-          <p className="text-gray-300 mb-2">{t("cta.description1")}</p>
-          <p className="text-gray-300 mb-8">{t("cta.description2")}</p>
+          <p className="text-white/80 mb-2 text-base">{t("cta.description1")}</p>
+          <p className="text-white/80 mb-10 text-base">{t("cta.description2")}</p>
           <Link
             href="/contact"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#549fe3] to-[#35eaff] text-white font-semibold rounded-full hover:opacity-90 transition-opacity shadow-lg"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             {t("cta.button")}
           </Link>

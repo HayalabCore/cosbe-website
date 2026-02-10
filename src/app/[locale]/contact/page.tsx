@@ -11,7 +11,7 @@ export default async function ContactPage() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               <div>{t('pageTitlePrefix')}</div>
-              <div className="text-blue-500 underline decoration-2 underline-offset-4">{t('pageTitleInquiry')}</div>
+              <div className="text-[#5FA4E6] underline decoration-2 underline-offset-4">{t('pageTitleInquiry')}</div>
             </h1>
           </div>
           <p className="text-lg text-gray-700 leading-relaxed">
@@ -24,7 +24,7 @@ export default async function ContactPage() {
           <ol className="flex items-center justify-center space-x-4 md:space-x-8">
             <li className="flex items-center">
               <div className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full font-semibold">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#5FA4E6] text-white rounded-full font-semibold">
                   1
                 </div>
                 <span className="ml-3 text-sm font-medium text-gray-900">
@@ -73,7 +73,7 @@ export default async function ContactPage() {
                   type="text"
                   name="fullname"
                   placeholder={t('form.fields.fullname.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5FA4E6] focus:border-transparent"
                   required
                 />
               </div>
@@ -94,7 +94,7 @@ export default async function ContactPage() {
                   type="text"
                   name="companyname"
                   placeholder={t('form.fields.companyname.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5FA4E6] focus:border-transparent"
                   required
                 />
               </div>
@@ -112,7 +112,7 @@ export default async function ContactPage() {
                   type="text"
                   name="position"
                   placeholder={t('form.fields.position.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5FA4E6] focus:border-transparent"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ export default async function ContactPage() {
                   type="email"
                   name="email"
                   placeholder={t('form.fields.email.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5FA4E6] focus:border-transparent"
                   required
                 />
               </div>
@@ -156,7 +156,7 @@ export default async function ContactPage() {
                   type="tel"
                   name="tel"
                   placeholder={t('form.fields.tel.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5FA4E6] focus:border-transparent"
                   required
                 />
               </div>
@@ -175,7 +175,7 @@ export default async function ContactPage() {
               <div className="md:col-span-2">
                 <select
                   name="inquiryType"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5FA4E6] focus:border-transparent"
                   required
                 >
                   <option value="">{t('form.fields.inquiryType.options.default')}</option>
@@ -201,7 +201,7 @@ export default async function ContactPage() {
                 <textarea
                   name="message"
                   rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5FA4E6] focus:border-transparent"
                   required
                 ></textarea>
               </div>
@@ -222,7 +222,7 @@ export default async function ContactPage() {
         {/* Privacy Policy */}
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-600">
-            <a href="/privacy-policy" className="text-blue-600 hover:underline">
+            <a href="/privacy-policy" className="text-[#5FA4E6] hover:underline">
               {t('form.privacyPolicy')}
             </a>
             {t('form.privacyPolicyAgree')}

@@ -30,18 +30,18 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
       <div className="bg-gray-50 border-b border-gray-200 pt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center text-sm text-gray-600">
-            <Link href="/" className="hover:text-blue-600 flex items-center">
+            <Link href="/" className="hover:text-[#5FA4E6] flex items-center">
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
               {commonT('breadcrumb.home')}
             </Link>
             <span className="mx-2">›</span>
-            <Link href="/case-studies" className="hover:text-blue-600">
+            <Link href="/case-studies" className="hover:text-[#5FA4E6]">
               {commonT('breadcrumb.caseStudies')}
             </Link>
             <span className="mx-2">›</span>
-            <Link href="/case-studies/hr-improvement" className="hover:text-blue-600">
+            <Link href="/case-studies/hr-improvement" className="hover:text-[#5FA4E6]">
               {t('categoryName')}
             </Link>
             <span className="mx-2">›</span>
@@ -65,10 +65,10 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
             </time>
           </div>
           <div className="flex flex-wrap gap-2 mb-6">
-            <Link href="/case-studies" className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded hover:bg-blue-200 transition-colors">
+            <Link href="/case-studies" className="px-3 py-1 bg-[#5FA4E6]/15 text-[#4A8FD1] text-sm font-semibold rounded hover:bg-[#5FA4E6]/25 transition-colors">
               {commonT('categories.all')}
             </Link>
-            <Link href="/case-studies/hr-improvement" className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded hover:bg-blue-200 transition-colors">
+            <Link href="/case-studies/hr-improvement" className="px-3 py-1 bg-[#5FA4E6]/15 text-[#4A8FD1] text-sm font-semibold rounded hover:bg-[#5FA4E6]/25 transition-colors">
               {t('categoryName')}
             </Link>
           </div>
@@ -93,10 +93,10 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
             {t('tableOfContents.title')}
           </h2>
           <ol className="space-y-2 list-decimal list-inside text-slate-700">
-            <li><a href="#background" className="hover:text-blue-600">{t('tableOfContents.background')}</a></li>
-            <li><a href="#solution" className="hover:text-blue-600">{t('tableOfContents.solution')}</a></li>
-            <li><a href="#benefits" className="hover:text-blue-600">{t('tableOfContents.benefits')}</a></li>
-            <li><a href="#summary" className="hover:text-blue-600">{t('tableOfContents.summary')}</a></li>
+            <li><a href="#background" className="hover:text-[#5FA4E6]">{t('tableOfContents.background')}</a></li>
+            <li><a href="#solution" className="hover:text-[#5FA4E6]">{t('tableOfContents.solution')}</a></li>
+            <li><a href="#benefits" className="hover:text-[#5FA4E6]">{t('tableOfContents.benefits')}</a></li>
+            <li><a href="#summary" className="hover:text-[#5FA4E6]">{t('tableOfContents.summary')}</a></li>
           </ol>
         </div>
 
@@ -105,12 +105,12 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 1: Background */}
           <section id="background" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-blue-500 pl-4">
+              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-[#5FA4E6] pl-4">
                 {t('section1.title')}
               </h2>
               
-              <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg mb-6">
-                <h3 className="text-2xl font-bold text-blue-600 mb-4">
+              <div className="bg-gradient-to-r from-[#5FA4E6]/10 to-white p-6 rounded-lg mb-6">
+                <h3 className="text-2xl font-bold text-[#5FA4E6] mb-4">
                   {t('section1.subtitle')}
                 </h3>
                 <p className="text-slate-700 leading-relaxed mb-4">
@@ -142,7 +142,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                     <tr className="border-b border-gray-200">
                       <td className="px-6 py-4 bg-gray-100 font-semibold text-slate-700">{t('companyInfo.url')}</td>
                       <td className="px-6 py-4 text-slate-700">
-                        <a href={t('companyInfo.urlValue')} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <a href={t('companyInfo.urlValue')} target="_blank" rel="noopener noreferrer" className="text-[#5FA4E6] hover:underline">
                           {t('companyInfo.urlValue')}
                         </a>
                       </td>
@@ -151,10 +151,10 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                       <td className="px-6 py-4 bg-gray-100 font-semibold text-slate-700">{t('companyInfo.aiModel')}</td>
                       <td className="px-6 py-4 text-slate-700">
                         <div className="flex flex-wrap gap-2">
-                          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                          <span className="px-3 py-1 bg-[#5FA4E6]/15 text-[#4A8FD1] rounded-full text-sm font-medium">
                             {t('companyInfo.aiAgent')}
                           </span>
-                          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                          <span className="px-3 py-1 bg-[#5FA4E6]/15 text-[#4A8FD1] rounded-full text-sm font-medium">
                             {t('companyInfo.llm')}
                           </span>
                         </div>
@@ -173,12 +173,12 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 2: Solution */}
           <section id="solution" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-blue-500 pl-4">
+              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-[#5FA4E6] pl-4">
                 {t('section2.title')}
               </h2>
               
-              <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg mb-6">
-                <h3 className="text-2xl font-bold text-blue-600 mb-4">
+              <div className="bg-gradient-to-r from-[#5FA4E6]/10 to-white p-6 rounded-lg mb-6">
+                <h3 className="text-2xl font-bold text-[#5FA4E6] mb-4">
                   {t('section2.subtitle')}
                 </h3>
                 <p className="text-slate-700 leading-relaxed mb-6">
@@ -224,7 +224,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                   />
                 </div>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded">
+                <div className="bg-[#5FA4E6]/10 border-l-4 border-[#5FA4E6] p-6 rounded">
                   <p className="text-slate-700 leading-relaxed">
                     {t('section2.note')}
                   </p>
@@ -236,14 +236,14 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 3: Benefits */}
           <section id="benefits" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-blue-500 pl-4">
+              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-[#5FA4E6] pl-4">
                 {t('section3.title')}
               </h2>
               
               <div className="space-y-8">
                 {/* Benefit 1 */}
-                <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg">
-                  <h3 className="text-2xl font-bold text-blue-600 mb-4">
+                <div className="bg-gradient-to-r from-[#5FA4E6]/10 to-white p-6 rounded-lg">
+                  <h3 className="text-2xl font-bold text-[#5FA4E6] mb-4">
                     {t('section3.benefit1Title')}
                   </h3>
                   <p className="text-slate-700 leading-relaxed">
@@ -252,8 +252,8 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                 </div>
 
                 {/* Benefit 2 */}
-                <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg">
-                  <h3 className="text-2xl font-bold text-blue-600 mb-4">
+                <div className="bg-gradient-to-r from-[#5FA4E6]/10 to-white p-6 rounded-lg">
+                  <h3 className="text-2xl font-bold text-[#5FA4E6] mb-4">
                     {t('section3.benefit2Title')}
                   </h3>
                   <p className="text-slate-700 leading-relaxed">
@@ -262,8 +262,8 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                 </div>
 
                 {/* Benefit 3 */}
-                <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg">
-                  <h3 className="text-2xl font-bold text-blue-600 mb-4">
+                <div className="bg-gradient-to-r from-[#5FA4E6]/10 to-white p-6 rounded-lg">
+                  <h3 className="text-2xl font-bold text-[#5FA4E6] mb-4">
                     {t('section3.benefit3Title')}
                   </h3>
                   <p className="text-slate-700 leading-relaxed">
@@ -296,11 +296,11 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 4: Summary */}
           <section id="summary" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-blue-500 pl-4">
+              <h2 className="text-3xl font-bold text-slate-800 mb-6 border-l-6 border-[#5FA4E6] pl-4">
                 {t('section4.title')}
               </h2>
               
-              <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg mb-6">
+              <div className="bg-gradient-to-r from-[#5FA4E6]/10 to-white p-6 rounded-lg mb-6">
                 <p className="text-slate-700 leading-relaxed mb-4">
                   {t('section4.paragraph1')}
                 </p>
@@ -310,18 +310,22 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
               </div>
 
               {/* CTA */}
-              <div className="text-center bg-gradient-to-r from-blue-500 to-blue-600 text-white p-8 rounded-lg">
-                <p className="text-xl font-bold mb-6">
-                  {t('section4.ctaText')}
-                </p>
-                <Link href="/contact">
-                  <button className="px-10 py-4 bg-white text-blue-600 text-lg font-bold rounded-full hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 inline-flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    {t('section4.ctaButton')}
-                  </button>
-                </Link>
+              <div className="relative text-center p-8 overflow-hidden">
+                <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+                <div className="absolute inset-0 bg-black/60" />
+                <div className="relative z-10">
+                  <p className="text-xl font-bold text-white mb-6">
+                    {t('section4.ctaText')}
+                  </p>
+                  <Link href="/contact">
+                    <button className="inline-flex items-center justify-center gap-3 px-12 py-5 bg-[#5FA4E6] text-white text-lg font-bold rounded-full hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      {t('section4.ctaButton')}
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </section>
@@ -332,7 +336,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           <div className="border-t border-gray-200 pt-8">
             <p className="text-center text-sm text-gray-600 mb-4">{t('shareText')}</p>
             <div className="flex justify-center gap-4">
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+              <button className="px-6 py-3 bg-[#5FA4E6] text-white rounded-lg hover:bg-[#4A8FD1] transition-colors flex items-center gap-2">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
@@ -357,7 +361,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
         {/* Author Section */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <div className="border-t border-gray-200 pt-8">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 border-l-4 border-blue-500 pl-4">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6 border-l-4 border-[#5FA4E6] pl-4">
               {t('author.title')}
             </h2>
             <div className="flex gap-6 bg-gray-50 p-6 rounded-lg">
@@ -384,7 +388,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
         {/* Related Articles */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <div className="border-t border-gray-200 pt-8">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 border-l-4 border-blue-500 pl-4">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6 border-l-4 border-[#5FA4E6] pl-4">
               {t('relatedArticles.title')}
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -399,7 +403,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                     />
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-lg font-bold text-slate-800 group-hover:text-[#5FA4E6] transition-colors">
                       {t('relatedArticles.article1Title')}
                     </h3>
                     <p className="text-sm text-gray-600 mt-2">{t('relatedArticles.article1Date')}</p>
@@ -417,7 +421,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                     />
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-lg font-bold text-slate-800 group-hover:text-[#5FA4E6] transition-colors">
                       {t('relatedArticles.article2Title')}
                     </h3>
                     <p className="text-sm text-gray-600 mt-2">{t('relatedArticles.article2Date')}</p>
@@ -430,31 +434,32 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
       </div>
 
       {/* Bottom CTA Section */}
-      <div className="relative bg-gray-800 text-white py-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-800/80 to-gray-900/90"></div>
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section className="relative py-20 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 whitespace-pre-line">
             {commonT('cta.title')}
           </h2>
-          <p className="text-xl mb-4 opacity-90">
+          <p className="text-xl text-white mb-2">
             {commonT('cta.subtitle')}
           </p>
-          <p className="text-lg mb-6 opacity-80">
+          <p className="text-white/80 mb-2 text-base">
             {commonT('cta.description')}
           </p>
-          <p className="text-base mb-8 opacity-80">
+          <p className="text-white/80 mb-10 text-base">
             {commonT('cta.message')}
           </p>
           <Link href="/contact">
-            <button className="px-12 py-4 bg-blue-500 hover:bg-blue-600 text-white text-lg font-bold rounded-full transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 inline-flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               {commonT('cta.button')}
             </button>
           </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

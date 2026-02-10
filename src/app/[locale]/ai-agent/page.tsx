@@ -12,8 +12,8 @@ export default function AiAgentPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section with Background */}
-      <div className="relative bg-gradient-to-r from-blue-500 to-blue-600 pt-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400/50 to-indigo-600/50" />
+      <div className="relative bg-gradient-to-r from-[#5FA4E6] to-[#5FA4E6] pt-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#7AB5ED]/50 to-indigo-600/50" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Breadcrumb */}
           <nav className="text-sm mb-8 text-white/90">
@@ -37,11 +37,11 @@ export default function AiAgentPage() {
         <section className="py-20">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              <h2 className="text-5xl md:text-6xl font-bold text-blue-400 leading-tight">
+              <h2 className="text-5xl md:text-6xl font-bold text-[#7AB5ED] leading-tight">
                 {t('title')}
               </h2>
               
-              <p className="text-2xl md:text-3xl text-blue-300 leading-relaxed font-light">
+              <p className="text-2xl md:text-3xl text-[#7AB5ED] leading-relaxed font-light">
                 {t('subtitle')}
               </p>
               
@@ -121,7 +121,7 @@ export default function AiAgentPage() {
             {/* CTA Button */}
             <div className="text-center">
               <Link href="/contact">
-                <button className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-12 py-5 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl">
+                <button className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-12 py-5 bg-[#5FA4E6] text-white rounded-full hover:bg-[#5FA4E6] transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl">
                   {t('ctaConsult')}
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -136,13 +136,13 @@ export default function AiAgentPage() {
         <section className="py-20 bg-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-8 bg-blue-500 rounded flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-12 h-8 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-sm">
                 CosBE
               </div>
               <span className="text-gray-600 text-sm">{t('whatIs.badge')}</span>
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-bold text-blue-400 mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#7AB5ED] mb-8">
               {t('whatIs.title')}
             </h2>
             
@@ -152,13 +152,13 @@ export default function AiAgentPage() {
             
             <ul className="space-y-5 mb-16 max-w-5xl">
               <li className="flex items-start gap-4">
-                <svg className="w-6 h-6 text-blue-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#5FA4E6] mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <p className="text-gray-700 text-lg leading-relaxed">{t('whatIs.point1')}</p>
               </li>
               <li className="flex items-start gap-4">
-                <svg className="w-6 h-6 text-blue-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#5FA4E6] mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <p className="text-gray-700 text-lg leading-relaxed">{t('whatIs.point2')}</p>
@@ -171,12 +171,12 @@ export default function AiAgentPage() {
               <div className="relative">
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-blue-500 text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step1.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-200">
-                    <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
+                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                     </svg>
                   </div>
@@ -190,12 +190,12 @@ export default function AiAgentPage() {
               <div className="relative">
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-blue-500 text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step2.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-200">
-                    <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
+                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -209,12 +209,12 @@ export default function AiAgentPage() {
               <div className="relative">
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-blue-500 text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step3.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-200">
-                    <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
+                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                     </svg>
                   </div>
@@ -228,12 +228,12 @@ export default function AiAgentPage() {
               <div>
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-blue-500 text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step4.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-200">
-                    <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
+                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
                   </div>
@@ -489,10 +489,10 @@ export default function AiAgentPage() {
         {/* Features Section */}
         <section className="py-16">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-6 bg-blue-500 rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+            <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
             <span className="text-gray-600 text-sm">{t('features.badge')}</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-blue-600 mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-4">
             {t('features.title')}
           </h2>
           <p className="text-gray-700 mb-8">{t('features.subtitle')}</p>
@@ -555,7 +555,7 @@ export default function AiAgentPage() {
           {/* CTA Button */}
           <div className="text-center mt-10">
             <Link href="/contact">
-              <button className="inline-flex items-center gap-2 px-8 py-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 hover:shadow-lg transition-all duration-200 text-lg font-semibold">
+              <button className="inline-flex items-center gap-2 px-8 py-4 bg-[#5FA4E6] text-white rounded-full hover:bg-[#5FA4E6] hover:shadow-lg transition-all duration-200 text-lg font-semibold">
                 {t('ctaConsult')}
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -569,10 +569,10 @@ export default function AiAgentPage() {
         <section className="py-16 bg-gray-50/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-6 bg-blue-500 rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+              <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
               <span className="text-gray-600 text-sm">{t('deployment.badge')}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-blue-600 mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-6">
               {t('deployment.title')}
             </h2>
             <p className="text-gray-700 mb-4">{t('deployment.description1')}</p>
@@ -596,10 +596,10 @@ export default function AiAgentPage() {
         <section className="py-16 bg-gray-50/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-6 bg-blue-500 rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+              <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
               <span className="text-gray-600 text-sm">{t('pricing.badge')}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-blue-600 mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-6">
               {t('pricing.title')}
             </h2>
             <p className="text-gray-700 mb-8">{t('pricing.description')}</p>
@@ -622,7 +622,7 @@ export default function AiAgentPage() {
             {/* Comparison Table */}
             <div className="overflow-x-auto">
               <table className="w-full bg-white rounded-xl shadow-lg overflow-hidden">
-                <thead className="bg-blue-500 text-white">
+                <thead className="bg-[#5FA4E6] text-white">
                   <tr>
                     <th className="px-6 py-4 text-left"></th>
                     <th className="px-6 py-4 text-center font-bold">CosBE</th>
@@ -631,8 +631,8 @@ export default function AiAgentPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-gray-100 bg-blue-50">
-                    <td className="px-6 py-4 font-semibold text-white bg-blue-500">{t('pricing.agileDev')}</td>
+                  <tr className="border-b border-gray-100 bg-[#5FA4E6]/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.agileDev')}</td>
                     <td className="px-6 py-4 text-center">
                       <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
                         <span className="text-green-500 text-xl">○</span>
@@ -649,8 +649,8 @@ export default function AiAgentPage() {
                       </div>
                     </td>
                   </tr>
-                  <tr className="border-b border-gray-100 bg-blue-50">
-                    <td className="px-6 py-4 font-semibold text-white bg-blue-500">{t('pricing.consulting')}</td>
+                  <tr className="border-b border-gray-100 bg-[#5FA4E6]/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.consulting')}</td>
                     <td className="px-6 py-4 text-center">
                       <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
                         <span className="text-green-500 text-xl">○</span>
@@ -663,8 +663,8 @@ export default function AiAgentPage() {
                       <span className="text-red-500 text-2xl font-bold">✕</span>
                     </td>
                   </tr>
-                  <tr className="border-b border-gray-100 bg-blue-50">
-                    <td className="px-6 py-4 font-semibold text-white bg-blue-500">{t('pricing.serverTools')}</td>
+                  <tr className="border-b border-gray-100 bg-[#5FA4E6]/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.serverTools')}</td>
                     <td className="px-6 py-4 text-center">
                       <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
                         <span className="text-green-500 text-xl">○</span>
@@ -677,8 +677,8 @@ export default function AiAgentPage() {
                       <span className="text-red-500 text-2xl font-bold">✕</span>
                     </td>
                   </tr>
-                  <tr className="bg-blue-50">
-                    <td className="px-6 py-4 font-semibold text-white bg-blue-500">{t('pricing.priceLabel')}</td>
+                  <tr className="bg-[#5FA4E6]/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.priceLabel')}</td>
                     <td className="px-6 py-4 text-center">
                       <p className="font-bold text-lg">{t('pricing.cosbePriceMain')}</p>
                       <p className="font-bold text-lg">{t('pricing.cosbePriceSub')}</p>
@@ -700,7 +700,7 @@ export default function AiAgentPage() {
             {/* CTA Button */}
             <div className="text-center mt-10">
               <Link href="/contact">
-                <button className="inline-flex items-center gap-2 px-8 py-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-200 text-lg font-semibold shadow-lg">
+                <button className="inline-flex items-center gap-2 px-8 py-4 bg-[#5FA4E6] text-white rounded-full hover:bg-[#5FA4E6] transition-all duration-200 text-lg font-semibold shadow-lg">
                   {t('ctaConsult')}
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -715,10 +715,10 @@ export default function AiAgentPage() {
         <section className="py-16">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-6 bg-blue-500 rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+              <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
               <span className="text-gray-600 text-sm">{t('faq.badge')}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-blue-600 mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-8">
               {t('faq.title')}
             </h2>
             
@@ -736,7 +736,7 @@ export default function AiAgentPage() {
                   </summary>
                   <div className="px-6 pb-4">
                     <div className="flex items-start gap-4 pt-4 border-t border-gray-100">
-                      <span className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">A</span>
+                      <span className="w-8 h-8 bg-[#5FA4E6] text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">A</span>
                       <p className="text-gray-700">{t(`faq.a${num}`)}</p>
                     </div>
                   </div>
@@ -746,29 +746,29 @@ export default function AiAgentPage() {
           </div>
         </section>
 
-        {/* Final CTA Section */}
-        <section className="py-16 -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="relative bg-gradient-to-r from-gray-800 to-gray-900 py-16 px-8 text-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20" />
-            <div className="relative max-w-3xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+      </div>
+
+      {/* Final CTA Section */}
+      <section className="relative py-20 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 whitespace-pre-line">
                 {t('finalCta.title')}
               </h2>
-              <p className="text-white/90 mb-2">{t('finalCta.description1')}</p>
-              <p className="text-white/90 mb-8">{t('finalCta.description2')}</p>
+              <p className="text-white/80 mb-2 text-base">{t('finalCta.description1')}</p>
+              <p className="text-white/80 mb-10 text-base">{t('finalCta.description2')}</p>
               <Link href="/contact">
-                <button className="inline-flex items-center gap-2 px-8 py-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-200 text-lg font-semibold shadow-lg">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   {t('finalCta.button')}
                 </button>
               </Link>
-            </div>
-          </div>
-        </section>
+        </div>
+      </section>
 
-      </div>
     </div>
   );
 }

@@ -12,14 +12,14 @@ export default function AiTransformationPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         {/* Breadcrumb */}
         <div className="mb-8 text-sm text-gray-600">
-          <span className="hover:text-blue-600 cursor-pointer">□ Home</span>
+          <span className="hover:text-[#5FA4E6] cursor-pointer">□ Home</span>
           <span className="mx-2">›</span>
           <span>{t('breadcrumb')}</span>
         </div>
 
         {/* CosBE's Strengths Heading */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 inline-block pb-2 border-b-2 border-blue-500">
+          <h2 className="text-2xl font-bold text-gray-900 inline-block pb-2 border-b-2 border-[#5FA4E6]">
             {t('strengths.title')}
           </h2>
         </div>
@@ -37,7 +37,7 @@ export default function AiTransformationPage() {
         {/* Section 1 - Image Left, Text Right */}
         <div className="mb-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative h-80 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl overflow-hidden">
+            <div className="relative h-80 bg-gradient-to-br from-[#5FA4E6]/20 to-[#5FA4E6]/10 rounded-2xl overflow-hidden">
               <Image
                 src="/ai-transformation/vision1.png"
                 alt={t('section1.imageAlt')}
@@ -46,7 +46,7 @@ export default function AiTransformationPage() {
               />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-blue-500 pl-4">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                 {t('section1.title')}
               </h2>
               <p className="text-gray-700 mb-6 leading-relaxed">
@@ -54,15 +54,15 @@ export default function AiTransformationPage() {
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section1.point1')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section1.point2')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section1.point3')}</span>
                 </li>
               </ul>
@@ -74,7 +74,7 @@ export default function AiTransformationPage() {
         <div className="mb-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-blue-500 pl-4">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                 {t('section2.title')}
               </h2>
               <p className="text-gray-700 mb-6 leading-relaxed">
@@ -82,20 +82,20 @@ export default function AiTransformationPage() {
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section2.point1')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section2.point2')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section2.point3')}</span>
                 </li>
               </ul>
             </div>
-            <div className="relative h-80 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl overflow-hidden">
+            <div className="relative h-80 bg-gradient-to-br from-[#5FA4E6]/20 to-[#5FA4E6]/10 rounded-2xl overflow-hidden">
               <Image
                 src="/ai-transformation/vision2.png"
                 alt={t('section2.imageAlt')}
@@ -109,7 +109,7 @@ export default function AiTransformationPage() {
         {/* Section 3 - Image Left, Text Right */}
         <div className="mb-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative h-80 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl overflow-hidden">
+            <div className="relative h-80 bg-gradient-to-br from-[#5FA4E6]/20 to-[#5FA4E6]/10 rounded-2xl overflow-hidden">
               <Image
                 src="/ai-transformation/vision3.png"
                 alt={t('section3.imageAlt')}
@@ -118,7 +118,7 @@ export default function AiTransformationPage() {
               />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-blue-500 pl-4">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
                 {t('section3.title')}
               </h2>
               <p className="text-gray-700 mb-6 leading-relaxed">
@@ -126,15 +126,15 @@ export default function AiTransformationPage() {
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section3.point1')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section3.point2')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-500 mr-3 mt-1">●</span>
+                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
                   <span className="text-gray-700">{t('section3.point3')}</span>
                 </li>
               </ul>
@@ -143,7 +143,7 @@ export default function AiTransformationPage() {
         </div>
 
         {/* Info Section */}
-        <div className="max-w-3xl mx-auto mb-16 bg-white rounded-2xl p-8 md:p-12 shadow-lg border-l-4 border-blue-500">
+        <div className="max-w-3xl mx-auto mb-16 bg-white rounded-2xl p-8 md:p-12 shadow-lg border-l-4 border-[#5FA4E6]">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
             {t('info.title')}
           </h2>
@@ -153,38 +153,43 @@ export default function AiTransformationPage() {
           <div className="text-center">
             <Link
               href="/download"
-              className="inline-block px-8 py-4 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-colors shadow-md hover:shadow-lg"
+              className="inline-block px-8 py-4 bg-[#5FA4E6] text-white rounded-full font-semibold hover:bg-[#5FA4E6] transition-colors shadow-md hover:shadow-lg"
             >
               {t('info.button')}
             </Link>
           </div>
         </div>
 
-        {/* CTA Section 2 */}
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-12 text-white text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {t('cta2.title')}
-          </h2>
-          <p className="text-lg mb-4 opacity-90">
-            {t('cta2.subtitle')}
-          </p>
-          <p className="text-base mb-4 opacity-80 max-w-2xl mx-auto">
-            {t('cta2.description')}
-          </p>
-          <p className="text-base mb-8 opacity-80 max-w-2xl mx-auto">
-            {t('cta2.additionalText')}
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-all"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            {t('cta2.button')}
-          </Link>
-        </div>
       </div>
+
+      {/* CTA Section 2 */}
+      <section className="relative py-20 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 whitespace-pre-line">
+              {t('cta2.title')}
+            </h2>
+            <p className="text-white/90 mb-2 text-lg">
+              {t('cta2.subtitle')}
+            </p>
+            <p className="text-white/80 mb-2 text-base max-w-2xl mx-auto">
+              {t('cta2.description')}
+            </p>
+            <p className="text-white/80 mb-10 text-base max-w-2xl mx-auto">
+              {t('cta2.additionalText')}
+            </p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              {t('cta2.button')}
+            </Link>
+        </div>
+      </section>
     </div>
   );
 }
