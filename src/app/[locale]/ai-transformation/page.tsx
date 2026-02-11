@@ -11,25 +11,25 @@ export default function AiTransformationPage() {
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         {/* Breadcrumb */}
-        <div className="mb-8 text-sm text-gray-600">
-          <span className="hover:text-[#5FA4E6] cursor-pointer">□ Home</span>
+        <div className="mb-8 text-sm text-textTertiary">
+          <span className="hover:text-primaryColor cursor-pointer">□ Home</span>
           <span className="mx-2">›</span>
           <span>{t('breadcrumb')}</span>
         </div>
 
         {/* CosBE's Strengths Heading */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 inline-block pb-2 border-b-2 border-[#5FA4E6]">
+          <h2 className="text-2xl font-bold text-textPrimary inline-block pb-2 border-b-2 border-primaryColor">
             {t('strengths.title')}
           </h2>
         </div>
 
         {/* Main Content Section */}
-        <div className="bg-gray-50 rounded-lg p-8 md:p-12 mb-16">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center">
+        <div className="bg-bgSecondary rounded-lg p-8 md:p-12 mb-16">
+          <h1 className="text-3xl md:text-4xl font-bold text-textPrimary mb-6 text-center">
             {t('title')}
           </h1>
-          <p className="text-base md:text-lg text-gray-700 text-center leading-relaxed max-w-4xl mx-auto">
+          <p className="text-base md:text-lg text-textSecondary text-center leading-relaxed max-w-4xl mx-auto">
             {t('subtitle')}
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function AiTransformationPage() {
         {/* Section 1 - Image Left, Text Right */}
         <div className="mb-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative h-80 bg-gradient-to-br from-[#5FA4E6]/20 to-[#5FA4E6]/10 rounded-2xl overflow-hidden">
+            <div className="relative h-80 bg-gradient-to-br from-primaryColor/20 to-primaryColor/10 rounded-2xl overflow-hidden">
               <Image
                 src="/ai-transformation/vision1.png"
                 alt={t('section1.imageAlt')}
@@ -46,24 +46,24 @@ export default function AiTransformationPage() {
               />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
+              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
                 {t('section1.title')}
               </h2>
-              <p className="text-gray-700 mb-6 leading-relaxed">
+              <p className="text-textSecondary mb-6 leading-relaxed">
                 {t('section1.description')}
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section1.point1')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section1.point1')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section1.point2')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section1.point2')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section1.point3')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section1.point3')}</span>
                 </li>
               </ul>
             </div>
@@ -74,28 +74,28 @@ export default function AiTransformationPage() {
         <div className="mb-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
+              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
                 {t('section2.title')}
               </h2>
-              <p className="text-gray-700 mb-6 leading-relaxed">
+              <p className="text-textSecondary mb-6 leading-relaxed">
                 {t('section2.description')}
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section2.point1')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section2.point1')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section2.point2')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section2.point2')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section2.point3')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section2.point3')}</span>
                 </li>
               </ul>
             </div>
-            <div className="relative h-80 bg-gradient-to-br from-[#5FA4E6]/20 to-[#5FA4E6]/10 rounded-2xl overflow-hidden">
+            <div className="relative h-80 bg-gradient-to-br from-primaryColor/20 to-primaryColor/10 rounded-2xl overflow-hidden">
               <Image
                 src="/ai-transformation/vision2.png"
                 alt={t('section2.imageAlt')}
@@ -109,7 +109,7 @@ export default function AiTransformationPage() {
         {/* Section 3 - Image Left, Text Right */}
         <div className="mb-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative h-80 bg-gradient-to-br from-[#5FA4E6]/20 to-[#5FA4E6]/10 rounded-2xl overflow-hidden">
+            <div className="relative h-80 bg-gradient-to-br from-primaryColor/20 to-primaryColor/10 rounded-2xl overflow-hidden">
               <Image
                 src="/ai-transformation/vision3.png"
                 alt={t('section3.imageAlt')}
@@ -118,24 +118,24 @@ export default function AiTransformationPage() {
               />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-[#5FA4E6] pl-4">
+              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
                 {t('section3.title')}
               </h2>
-              <p className="text-gray-700 mb-6 leading-relaxed">
+              <p className="text-textSecondary mb-6 leading-relaxed">
                 {t('section3.description')}
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section3.point1')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section3.point1')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section3.point2')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section3.point2')}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#5FA4E6] mr-3 mt-1">●</span>
-                  <span className="text-gray-700">{t('section3.point3')}</span>
+                  <span className="text-primaryColor mr-3 mt-1">●</span>
+                  <span className="text-textSecondary">{t('section3.point3')}</span>
                 </li>
               </ul>
             </div>
@@ -143,17 +143,17 @@ export default function AiTransformationPage() {
         </div>
 
         {/* Info Section */}
-        <div className="max-w-3xl mx-auto mb-16 bg-white rounded-2xl p-8 md:p-12 shadow-lg border-l-4 border-[#5FA4E6]">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="max-w-3xl mx-auto mb-16 bg-white rounded-2xl p-8 md:p-12 shadow-lg border-l-4 border-primaryColor">
+          <h2 className="text-2xl md:text-3xl font-bold text-textPrimary mb-6 text-center">
             {t('info.title')}
           </h2>
-          <p className="text-gray-700 leading-relaxed text-center mb-8">
+          <p className="text-textSecondary leading-relaxed text-center mb-8">
             {t('info.description')}
           </p>
           <div className="text-center">
             <Link
               href="/download"
-              className="inline-block px-8 py-4 bg-[#5FA4E6] text-white rounded-full font-semibold hover:bg-[#5FA4E6] transition-colors shadow-md hover:shadow-lg"
+              className="inline-block px-8 py-4 bg-primaryColor text-white rounded-full font-semibold hover:bg-primaryColor transition-colors shadow-md hover:shadow-lg"
             >
               {t('info.button')}
             </Link>
@@ -181,7 +181,7 @@ export default function AiTransformationPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

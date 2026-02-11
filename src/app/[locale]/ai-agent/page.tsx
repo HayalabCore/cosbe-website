@@ -12,8 +12,8 @@ export default function AiAgentPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section with Background */}
-      <div className="relative bg-gradient-to-r from-[#5FA4E6] to-[#5FA4E6] pt-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#7AB5ED]/50 to-indigo-600/50" />
+      <div className="relative bg-gradient-to-r from-primaryColor to-primaryColor pt-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-primaryLight/50 to-primaryHover/50" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Breadcrumb */}
           <nav className="text-sm mb-8 text-white/90">
@@ -37,17 +37,17 @@ export default function AiAgentPage() {
         <section className="py-20">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              <h2 className="text-5xl md:text-6xl font-bold text-[#7AB5ED] leading-tight">
+              <h2 className="text-5xl md:text-6xl font-bold text-primaryLight leading-tight">
                 {t('title')}
               </h2>
               
-              <p className="text-2xl md:text-3xl text-[#7AB5ED] leading-relaxed font-light">
+              <p className="text-2xl md:text-3xl text-primaryLight leading-relaxed font-light">
                 {t('subtitle')}
               </p>
               
-              <div className="h-px bg-gray-300 my-8"></div>
+              <div className="h-px bg-borderSecondary my-8"></div>
               
-              <div className="space-y-6 text-gray-700">
+              <div className="space-y-6 text-textSecondary">
                 <p className="text-lg leading-relaxed">
                   {t('intro1')}
                 </p>
@@ -87,32 +87,32 @@ export default function AiAgentPage() {
 
         {/* Problems Section */}
         <section className="py-16">
-          <div className="max-w-5xl mx-auto bg-gray-50 rounded-3xl shadow-lg p-10 md:p-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">
+          <div className="max-w-5xl mx-auto bg-bgSecondary rounded-3xl shadow-lg p-10 md:p-16">
+            <h3 className="text-3xl md:text-4xl font-bold text-center text-textPrimary mb-12">
               {t('problems.title')}
             </h3>
             <ul className="space-y-6 mb-12">
               <li className="flex items-start gap-4">
-                <span className="text-gray-800 mt-1.5 text-xl font-bold">•</span>
-                <p className="text-gray-700 text-lg leading-relaxed">
+                <span className="text-textPrimary mt-1.5 text-xl font-bold">•</span>
+                <p className="text-textSecondary text-lg leading-relaxed">
                   {t('problems.item1')}
                 </p>
               </li>
               <li className="flex items-start gap-4">
-                <span className="text-gray-800 mt-1.5 text-xl font-bold">•</span>
-                <p className="text-gray-700 text-lg leading-relaxed">
+                <span className="text-textPrimary mt-1.5 text-xl font-bold">•</span>
+                <p className="text-textSecondary text-lg leading-relaxed">
                   {t('problems.item2')}
                 </p>
               </li>
               <li className="flex items-start gap-4">
-                <span className="text-gray-800 mt-1.5 text-xl font-bold">•</span>
-                <p className="text-gray-700 text-lg leading-relaxed">
+                <span className="text-textPrimary mt-1.5 text-xl font-bold">•</span>
+                <p className="text-textSecondary text-lg leading-relaxed">
                   {t('problems.item3')}
                 </p>
               </li>
               <li className="flex items-start gap-4">
-                <span className="text-gray-800 mt-1.5 text-xl font-bold">•</span>
-                <p className="text-gray-700 text-lg leading-relaxed">
+                <span className="text-textPrimary mt-1.5 text-xl font-bold">•</span>
+                <p className="text-textSecondary text-lg leading-relaxed">
                   {t('problems.item4')}
                 </p>
               </li>
@@ -121,7 +121,7 @@ export default function AiAgentPage() {
             {/* CTA Button */}
             <div className="text-center">
               <Link href="/contact">
-                <button className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-12 py-5 bg-[#5FA4E6] text-white rounded-full hover:bg-[#5FA4E6] transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl">
+                <button className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-12 py-5 bg-primaryColor text-white rounded-full hover:bg-primaryColor transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl">
                   {t('ctaConsult')}
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -133,35 +133,35 @@ export default function AiAgentPage() {
         </section>
 
         {/* What is AI Agent Section */}
-        <section className="py-20 bg-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <section className="py-20 bg-bgSecondary -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-8 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-12 h-8 bg-primaryColor rounded flex items-center justify-center text-white font-bold text-sm">
                 CosBE
               </div>
-              <span className="text-gray-600 text-sm">{t('whatIs.badge')}</span>
+              <span className="text-textTertiary text-sm">{t('whatIs.badge')}</span>
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-bold text-[#7AB5ED] mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold text-primaryLight mb-8">
               {t('whatIs.title')}
             </h2>
             
-            <h3 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-10 leading-relaxed">
+            <h3 className="text-2xl md:text-3xl font-semibold text-textPrimary mb-10 leading-relaxed">
               {t('whatIs.subtitle')}
             </h3>
             
             <ul className="space-y-5 mb-16 max-w-5xl">
               <li className="flex items-start gap-4">
-                <svg className="w-6 h-6 text-[#5FA4E6] mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-primaryColor mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <p className="text-gray-700 text-lg leading-relaxed">{t('whatIs.point1')}</p>
+                <p className="text-textSecondary text-lg leading-relaxed">{t('whatIs.point1')}</p>
               </li>
               <li className="flex items-start gap-4">
-                <svg className="w-6 h-6 text-[#5FA4E6] mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-primaryColor mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <p className="text-gray-700 text-lg leading-relaxed">{t('whatIs.point2')}</p>
+                <p className="text-textSecondary text-lg leading-relaxed">{t('whatIs.point2')}</p>
               </li>
             </ul>
 
@@ -171,91 +171,91 @@ export default function AiAgentPage() {
               <div className="relative">
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step1.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
-                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
+                    <svg className="w-10 h-10 text-primaryColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                     </svg>
                   </div>
-                  <h4 className="font-bold text-gray-800 mb-3 text-lg text-center">{t('process.step1.title')}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{t('process.step1.description')}</p>
+                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">{t('process.step1.title')}</h4>
+                  <p className="text-sm text-textTertiary leading-relaxed">{t('process.step1.description')}</p>
                 </div>
-                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-400 text-3xl z-10">›</div>
+                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-textDisabled text-3xl z-10">›</div>
               </div>
               
               {/* Step 2 */}
               <div className="relative">
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step2.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
-                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
+                    <svg className="w-10 h-10 text-primaryColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h4 className="font-bold text-gray-800 mb-3 text-lg text-center">{t('process.step2.title')}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{t('process.step2.description')}</p>
+                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">{t('process.step2.title')}</h4>
+                  <p className="text-sm text-textTertiary leading-relaxed">{t('process.step2.description')}</p>
                 </div>
-                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-400 text-3xl z-10">›</div>
+                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-textDisabled text-3xl z-10">›</div>
               </div>
               
               {/* Step 3 */}
               <div className="relative">
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step3.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
-                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
+                    <svg className="w-10 h-10 text-primaryColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                     </svg>
                   </div>
-                  <h4 className="font-bold text-gray-800 mb-3 text-lg text-center">{t('process.step3.title')}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{t('process.step3.description')}</p>
+                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">{t('process.step3.title')}</h4>
+                  <p className="text-sm text-textTertiary leading-relaxed">{t('process.step3.description')}</p>
                 </div>
-                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-400 text-3xl z-10">›</div>
+                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-textDisabled text-3xl z-10">›</div>
               </div>
               
               {/* Step 4 */}
               <div>
                 <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-[#5FA4E6] text-white text-sm px-4 py-1.5 rounded font-semibold">
+                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
                       {t('process.step4.number')}
                     </span>
                   </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-[#5FA4E6]/10 rounded-full flex items-center justify-center border-2 border-[#5FA4E6]/30">
-                    <svg className="w-10 h-10 text-[#5FA4E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
+                    <svg className="w-10 h-10 text-primaryColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
                   </div>
-                  <h4 className="font-bold text-gray-800 mb-3 text-lg text-center">{t('process.step4.title')}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{t('process.step4.description')}</p>
+                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">{t('process.step4.title')}</h4>
+                  <p className="text-sm text-textTertiary leading-relaxed">{t('process.step4.description')}</p>
                 </div>
               </div>
             </div>
 
             {/* Industry Examples with Tabs */}
             <div className="mt-20">
-              <h3 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">{t('industries.title')}</h3>
-              <p className="text-gray-700 text-lg mb-10 leading-relaxed max-w-5xl">{t('industries.description')}</p>
+              <h3 className="text-3xl md:text-4xl font-bold text-textPrimary mb-6">{t('industries.title')}</h3>
+              <p className="text-textSecondary text-lg mb-10 leading-relaxed max-w-5xl">{t('industries.description')}</p>
               
               {/* Tabs */}
-              <div className="flex border-b border-gray-300 mb-8">
+              <div className="flex border-b border-borderSecondary mb-8">
                 <button 
                   onClick={() => setActiveTab('construction')}
                   className={`px-8 py-4 font-semibold text-lg transition-all ${
                     activeTab === 'construction' 
-                      ? 'bg-gray-800 text-white border-b-4 border-gray-800' 
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-borderDark text-white border-b-4 border-borderDark' 
+                      : 'bg-bgTertiary text-textTertiary hover:bg-borderPrimaryPrimary'
                   }`}
                 >
                   {t('industries.construction.title')}
@@ -264,8 +264,8 @@ export default function AiAgentPage() {
                   onClick={() => setActiveTab('retail')}
                   className={`px-8 py-4 font-semibold text-lg transition-all ${
                     activeTab === 'retail' 
-                      ? 'bg-gray-800 text-white border-b-4 border-gray-800' 
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-borderDark text-white border-b-4 border-borderDark' 
+                      : 'bg-bgTertiary text-textTertiary hover:bg-borderPrimaryPrimary'
                   }`}
                 >
                   {t('industries.retail.title')}
@@ -274,8 +274,8 @@ export default function AiAgentPage() {
                   onClick={() => setActiveTab('manufacturing')}
                   className={`px-8 py-4 font-semibold text-lg transition-all ${
                     activeTab === 'manufacturing' 
-                      ? 'bg-gray-800 text-white border-b-4 border-gray-800' 
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-borderDark text-white border-b-4 border-borderDark' 
+                      : 'bg-bgTertiary text-textTertiary hover:bg-borderPrimaryPrimary'
                   }`}
                 >
                   {t('industries.manufacturing.title')}
@@ -283,10 +283,10 @@ export default function AiAgentPage() {
               </div>
 
               {/* Tab Content */}
-              <div className="bg-white border-2 border-gray-200 rounded-lg p-10">
+              <div className="bg-white border-2 border-borderPrimary rounded-lg p-10">
                 {activeTab === 'construction' && (
                   <div>
-                    <h4 className="text-3xl font-bold text-gray-800 text-center mb-12">{t('industries.construction.title')}</h4>
+                    <h4 className="text-3xl font-bold text-textPrimary text-center mb-12">{t('industries.construction.title')}</h4>
                     
                     <div className="grid lg:grid-cols-2 gap-10 items-start mb-12">
                       {/* Construction Image */}
@@ -302,31 +302,31 @@ export default function AiAgentPage() {
                       
                       {/* Example Assignment */}
                       <div>
-                        <div className="bg-gray-50 rounded-lg p-6 mb-8">
-                          <h5 className="text-xl font-bold text-gray-800 mb-4">{t('industries.construction.problemTitle')}</h5>
+                        <div className="bg-bgSecondary rounded-lg p-6 mb-8">
+                          <h5 className="text-xl font-bold text-textPrimary mb-4">{t('industries.construction.problemTitle')}</h5>
                           <ul className="space-y-3">
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.construction.problem1')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.construction.problem1')}</p>
                             </li>
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.construction.problem2')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.construction.problem2')}</p>
                             </li>
                           </ul>
                         </div>
                         
                         {/* AI Agent Introduction */}
-                        <div className="bg-gray-50 rounded-lg p-6">
-                          <h5 className="text-xl font-bold text-gray-800 mb-4">{t('industries.construction.solutionTitle')}</h5>
+                        <div className="bg-bgSecondary rounded-lg p-6">
+                          <h5 className="text-xl font-bold text-textPrimary mb-4">{t('industries.construction.solutionTitle')}</h5>
                           <ul className="space-y-3">
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.construction.solution1')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.construction.solution1')}</p>
                             </li>
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.construction.solution2')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.construction.solution2')}</p>
                             </li>
                           </ul>
                         </div>
@@ -334,16 +334,16 @@ export default function AiAgentPage() {
                     </div>
                     
                     {/* Merit Section */}
-                    <div className="bg-gray-50 rounded-lg p-8">
-                      <h5 className="text-xl font-bold text-gray-800 mb-6">{t('industries.construction.benefitTitle')}</h5>
+                    <div className="bg-bgSecondary rounded-lg p-8">
+                      <h5 className="text-xl font-bold text-textPrimary mb-6">{t('industries.construction.benefitTitle')}</h5>
                       <ul className="space-y-4">
                         <li className="flex items-start gap-3">
-                          <span className="text-gray-800 mt-1 font-bold">•</span>
-                          <p className="text-gray-700 leading-relaxed">{t('industries.construction.benefit1')}</p>
+                          <span className="text-textPrimary mt-1 font-bold">•</span>
+                          <p className="text-textSecondary leading-relaxed">{t('industries.construction.benefit1')}</p>
                         </li>
                         <li className="flex items-start gap-3">
-                          <span className="text-gray-800 mt-1 font-bold">•</span>
-                          <p className="text-gray-700 leading-relaxed">{t('industries.construction.benefit2')}</p>
+                          <span className="text-textPrimary mt-1 font-bold">•</span>
+                          <p className="text-textSecondary leading-relaxed">{t('industries.construction.benefit2')}</p>
                         </li>
                       </ul>
                     </div>
@@ -352,7 +352,7 @@ export default function AiAgentPage() {
                 
                 {activeTab === 'retail' && (
                   <div>
-                    <h4 className="text-3xl font-bold text-gray-800 text-center mb-12">{t('industries.retail.title')}</h4>
+                    <h4 className="text-3xl font-bold text-textPrimary text-center mb-12">{t('industries.retail.title')}</h4>
                     
                     <div className="grid lg:grid-cols-2 gap-10 items-start mb-12">
                       {/* Retail Image */}
@@ -368,31 +368,31 @@ export default function AiAgentPage() {
                       
                       {/* Example Assignment */}
                       <div>
-                        <div className="bg-gray-50 rounded-lg p-6 mb-8">
-                          <h5 className="text-xl font-bold text-gray-800 mb-4">{t('industries.retail.problemTitle')}</h5>
+                        <div className="bg-bgSecondary rounded-lg p-6 mb-8">
+                          <h5 className="text-xl font-bold text-textPrimary mb-4">{t('industries.retail.problemTitle')}</h5>
                           <ul className="space-y-3">
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.retail.problem1')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.retail.problem1')}</p>
                             </li>
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.retail.problem2')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.retail.problem2')}</p>
                             </li>
                           </ul>
                         </div>
                         
                         {/* AI Agent Introduction */}
-                        <div className="bg-gray-50 rounded-lg p-6">
-                          <h5 className="text-xl font-bold text-gray-800 mb-4">{t('industries.retail.solutionTitle')}</h5>
+                        <div className="bg-bgSecondary rounded-lg p-6">
+                          <h5 className="text-xl font-bold text-textPrimary mb-4">{t('industries.retail.solutionTitle')}</h5>
                           <ul className="space-y-3">
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.retail.solution1')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.retail.solution1')}</p>
                             </li>
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.retail.solution2')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.retail.solution2')}</p>
                             </li>
                           </ul>
                         </div>
@@ -400,16 +400,16 @@ export default function AiAgentPage() {
                     </div>
                     
                     {/* Merit Section */}
-                    <div className="bg-gray-50 rounded-lg p-8">
-                      <h5 className="text-xl font-bold text-gray-800 mb-6">{t('industries.retail.benefitTitle')}</h5>
+                    <div className="bg-bgSecondary rounded-lg p-8">
+                      <h5 className="text-xl font-bold text-textPrimary mb-6">{t('industries.retail.benefitTitle')}</h5>
                       <ul className="space-y-4">
                         <li className="flex items-start gap-3">
-                          <span className="text-gray-800 mt-1 font-bold">•</span>
-                          <p className="text-gray-700 leading-relaxed">{t('industries.retail.benefit1')}</p>
+                          <span className="text-textPrimary mt-1 font-bold">•</span>
+                          <p className="text-textSecondary leading-relaxed">{t('industries.retail.benefit1')}</p>
                         </li>
                         <li className="flex items-start gap-3">
-                          <span className="text-gray-800 mt-1 font-bold">•</span>
-                          <p className="text-gray-700 leading-relaxed">{t('industries.retail.benefit2')}</p>
+                          <span className="text-textPrimary mt-1 font-bold">•</span>
+                          <p className="text-textSecondary leading-relaxed">{t('industries.retail.benefit2')}</p>
                         </li>
                       </ul>
                     </div>
@@ -418,7 +418,7 @@ export default function AiAgentPage() {
                 
                 {activeTab === 'manufacturing' && (
                   <div>
-                    <h4 className="text-3xl font-bold text-gray-800 text-center mb-12">{t('industries.manufacturing.title')}</h4>
+                    <h4 className="text-3xl font-bold text-textPrimary text-center mb-12">{t('industries.manufacturing.title')}</h4>
                     
                     <div className="grid lg:grid-cols-2 gap-10 items-start mb-12">
                       {/* Manufacturing Image */}
@@ -434,31 +434,31 @@ export default function AiAgentPage() {
                       
                       {/* Example Assignment */}
                       <div>
-                        <div className="bg-gray-50 rounded-lg p-6 mb-8">
-                          <h5 className="text-xl font-bold text-gray-800 mb-4">{t('industries.manufacturing.problemTitle')}</h5>
+                        <div className="bg-bgSecondary rounded-lg p-6 mb-8">
+                          <h5 className="text-xl font-bold text-textPrimary mb-4">{t('industries.manufacturing.problemTitle')}</h5>
                           <ul className="space-y-3">
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.manufacturing.problem1')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.manufacturing.problem1')}</p>
                             </li>
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.manufacturing.problem2')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.manufacturing.problem2')}</p>
                             </li>
                           </ul>
                         </div>
                         
                         {/* AI Agent Introduction */}
-                        <div className="bg-gray-50 rounded-lg p-6">
-                          <h5 className="text-xl font-bold text-gray-800 mb-4">{t('industries.manufacturing.solutionTitle')}</h5>
+                        <div className="bg-bgSecondary rounded-lg p-6">
+                          <h5 className="text-xl font-bold text-textPrimary mb-4">{t('industries.manufacturing.solutionTitle')}</h5>
                           <ul className="space-y-3">
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.manufacturing.solution1')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.manufacturing.solution1')}</p>
                             </li>
                             <li className="flex items-start gap-3">
-                              <span className="text-gray-800 mt-1 font-bold">•</span>
-                              <p className="text-gray-700 leading-relaxed">{t('industries.manufacturing.solution2')}</p>
+                              <span className="text-textPrimary mt-1 font-bold">•</span>
+                              <p className="text-textSecondary leading-relaxed">{t('industries.manufacturing.solution2')}</p>
                             </li>
                           </ul>
                         </div>
@@ -466,16 +466,16 @@ export default function AiAgentPage() {
                     </div>
                     
                     {/* Merit Section */}
-                    <div className="bg-gray-50 rounded-lg p-8">
-                      <h5 className="text-xl font-bold text-gray-800 mb-6">{t('industries.manufacturing.benefitTitle')}</h5>
+                    <div className="bg-bgSecondary rounded-lg p-8">
+                      <h5 className="text-xl font-bold text-textPrimary mb-6">{t('industries.manufacturing.benefitTitle')}</h5>
                       <ul className="space-y-4">
                         <li className="flex items-start gap-3">
-                          <span className="text-gray-800 mt-1 font-bold">•</span>
-                          <p className="text-gray-700 leading-relaxed">{t('industries.manufacturing.benefit1')}</p>
+                          <span className="text-textPrimary mt-1 font-bold">•</span>
+                          <p className="text-textSecondary leading-relaxed">{t('industries.manufacturing.benefit1')}</p>
                         </li>
                         <li className="flex items-start gap-3">
-                          <span className="text-gray-800 mt-1 font-bold">•</span>
-                          <p className="text-gray-700 leading-relaxed">{t('industries.manufacturing.benefit2')}</p>
+                          <span className="text-textPrimary mt-1 font-bold">•</span>
+                          <p className="text-textSecondary leading-relaxed">{t('industries.manufacturing.benefit2')}</p>
                         </li>
                       </ul>
                     </div>
@@ -489,13 +489,13 @@ export default function AiAgentPage() {
         {/* Features Section */}
         <section className="py-16">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
-            <span className="text-gray-600 text-sm">{t('features.badge')}</span>
+            <div className="w-10 h-6 bg-primaryColor rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+            <span className="text-textTertiary text-sm">{t('features.badge')}</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-4">
             {t('features.title')}
           </h2>
-          <p className="text-gray-700 mb-8">{t('features.subtitle')}</p>
+          <p className="text-textSecondary mb-8">{t('features.subtitle')}</p>
           
           <div className="mb-8 rounded-xl overflow-hidden shadow-lg">
             <Image 
@@ -508,46 +508,46 @@ export default function AiAgentPage() {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <h4 className="font-bold text-gray-800 mb-3">{t('features.feature1.title')}</h4>
-              <hr className="border-gray-200 mb-3" />
-              <p className="text-gray-600 text-sm mb-4">{t('features.feature1.description')}</p>
-              <p className="text-sm font-medium text-gray-700">{t('features.feature1.benefit')}</p>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-surface-tertiary">
+              <h4 className="font-bold text-textPrimary mb-3">{t('features.feature1.title')}</h4>
+              <hr className="border-borderPrimary mb-3" />
+              <p className="text-textTertiary text-sm mb-4">{t('features.feature1.description')}</p>
+              <p className="text-sm font-medium text-textSecondary">{t('features.feature1.benefit')}</p>
               <ul className="mt-2 space-y-1">
-                <li className="text-sm text-gray-600">• {t('features.feature1.point1')}</li>
-                <li className="text-sm text-gray-600">• {t('features.feature1.point2')}</li>
+                <li className="text-sm text-textTertiary">• {t('features.feature1.point1')}</li>
+                <li className="text-sm text-textTertiary">• {t('features.feature1.point2')}</li>
               </ul>
             </div>
             
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <h4 className="font-bold text-gray-800 mb-3">{t('features.feature2.title')}</h4>
-              <hr className="border-gray-200 mb-3" />
-              <p className="text-gray-600 text-sm mb-4">{t('features.feature2.description')}</p>
-              <p className="text-sm font-medium text-gray-700">{t('features.feature2.benefit')}</p>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-surface-tertiary">
+              <h4 className="font-bold text-textPrimary mb-3">{t('features.feature2.title')}</h4>
+              <hr className="border-borderPrimary mb-3" />
+              <p className="text-textTertiary text-sm mb-4">{t('features.feature2.description')}</p>
+              <p className="text-sm font-medium text-textSecondary">{t('features.feature2.benefit')}</p>
               <ul className="mt-2 space-y-1">
-                <li className="text-sm text-gray-600">• {t('features.feature2.point1')}</li>
+                <li className="text-sm text-textTertiary">• {t('features.feature2.point1')}</li>
               </ul>
             </div>
             
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <h4 className="font-bold text-gray-800 mb-3">{t('features.feature3.title')}</h4>
-              <hr className="border-gray-200 mb-3" />
-              <p className="text-gray-600 text-sm mb-4">{t('features.feature3.description')}</p>
-              <p className="text-sm font-medium text-gray-700">{t('features.feature3.benefit')}</p>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-surface-tertiary">
+              <h4 className="font-bold text-textPrimary mb-3">{t('features.feature3.title')}</h4>
+              <hr className="border-borderPrimary mb-3" />
+              <p className="text-textTertiary text-sm mb-4">{t('features.feature3.description')}</p>
+              <p className="text-sm font-medium text-textSecondary">{t('features.feature3.benefit')}</p>
               <ul className="mt-2 space-y-1">
-                <li className="text-sm text-gray-600">• {t('features.feature3.point1')}</li>
-                <li className="text-sm text-gray-600">• {t('features.feature3.point2')}</li>
+                <li className="text-sm text-textTertiary">• {t('features.feature3.point1')}</li>
+                <li className="text-sm text-textTertiary">• {t('features.feature3.point2')}</li>
               </ul>
             </div>
             
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <h4 className="font-bold text-gray-800 mb-3">{t('features.feature4.title')}</h4>
-              <hr className="border-gray-200 mb-3" />
-              <p className="text-gray-600 text-sm mb-4">{t('features.feature4.description')}</p>
-              <p className="text-sm font-medium text-gray-700">{t('features.feature4.benefit')}</p>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-surface-tertiary">
+              <h4 className="font-bold text-textPrimary mb-3">{t('features.feature4.title')}</h4>
+              <hr className="border-borderPrimary mb-3" />
+              <p className="text-textTertiary text-sm mb-4">{t('features.feature4.description')}</p>
+              <p className="text-sm font-medium text-textSecondary">{t('features.feature4.benefit')}</p>
               <ul className="mt-2 space-y-1">
-                <li className="text-sm text-gray-600">• {t('features.feature4.point1')}</li>
-                <li className="text-sm text-gray-600">• {t('features.feature4.point2')}</li>
+                <li className="text-sm text-textTertiary">• {t('features.feature4.point1')}</li>
+                <li className="text-sm text-textTertiary">• {t('features.feature4.point2')}</li>
               </ul>
             </div>
           </div>
@@ -555,7 +555,7 @@ export default function AiAgentPage() {
           {/* CTA Button */}
           <div className="text-center mt-10">
             <Link href="/contact">
-              <button className="inline-flex items-center gap-2 px-8 py-4 bg-[#5FA4E6] text-white rounded-full hover:bg-[#5FA4E6] hover:shadow-lg transition-all duration-200 text-lg font-semibold">
+              <button className="inline-flex items-center gap-2 px-8 py-4 bg-primaryColor text-white rounded-full hover:bg-primaryColor hover:shadow-lg transition-all duration-200 text-lg font-semibold">
                 {t('ctaConsult')}
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -566,18 +566,18 @@ export default function AiAgentPage() {
         </section>
 
         {/* Deployment Process Section */}
-        <section className="py-16 bg-gray-50/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <section className="py-16 bg-bgSecondary/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
-              <span className="text-gray-600 text-sm">{t('deployment.badge')}</span>
+              <div className="w-10 h-6 bg-primaryColor rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+              <span className="text-textTertiary text-sm">{t('deployment.badge')}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-6">
               {t('deployment.title')}
             </h2>
-            <p className="text-gray-700 mb-4">{t('deployment.description1')}</p>
-            <p className="text-gray-700 mb-4">{t('deployment.description2')}</p>
-            <p className="text-gray-700 mb-8">{t('deployment.description3')}</p>
+            <p className="text-textSecondary mb-4">{t('deployment.description1')}</p>
+            <p className="text-textSecondary mb-4">{t('deployment.description2')}</p>
+            <p className="text-textSecondary mb-8">{t('deployment.description3')}</p>
             
             {/* Deployment Flow Diagram */}
             <div className="bg-white rounded-xl shadow-lg p-8">
@@ -593,36 +593,36 @@ export default function AiAgentPage() {
         </section>
 
         {/* Pricing Section */}
-        <section className="py-16 bg-gray-50/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <section className="py-16 bg-bgSecondary/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
-              <span className="text-gray-600 text-sm">{t('pricing.badge')}</span>
+              <div className="w-10 h-6 bg-primaryColor rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+              <span className="text-textTertiary text-sm">{t('pricing.badge')}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-6">
               {t('pricing.title')}
             </h2>
-            <p className="text-gray-700 mb-8">{t('pricing.description')}</p>
+            <p className="text-textSecondary mb-8">{t('pricing.description')}</p>
             
             <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
               <div className="mb-6">
-                <p className="text-gray-700 text-lg">
-                  {t('pricing.feeLabel')}: <span className="text-2xl font-bold text-gray-900">{t('pricing.fee')}</span>
+                <p className="text-textSecondary text-lg">
+                  {t('pricing.feeLabel')}: <span className="text-2xl font-bold text-textPrimary">{t('pricing.fee')}</span>
                 </p>
-                <p className="text-gray-600 mt-1">{t('pricing.feeNote')}</p>
+                <p className="text-textTertiary mt-1">{t('pricing.feeNote')}</p>
               </div>
               <div>
-                <p className="text-gray-700 text-lg">
-                  {t('pricing.maintenanceLabel')}: <span className="text-2xl font-bold text-gray-900">{t('pricing.maintenance')}</span>
+                <p className="text-textSecondary text-lg">
+                  {t('pricing.maintenanceLabel')}: <span className="text-2xl font-bold text-textPrimary">{t('pricing.maintenance')}</span>
                 </p>
-                <p className="text-gray-600 mt-1">{t('pricing.maintenanceNote')}</p>
+                <p className="text-textTertiary mt-1">{t('pricing.maintenanceNote')}</p>
               </div>
             </div>
             
             {/* Comparison Table */}
             <div className="overflow-x-auto">
               <table className="w-full bg-white rounded-xl shadow-lg overflow-hidden">
-                <thead className="bg-[#5FA4E6] text-white">
+                <thead className="bg-primaryColor text-white">
                   <tr>
                     <th className="px-6 py-4 text-left"></th>
                     <th className="px-6 py-4 text-center font-bold">CosBE</th>
@@ -631,66 +631,66 @@ export default function AiAgentPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-gray-100 bg-[#5FA4E6]/10">
-                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.agileDev')}</td>
+                  <tr className="border-b border-surface-tertiary bg-primaryColor/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-primaryColor">{t('pricing.agileDev')}</td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
-                        <span className="text-green-500 text-xl">○</span>
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
+                        <span className="text-successColor text-xl">○</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
-                        <span className="text-green-500 text-xl">○</span>
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
+                        <span className="text-successColor text-xl">○</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
-                        <span className="text-green-500 text-xl">○</span>
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
+                        <span className="text-successColor text-xl">○</span>
                       </div>
                     </td>
                   </tr>
-                  <tr className="border-b border-gray-100 bg-[#5FA4E6]/10">
-                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.consulting')}</td>
+                  <tr className="border-b border-surface-tertiary bg-primaryColor/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-primaryColor">{t('pricing.consulting')}</td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
-                        <span className="text-green-500 text-xl">○</span>
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
+                        <span className="text-successColor text-xl">○</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-red-500 text-2xl font-bold">✕</span>
+                      <span className="text-errorColor text-2xl font-bold">✕</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-red-500 text-2xl font-bold">✕</span>
+                      <span className="text-errorColor text-2xl font-bold">✕</span>
                     </td>
                   </tr>
-                  <tr className="border-b border-gray-100 bg-[#5FA4E6]/10">
-                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.serverTools')}</td>
+                  <tr className="border-b border-surface-tertiary bg-primaryColor/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-primaryColor">{t('pricing.serverTools')}</td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-green-500">
-                        <span className="text-green-500 text-xl">○</span>
+                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
+                        <span className="text-successColor text-xl">○</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-red-500 text-2xl font-bold">✕</span>
+                      <span className="text-errorColor text-2xl font-bold">✕</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-red-500 text-2xl font-bold">✕</span>
+                      <span className="text-errorColor text-2xl font-bold">✕</span>
                     </td>
                   </tr>
-                  <tr className="bg-[#5FA4E6]/10">
-                    <td className="px-6 py-4 font-semibold text-white bg-[#5FA4E6]">{t('pricing.priceLabel')}</td>
+                  <tr className="bg-primaryColor/10">
+                    <td className="px-6 py-4 font-semibold text-white bg-primaryColor">{t('pricing.priceLabel')}</td>
                     <td className="px-6 py-4 text-center">
                       <p className="font-bold text-lg">{t('pricing.cosbePriceMain')}</p>
                       <p className="font-bold text-lg">{t('pricing.cosbePriceSub')}</p>
-                      <p className="text-sm text-gray-600 mt-1">{t('pricing.minMonths')}</p>
+                      <p className="text-sm text-textTertiary mt-1">{t('pricing.minMonths')}</p>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <p className="font-bold text-lg">{t('pricing.companyAPrice')}</p>
-                      <p className="text-sm text-gray-600 mt-1">{t('pricing.companyAPriceSub')}</p>
+                      <p className="text-sm text-textTertiary mt-1">{t('pricing.companyAPriceSub')}</p>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <p className="font-bold text-lg">{t('pricing.companyBPrice')}</p>
-                      <p className="text-sm text-gray-600 mt-1">{t('pricing.companyBPriceSub')}</p>
+                      <p className="text-sm text-textTertiary mt-1">{t('pricing.companyBPriceSub')}</p>
                     </td>
                   </tr>
                 </tbody>
@@ -700,7 +700,7 @@ export default function AiAgentPage() {
             {/* CTA Button */}
             <div className="text-center mt-10">
               <Link href="/contact">
-                <button className="inline-flex items-center gap-2 px-8 py-4 bg-[#5FA4E6] text-white rounded-full hover:bg-[#5FA4E6] transition-all duration-200 text-lg font-semibold shadow-lg">
+                <button className="inline-flex items-center gap-2 px-8 py-4 bg-primaryColor text-white rounded-full hover:bg-primaryColor transition-all duration-200 text-lg font-semibold shadow-lg">
                   {t('ctaConsult')}
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -715,29 +715,29 @@ export default function AiAgentPage() {
         <section className="py-16">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-6 bg-[#5FA4E6] rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
-              <span className="text-gray-600 text-sm">{t('faq.badge')}</span>
+              <div className="w-10 h-6 bg-primaryColor rounded flex items-center justify-center text-white font-bold text-xs">AI</div>
+              <span className="text-textTertiary text-sm">{t('faq.badge')}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#5FA4E6] mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-8">
               {t('faq.title')}
             </h2>
             
             <div className="space-y-4">
               {[1, 2, 3, 4, 5, 6, 7].map((num) => (
                 <details key={num} className="bg-white rounded-xl shadow-lg overflow-hidden group">
-                  <summary className="px-6 py-4 cursor-pointer flex items-center justify-between hover:bg-gray-50">
+                  <summary className="px-6 py-4 cursor-pointer flex items-center justify-between hover:bg-bgSecondary">
                     <div className="flex items-center gap-4">
-                      <span className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-bold text-sm">Q</span>
-                      <span className="font-medium text-gray-800">{t(`faq.q${num}`)}</span>
+                      <span className="w-8 h-8 bg-error text-white rounded-full flex items-center justify-center font-bold text-sm">Q</span>
+                      <span className="font-medium text-textPrimary">{t(`faq.q${num}`)}</span>
                     </div>
-                    <svg className="w-5 h-5 text-gray-500 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-textTertiary transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
                   <div className="px-6 pb-4">
-                    <div className="flex items-start gap-4 pt-4 border-t border-gray-100">
-                      <span className="w-8 h-8 bg-[#5FA4E6] text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">A</span>
-                      <p className="text-gray-700">{t(`faq.a${num}`)}</p>
+                    <div className="flex items-start gap-4 pt-4 border-t border-surface-tertiary">
+                      <span className="w-8 h-8 bg-primaryColor text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">A</span>
+                      <p className="text-textSecondary">{t(`faq.a${num}`)}</p>
                     </div>
                   </div>
                 </details>
@@ -759,7 +759,7 @@ export default function AiAgentPage() {
               <p className="text-white/80 mb-2 text-base">{t('finalCta.description1')}</p>
               <p className="text-white/80 mb-10 text-base">{t('finalCta.description2')}</p>
               <Link href="/contact">
-                <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-[#5FA4E6] text-white rounded-full font-bold text-lg hover:bg-[#7AB5ED] transition-all duration-200 shadow-lg hover:shadow-xl">
+                <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
