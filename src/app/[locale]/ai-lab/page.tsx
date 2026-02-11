@@ -7,7 +7,11 @@ import type { Locale } from '@/i18n/routing';
 
 export default function AiLabPage() {
   const t = useTranslations('aiLabPage');
+<<<<<<< HEAD
   const locale = useLocale();
+=======
+  const locale = useLocale() as Locale;
+>>>>>>> master
 
   const challenges = [
     { key: 'challenge1', image: '/ai-lab/challenge1.webp' },
