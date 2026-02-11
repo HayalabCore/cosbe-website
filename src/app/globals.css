@@ -1,37 +1,8 @@
 @import "tailwindcss";
+@config "../../tailwind.config.js";
 
 @theme {
   --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
-
-  /* ── Primary Colors ── */
-  --color-primaryColor: #5FA4E6;
-  --color-primaryHover: #4A8FD1;
-  --color-primaryLight: #7AB5ED;
-  --color-primaryDark: #3A7AB8;
-  
-  /* ── Background Colors ── */
-  --color-bgPrimary: #FFFFFF;
-  --color-bgSecondary: #F9FAFB;
-  --color-bgTertiary: #F3F4F6;
-  --color-bgAccent: #EBF7FF;
-  
-  /* ── Text Colors ── */
-  --color-textPrimary: #111827;
-  --color-textSecondary: #374151;
-  --color-textTertiary: #6B7280;
-  --color-textDisabled: #9CA3AF;
-  --color-textHeading: #0F172A;
-  --color-textBody: #334155;
-  
-  /* ── Border Colors ── */
-  --color-borderPrimary: #E5E7EB;
-  --color-borderSecondary: #D1D5DB;
-  --color-borderDark: #1F2937;
-  
-  /* ── Status Colors ── */
-  --color-successColor: #22C55E;
-  --color-errorColor: #EF4444;
-  --color-warningColor: #F59E0B;
 }
 
 body {
@@ -99,10 +70,10 @@ h1, h2, h3, h4, h5, h6 {
 .hubspot-form-container .hs-input:focus,
 .hubspot-form-container select:focus,
 .hubspot-form-container textarea:focus {
-  border-color: var(--color-brand-blue) !important;
+  border-color: var(--color-primaryColor) !important;
   background: #ffffff !important;
   outline: none !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-blue) 10%, transparent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primaryColor) 10%, transparent) !important;
   color: #1e293b !important;
 }
 
@@ -136,7 +107,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Submit button */
 .hubspot-form-container .hs-button {
-  background: linear-gradient(to right, var(--color-brand-light), var(--color-brand-blue)) !important;
+  background: linear-gradient(to right, var(--color-primaryLight), var(--color-primaryColor)) !important;
   color: white !important;
   border: none !important;
   border-radius: 0.75rem !important;
@@ -147,12 +118,12 @@ h1, h2, h3, h4, h5, h6 {
   transition: all 0.3s !important;
   width: 100% !important;
   margin-top: 1rem !important;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand-blue) 20%, transparent) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primaryColor) 20%, transparent) !important;
 }
 
 .hubspot-form-container .hs-button:hover {
-  background: linear-gradient(to right, var(--color-brand-blue), var(--color-brand-hover)) !important;
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-brand-blue) 30%, transparent) !important;
+  background: linear-gradient(to right, var(--color-primaryColor), var(--color-primaryHover)) !important;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-primaryColor) 30%, transparent) !important;
   transform: translateY(-1px) !important;
 }
 
