@@ -75,7 +75,7 @@ export default async function UsefulVideoPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section with Background */}
-      <div className="relative bg-gradient-to-r from-blue-500/80 to-blue-600/80 py-16 pt-32">
+      <div className="relative bg-gradient-to-r from-primaryColor/80 to-primaryColor/80 py-16 pt-32">
         <div className="absolute inset-0 bg-[url('/useful-video/video-thumbnail-01.jpg')] bg-cover bg-center opacity-30"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -88,26 +88,26 @@ export default async function UsefulVideoPage() {
       </div>
 
       {/* Breadcrumb */}
-      <div className="bg-gray-100 py-3 border-b">
+      <div className="bg-bgTertiary py-3 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center text-sm text-gray-600">
-            <Link href="/" className="hover:text-blue-600 flex items-center">
+          <nav className="flex items-center text-sm text-textTertiary">
+            <Link href="/" className="hover:text-primaryColor flex items-center">
               <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
               {t('breadcrumb.home')}
             </Link>
             <span className="mx-2">›</span>
-            <span className="text-gray-900 font-medium">{t('breadcrumb.usefulVideo')}</span>
+            <span className="text-textPrimary font-medium">{t('breadcrumb.usefulVideo')}</span>
           </nav>
         </div>
       </div>
 
       {/* Page Title */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 border-b-4 border-blue-500 pb-2 inline-block">
+        <h2 className="text-2xl md:text-3xl font-bold text-textPrimary border-b-4 border-primaryColor pb-2 inline-block">
           {t('pageTitle')}
-          <span className="text-sm font-normal text-gray-500 ml-2">– category –</span>
+          <span className="text-sm font-normal text-textTertiary ml-2">– category –</span>
         </h2>
       </div>
 
@@ -118,7 +118,7 @@ export default async function UsefulVideoPage() {
             <Link
               href="#"
               key={video.id}
-              className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+              className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-surface-tertiary"
             >
               {/* Thumbnail */}
               <div className="relative aspect-video overflow-hidden">
@@ -130,7 +130,7 @@ export default async function UsefulVideoPage() {
                 />
                 {/* Category Badge */}
                 <div className="absolute top-3 left-3">
-                  <span className="px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded flex items-center">
+                  <span className="px-3 py-1 bg-primaryColor text-white text-xs font-medium rounded flex items-center">
                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
                     </svg>
@@ -141,14 +141,14 @@ export default async function UsefulVideoPage() {
 
               {/* Content */}
               <div className="p-5">
-                <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="text-lg font-bold text-textPrimary mb-3 line-clamp-2 group-hover:text-primaryColor transition-colors">
                   {video.title}
                 </h3>
 
                 {/* Meta Info */}
                 <div className="flex items-center justify-between">
                   {/* Date */}
-                  <div className="flex items-center text-sm text-gray-500">
+                  <div className="flex items-center text-sm text-textTertiary">
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
@@ -165,14 +165,14 @@ export default async function UsefulVideoPage() {
                         className="object-cover"
                       />
                     </div>
-                    <span className="text-sm text-gray-600">{video.author}</span>
+                    <span className="text-sm text-textTertiary">{video.author}</span>
                   </div>
                 </div>
               </div>
 
               {/* Read More */}
               <div className="px-5 pb-5">
-                <span className="text-blue-600 text-sm font-medium group-hover:underline">
+                <span className="text-primaryColor text-sm font-medium group-hover:underline">
                   {t('readMore')} »
                 </span>
               </div>
@@ -183,7 +183,7 @@ export default async function UsefulVideoPage() {
         {/* Pagination */}
         <div className="flex justify-center mt-12">
           <nav className="flex items-center space-x-2">
-            <span className="w-10 h-10 flex items-center justify-center bg-gray-300 text-white rounded font-medium">
+            <span className="w-10 h-10 flex items-center justify-center bg-borderSecondary text-white rounded font-medium">
               1
             </span>
           </nav>
@@ -191,33 +191,30 @@ export default async function UsefulVideoPage() {
       </div>
 
       {/* CTA Section */}
-      <div className="relative py-16 bg-gray-800">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-fixed opacity-40"
-          style={{ backgroundImage: "url('/useful-video/video-thumbnail-01.jpg')" }}
-        ></div>
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+      <section className="relative py-20 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 whitespace-pre-line">
             {t('cta.title')}
           </h2>
-          <p className="text-white/90 mb-3">
+          <p className="text-white/80 mb-2 text-base">
             {t('cta.description1')}
           </p>
-          <p className="text-white/90 mb-8">
+          <p className="text-white/80 mb-10 text-base">
             {t('cta.description2')}
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             {t('cta.button')}
           </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

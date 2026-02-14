@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
             priority
           />
           {/* Blue Overlay */}
-          <div className="absolute inset-0 bg-[#549fe3]/60"></div>
+          <div className="absolute inset-0 bg-primaryColor/60"></div>
         </div>
 
         {/* Hero Content */}
@@ -32,10 +32,10 @@ export default function PrivacyPolicyPage() {
       </section>
 
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-3 border-b border-gray-200">
+      <div className="bg-bgSecondary py-3 border-b border-borderPrimary">
         <div className="max-w-6xl mx-auto px-4">
-          <nav className="flex items-center space-x-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-[#549fe3] flex items-center">
+          <nav className="flex items-center space-x-2 text-sm text-textTertiary">
+            <Link href="/" className="hover:text-primaryColor flex items-center">
               <svg
                 className="w-4 h-4 mr-1"
                 fill="currentColor"
@@ -45,8 +45,8 @@ export default function PrivacyPolicyPage() {
               </svg>
               {t("breadcrumb.home")}
             </Link>
-            <span className="text-gray-400">›</span>
-            <span className="text-gray-800">{t("breadcrumb.privacyPolicy")}</span>
+            <span className="text-textDisabled">›</span>
+            <span className="text-textPrimary">{t("breadcrumb.privacyPolicy")}</span>
           </nav>
         </div>
       </div>
@@ -56,21 +56,21 @@ export default function PrivacyPolicyPage() {
         <div className="max-w-4xl mx-auto px-4">
           <div className="prose prose-lg max-w-none">
             {/* Collecting and Using Your Personal Data */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
               {t("sections.collecting.title")}
             </h2>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-8 mb-4">
               {t("sections.typesOfData.title")}
             </h3>
 
-            <h4 className="text-lg font-semibold text-gray-700 mt-6 mb-3">
+            <h4 className="text-lg font-semibold text-textSecondary mt-6 mb-3">
               {t("sections.personalData.title")}
             </h4>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.personalData.description")}
             </p>
-            <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-600">
+            <ul className="list-disc pl-6 mb-6 space-y-2 text-textTertiary">
               <li>{t("sections.personalData.items.email")}</li>
               <li>{t("sections.personalData.items.name")}</li>
               <li>{t("sections.personalData.items.phone")}</li>
@@ -78,27 +78,27 @@ export default function PrivacyPolicyPage() {
               <li>{t("sections.personalData.items.usageData")}</li>
             </ul>
 
-            <h4 className="text-lg font-semibold text-gray-700 mt-6 mb-3">
+            <h4 className="text-lg font-semibold text-textSecondary mt-6 mb-3">
               {t("sections.usageData.title")}
             </h4>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.usageData.description1")}
             </p>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.usageData.description2")}
             </p>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.usageData.description3")}
             </p>
 
             {/* Tracking Technologies and Cookies */}
-            <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-8 mb-4">
               {t("sections.tracking.title")}
             </h3>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.tracking.description")}
             </p>
-            <ul className="list-disc pl-6 mb-6 space-y-3 text-gray-600">
+            <ul className="list-disc pl-6 mb-6 space-y-3 text-textTertiary">
               <li>
                 <strong>{t("sections.tracking.cookies.title")}</strong>{" "}
                 {t("sections.tracking.cookies.description")}
@@ -109,14 +109,14 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
 
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.cookieTypes.description")}
             </p>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.cookieTypes.useBoth")}
             </p>
 
-            <ul className="list-disc pl-6 mb-6 space-y-4 text-gray-600">
+            <ul className="list-disc pl-6 mb-6 space-y-4 text-textTertiary">
               <li>
                 <strong>{t("sections.cookieTypes.necessary.title")}</strong>
                 <br />
@@ -155,18 +155,18 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
 
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.cookieTypes.moreInfo")}
             </p>
 
             {/* Use of Your Personal Data */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.useOfData.title")}
             </h2>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.useOfData.description")}
             </p>
-            <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-600">
+            <ul className="list-disc pl-6 mb-6 space-y-2 text-textTertiary">
               <li>{t("sections.useOfData.purposes.provide")}</li>
               <li>{t("sections.useOfData.purposes.manage")}</li>
               <li>{t("sections.useOfData.purposes.contract")}</li>
@@ -177,10 +177,10 @@ export default function PrivacyPolicyPage() {
               <li>{t("sections.useOfData.purposes.other")}</li>
             </ul>
 
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.sharing.description")}
             </p>
-            <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-600">
+            <ul className="list-disc pl-6 mb-6 space-y-2 text-textTertiary">
               <li>{t("sections.sharing.serviceProviders")}</li>
               <li>{t("sections.sharing.businessTransfers")}</li>
               <li>{t("sections.sharing.affiliates")}</li>
@@ -190,56 +190,56 @@ export default function PrivacyPolicyPage() {
             </ul>
 
             {/* Retention */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.retention.title")}
             </h2>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.retention.description1")}
             </p>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.retention.description2")}
             </p>
 
             {/* Transfer */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.transfer.title")}
             </h2>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.transfer.description1")}
             </p>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.transfer.description2")}
             </p>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.transfer.description3")}
             </p>
 
             {/* Disclosure */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.disclosure.title")}
             </h2>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-6 mb-4">
               {t("sections.disclosure.business.title")}
             </h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.disclosure.business.description")}
             </p>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-6 mb-4">
               {t("sections.disclosure.lawEnforcement.title")}
             </h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.disclosure.lawEnforcement.description")}
             </p>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-6 mb-4">
               {t("sections.disclosure.otherLegal.title")}
             </h3>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.disclosure.otherLegal.description")}
             </p>
-            <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-600">
+            <ul className="list-disc pl-6 mb-6 space-y-2 text-textTertiary">
               <li>{t("sections.disclosure.otherLegal.items.comply")}</li>
               <li>{t("sections.disclosure.otherLegal.items.protect")}</li>
               <li>{t("sections.disclosure.otherLegal.items.prevent")}</li>
@@ -248,82 +248,82 @@ export default function PrivacyPolicyPage() {
             </ul>
 
             {/* Security */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.security.title")}
             </h2>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.security.description")}
             </p>
 
             {/* Service Providers */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.serviceProviders.title")}
             </h2>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.serviceProviders.description")}
             </p>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-6 mb-4">
               {t("sections.analytics.title")}
             </h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.analytics.description")}
             </p>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-6 mb-4">
               {t("sections.emailMarketing.title")}
             </h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.emailMarketing.description")}
             </p>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-4">
+            <h3 className="text-xl font-semibold text-textPrimary mt-6 mb-4">
               {t("sections.payments.title")}
             </h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.payments.description")}
             </p>
 
             {/* Links to Other Websites */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.links.title")}
             </h2>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.links.description1")}
             </p>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.links.description2")}
             </p>
 
             {/* Changes to this Privacy Policy */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.changes.title")}
             </h2>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.changes.description1")}
             </p>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.changes.description2")}
             </p>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-textTertiary mb-6 leading-relaxed">
               {t("sections.changes.description3")}
             </p>
 
             {/* Contact Us */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#549fe3] pl-4 mt-10">
+            <h2 className="text-2xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4 mt-10">
               {t("sections.contact.title")}
             </h2>
-            <p className="text-gray-600 mb-4 leading-relaxed">
+            <p className="text-textTertiary mb-4 leading-relaxed">
               {t("sections.contact.description")}
             </p>
-            <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-600">
+            <ul className="list-disc pl-6 mb-6 space-y-2 text-textTertiary">
               <li>
                 {t("sections.contact.website")}{" "}
                 <a
                   href="https://cosbe.inc/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#549fe3] hover:underline"
+                  className="text-primaryColor hover:underline"
                 >
                   https://cosbe.inc/
                 </a>
@@ -332,7 +332,7 @@ export default function PrivacyPolicyPage() {
                 {t("sections.contact.email")}{" "}
                 <a
                   href="mailto:info@cosbe.inc"
-                  className="text-[#549fe3] hover:underline"
+                  className="text-primaryColor hover:underline"
                 >
                   info@cosbe.inc
                 </a>
@@ -343,36 +343,21 @@ export default function PrivacyPolicyPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-20">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src="/company/cta-background.jpg"
-            alt="CTA Background"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gray-900/80"></div>
-        </div>
-
-        {/* CTA Content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-4 whitespace-pre-line">
+      <section className="relative py-20 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 whitespace-pre-line">
             {t("cta.title")}
           </h2>
-          <p className="text-gray-300 mb-2">{t("cta.description1")}</p>
-          <p className="text-gray-300 mb-8">{t("cta.description2")}</p>
+          <p className="text-white/80 mb-2 text-base">{t("cta.description1")}</p>
+          <p className="text-white/80 mb-10 text-base">{t("cta.description2")}</p>
           <Link
             href="/contact"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#549fe3] to-[#35eaff] text-white font-semibold rounded-full hover:opacity-90 transition-opacity shadow-lg"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             {t("cta.button")}
           </Link>

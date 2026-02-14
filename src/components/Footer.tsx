@@ -22,7 +22,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-white border-t border-gray-200 py-12 mt-16 relative">
+    <footer className="bg-white border-t border-borderPrimary py-12 mt-16 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Logo and Tagline */}
@@ -38,14 +38,14 @@ export default function Footer() {
                 />
               </Link>
             </div>
-            <p className="text-sm text-gray-600 font-medium">
-              <span className="text-gray-600">The </span>
-              <span className="text-blue-600">Cos</span>
-              <span className="text-gray-600">mopolitan </span>
-              <span className="text-blue-600">B</span>
-              <span className="text-gray-600">usiness </span>
-              <span className="text-blue-600">E</span>
-              <span className="text-gray-600">ngine</span>
+            <p className="text-sm text-textTertiary font-medium">
+              <span className="text-textTertiary">The </span>
+              <span className="text-primaryColor">Cos</span>
+              <span className="text-textTertiary">mopolitan </span>
+              <span className="text-primaryColor">B</span>
+              <span className="text-textTertiary">usiness </span>
+              <span className="text-primaryColor">E</span>
+              <span className="text-textTertiary">ngine</span>
             </p>
           </div>
 
@@ -53,32 +53,32 @@ export default function Footer() {
           <div>
             <ul className="space-y-2">
               <li>
-                <Link href="/ai-lab" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/ai-lab" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('businessContent')}
                 </Link>
               </li>
               <li>
-                <Link href="/company" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/company" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('companyProfile')}
                 </Link>
               </li>
               <li>
-                <Link href="/case-studies" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/case-studies" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('caseStudies')}
                 </Link>
               </li>
               <li>
-                <Link href="/useful-column" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/useful-column" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('usefulColumn')}
                 </Link>
               </li>
               <li>
-                <Link href="/notice" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/notice" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('announcement')}
                 </Link>
               </li>
@@ -89,20 +89,20 @@ export default function Footer() {
           <div>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('homePage')}
                 </Link>
               </li>
               <li>
-                <Link href="/privacy-policy" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/privacy-policy" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('privacyPolicy')}
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-700 hover:text-blue-600 text-sm flex items-center">
-                  <span className="mr-2 text-blue-600">▸</span>
+                <Link href="/contact" className="text-textSecondary hover:text-primaryColor text-sm flex items-center">
+                  <span className="mr-2 text-primaryColor">▸</span>
                   {t('inquiry')}
                 </Link>
               </li>
@@ -111,16 +111,16 @@ export default function Footer() {
         </div>
 
         {/* Company Info */}
-        <div className="border-t border-gray-200 pt-8">
+        <div className="border-t border-borderPrimary pt-8">
           <div className="text-center md:text-left mb-4">
-            <h3 className="text-lg font-semibold text-blue-600 mb-2">CosBE Incorporated</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="text-lg font-semibold text-primaryColor mb-2">CosBE Incorporated</h3>
+            <p className="text-sm text-textTertiary">
               3 East Third Ave, San Mateo, CA, United States of America
             </p>
           </div>
           
           {/* Copyright */}
-          <div className="text-center text-sm text-gray-600">
+          <div className="text-center text-sm text-textTertiary">
             {t('copyright')}
           </div>
         </div>
@@ -130,18 +130,18 @@ export default function Footer() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-14 h-14 bg-white border-2 border-blue-500 rounded-full shadow-lg flex flex-col items-center justify-center hover:bg-blue-50 transition-all duration-300 z-50"
+          className="fixed bottom-8 right-8 w-14 h-14 bg-white border-2 border-primaryColor rounded-full shadow-lg flex flex-col items-center justify-center hover:bg-bgAccent transition-all duration-300 z-50"
           aria-label="Scroll to top"
         >
           <svg 
-            className="w-4 h-4 text-blue-500" 
+            className="w-4 h-4 text-primaryColor" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
           </svg>
-          <span className="text-xs font-semibold text-blue-500 mt-0.5">TOP</span>
+          <span className="text-xs font-semibold text-primaryColor mt-0.5">TOP</span>
         </button>
       )}
     </footer>
