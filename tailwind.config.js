@@ -18,9 +18,9 @@ module.exports = {
       },
       colors: {
         /* ── Primary Colors ── */
-        primaryColor: '#5FA4E6',
-        primaryHover: '#4A8FD1',
-        primaryLight: '#7AB5ED',
+        primaryColor: '#549FE3',
+        primaryHover: '#4589CC',
+        primaryLight: '#6FAFE8',
         primaryDark: '#3A7AB8',
 
         /* ── Background Colors ── */

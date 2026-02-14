@@ -7,11 +7,7 @@ import type { Locale } from '@/i18n/routing';
 
 export default function AiLabPage() {
   const t = useTranslations('aiLabPage');
-<<<<<<< HEAD
-  const locale = useLocale();
-=======
   const locale = useLocale() as Locale;
->>>>>>> master
 
   const challenges = [
     { key: 'challenge1', image: '/ai-lab/challenge1.webp' },
@@ -353,7 +349,7 @@ export default function AiLabPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full bg-primaryColor/10 rounded-2xl overflow-hidden">
+              <table className="w-full rounded-2xl overflow-hidden border-collapse">
                 <thead className="bg-primaryColor text-white">
                   <tr>
                     <th className="p-4 text-left"></th>
@@ -363,53 +359,53 @@ export default function AiLabPage() {
                   </tr>
                 </thead>
                 <tbody className="text-sm">
-                  <tr className="border-b border-primaryColor/30">
-                    <td className="p-4 font-semibold">{t('pricing.comparison.agile')}</td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-successColor rounded-full" />
+                  <tr className="border-b border-gray-200">
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.agile')}</td>
+                    <td className="p-4 text-center bg-white">
+                      <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
                     </td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-successColor rounded-full" />
+                    <td className="p-4 text-center bg-white">
+                      <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
                     </td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-successColor rounded-full" />
-                    </td>
-                  </tr>
-                  <tr className="border-b border-primaryColor/30">
-                    <td className="p-4 font-semibold">{t('pricing.comparison.consulting')}</td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-successColor rounded-full" />
-                    </td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-errorColor rounded-full">✕</span>
-                    </td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-errorColor rounded-full">✕</span>
+                    <td className="p-4 text-center bg-white">
+                      <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
                     </td>
                   </tr>
-                  <tr className="border-b border-primaryColor/30">
-                    <td className="p-4 font-semibold">{t('pricing.comparison.serverTools')}</td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-successColor rounded-full" />
+                  <tr className="border-b border-gray-200">
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.consulting')}</td>
+                    <td className="p-4 text-center bg-white">
+                      <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
                     </td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-errorColor rounded-full">✕</span>
+                    <td className="p-4 text-center bg-white">
+                      <span className="text-errorColor text-2xl font-light">×</span>
                     </td>
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 bg-errorColor rounded-full">✕</span>
+                    <td className="p-4 text-center bg-white">
+                      <span className="text-errorColor text-2xl font-light">×</span>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.serverTools')}</td>
+                    <td className="p-4 text-center bg-white">
+                      <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
+                    </td>
+                    <td className="p-4 text-center bg-white">
+                      <span className="text-errorColor text-2xl font-light">×</span>
+                    </td>
+                    <td className="p-4 text-center bg-white">
+                      <span className="text-errorColor text-2xl font-light">×</span>
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">{t('pricing.comparison.price')}</td>
-                    <td className="p-4 text-center">
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.price')}</td>
+                    <td className="p-4 text-center bg-white">
                       <p className="font-bold text-lg">{t('pricing.comparison.cosbePrice')}</p>
                       <p className="text-xs text-textTertiary">{t('pricing.comparison.cosbeNote')}</p>
                     </td>
-                    <td className="p-4 text-center">
+                    <td className="p-4 text-center bg-white">
                       <p className="font-bold text-lg">{t('pricing.comparison.companyAPrice')}</p>
                       <p className="text-xs text-textTertiary">{t('pricing.comparison.companyANote')}</p>
                     </td>
-                    <td className="p-4 text-center">
+                    <td className="p-4 text-center bg-white">
                       <p className="font-bold text-lg">{t('pricing.comparison.companyBPrice')}</p>
                       <p className="text-xs text-textTertiary">{t('pricing.comparison.companyBNote')}</p>
                     </td>
