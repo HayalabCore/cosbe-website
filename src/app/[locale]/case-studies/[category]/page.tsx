@@ -14,7 +14,7 @@ type CategoryPageProps = {
 const validCategories = ['efficiency', 'hr-improvement', 'innovation', 'customer-marketing'];
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { category } = await params;
+  const { category, locale } = await params;
   
   // Validate category
   if (!validCategories.includes(category)) {
@@ -50,7 +50,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     {
       id: 1,
       slug: '2month-ai-mvp',
-      image: '/case-studies/new-business-2months.png',
+      image: locale === 'en' ? '/case-studies/new-business-2months en.png' : '/case-studies/new-business-2months.png',
       category: t('case1.category'),
       title: t('case1.title'),
       date: t('case1.date'),
@@ -59,7 +59,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     {
       id: 2,
       slug: 'kando',
-      image: '/case-studies/training-instructor.png',
+      image: locale === 'en' ? '/case-studies/training-instructor en.png' : '/case-studies/training-instructor.png',
       category: t('case2.category'),
       title: t('case2.title'),
       date: t('case2.date'),
@@ -68,7 +68,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     {
       id: 3,
       slug: 'cosbe',
-      image: '/case-studies/resume-screening.png',
+      image: locale === 'en' ? '/case-studies/resume-screening en.png' : '/case-studies/resume-screening.png',
       category: t('case3.category'),
       title: t('case3.title'),
       date: t('case3.date'),

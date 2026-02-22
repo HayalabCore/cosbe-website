@@ -3,7 +3,7 @@
     "companyOverview": "Company Overview",
     "aiTransformation": "AI Transformation",
     "cosbeAiTransformation": "CosBe's AI transformation",
-    "fastAiLab": "Fast AI Lab",
+    "fastAiLab": "HAYAI Lab",
     "aiPartnerRecruitment": "AI Partner Recruitment",
     "usefulInfo": "Useful Information",
     "caseStudies": "Case studies",
@@ -74,7 +74,7 @@
       },
       "event2": {
         "date": "May 2024",
-        "title": "Released Hayaku AI Lab",
+        "title": "Released HAYAI Lab",
         "description": "Immediately bring to life managers' AI ideas"
       },
       "event3": {
@@ -92,7 +92,7 @@
       "representative": "Representative",
       "representativeName": "Founder & CEO Kenjiro Momi",
       "business": "Business",
-      "business1": "Hayaku AI Lab (AI MVP Development)",
+      "business1": "HAYAI Lab (AI MVP Development)",
       "business2": "AI Transformation Support",
       "business3": "AI Consulting"
     },
@@ -109,7 +109,7 @@
       "title": "We will support your business in various aspects.",
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquire about Hayaku AI Lab"
+      "button": "Inquire about HAYAI Lab"
     }
   },
   "aiTransformation": {
@@ -197,22 +197,22 @@
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form.",
       "additionalText": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "aiLab": {
     "hero": {
-      "badge": "Hayaku AI Lab",
+      "badge": "HAYAI Lab",
       "title": "Concrete AI results in just 2 months",
       "subtitle": "From \"Can AI solve this?\" to a working MVP that proves value",
-      "description": "Hayaku AI Lab is a rapid AI experimentation lab for executives who want to move from ideas to concrete results fast. In as little as two months, we turn your AI concepts into working services, validate them with real data, and create a foundation for full-scale rollout.",
-      "primaryCta": "Consult about Hayaku AI Lab (Free)",
+      "description": "HAYAI Lab is a rapid AI experimentation lab for executives who want to move from ideas to concrete results fast. In as little as two months, we turn your AI concepts into working services, validate them with real data, and create a foundation for full-scale rollout.",
+      "primaryCta": "Consult about HAYAI Lab (Free)",
       "secondaryCta": "Download detailed materials",
       "imageAlt": "Visual of AI brain connected to digital infrastructure"
     },
     "offerings": {
-      "title": "What you can do with Hayaku AI Lab",
-      "description": "We design and build AI solutions that directly connect to management and business outcomes. Here are three representative projects realized through Hayaku AI Lab.",
+      "title": "What you can do with HAYAI Lab",
+      "description": "We design and build AI solutions that directly connect to management and business outcomes. Here are three representative projects realized through HAYAI Lab.",
       "resume": {
         "label": "HR / Talent",
         "title": "Generate Japanese resumes from English CVs",
@@ -272,14 +272,14 @@
     "ctaSection": {
       "title": "Turn your \"someday\" AI ideas into concrete results now",
       "description": "If you have even a rough idea such as \"Could AI help with this?\", please feel free to talk with us. Together we will design an AI MVP that is realistic for your organization and create visible results within a short time frame.",
-      "button": "Ask about Hayaku AI Lab (Free)"
+      "button": "Ask about HAYAI Lab (Free)"
     }
   },
   "aiLabPage": {
     "hero": {
-      "title": "Hayaku AI Lab",
-      "subtitle": "AI-Specialized Agile Development Service \"Hayaku AI Lab\"",
-      "description1": "Hayaku AI Lab is a service that rapidly develops prototypes of products and services utilizing AI.",
+      "title": "HAYAI Lab",
+      "subtitle": "AI-Specialized Agile Development Service \"HAYAI Lab\"",
+      "description1": "HAYAI Lab is a service that rapidly develops prototypes of products and services utilizing AI.",
       "description2": "For example, it's ideal for companies and entrepreneurs who have concerns such as \"I have an idea for a new AI app but don't know how to create it\" or \"I'm thinking of an AI-powered service but can't move forward because we don't have experts.\"",
       "description3": "By teaming up with our customers, we can achieve flexible and rapid development, with AI consultants who are knowledgeable about new businesses and world-class AI engineers.",
       "imageAlt": "AI development concept image"
@@ -309,7 +309,7 @@
       "text": " will help you solve these problems."
     },
     "features": {
-      "title": "Features of \"Hayaku AI Lab,\" an agile development service specializing in AI",
+      "title": "Features of \"HAYAI Lab,\" an agile development service specializing in AI",
       "feature1": {
         "title": "Quickly turn ideas into reality",
         "description": "We can start development immediately from your idea, without the hassle of creating a requirements specification document, and provide you with an MVP as quickly as possible.",
@@ -327,7 +327,7 @@
       }
     },
     "benefits": {
-      "title": "\"Hayaku AI Lab,\" an agile development service specializing in AI",
+      "title": "\"HAYAI Lab,\" an agile development service specializing in AI",
       "benefit1": {
         "title": "Realize your ideas in as little as two months! Quickly turn your ideas into reality.",
         "point1": "We can start development immediately from your idea, without the hassle of creating a requirements specification document, and provide you with an MVP as quickly as possible.",
@@ -339,8 +339,8 @@
         "title": "The secret to speedy development : \"AI LaaS\"",
         "point1": "\"AILaaS\" stands for AI Laboratory as a Service. We provide a service that acts as your company's AI laboratory.",
         "point2": "Just as knowledgeable researchers use cutting-edge experimental equipment in a real laboratory and conduct trial and error daily,",
-        "point2Bold": "Hayaku AI Lab will develop prototypes of your services within CosBE's well-equipped development environment.",
-        "point3": "Our AI consultants will propose an MVP based on your idea, and our AI engineers will quickly develop the first product. During your time at the Hayaku AI Lab, we will work with you to actually operate and improve the product, verifying your idea.",
+        "point2Bold": "HAYAI Lab will develop prototypes of your services within CosBE's well-equipped development environment.",
+        "point3": "Our AI consultants will propose an MVP based on your idea, and our AI engineers will quickly develop the first product. During your time at the HAYAI Lab, we will work with you to actually operate and improve the product, verifying your idea.",
         "imageAlt": "AI LaaS image"
       },
       "benefit3": {
@@ -352,7 +352,7 @@
       }
     },
     "aiAgentLink": {
-      "text": "/AI Agents provided by Hayaku AI Lab/",
+      "text": "/AI Agents provided by HAYAI Lab/",
       "button": "Learn more about AI Agents"
     },
     "pricing": {
@@ -369,9 +369,9 @@
         "title": "We promise high-quality business growth at unbeatable prices"
       },
       "amount": {
-        "development": "Fee: 1.5 million yen per month",
+        "development": "Fee: $10,000 per month",
         "developmentNote": "(Development, consulting, server, and various tool costs included *Minimum 2 months)",
-        "maintenance": "Maintenance and operation: from 50,000 yen per month",
+        "maintenance": "Maintenance and operation: from $350 per month",
         "maintenanceNote": "(Depending on the product, such as number of users and usage)"
       },
       "comparison": {
@@ -386,17 +386,17 @@
         "consulting": "Consulting",
         "serverTools": "Use of various server tools",
         "price": "price",
-        "cosbePrice": "1.5 million yen per month",
+        "cosbePrice": "$10,000 per month",
         "cosbeNote": "* Minimum 2 months",
-        "companyAPrice": "10 million yen and up",
+        "companyAPrice": "$70,000 and up",
         "companyANote": "(development only)",
-        "companyBPrice": "15 million yen -",
+        "companyBPrice": "$100,000 -",
         "companyBNote": "Initial costs and development only"
       }
     },
     "caseStudies": {
-      "subtitle": "Case study of \"Hayaku AI Lab,\" an agile development service specializing in AI",
-      "title": "Cross-industry AI solutions provided by Hayaku AI Lab",
+      "subtitle": "Case study of \"HAYAI Lab,\" an agile development service specializing in AI",
+      "title": "Cross-industry AI solutions provided by HAYAI Lab",
       "description": "CosBE has highly skilled AI engineers active internationally, and can flexibly handle a wide range of projects, from manufacturing, construction, and retail to IT.",
       "viewAll": "To the list of achievement",
       "case1": {
@@ -434,7 +434,7 @@
       "subtitle": "Please feel free to contact us first",
       "description": "For detailed service information, consultations, or estimates, please use the form.",
       "additionalText": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquire about Hayaku AI Lab"
+      "button": "Inquire about HAYAI Lab"
     }
   },
   "caseStudies": {
@@ -558,9 +558,9 @@
     "description": "Thank you for your interest in CosBE. Please feel free to ask questions or consult with us using the form below. Our representative will contact you back.",
     "form": {
       "progressTracker": {
-        "input": "Input screen",
-        "confirm": "Confirmation screen",
-        "complete": "Completion screen"
+        "input": "Input Confirmation screen",
+        "confirm": "Confirmation Completion screen",
+        "complete": "Completion"
       },
       "fields": {
         "required": "Required",
@@ -599,7 +599,7 @@
           "label": "Inquiry Details"
         }
       },
-      "submitButton": "To the confirmation screen",
+      "submitButton": "To the Input Confirmation Completion screen",
       "privacyPolicy": "Privacy Policy",
       "privacyPolicyAgree": " - You are deemed to have agreed to it."
     },
@@ -617,13 +617,13 @@
     }
   },
   "aiAgent": {
-    "heroTitle": "AI Agent | Fast AI Lab",
+    "heroTitle": "AI Agent | HAYAI Lab",
     "breadcrumb": {
       "home": "Home",
-      "aiLab": "Fast AI Lab",
-      "current": "AI Agent | Fast AI Lab"
+      "aiLab": "HAYAI Lab",
+      "current": "AI Agent | HAYAI Lab"
     },
-    "badge": "Fast AI Lab",
+    "badge": "HAYAI Lab",
     "title": "AI Agents",
     "subtitle": "AI will carry out tasks autonomously, and humans will focus on maximizing added value that AI cannot provide.",
     "intro1": "\"I want to introduce AI, but it seems like it will be difficult to operate...\"",
@@ -711,7 +711,7 @@
     },
     "features": {
       "badge": "Our Strengths",
-      "title": "Features of the \"Soku AI Lab\" AI Agent",
+      "title": "Features of the \"HAYAI Lab\" AI Agent",
       "subtitle": "Achieving both quick implementation and flexible expansion. An AI agent that supports top management strategies.",
       "feature1": {
         "title": "Agile development that allows prototyping in as little as two months",
@@ -757,12 +757,12 @@
     "pricing": {
       "badge": "Price",
       "title": "Information on installation costs",
-      "description": "Hayaku AI Lab provides consistent support to maximize your business impact, with an optimal price design that allows you to start small.",
+      "description": "HAYAI Lab provides consistent support to maximize your business impact, with an optimal price design that allows you to start small.",
       "feeLabel": "Fee",
-      "fee": "1.5 million yen per month",
+      "fee": "$10,000 per month",
       "feeNote": "(Development, consulting, server, and various tool costs included *Minimum 2 months)",
       "maintenanceLabel": "Maintenance and operation",
-      "maintenance": "from 50,000 yen per month",
+      "maintenance": "from $350 per month",
       "maintenanceNote": "(Depending on the product, such as number of users and usage)",
       "companyA": "Company A",
       "companyB": "Company B",
@@ -771,20 +771,20 @@
       "serverTools": "Use of various server tools",
       "priceLabel": "price",
       "minMonths": "* Minimum 2 months",
-      "cosbePriceMain": "1.5 million yen per",
+      "cosbePriceMain": "$10,000 per",
       "cosbePriceSub": "month",
-      "companyAPrice": "10 million yen and",
+      "companyAPrice": "$70,000 and",
       "companyAPriceSub": "up (development only)",
-      "companyBPrice": "15 million yen -",
+      "companyBPrice": "$100,000 -",
       "companyBPriceSub": "Initial costs and development only"
     },
     "faq": {
       "badge": "Q&A",
       "title": "Frequently Asked Questions",
       "q1": "How much does it cost to deploy an AI agent?",
-      "a1": "An MVP (minimum functionality initial product) can be developed in 2 months (3 million yen) or more.",
+      "a1": "An MVP (minimum functionality initial product) can be developed in 2 months ($20,000) or more.",
       "q2": "How much does it cost to operate monthly?",
-      "a2": "If you run it in the CosBE cloud environment, it will cost from 50,000 yen/month (depending on the load).",
+      "a2": "If you run it in the CosBE cloud environment, it will cost from $350/month (depending on the load).",
       "q3": "How long will it take to get started?",
       "a3": "As we will be working in an agile style, implementation will take as little as two months.",
       "q4": "Is it really possible to implement AI even if there are no personnel with AI expertise in-house?",
@@ -800,7 +800,7 @@
       "title": "We support your business from various aspects\nPlease feel free to consult with us",
       "description1": "For consultations on detailed service content and estimates, please use the form.",
       "description2": "We respond flexibly according to the situation, so please feel free to contact us first.",
-      "button": "Contact about Fast AI Lab"
+      "button": "Contact about HAYAI Lab"
     }
   },
   "caseStudiesPage": {
@@ -844,7 +844,7 @@
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form.",
       "message": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "caseStudyDetails": {
@@ -852,7 +852,7 @@
       "title": "[Case Study] Solving the problem of a lack of professional instructors!",
       "categoryName": "Human Resources and Organizational Improvement",
       "publishDate": "August 31, 2024",
-      "heroImage": "/case-studies/details/kando-hero.png",
+      "heroImage": "/case-studies/details/kando-hero en.png",
       "tableOfContents": {
         "title": "Table of Contents",
         "background": "Background of the issue",
@@ -884,7 +884,7 @@
       "section2": {
         "title": "Solution Overview",
         "subtitle": "Improving instructor productivity with AI agents",
-        "description": "\"Hayaku AI Lab\" is a system that utilizes an interactive AI agent to streamline the \"pre-preparation\" stage before training participants consult with instructors, significantly reducing the burden on instructors.",
+        "description": "\"HAYAI Lab\" is a system that utilizes an interactive AI agent to streamline the \"pre-preparation\" stage before training participants consult with instructors, significantly reducing the burden on instructors.",
         "feature1Title": "AI technology",
         "feature1Item1": "We have introduced an AI agent based on a large-scale language model (LLM) and refined requests and issues through repeated dialogue with users.",
         "feature2Title": "Specific functions and approaches",
@@ -902,14 +902,14 @@
         "benefit2Description": "By interacting with an AI agent beforehand, students can organize their thoughts, allowing instructors more time to provide advanced expertise.",
         "benefit3Title": "Creating new business opportunities",
         "benefit3Description": "The functionality has grown significantly from what was initially envisioned, and a model for selling the AI agent itself as a separate service is now in sight. This flexible project approach is creating new business opportunities for both our clients and our company.",
-        "keyPointsIntro": "KANDO introduced \"Hayaku AI Lab\" to prepare for corporate training and achieved the following benefits:",
+        "keyPointsIntro": "KANDO introduced \"HAYAI Lab\" to prepare for corporate training and achieved the following benefits:",
         "keyPoint1": "Participants can freely consult with the AI, allowing for thorough advance preparation.",
         "keyPoint2": "Previously, one instructor would conduct multiple pre-interviews, but this has now been reduced to one or two.",
         "keyPoint3": "Instructors can now focus on highly specialized areas, improving the quality of the training itself."
       },
       "section4": {
         "title": "Summary",
-        "paragraph1": "\"Hayaku AI Lab\" solved KANDO's problem of a lack of professional instructors and achieved the great result of doubling training productivity.",
+        "paragraph1": "\"HAYAI Lab\" solved KANDO's problem of a lack of professional instructors and achieved the great result of doubling training productivity.",
         "paragraph2": "Going forward, we will continue to provide flexible AI solutions that meet the changing needs and business ideas of our customers, supporting their corporate growth and new value creation.",
         "ctaText": "Why not improve your business efficiency with AI?",
         "ctaButton": "Free consultation here"
@@ -933,7 +933,7 @@
       "title": "[Case Study] Solving the document screening issues of foreign resumes!",
       "categoryName": "Human Resources and Organizational Improvement",
       "publishDate": "August 31, 2024",
-      "heroImage": "/case-studies/resume-screening.png",
+      "heroImage": "/case-studies/resume-screening en.png",
       "tableOfContents": {
         "title": "Table of Contents",
         "background": "Background of the issue",
@@ -946,7 +946,7 @@
         "subtitle": "Challenges posed by diverse resume formats in overseas recruitment",
         "challenge1": "Our company (CosBE) employs foreign talent in our global management division. However, resume formats are not standardized overseas, and it was common for application documents to be 100 to 200 pages long.",
         "challenge2": "This meant that our recruiters had to spend a huge amount of time checking documents each time, which reduced work efficiency and increased the risk of making incorrect selections.",
-        "challenge3": "Furthermore, translating information into Japanese and organizing it required a lot of time and effort, putting pressure on the work that recruiters should be doing. Therefore, we decided to develop and implement 'Fast AI Lab' in-house to solve this problem."
+        "challenge3": "Furthermore, translating information into Japanese and organizing it required a lot of time and effort, putting pressure on the work that recruiters should be doing. Therefore, we decided to develop and implement 'HAYAI Lab' in-house to solve this problem."
       },
       "companyInfo": {
         "title": "Company Information",
@@ -965,7 +965,7 @@
       "section2": {
         "title": "Solution Overview",
         "subtitle": "Automatically convert foreign language resumes into standard Japanese formats",
-        "description": "Our 'Fast AI Lab' streamlines recruitment operations using the following process:",
+        "description": "Our 'HAYAI Lab' streamlines recruitment operations using the following process:",
         "feature1Title": "Analyzes various foreign language resumes",
         "feature1Item1": "Automatically extracts necessary information (name, academic background, work history, skills, etc.)",
         "feature2Title": "Conversion and output process",
@@ -990,7 +990,7 @@
       },
       "section4": {
         "title": "Summary",
-        "paragraph1": "The newly developed and implemented 'Hayaku AI Lab' has solved a major issue for the Global Management Division of our company, namely document screening for foreign recruitment, shortening the selection process from several days to just one hour. This has enabled recruitment staff to focus on more strategic tasks, contributing to the global expansion of the company as a whole.",
+        "paragraph1": "The newly developed and implemented 'HAYAI Lab' has solved a major issue for the Global Management Division of our company, namely document screening for foreign recruitment, shortening the selection process from several days to just one hour. This has enabled recruitment staff to focus on more strategic tasks, contributing to the global expansion of the company as a whole.",
         "paragraph2": "This function has the potential to convert not only resumes but also various other documents into a unified format. For example, it could convert purchase orders that have different formats for each client into a single unified format. We provide flexible AI solutions that meet customer needs, so please feel free to contact us if you have any problems.",
         "ctaText": "Why not improve your business efficiency with AI?",
         "ctaButton": "Free consultation here"
@@ -1235,7 +1235,7 @@
       "title": "We support your business from various perspectives. Please feel free to contact us first.",
       "description1": "Please use the form for consultations and quotes regarding detailed service content.",
       "description2": "We will respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "noticePage": {
@@ -1291,7 +1291,7 @@
       "title": "We will support your business in various aspects. Please feel free to contact us.",
       "description1": "For more information about our services or to request a quote, please fill out the form.",
       "description2": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "downloadPage": {
@@ -1359,7 +1359,7 @@
       "title": "We will support your business in various aspects.",
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "footer": {
@@ -1573,7 +1573,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "privacyPolicyPage": {
@@ -1746,7 +1746,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   }
 }
