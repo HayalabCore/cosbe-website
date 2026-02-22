@@ -14,7 +14,7 @@ type CaseStudyDetailProps = {
 const validSlugs = ['kando', 'cosbe', '2month-ai-mvp'];
 
 export default async function CaseStudyDetailPage({ params }: CaseStudyDetailProps) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   
   // Validate slug
   if (!validSlugs.includes(slug)) {
@@ -396,7 +396,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                 <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-surface-tertiary">
                   <div className="relative h-48 overflow-hidden">
                     <Image
-                      src="/case-studies/resume-screening.png"
+                      src={locale === 'en' ? '/case-studies/resume-screening en.png' : '/case-studies/resume-screening.png'}
                       alt={t('relatedArticles.article1Title')}
                       fill
                       className="object-cover"
@@ -414,7 +414,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                 <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-surface-tertiary">
                   <div className="relative h-48 overflow-hidden">
                     <Image
-                      src="/case-studies/new-business-2months.png"
+                      src={locale === 'en' ? '/case-studies/new-business-2months en.png' : '/case-studies/new-business-2months.png'}
                       alt={t('relatedArticles.article2Title')}
                       fill
                       className="object-cover"

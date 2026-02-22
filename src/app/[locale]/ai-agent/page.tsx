@@ -1,12 +1,13 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useState } from 'react';
 import Image from 'next/image';
 
 export default function AiAgentPage() {
   const t = useTranslations('aiAgent');
+  const locale = useLocale();
   const [activeTab, setActiveTab] = useState<'construction' | 'retail' | 'manufacturing'>('construction');
 
   return (
@@ -582,7 +583,7 @@ export default function AiAgentPage() {
             {/* Deployment Flow Diagram */}
             <div className="bg-white rounded-xl shadow-lg p-8">
               <Image 
-                src="/ai-agent/flow.jpg" 
+                src={locale === 'en' ? '/ai-agent/flow en.jpg' : '/ai-agent/flow.jpg'}
                 alt="Deployment Flow" 
                 width={1200} 
                 height={400}
@@ -634,47 +635,37 @@ export default function AiAgentPage() {
                   <tr className="border-b border-surface-tertiary bg-primaryColor/10">
                     <td className="px-6 py-4 font-semibold text-white bg-primaryColor">{t('pricing.agileDev')}</td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
-                        <span className="text-successColor text-xl">○</span>
-                      </div>
+                      <span className="text-green-500 text-6xl">○</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
-                        <span className="text-successColor text-xl">○</span>
-                      </div>
+                      <span className="text-green-500 text-6xl">○</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
-                        <span className="text-successColor text-xl">○</span>
-                      </div>
+                      <span className="text-green-500 text-6xl">○</span>
                     </td>
                   </tr>
                   <tr className="border-b border-surface-tertiary bg-primaryColor/10">
                     <td className="px-6 py-4 font-semibold text-white bg-primaryColor">{t('pricing.consulting')}</td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
-                        <span className="text-successColor text-xl">○</span>
-                      </div>
+                      <span className="text-green-500 text-6xl">○</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-errorColor text-2xl font-bold">✕</span>
+                      <span className="text-red-500 text-6xl">×</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-errorColor text-2xl font-bold">✕</span>
+                      <span className="text-red-500 text-6xl">×</span>
                     </td>
                   </tr>
                   <tr className="border-b border-surface-tertiary bg-primaryColor/10">
                     <td className="px-6 py-4 font-semibold text-white bg-primaryColor">{t('pricing.serverTools')}</td>
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full border-2 border-success">
-                        <span className="text-successColor text-xl">○</span>
-                      </div>
+                      <span className="text-green-500 text-6xl">○</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-errorColor text-2xl font-bold">✕</span>
+                      <span className="text-red-500 text-6xl">×</span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-errorColor text-2xl font-bold">✕</span>
+                      <span className="text-red-500 text-6xl">×</span>
                     </td>
                   </tr>
                   <tr className="bg-primaryColor/10">

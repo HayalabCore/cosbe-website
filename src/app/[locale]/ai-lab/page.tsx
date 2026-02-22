@@ -22,9 +22,18 @@ export default function AiLabPage() {
   ];
 
   const caseStudies = [
-    { key: 'case1', image: '/ai-lab/training-agent.png' },
-    { key: 'case2', image: '/ai-lab/new-business-2months.png' },
-    { key: 'case3', image: '/ai-lab/resume-from-en.png' },
+    { 
+      key: 'case1', 
+      image: locale === 'en' ? '/case-studies/training-instructor en.png' : '/case-studies/training-instructor.png' 
+    },
+    { 
+      key: 'case2', 
+      image: locale === 'en' ? '/case-studies/new-business-2months en.png' : '/case-studies/new-business-2months.png' 
+    },
+    { 
+      key: 'case3', 
+      image: locale === 'en' ? '/case-studies/resume-screening en.png' : '/case-studies/resume-screening.png' 
+    },
   ];
 
   return (
