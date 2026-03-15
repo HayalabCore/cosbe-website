@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
+import { Breadcrumb } from '@/components';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -31,31 +32,15 @@ export default async function CaseStudy2MonthAI({ params }: PageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <nav className="bg-bgSecondary py-4">
-        <div className="container mx-auto px-4">
-          <ol className="flex items-center space-x-2 text-sm">
-            <li>
-              <Link href="/" className="text-primaryColor hover:underline">
-                {t('breadcrumb.home')}
-              </Link>
-            </li>
-            <li className="text-textTertiary">/</li>
-            <li>
-              <Link href="/case-studies" className="text-primaryColor hover:underline">
-                {t('breadcrumb.caseStudies')}
-              </Link>
-            </li>
-            <li className="text-textTertiary">/</li>
-            <li>
-              <span className="text-primaryColor">{t('breadcrumb.innovation')}</span>
-            </li>
-            <li className="text-textTertiary">/</li>
-            <li className="text-textSecondary">{t('title')}</li>
-          </ol>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-white pt-16 md:pt-18 lg:pt-20">
+      <Breadcrumb
+        homeLabel={t('breadcrumb.home')}
+        items={[
+          { label: t('breadcrumb.caseStudies'), href: '/case-studies' },
+          { label: t('breadcrumb.innovation') },
+          { label: t('title') }
+        ]}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 lg:py-12">

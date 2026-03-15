@@ -103,14 +103,17 @@ export default async function CompanyPage() {
             </h2>
           </div>
 
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-4xl mx-auto px-4">
             <div className="relative">
-              {/* Timeline */}
-              <div className="space-y-12">
-                {/* Event 1 */}
-                <div className="flex items-start gap-8">
-                  <div className="flex-1 text-right">
-                    <div className="bg-white border border-borderPrimary rounded-lg p-6 shadow-sm inline-block">
+              {/* Continuous vertical line */}
+              <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-primaryLight -translate-x-1/2"></div>
+
+              {/* Timeline events */}
+              <div className="space-y-16">
+                {/* Event 1 - Left side */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-12 text-right">
+                    <div className="bg-white border border-borderPrimary rounded-lg p-6 shadow-sm">
                       <h3 className="text-primaryColor font-bold text-lg mb-2">
                         {t('history.event1.date')}
                       </h3>
@@ -122,22 +125,16 @@ export default async function CompanyPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-4 h-4 bg-primaryColor rounded-full"></div>
-                    <div className="w-0.5 h-24 bg-primaryLight"></div>
-                  </div>
-                  <div className="flex-1"></div>
+                  <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-primaryColor rounded-full z-10"></div>
+                  <div className="w-1/2 pl-12"></div>
                 </div>
 
-                {/* Event 2 */}
-                <div className="flex items-start gap-8">
-                  <div className="flex-1"></div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-4 h-4 bg-primaryColor rounded-full"></div>
-                    <div className="w-0.5 h-24 bg-primaryLight"></div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="bg-white border border-borderPrimary rounded-lg p-6 shadow-sm inline-block">
+                {/* Event 2 - Right side */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-12"></div>
+                  <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-primaryColor rounded-full z-10"></div>
+                  <div className="w-1/2 pl-12">
+                    <div className="bg-white border border-borderPrimary rounded-lg p-6 shadow-sm">
                       <h3 className="text-primaryColor font-bold text-lg mb-2">
                         {t('history.event2.date')}
                       </h3>
@@ -151,10 +148,10 @@ export default async function CompanyPage() {
                   </div>
                 </div>
 
-                {/* Event 3 */}
-                <div className="flex items-start gap-8">
-                  <div className="flex-1 text-right">
-                    <div className="bg-white border border-borderPrimary rounded-lg p-6 shadow-sm inline-block">
+                {/* Event 3 - Left side */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-12 text-right">
+                    <div className="bg-white border border-borderPrimary rounded-lg p-6 shadow-sm">
                       <h3 className="text-primaryColor font-bold text-lg mb-2">
                         {t('history.event3.date')}
                       </h3>
@@ -166,10 +163,8 @@ export default async function CompanyPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-4 h-4 bg-primaryColor rounded-full"></div>
-                  </div>
-                  <div className="flex-1"></div>
+                  <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-primaryColor rounded-full z-10"></div>
+                  <div className="w-1/2 pl-12"></div>
                 </div>
               </div>
             </div>

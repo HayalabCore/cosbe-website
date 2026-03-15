@@ -1,27 +1,21 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
 import Image from 'next/image';
+import { Link } from '@/i18n/routing';
+import { Breadcrumb } from '@/components';
 
 export default function AiTransformationPage() {
   const t = useTranslations('aiTransformationPage');
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-        {/* Breadcrumb */}
-        <div className="mb-8 text-sm text-textTertiary">
-          <Link href="/" className="hover:text-primaryColor">
-            <svg className="w-4 h-4 mr-1 inline" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-            </svg>
-            {t('home')}
-          </Link>
-          <span className="mx-2">›</span>
-          <span>{t('breadcrumb')}</span>
-        </div>
+    <div className="min-h-screen bg-white pt-16 md:pt-18 lg:pt-20">
+      <Breadcrumb
+        homeLabel={t('home')}
+        items={[{ label: t('breadcrumb') }]}
+      />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* CosBE's Strengths Heading */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-textPrimary inline-block pb-2 border-b-2 border-primaryColor">

@@ -4,31 +4,31 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useState } from 'react';
 import Image from 'next/image';
+import { Breadcrumb } from '@/components';
 
 export default function AiAgentPage() {
   const t = useTranslations('aiAgent');
   const [activeTab, setActiveTab] = useState<'construction' | 'retail' | 'manufacturing'>('construction');
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-16 md:pt-18 lg:pt-20">
       {/* Hero Section with Background */}
-      <div className="relative bg-gradient-to-r from-primaryColor to-primaryColor pt-20">
+      <div className="relative bg-gradient-to-r from-primaryColor to-primaryColor">
         <div className="absolute inset-0 bg-gradient-to-br from-primaryLight/50 to-primaryHover/50" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {/* Breadcrumb */}
-          <nav className="text-sm mb-8 text-white/90">
-            <Link href="/" className="hover:underline">{t('breadcrumb.home')}</Link>
-            <span className="mx-2">›</span>
-            <Link href="/ai-lab" className="hover:underline">{t('breadcrumb.aiLab')}</Link>
-            <span className="mx-2">›</span>
-            <span>{t('breadcrumb.current')}</span>
-          </nav>
-          
           <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
             {t('heroTitle')}
           </h1>
         </div>
       </div>
+
+      <Breadcrumb
+        homeLabel={t('breadcrumb.home')}
+        items={[
+          { label: t('breadcrumb.aiLab'), href: '/ai-lab' },
+          { label: t('breadcrumb.current') }
+        ]}
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

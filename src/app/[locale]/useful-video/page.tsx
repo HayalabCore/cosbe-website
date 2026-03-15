@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
+import { Breadcrumb } from '@/components';
 
 export default async function UsefulVideoPage() {
   const t = await getTranslations('usefulVideoPage');
@@ -87,21 +88,10 @@ export default async function UsefulVideoPage() {
         </div>
       </div>
 
-      {/* Breadcrumb */}
-      <div className="bg-bgTertiary py-3 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center text-sm text-textTertiary">
-            <Link href="/" className="hover:text-primaryColor flex items-center">
-              <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-              </svg>
-              {t('breadcrumb.home')}
-            </Link>
-            <span className="mx-2">›</span>
-            <span className="text-textPrimary font-medium">{t('breadcrumb.usefulVideo')}</span>
-          </nav>
-        </div>
-      </div>
+      <Breadcrumb
+        homeLabel={t('breadcrumb.home')}
+        items={[{ label: t('breadcrumb.usefulVideo') }]}
+      />
 
       {/* Page Title */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

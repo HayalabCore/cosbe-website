@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
+import { Breadcrumb } from '@/components';
 
 export default async function NoticePage() {
   const t = await getTranslations('noticePage');
@@ -102,27 +103,10 @@ export default async function NoticePage() {
         </div>
       </section>
 
-      {/* Breadcrumb */}
-      <nav className="bg-bgTertiary py-3 border-b border-borderPrimary">
-        <div className="max-w-6xl mx-auto px-4">
-          <ol className="flex items-center text-sm text-textTertiary">
-            <li className="flex items-center">
-              <Link href="/" className="hover:text-primaryColor transition-colors">
-                <svg className="w-4 h-4 mr-1 inline" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                </svg>
-                {t('breadcrumb.home')}
-              </Link>
-            </li>
-            <li className="flex items-center">
-              <svg className="w-4 h-4 mx-2 text-textDisabled" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-              </svg>
-              <span className="text-textPrimary font-medium">{t('breadcrumb.notice')}</span>
-            </li>
-          </ol>
-        </div>
-      </nav>
+      <Breadcrumb
+        homeLabel={t('breadcrumb.home')}
+        items={[{ label: t('breadcrumb.notice') }]}
+      />
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
