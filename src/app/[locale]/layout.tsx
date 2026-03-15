@@ -4,8 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { Navbar, Footer } from '@/components';
 import "../globals.css";
 
 const poppins = Poppins({
@@ -16,8 +15,17 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "CosBe Website",
-  description: "CosBe Website",
+  title: {
+    default: "CosBE - AI Transformation Consulting",
+    template: "%s | CosBE",
+  },
+  description: "CosBE provides AI transformation consulting services to help businesses leverage cutting-edge AI technology for growth and innovation.",
+  keywords: ["AI", "transformation", "consulting", "business", "innovation", "CosBE"],
+  openGraph: {
+    type: "website",
+    siteName: "CosBE",
+    locale: "en_US",
+  },
 };
 
 export function generateStaticParams() {

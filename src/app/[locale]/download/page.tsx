@@ -1,5 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
+import { HubSpotForm } from '@/components';
+import { Link } from '@/i18n/routing';
 
 export default async function DownloadPage() {
   const t = await getTranslations('downloadPage');
@@ -69,150 +71,7 @@ export default async function DownloadPage() {
           {/* Right Column - Form */}
           <div className="lg:sticky lg:top-24 h-fit">
             <div className="bg-white rounded-lg shadow-xl p-8 border border-borderPrimary">
-              <form className="space-y-5">
-                {/* Last Name */}
-                <div>
-                  <label htmlFor="lastname" className="block text-sm font-medium text-textSecondary mb-1">
-                    {t('form.lastname.label')} <span className="text-errorColor">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="lastname"
-                    name="lastname"
-                    required
-                    placeholder={t('form.lastname.placeholder')}
-                    className="w-full px-4 py-2 border border-borderSecondary rounded-md focus:outline-none focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  />
-                </div>
-
-                {/* Given Name */}
-                <div>
-                  <label htmlFor="givenname" className="block text-sm font-medium text-textSecondary mb-1">
-                    {t('form.givenname.label')} <span className="text-errorColor">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="givenname"
-                    name="givenname"
-                    required
-                    placeholder={t('form.givenname.placeholder')}
-                    className="w-full px-4 py-2 border border-borderSecondary rounded-md focus:outline-none focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  />
-                </div>
-
-                {/* Company Name */}
-                <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-textSecondary mb-1">
-                    {t('form.company.label')} <span className="text-errorColor">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    required
-                    placeholder={t('form.company.placeholder')}
-                    className="w-full px-4 py-2 border border-borderSecondary rounded-md focus:outline-none focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  />
-                </div>
-
-                {/* Industry */}
-                <div>
-                  <label htmlFor="industry" className="block text-sm font-medium text-textSecondary mb-1">
-                    {t('form.industry.label')} <span className="text-errorColor">*</span>
-                  </label>
-                  <select
-                    id="industry"
-                    name="industry"
-                    required
-                    className="w-full px-4 py-2 border border-borderSecondary rounded-md focus:outline-none focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  >
-                    <option value="">{t('form.industry.placeholder')}</option>
-                    <option value="it">{t('form.industry.options.it')}</option>
-                    <option value="manufacturing">{t('form.industry.options.manufacturing')}</option>
-                    <option value="retail">{t('form.industry.options.retail')}</option>
-                    <option value="finance">{t('form.industry.options.finance')}</option>
-                    <option value="healthcare">{t('form.industry.options.healthcare')}</option>
-                    <option value="education">{t('form.industry.options.education')}</option>
-                    <option value="other">{t('form.industry.options.other')}</option>
-                  </select>
-                </div>
-
-                {/* Position */}
-                <div>
-                  <label htmlFor="position" className="block text-sm font-medium text-textSecondary mb-1">
-                    {t('form.position.label')} <span className="text-errorColor">*</span>
-                  </label>
-                  <select
-                    id="position"
-                    name="position"
-                    required
-                    className="w-full px-4 py-2 border border-borderSecondary rounded-md focus:outline-none focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  >
-                    <option value="">{t('form.position.placeholder')}</option>
-                    <option value="executive">{t('form.position.options.executive')}</option>
-                    <option value="manager">{t('form.position.options.manager')}</option>
-                    <option value="staff">{t('form.position.options.staff')}</option>
-                    <option value="other">{t('form.position.options.other')}</option>
-                  </select>
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-textSecondary mb-1">
-                    {t('form.email.label')} <span className="text-errorColor">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    placeholder={t('form.email.placeholder')}
-                    className="w-full px-4 py-2 border border-borderSecondary rounded-md focus:outline-none focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-textSecondary mb-1">
-                    {t('form.phone.label')} <span className="text-errorColor">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    placeholder={t('form.phone.placeholder')}
-                    className="w-full px-4 py-2 border border-borderSecondary rounded-md focus:outline-none focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  />
-                </div>
-
-                {/* Privacy Policy */}
-                <div className="flex items-center">
-                  <input
-                    id="privacy"
-                    name="privacy"
-                    type="checkbox"
-                    required
-                    className="h-4 w-4 text-primaryColor focus:ring-primaryColor border-borderSecondary rounded"
-                  />
-                  <label htmlFor="privacy" className="ml-2 block text-sm text-textPrimary">
-                    <a href="/privacy-policy" className="text-primaryColor hover:underline">
-                      {t('form.privacyPolicy')}
-                    </a>
-                    {t('form.privacyAgree')} <span className="text-errorColor">*</span>
-                  </label>
-                </div>
-
-                {/* Submit Button */}
-                <div>
-                  <button
-                    type="submit"
-                    className="w-full bg-primaryColor text-white font-semibold py-3 px-4 rounded-md shadow-md hover:bg-primaryHover transition-colors focus:outline-none focus:ring-2 focus:ring-primaryColor focus:ring-offset-2"
-                  >
-                    {t('form.submitButton')}
-                  </button>
-                </div>
-              </form>
+              <HubSpotForm />
             </div>
           </div>
         </div>
@@ -232,7 +91,7 @@ export default async function DownloadPage() {
           <p className="text-white/80 mb-10 text-base max-w-2xl mx-auto">
             {t('cta.description')}
           </p>
-          <a
+          <Link
             href="/contact"
             className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
           >
@@ -240,7 +99,7 @@ export default async function DownloadPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             {t('cta.button')}
-          </a>
+          </Link>
         </div>
       </section>
     </div>

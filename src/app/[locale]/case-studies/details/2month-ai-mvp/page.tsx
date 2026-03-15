@@ -1,9 +1,13 @@
-import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'caseStudy2MonthAI' });
 
   return {
@@ -13,9 +17,9 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   };
 }
 
-export default function CaseStudy2MonthAI() {
-  const t = useTranslations('caseStudy2MonthAI');
-  const nav = useTranslations('navbar');
+export default async function CaseStudy2MonthAI({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'caseStudy2MonthAI' });
 
   const tableOfContents = [
     { id: 'introduction', title: t('sections.introduction.title') },

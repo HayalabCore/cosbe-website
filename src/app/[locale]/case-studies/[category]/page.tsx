@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
+import { caseStudies, caseStudyCategories, categoryToCaseStudies, validCategorySlugs } from '@/data/caseStudies';
 
 type CategoryPageProps = {
   params: Promise<{
@@ -10,84 +11,31 @@ type CategoryPageProps = {
   }>;
 };
 
-// Valid categories
-const validCategories = ['efficiency', 'hr-improvement', 'innovation', 'customer-marketing'];
-
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
   
-  // Validate category
-  if (!validCategories.includes(category)) {
+  if (!validCategorySlugs.includes(category)) {
     notFound();
   }
 
   const t = await getTranslations('caseStudiesPage');
   
-  // Category-specific data mapping
-  const categoryData: Record<string, { title: string; caseStudies: number[] }> = {
-    'efficiency': {
-      title: t('categories.efficiency'),
-      caseStudies: [], // No articles for now
-    },
-    'hr-improvement': {
-      title: t('categories.hrImprovement'),
-      caseStudies: [2, 3], // Case 2 and 3 are HR related
-    },
-    'innovation': {
-      title: t('categories.innovation'),
-      caseStudies: [1], // Case 1 is innovation
-    },
-    'customer-marketing': {
-      title: t('categories.customerMarketing'),
-      caseStudies: [], // No articles for now
-    },
+  const categoryLabelMap: Record<string, string> = {
+    'efficiency': t('categories.efficiency'),
+    'hr-improvement': t('categories.hrImprovement'),
+    'innovation': t('categories.innovation'),
+    'customer-marketing': t('categories.customerMarketing'),
   };
 
-  const currentCategory = categoryData[category];
-  
-  // All case studies
-  const allCaseStudies = [
-    {
-      id: 1,
-      slug: '2month-ai-mvp',
-      image: '/case-studies/new-business-2months.png',
-      category: t('case1.category'),
-      title: t('case1.title'),
-      date: t('case1.date'),
-      author: t('case1.author'),
-    },
-    {
-      id: 2,
-      slug: 'kando',
-      image: '/case-studies/training-instructor.png',
-      category: t('case2.category'),
-      title: t('case2.title'),
-      date: t('case2.date'),
-      author: t('case2.author'),
-    },
-    {
-      id: 3,
-      slug: 'cosbe',
-      image: '/case-studies/resume-screening.png',
-      category: t('case3.category'),
-      title: t('case3.title'),
-      date: t('case3.date'),
-      author: t('case3.author'),
-    },
-  ];
+  const currentCategoryTitle = categoryLabelMap[category];
+  const caseStudyIds = categoryToCaseStudies[category] || [];
+  const filteredCaseStudies = caseStudies.filter(study => caseStudyIds.includes(study.id));
 
-  // Filter case studies by category
-  const filteredCaseStudies = allCaseStudies.filter(study => 
-    currentCategory.caseStudies.includes(study.id)
-  );
-
-  const categories = [
-    { id: 'all', label: t('categories.all'), href: '/case-studies', active: false },
-    { id: 'efficiency', label: t('categories.efficiency'), href: '/case-studies/efficiency', active: category === 'efficiency' },
-    { id: 'hrImprovement', label: t('categories.hrImprovement'), href: '/case-studies/hr-improvement', active: category === 'hr-improvement' },
-    { id: 'innovation', label: t('categories.innovation'), href: '/case-studies/innovation', active: category === 'innovation' },
-    { id: 'customerMarketing', label: t('categories.customerMarketing'), href: '/case-studies/customer-marketing', active: category === 'customer-marketing' },
-  ];
+  const categories = caseStudyCategories.map(cat => ({
+    ...cat,
+    label: t(cat.labelKey),
+    active: cat.href === `/case-studies/${category}`,
+  }));
 
   return (
     <div className="min-h-screen">
@@ -138,7 +86,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               {t('breadcrumb.caseStudies')}
             </Link>
             <span className="mx-2">›</span>
-            <span className="text-textPrimary">{currentCategory.title}</span>
+            <span className="text-textPrimary">{currentCategoryTitle}</span>
           </div>
         </div>
       </div>
@@ -149,7 +97,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           {/* Page Title */}
           <div className="mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-textPrimary border-b-2 border-borderPrimary pb-4">
-              {currentCategory.title}
+              {currentCategoryTitle}
               <small className="text-sm font-normal text-textTertiary ml-3">– category –</small>
             </h2>
           </div>
@@ -160,7 +108,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               {t('categories.all')}
             </Link>
             <span className="px-4 py-2 bg-primaryColor text-white text-sm font-medium rounded border-2 border-primaryHover">
-              {currentCategory.title}
+              {currentCategoryTitle}
             </span>
           </div>
 
@@ -173,30 +121,30 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     <div className="relative h-64 overflow-hidden">
                       <Image
                         src={study.image}
-                        alt={study.title}
+                        alt={t(study.titleKey)}
                         fill
                         className="object-cover"
                       />
                       <div className="absolute top-4 right-4">
                         <span className="px-4 py-1.5 bg-primaryColor/90 backdrop-blur-sm text-white text-sm font-semibold rounded">
-                          {study.category}
+                          {t(study.categoryKey)}
                         </span>
                       </div>
                     </div>
                     <div className="p-6">
                       <h3 className="text-xl font-bold text-textPrimary mb-4 line-clamp-2 group-hover:text-primaryColor transition-colors">
-                        {study.title}
+                        {t(study.titleKey)}
                       </h3>
                       <div className="flex items-center gap-4 text-sm text-textTertiary">
                         <div className="flex items-center">
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
-                          <span>{study.date}</span>
+                          <span>{t(study.dateKey)}</span>
                         </div>
                         <div className="flex items-center">
                           <div className="w-6 h-6 rounded-full bg-borderSecondary mr-2"></div>
-                          <span>{study.author}</span>
+                          <span>{t(study.authorKey)}</span>
                         </div>
                       </div>
                     </div>
@@ -229,13 +177,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <p className="text-white/80 mb-10 text-base">
             {t('cta.message')}
           </p>
-          <Link href="/contact">
-            <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              {t('cta.button')}
-            </button>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            {t('cta.button')}
           </Link>
         </div>
       </section>

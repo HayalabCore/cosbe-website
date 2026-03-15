@@ -1,4 +1,26 @@
 import { getTranslations } from 'next-intl/server';
+import { HubSpotForm } from '@/components';
+import { Link } from '@/i18n/routing';
+import type { Metadata } from 'next';
+
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'contact' });
+
+  return {
+    title: t('pageTitleInquiry'),
+    description: t('description'),
+    openGraph: {
+      title: t('pageTitleInquiry'),
+      description: t('description'),
+      locale: locale === 'ja' ? 'ja_JP' : 'en_US',
+    },
+  };
+}
 
 export default async function ContactPage() {
   const t = await getTranslations('contact');
@@ -55,176 +77,17 @@ export default async function ContactPage() {
           </ol>
         </div>
 
-        {/* Contact Form */}
+        {/* Contact Form - HubSpot Integration */}
         <div className="bg-white">
-          <form className="space-y-6">
-            {/* Full Name */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <label className="block text-sm font-medium text-textSecondary">
-                  {t('form.fields.fullname.label')}
-                  <span className="ml-2 inline-block bg-error text-white text-xs px-2 py-0.5 rounded">
-                    {t('form.fields.required')}
-                  </span>
-                </label>
-              </div>
-              <div className="md:col-span-2">
-                <input
-                  type="text"
-                  name="fullname"
-                  placeholder={t('form.fields.fullname.placeholder')}
-                  className="w-full px-4 py-3 border border-borderSecondary rounded-md focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Company Name */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <label className="block text-sm font-medium text-textSecondary">
-                  {t('form.fields.companyname.label')}
-                  <span className="ml-2 inline-block bg-error text-white text-xs px-2 py-0.5 rounded">
-                    {t('form.fields.required')}
-                  </span>
-                </label>
-              </div>
-              <div className="md:col-span-2">
-                <input
-                  type="text"
-                  name="companyname"
-                  placeholder={t('form.fields.companyname.placeholder')}
-                  className="w-full px-4 py-3 border border-borderSecondary rounded-md focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Position */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <label className="block text-sm font-medium text-textSecondary">
-                  {t('form.fields.position.label')}
-                </label>
-              </div>
-              <div className="md:col-span-2">
-                <input
-                  type="text"
-                  name="position"
-                  placeholder={t('form.fields.position.placeholder')}
-                  className="w-full px-4 py-3 border border-borderSecondary rounded-md focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <label className="block text-sm font-medium text-textSecondary">
-                  {t('form.fields.email.label')}
-                  <span className="ml-2 inline-block bg-error text-white text-xs px-2 py-0.5 rounded">
-                    {t('form.fields.required')}
-                  </span>
-                </label>
-              </div>
-              <div className="md:col-span-2">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder={t('form.fields.email.placeholder')}
-                  className="w-full px-4 py-3 border border-borderSecondary rounded-md focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Phone */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <label className="block text-sm font-medium text-textSecondary">
-                  {t('form.fields.tel.label')}
-                  <span className="ml-2 inline-block bg-error text-white text-xs px-2 py-0.5 rounded">
-                    {t('form.fields.required')}
-                  </span>
-                </label>
-                <p className="mt-1 text-xs text-textTertiary">
-                  {t('form.fields.tel.description')}
-                </p>
-              </div>
-              <div className="md:col-span-2">
-                <input
-                  type="tel"
-                  name="tel"
-                  placeholder={t('form.fields.tel.placeholder')}
-                  className="w-full px-4 py-3 border border-borderSecondary rounded-md focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Inquiry Type */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <label className="block text-sm font-medium text-textSecondary">
-                  {t('form.fields.inquiryType.label')}
-                  <span className="ml-2 inline-block bg-error text-white text-xs px-2 py-0.5 rounded">
-                    {t('form.fields.required')}
-                  </span>
-                </label>
-              </div>
-              <div className="md:col-span-2">
-                <select
-                  name="inquiryType"
-                  className="w-full px-4 py-3 border border-borderSecondary rounded-md focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  required
-                >
-                  <option value="">{t('form.fields.inquiryType.options.default')}</option>
-                  <option value="ai-development">{t('form.fields.inquiryType.options.aiDevelopment')}</option>
-                  <option value="service-inquiry">{t('form.fields.inquiryType.options.serviceInquiry')}</option>
-                  <option value="recruitment">{t('form.fields.inquiryType.options.recruitment')}</option>
-                  <option value="other">{t('form.fields.inquiryType.options.other')}</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Message */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <label className="block text-sm font-medium text-textSecondary">
-                  {t('form.fields.message.label')}
-                  <span className="ml-2 inline-block bg-error text-white text-xs px-2 py-0.5 rounded">
-                    {t('form.fields.required')}
-                  </span>
-                </label>
-              </div>
-              <div className="md:col-span-2">
-                <textarea
-                  name="message"
-                  rows={5}
-                  className="w-full px-4 py-3 border border-borderSecondary rounded-md focus:ring-2 focus:ring-primaryColor focus:border-transparent"
-                  required
-                ></textarea>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-center pt-6">
-              <button
-                type="submit"
-                className="px-12 py-4 bg-textSecondary text-white font-medium rounded-md hover:bg-textPrimary transition-colors"
-              >
-                {t('form.submitButton')}
-              </button>
-            </div>
-          </form>
+          <HubSpotForm />
         </div>
 
         {/* Privacy Policy */}
         <div className="mt-8 text-center">
           <p className="text-sm text-textTertiary">
-            <a href="/privacy-policy" className="text-primaryColor hover:underline">
+            <Link href="/privacy-policy" className="text-primaryColor hover:underline">
               {t('form.privacyPolicy')}
-            </a>
+            </Link>
             {t('form.privacyPolicyAgree')}
           </p>
         </div>

@@ -1,0 +1,68 @@
+import { Video } from '@/types';
+
+export const videos: Video[] = [
+  {
+    id: 1,
+    image: '/useful-video/video-thumbnail-01.jpg',
+    titleKey: 'video1.title',
+    dateKey: 'video1.date',
+    authorKey: 'video1.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+  {
+    id: 2,
+    image: '/useful-video/video-thumbnail-02.jpg',
+    titleKey: 'video2.title',
+    dateKey: 'video2.date',
+    authorKey: 'video2.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+  {
+    id: 3,
+    image: '/useful-video/video-thumbnail-03.jpg',
+    titleKey: 'video3.title',
+    dateKey: 'video3.date',
+    authorKey: 'video3.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+  {
+    id: 4,
+    image: '/useful-video/video-thumbnail-04.jpg',
+    titleKey: 'video4.title',
+    dateKey: 'video4.date',
+    authorKey: 'video4.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+  {
+    id: 5,
+    image: '/useful-video/video-thumbnail-05.jpg',
+    titleKey: 'video5.title',
+    dateKey: 'video5.date',
+    authorKey: 'video5.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+  {
+    id: 6,
+    image: '/useful-video/video-thumbnail-06.jpg',
+    titleKey: 'video6.title',
+    dateKey: 'video6.date',
+    authorKey: 'video6.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+  {
+    id: 7,
+    image: '/useful-video/video-thumbnail-07.jpg',
+    titleKey: 'video7.title',
+    dateKey: 'video7.date',
+    authorKey: 'video7.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+  {
+    id: 8,
+    image: '/useful-video/video-thumbnail-08.jpg',
+    titleKey: 'video8.title',
+    dateKey: 'video8.date',
+    authorKey: 'video8.author',
+    authorImage: '/useful-video/author-portrait.jpg',
+  },
+];

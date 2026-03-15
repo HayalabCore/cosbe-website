@@ -1,47 +1,36 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
+import { caseStudies, caseStudyCategories } from '@/data/caseStudies';
+import type { Metadata } from 'next';
+
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'caseStudiesPage' });
+
+  return {
+    title: t('heroTitle'),
+    description: t('heroSubtitle'),
+    openGraph: {
+      title: t('heroTitle'),
+      description: t('heroSubtitle'),
+      locale: locale === 'ja' ? 'ja_JP' : 'en_US',
+    },
+  };
+}
 
 export default async function CaseStudiesPage() {
   const t = await getTranslations('caseStudiesPage');
 
-  const caseStudies = [
-    {
-      id: 1,
-      slug: '2month-ai-mvp',
-      image: '/case-studies/new-business-2months.png',
-      category: t('case1.category'),
-      title: t('case1.title'),
-      date: t('case1.date'),
-      author: t('case1.author'),
-    },
-    {
-      id: 2,
-      slug: 'kando',
-      image: '/case-studies/training-instructor.png',
-      category: t('case2.category'),
-      title: t('case2.title'),
-      date: t('case2.date'),
-      author: t('case2.author'),
-    },
-    {
-      id: 3,
-      slug: 'cosbe',
-      image: '/case-studies/resume-screening.png',
-      category: t('case3.category'),
-      title: t('case3.title'),
-      date: t('case3.date'),
-      author: t('case3.author'),
-    },
-  ];
-
-  const categories = [
-    { id: 'all', label: t('categories.all'), href: '/case-studies', active: true },
-    { id: 'efficiency', label: t('categories.efficiency'), href: '/case-studies/efficiency', active: false },
-    { id: 'hrImprovement', label: t('categories.hrImprovement'), href: '/case-studies/hr-improvement', active: false },
-    { id: 'innovation', label: t('categories.innovation'), href: '/case-studies/innovation', active: false },
-    { id: 'customerMarketing', label: t('categories.customerMarketing'), href: '/case-studies/customer-marketing', active: false },
-  ];
+  const categories = caseStudyCategories.map(cat => ({
+    ...cat,
+    label: t(cat.labelKey),
+    active: cat.id === 'all',
+  }));
 
   return (
     <div className="min-h-screen">
@@ -104,30 +93,30 @@ export default async function CaseStudiesPage() {
                   <div className="relative h-64 overflow-hidden">
                     <Image
                       src={study.image}
-                      alt={study.title}
+                      alt={t(study.titleKey)}
                       fill
                       className="object-cover"
                     />
                     <div className="absolute top-4 right-4">
                       <span className="px-4 py-1.5 bg-primaryColor/90 backdrop-blur-sm text-white text-sm font-semibold rounded">
-                        {study.category}
+                        {t(study.categoryKey)}
                       </span>
                     </div>
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-textPrimary mb-4 line-clamp-2 group-hover:text-primaryColor transition-colors">
-                      {study.title}
+                      {t(study.titleKey)}
                     </h3>
                     <div className="flex items-center gap-4 text-sm text-textTertiary">
                       <div className="flex items-center">
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <span>{study.date}</span>
+                        <span>{t(study.dateKey)}</span>
                       </div>
                       <div className="flex items-center">
                         <div className="w-6 h-6 rounded-full bg-borderSecondary mr-2"></div>
-                        <span>{study.author}</span>
+                        <span>{t(study.authorKey)}</span>
                       </div>
                     </div>
                   </div>
@@ -162,13 +151,14 @@ export default async function CaseStudiesPage() {
           <p className="text-white/80 mb-10 text-base">
             {t('cta.message')}
           </p>
-          <Link href="/contact">
-            <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              {t('cta.button')}
-            </button>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            {t('cta.button')}
           </Link>
         </div>
       </section>

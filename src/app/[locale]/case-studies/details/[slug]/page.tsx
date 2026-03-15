@@ -105,7 +105,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 1: Background */}
           <section id="background" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-6 border-primaryColor pl-4">
+              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-[6px] border-primaryColor pl-4">
                 {t('section1.title')}
               </h2>
               
@@ -173,7 +173,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 2: Solution */}
           <section id="solution" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-6 border-primaryColor pl-4">
+              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-[6px] border-primaryColor pl-4">
                 {t('section2.title')}
               </h2>
               
@@ -189,7 +189,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                 <div className="bg-white rounded-lg p-6 mb-6 border-l-4 border-success">
                   <ul className="space-y-4">
                     <li className="flex items-start">
-                      <span className="text-successColorColor mr-2 mt-1">✓</span>
+                      <span className="text-successColor mr-2 mt-1">✓</span>
                       <div>
                         <span className="font-semibold text-textPrimary">{t('section2.feature1Title')}</span>
                         <ul className="ml-6 mt-2 space-y-2 text-textTertiary">
@@ -201,7 +201,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-successColorColor mr-2 mt-1">✓</span>
+                      <span className="text-successColor mr-2 mt-1">✓</span>
                       <div>
                         <span className="font-semibold text-textPrimary">{t('section2.feature2Title')}</span>
                         <ul className="ml-6 mt-2 space-y-2 text-textTertiary">
@@ -236,7 +236,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 3: Benefits */}
           <section id="benefits" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-6 border-primaryColor pl-4">
+              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-[6px] border-primaryColor pl-4">
                 {t('section3.title')}
               </h2>
               
@@ -276,15 +276,15 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                   <p className="font-semibold text-textPrimary mb-4">{t('section3.keyPointsIntro')}</p>
                   <ul className="space-y-3 text-textSecondary">
                     <li className="flex items-start">
-                      <span className="text-successColorColor mr-2 mt-1">✓</span>
+                      <span className="text-successColor mr-2 mt-1">✓</span>
                       <span>{t('section3.keyPoint1')}</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-successColorColor mr-2 mt-1">✓</span>
+                      <span className="text-successColor mr-2 mt-1">✓</span>
                       <span>{t('section3.keyPoint2')}</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-successColorColor mr-2 mt-1">✓</span>
+                      <span className="text-successColor mr-2 mt-1">✓</span>
                       <span>{t('section3.keyPoint3')}</span>
                     </li>
                   </ul>
@@ -296,7 +296,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           {/* Section 4: Summary */}
           <section id="summary" className="mb-16">
             <div className="bg-white p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-6 border-primaryColor pl-4">
+              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-[6px] border-primaryColor pl-4">
                 {t('section4.title')}
               </h2>
               
@@ -317,13 +317,14 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
                   <p className="text-xl font-bold text-white mb-6">
                     {t('section4.ctaText')}
                   </p>
-                  <Link href="/contact">
-                    <button className="inline-flex items-center justify-center gap-3 px-12 py-5 bg-primaryColor text-white text-lg font-bold rounded-full hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      {t('section4.ctaButton')}
-                    </button>
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center gap-3 px-12 py-5 bg-primaryColor text-white text-lg font-bold rounded-full hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    {t('section4.ctaButton')}
                   </Link>
                 </div>
               </div>
@@ -450,13 +451,14 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPro
           <p className="text-white/80 mb-10 text-base">
             {commonT('cta.message')}
           </p>
-          <Link href="/contact">
-            <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              {commonT('cta.button')}
-            </button>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            {commonT('cta.button')}
           </Link>
         </div>
       </section>

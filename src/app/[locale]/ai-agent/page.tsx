@@ -120,13 +120,14 @@ export default function AiAgentPage() {
             
             {/* CTA Button */}
             <div className="text-center">
-              <Link href="/contact">
-                <button className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-12 py-5 bg-primaryColor text-white rounded-full hover:bg-primaryColor transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl">
-                  {t('ctaConsult')}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </button>
+              <Link
+                href="/contact"
+                className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-12 py-5 bg-primaryColor text-white rounded-full hover:bg-primaryHover transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl"
+              >
+                {t('ctaConsult')}
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
             </div>
           </div>
@@ -554,13 +555,14 @@ export default function AiAgentPage() {
           
           {/* CTA Button */}
           <div className="text-center mt-10">
-            <Link href="/contact">
-              <button className="inline-flex items-center gap-2 px-8 py-4 bg-primaryColor text-white rounded-full hover:bg-primaryColor hover:shadow-lg transition-all duration-200 text-lg font-semibold">
-                {t('ctaConsult')}
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </button>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primaryColor text-white rounded-full hover:bg-primaryHover hover:shadow-lg transition-all duration-200 text-lg font-semibold"
+            >
+              {t('ctaConsult')}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </Link>
           </div>
         </section>
@@ -699,13 +701,14 @@ export default function AiAgentPage() {
             
             {/* CTA Button */}
             <div className="text-center mt-10">
-              <Link href="/contact">
-                <button className="inline-flex items-center gap-2 px-8 py-4 bg-primaryColor text-white rounded-full hover:bg-primaryColor transition-all duration-200 text-lg font-semibold shadow-lg">
-                  {t('ctaConsult')}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </button>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-primaryColor text-white rounded-full hover:bg-primaryHover transition-all duration-200 text-lg font-semibold shadow-lg"
+              >
+                {t('ctaConsult')}
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
             </div>
           </div>
@@ -758,13 +761,14 @@ export default function AiAgentPage() {
               </h2>
               <p className="text-white/80 mb-2 text-base">{t('finalCta.description1')}</p>
               <p className="text-white/80 mb-10 text-base">{t('finalCta.description2')}</p>
-              <Link href="/contact">
-                <button className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  {t('finalCta.button')}
-                </button>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {t('finalCta.button')}
               </Link>
         </div>
       </section>

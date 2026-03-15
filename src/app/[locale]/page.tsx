@@ -1,6 +1,29 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
-import HubSpotForm from '@/components/HubSpotForm';
+import { HubSpotForm } from '@/components';
+import type { Metadata } from 'next';
+
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'hero' });
+
+  const title = `${t('brand')} - ${t('tagline')}`;
+  const description = `${t('jpLine1')} ${t('jpLine2')}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      locale: locale === 'ja' ? 'ja_JP' : 'en_US',
+    },
+  };
+}
 
 export default async function Home() {
   const t = await getTranslations('hero');
