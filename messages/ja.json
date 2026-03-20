@@ -1387,8 +1387,14 @@
       "innovation": "新規事業・イノベーション"
     },
     "publishedDate": "2025年2月26日",
-    "categories": ["導入事例", "新規事業・イノベーション"],
-    "tags": ["LLM（大規模言語モデル）", "RAG（検索拡張生成）"],
+    "categories": [
+      "導入事例",
+      "新規事業・イノベーション"
+    ],
+    "tags": [
+      "LLM（大規模言語モデル）",
+      "RAG（検索拡張生成）"
+    ],
     "tableOfContents": "目次",
     "sections": {
       "introduction": {
@@ -1508,6 +1514,14 @@
       "usefulColumn": "お役立ち情報"
     },
     "readMore": "READ MORE »",
+    "noArticles": "記事が見つかりませんでした。",
+    "categoryLabels": {
+      "usefulInfo": "お役立ち情報",
+      "caseStudy": "導入事例",
+      "video": "動画",
+      "aiAgent": "AIエージェント",
+      "notice": "お知らせ"
+    },
     "articles": {
       "article1": {
         "category": "お役立ち情報",
@@ -1749,6 +1763,21 @@
       "description2": "状況にあわせて柔軟に対応しますので、まずは、お気軽にお問い合わせください。",
       "button": "速AIラボについてのお問い合わせ"
     }
+  },
+  "articlePage": {
+    "category": "お役立ち情報",
+    "tableOfContents": "目次",
+    "writtenBy": "この記事を書いた人",
+    "relatedArticles": "関連記事",
+    "breadcrumb": {
+      "home": "ホーム",
+      "usefulColumn": "お役立ち情報"
+    },
+    "cta": {
+      "title": "様々な側面から貴社のビジネスをサポートいたします\nまずはお気軽にご相談ください",
+      "description1": "詳しいサービス内容についてのご相談やお見積りはフォームからお願いします。",
+      "description2": "状況にあわせて柔軟に対応しますので、まずは、お気軽にお問い合わせください。",
+      "button": "速AIラボについてのお問い合わせ"
+    }
   }
 }
-

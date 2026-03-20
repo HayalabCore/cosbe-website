@@ -1,87 +1,35 @@
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
 import { Link } from '@/i18n/routing';
-import { Breadcrumb } from '@/components';
+import Image from 'next/image';
+import { Breadcrumb, ContentCardGrid } from '@/components';
+import { getArticles } from '@/lib/articles';
 
-export default async function NoticePage() {
+function formatDate(iso: string | null, locale: string): string {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString(locale === 'ja' ? 'ja-JP' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function NoticePage({ params }: Props) {
+  const { locale } = await params;
   const t = await getTranslations('noticePage');
 
-  const notices = [
-    {
-      id: 1,
-      title: t('notice1.title'),
-      date: t('notice1.date'),
-      author: t('author'),
-      image: '/notice/notice-01.jpeg',
-    },
-    {
-      id: 2,
-      title: t('notice2.title'),
-      date: t('notice2.date'),
-      author: t('author'),
-      image: '/notice/notice-02.png',
-    },
-    {
-      id: 3,
-      title: t('notice3.title'),
-      date: t('notice3.date'),
-      author: t('author'),
-      image: '/notice/notice-03.jpeg',
-    },
-    {
-      id: 4,
-      title: t('notice4.title'),
-      date: t('notice4.date'),
-      author: t('author'),
-      image: '/notice/notice-04.png',
-    },
-    {
-      id: 5,
-      title: t('notice5.title'),
-      date: t('notice5.date'),
-      author: t('author'),
-      image: '/notice/notice-05.png',
-    },
-    {
-      id: 6,
-      title: t('notice6.title'),
-      date: t('notice6.date'),
-      author: t('author'),
-      image: '/notice/notice-06.jpg',
-    },
-    {
-      id: 7,
-      title: t('notice7.title'),
-      date: t('notice7.date'),
-      author: t('author'),
-      image: '/notice/notice-07.jpg',
-    },
-    {
-      id: 8,
-      title: t('notice8.title'),
-      date: t('notice8.date'),
-      author: t('author'),
-      image: '/notice/notice-08.jpg',
-    },
-    {
-      id: 9,
-      title: t('notice9.title'),
-      date: t('notice9.date'),
-      author: t('author'),
-      image: '/notice/notice-09.jpg',
-    },
-    {
-      id: 10,
-      title: t('notice10.title'),
-      date: t('notice10.date'),
-      author: t('author'),
-      image: '/notice/notice-10.png',
-    },
-  ];
+  let list: Awaited<ReturnType<typeof getArticles>> = [];
+  try {
+    list = await getArticles({ category: 'notice' });
+  } catch (e) {
+    console.error(e);
+  }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
       <section className="relative min-h-[240px] md:min-h-[280px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -94,12 +42,8 @@ export default async function NoticePage() {
           <div className="absolute inset-0 bg-primaryColor/40" />
         </div>
         <div className="relative z-10 text-center text-white px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">
-            {t('heroTitle')}
-          </h1>
-          <p className="text-lg md:text-xl font-medium drop-shadow">
-            {t('heroSubtitle')}
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">{t('heroTitle')}</h1>
+          <p className="text-lg md:text-xl font-medium drop-shadow">{t('heroSubtitle')}</p>
         </div>
       </section>
 
@@ -108,99 +52,41 @@ export default async function NoticePage() {
         items={[{ label: t('breadcrumb.notice') }]}
       />
 
-      {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
-        {/* Notice Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {notices.map((notice) => (
-            <article
-              key={notice.id}
-              className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-surface-tertiary"
-            >
-              <Link href="/notice" className="block">
-                {/* Thumbnail */}
-                <div className="relative aspect-video overflow-hidden">
-                  <Image
-                    src={notice.image}
-                    alt={notice.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Category Badge */}
-                  <span className="absolute top-3 left-3 px-3 py-1 bg-primaryColor text-white text-xs font-medium rounded">
-                    {t('category')}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="p-5">
-                  <h2 className="text-lg font-bold text-textPrimary mb-3 line-clamp-2 group-hover:text-primaryColor transition-colors">
-                    {notice.title}
-                  </h2>
-
-                  {/* Meta Info */}
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center text-textTertiary">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      {notice.date}
-                    </div>
-
-                    {/* Author */}
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
-                        <Image
-                          src="/notice/author-portrait.jpg"
-                          alt={notice.author}
-                          width={32}
-                          height={32}
-                          className="object-cover"
-                        />
-                      </div>
-                      <span className="text-textTertiary text-xs">{notice.author}</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </article>
-          ))}
-        </div>
-
-        {/* Pagination */}
+        <ContentCardGrid
+          items={list}
+          detailBasePath="/notice"
+          categoryLabel={t('category')}
+          columns="2"
+          fallbackImage="/notice/notice-01.jpeg"
+          formatDate={(iso) => formatDate(iso, locale)}
+          emptyMessage={t('heroSubtitle')}
+        />
         <div className="flex justify-center items-center gap-2 mt-12">
           <span className="w-10 h-10 flex items-center justify-center bg-primaryColor text-white rounded font-medium">
             1
           </span>
-          <Link
-            href="/notice"
-            className="w-10 h-10 flex items-center justify-center bg-borderPrimary text-textSecondary rounded hover:bg-borderPrimaryPrimary-secondary transition-colors font-medium"
-          >
-            2
-          </Link>
         </div>
       </main>
 
-      {/* CTA Section */}
       <section className="relative py-20 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }} />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 whitespace-pre-line">
-            {t('cta.title')}
-          </h2>
-          <p className="text-white/80 mb-2 text-base">
-            {t('cta.description1')}
-          </p>
-          <p className="text-white/80 mb-10 text-base">
-            {t('cta.description2')}
-          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 whitespace-pre-line">{t('cta.title')}</h2>
+          <p className="text-white/80 mb-2 text-base">{t('cta.description1')}</p>
+          <p className="text-white/80 mb-10 text-base">{t('cta.description2')}</p>
           <Link
             href="/contact"
             className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
             </svg>
             {t('cta.button')}
           </Link>

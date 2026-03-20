@@ -1508,6 +1508,14 @@
       "usefulColumn": "Useful Information"
     },
     "readMore": "READ MORE »",
+    "noArticles": "No articles found.",
+    "categoryLabels": {
+      "usefulInfo": "Useful Information",
+      "caseStudy": "Case Study",
+      "video": "Video",
+      "aiAgent": "AI Agent",
+      "notice": "Notice"
+    },
     "articles": {
       "article1": {
         "category": "Useful Information",
@@ -1742,6 +1750,22 @@
         "website": "By visiting this page on our website:",
         "email": "By sending us an email:"
       }
+    },
+    "cta": {
+      "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
+      "description1": "For detailed service inquiries and estimates, please use the form.",
+      "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
+      "button": "Inquiries about Hayaku AI Lab"
+    }
+  },
+  "articlePage": {
+    "category": "Useful Information",
+    "tableOfContents": "Table of Contents",
+    "writtenBy": "Written by",
+    "relatedArticles": "Related Articles",
+    "breadcrumb": {
+      "home": "Home",
+      "usefulColumn": "Useful Information"
     },
     "cta": {
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",

@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// CMS article row (managed via Prisma Migrate — do not hand-edit SQL for this table).
+model Article {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug              String    @unique
+  title             String
+  excerpt           String?
+  featuredImage     String?   @map("featured_image")
+  status            String    @default("draft")
+  category          String
+  tags              String[]  @default([])
+  author            Json
+  blocks            Json
+  toc               Json
+  seo               Json?
+  relatedArticleIds String[]  @default([]) @map("related_article_ids")
+  viewCount         Int       @default(0) @map("view_count")
+  publishedAt       DateTime? @map("published_at") @db.Timestamptz(6)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([status, category, publishedAt(sort: Desc)])
+  @@map("articles")
+}

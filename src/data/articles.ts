@@ -1,6 +1,16 @@
-import { Article } from '@/types';
+/** Legacy static useful-column cards (translation keys). Not the CMS `Article` type. */
+export interface LegacyColumnArticle {
+  id: number;
+  slug: string;
+  image: string;
+  categoryKey: string;
+  titleKey: string;
+  dateKey: string;
+  authorKey: string;
+  authorImage: string;
+}
 
-export const articles: Article[] = [
+export const articles: LegacyColumnArticle[] = [
   {
     id: 1,
     slug: 'ai-agent-autonomous-management',
