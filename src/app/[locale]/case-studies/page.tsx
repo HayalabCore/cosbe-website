@@ -1,8 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { caseStudyCategories } from '@/data/caseStudies';
-import { Breadcrumb, ContentCardGrid } from '@/components';
-import { getArticles } from '@/lib/articles';
+import { Breadcrumb } from '@/components';
+import ArticleGrid from '@/components/article/ArticleGrid';
 import type { Metadata } from 'next';
 
 type PageProps = {
@@ -12,7 +12,6 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'caseStudiesPage' });
-
   return {
     title: t('heroTitle'),
     description: t('heroSubtitle'),
@@ -24,15 +23,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-function formatDate(iso: string | null, locale: string): string {
-  if (!iso) return '';
-  return new Date(iso).toLocaleDateString(locale === 'ja' ? 'ja-JP' : 'en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
-
 export default async function CaseStudiesPage({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations('caseStudiesPage');
@@ -42,13 +32,6 @@ export default async function CaseStudiesPage({ params }: PageProps) {
     label: t(cat.labelKey),
     active: cat.id === 'all',
   }));
-
-  let list: Awaited<ReturnType<typeof getArticles>> = [];
-  try {
-    list = await getArticles({ category: 'case-study' });
-  } catch (e) {
-    console.error(e);
-  }
 
   return (
     <div className="min-h-screen">
@@ -84,13 +67,13 @@ export default async function CaseStudiesPage({ params }: PageProps) {
 
       <div className="bg-bgAccent py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ContentCardGrid
-            items={list}
+          <ArticleGrid
+            category="case-study"
             detailBasePath="/case-studies/details"
+            locale={locale}
             categoryLabel={t('breadcrumb.caseStudies')}
-            columns="2"
-            formatDate={(iso) => formatDate(iso, locale)}
-            emptyMessage={t('heroSubtitle')}
+            emptyMessage={t('noArticles')}
+            columns="3"
           />
           <div className="flex justify-center mb-16 mt-12">
             <span className="px-4 py-2 bg-primaryColor text-white rounded font-semibold">1</span>

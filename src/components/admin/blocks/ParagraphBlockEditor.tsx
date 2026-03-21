@@ -1,33 +1,73 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import type { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Underline from '@tiptap/extension-underline';
 import Placeholder from '@tiptap/extension-placeholder';
+import { TextStyle } from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
+import TextAlign from '@tiptap/extension-text-align';
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  Strikethrough,
+  Baseline,
+  Highlighter,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  List,
+  ListOrdered,
+  TextQuote,
+  Link as LinkIcon,
+  Link2Off,
+  RemoveFormatting,
+} from 'lucide-react';
 import type { ParagraphBlock } from '@/types';
 import { escapeHtml } from '@/lib/sanitize-article-html';
+
+const TEXT_COLORS = [
+  { label: 'Default', value: '' },
+  { label: 'Body', value: '#374151' },
+  { label: 'Primary', value: '#549FE3' },
+  { label: 'Heading', value: '#111827' },
+  { label: 'Muted', value: '#6B7280' },
+  { label: 'Success', value: '#15803d' },
+  { label: 'Warning', value: '#b45309' },
+  { label: 'Danger', value: '#b91c1c' },
+];
+
+const HIGHLIGHTS = [
+  { label: 'None', value: '' },
+  { label: 'Yellow', value: '#fef08a' },
+  { label: 'Green', value: '#bbf7d0' },
+  { label: 'Blue', value: '#bfdbfe' },
+  { label: 'Pink', value: '#fbcfe8' },
+  { label: 'Amber', value: '#fde68a' },
+];
 
 const extensions = [
   StarterKit.configure({
     heading: false,
-    bulletList: false,
-    orderedList: false,
-    blockquote: false,
+    code: false,
     codeBlock: false,
     horizontalRule: false,
   }),
+  TextStyle,
+  Color,
+  Highlight.configure({ multicolor: true }),
   Underline,
-  Link.configure({
-    openOnClick: false,
-    autolink: true,
-    linkOnPaste: true,
+  TextAlign.configure({
+    types: ['paragraph'],
+    alignments: ['left', 'center', 'right', 'justify'],
   }),
-  Placeholder.configure({
-    placeholder: 'Write paragraph text…',
-  }),
+  Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
+  Placeholder.configure({ placeholder: 'Write paragraph text…' }),
 ];
 
 function toEditorHtml(stored: string): string {
@@ -37,18 +77,11 @@ function toEditorHtml(stored: string): string {
   return `<p>${escapeHtml(t)}</p>`;
 }
 
-function ToolbarButton({
-  onClick,
-  active,
-  disabled,
-  title,
-  children,
+// ── Primitives ────────────────────────────────────────────────────────────────
+function Btn({
+  onClick, active, disabled, title, children,
 }: {
-  onClick: () => void;
-  active?: boolean;
-  disabled?: boolean;
-  title: string;
-  children: ReactNode;
+  onClick: () => void; active?: boolean; disabled?: boolean; title: string; children: React.ReactNode;
 }) {
   return (
     <button
@@ -56,20 +89,28 @@ function ToolbarButton({
       title={title}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-md px-2 py-1.5 text-xs font-semibold transition-colors ${
+      className={`inline-flex h-7 w-7 items-center justify-center rounded transition-colors shrink-0 ${
         active
           ? 'bg-primaryColor/15 text-primaryColor'
-          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-      } disabled:opacity-40 disabled:cursor-not-allowed`}
+          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+      } disabled:opacity-30 disabled:cursor-not-allowed`}
     >
       {children}
     </button>
   );
 }
 
+function Sep() {
+  return <div className="w-px h-4 bg-slate-200 mx-1 shrink-0" aria-hidden />;
+}
+
+const selectCls =
+  'h-7 rounded border border-slate-200 bg-white px-1.5 text-[11px] text-slate-600 focus:outline-none focus:border-primaryColor cursor-pointer shrink-0';
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
 function RichToolbar({ editor }: { editor: Editor | null }) {
   if (!editor) {
-    return <div className="h-9 border-b border-slate-200 bg-slate-50/80 rounded-t-lg animate-pulse" />;
+    return <div className="h-10 border-b border-slate-200 bg-slate-50/80 rounded-t-lg animate-pulse" />;
   }
 
   const setLink = () => {
@@ -84,54 +125,138 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
     editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run();
   };
 
+  const currentColor = (editor.getAttributes('textStyle').color as string | undefined) ?? '';
+  const highlightColor = (editor.getAttributes('highlight').color as string | undefined) ?? '';
+
   return (
-    <div className="flex flex-wrap items-center gap-0.5 border-b border-slate-200 bg-slate-50/80 px-1.5 py-1 rounded-t-lg">
-      <ToolbarButton
-        title="Bold"
-        active={editor.isActive('bold')}
-        onClick={() => editor.chain().focus().toggleBold().run()}
+    <div className="flex flex-wrap items-center gap-0.5 border-b border-slate-200 bg-slate-50/80 rounded-t-lg px-2 py-1.5">
+      {/* ── Inline marks ── */}
+      <Btn title="Bold (⌘B)" active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
+        <Bold size={14} strokeWidth={2.5} />
+      </Btn>
+      <Btn title="Italic (⌘I)" active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
+        <Italic size={14} strokeWidth={2.5} />
+      </Btn>
+      <Btn title="Underline (⌘U)" active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+        <UnderlineIcon size={14} strokeWidth={2.5} />
+      </Btn>
+      <Btn title="Strikethrough" active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()}>
+        <Strikethrough size={14} strokeWidth={2.5} />
+      </Btn>
+
+      <Sep />
+
+      {/* ── Text color: swatch picker + preset dropdown ── */}
+      <label
+        className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded transition-colors shrink-0 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+        title="Custom text color"
       >
-        B
-      </ToolbarButton>
-      <ToolbarButton
-        title="Italic"
-        active={editor.isActive('italic')}
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        <div className="flex flex-col items-center gap-[2px]">
+          <Baseline size={12} strokeWidth={2} />
+          <span
+            className="h-[3px] w-[14px] rounded-full"
+            style={{ backgroundColor: currentColor || '#374151' }}
+          />
+        </div>
+        <input
+          type="color"
+          className="sr-only"
+          value={currentColor && /^#/.test(currentColor) ? currentColor : '#374151'}
+          onInput={(e) => editor.chain().focus().setColor((e.target as HTMLInputElement).value).run()}
+        />
+      </label>
+      <select
+        title="Text color preset"
+        className={selectCls}
+        value={TEXT_COLORS.some((c) => c.value === currentColor) ? currentColor : '__custom__'}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v === '__custom__') return;
+          if (v === '') editor.chain().focus().unsetColor().run();
+          else editor.chain().focus().setColor(v).run();
+        }}
       >
-        <i>I</i>
-      </ToolbarButton>
-      <ToolbarButton
-        title="Underline"
-        active={editor.isActive('underline')}
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        <option value="__custom__">Color…</option>
+        {TEXT_COLORS.map((c) => (
+          <option key={c.label} value={c.value}>{c.label}</option>
+        ))}
+      </select>
+
+      <Sep />
+
+      {/* ── Highlight ── */}
+      <Btn
+        title="Toggle highlight"
+        active={editor.isActive('highlight')}
+        onClick={() => {
+          if (editor.isActive('highlight')) editor.chain().focus().unsetHighlight().run();
+          else editor.chain().focus().setHighlight({ color: '#fef08a' }).run();
+        }}
       >
-        <span className="underline">U</span>
-      </ToolbarButton>
-      <ToolbarButton
-        title="Strikethrough"
-        active={editor.isActive('strike')}
-        onClick={() => editor.chain().focus().toggleStrike().run()}
+        <Highlighter size={14} strokeWidth={2} style={{ color: highlightColor || undefined }} />
+      </Btn>
+      <select
+        title="Highlight color"
+        className={selectCls}
+        value={HIGHLIGHTS.some((h) => h.value === highlightColor) ? highlightColor : '__custom__'}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v === '__custom__') return;
+          if (v === '') editor.chain().focus().unsetHighlight().run();
+          else editor.chain().focus().setHighlight({ color: v }).run();
+        }}
       >
-        <s>S</s>
-      </ToolbarButton>
-      <ToolbarButton
-        title="Inline code"
-        active={editor.isActive('code')}
-        onClick={() => editor.chain().focus().toggleCode().run()}
-      >
-        <span className="font-mono text-[10px] leading-none">{'<>'}</span>
-      </ToolbarButton>
-      <div className="w-px h-5 bg-slate-200 mx-0.5" />
-      <ToolbarButton title="Add link" active={editor.isActive('link')} onClick={setLink}>
-        Link
-      </ToolbarButton>
-      <ToolbarButton
-        title="Remove link"
-        disabled={!editor.isActive('link')}
-        onClick={() => editor.chain().focus().unsetLink().run()}
-      >
-        Unlink
-      </ToolbarButton>
+        <option value="__custom__">Highlight…</option>
+        {HIGHLIGHTS.map((h) => (
+          <option key={h.label} value={h.value}>{h.label}</option>
+        ))}
+      </select>
+
+      <Sep />
+
+      {/* ── Alignment ── */}
+      <Btn title="Align left (⌘⇧L)" active={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
+        <AlignLeft size={14} strokeWidth={2} />
+      </Btn>
+      <Btn title="Align center (⌘⇧E)" active={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()}>
+        <AlignCenter size={14} strokeWidth={2} />
+      </Btn>
+      <Btn title="Align right (⌘⇧R)" active={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()}>
+        <AlignRight size={14} strokeWidth={2} />
+      </Btn>
+      <Btn title="Justify (⌘⇧J)" active={editor.isActive({ textAlign: 'justify' })} onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
+        <AlignJustify size={14} strokeWidth={2} />
+      </Btn>
+
+      <Sep />
+
+      {/* ── Lists & quote ── */}
+      <Btn title="Bullet list" active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+        <List size={14} strokeWidth={2} />
+      </Btn>
+      <Btn title="Numbered list" active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+        <ListOrdered size={14} strokeWidth={2} />
+      </Btn>
+      <Btn title="Blockquote" active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+        <TextQuote size={14} strokeWidth={2} />
+      </Btn>
+
+      <Sep />
+
+      {/* ── Link ── */}
+      <Btn title="Add link" active={editor.isActive('link')} onClick={setLink}>
+        <LinkIcon size={14} strokeWidth={2} />
+      </Btn>
+      <Btn title="Remove link" disabled={!editor.isActive('link')} onClick={() => editor.chain().focus().unsetLink().run()}>
+        <Link2Off size={14} strokeWidth={2} />
+      </Btn>
+
+      <Sep />
+
+      {/* ── Clear ── */}
+      <Btn title="Clear formatting" onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+        <RemoveFormatting size={14} strokeWidth={2} />
+      </Btn>
     </div>
   );
 }
@@ -151,8 +276,15 @@ export default function ParagraphBlockEditor({
       content: toEditorHtml(block.content),
       editorProps: {
         attributes: {
-          class:
-            'prose prose-sm max-w-none focus:outline-none min-h-[120px] px-3 py-2.5 text-slate-900 [&_a]:text-primaryColor [&_a]:underline',
+          class: [
+            'prose prose-sm max-w-none focus:outline-none min-h-[140px] px-3 py-2.5 text-slate-900',
+            '[&_a]:text-primaryColor [&_a]:underline',
+            '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2 [&_ul>li]:my-0.5 [&_ul>li::marker]:text-slate-500',
+            '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2 [&_ol>li]:my-0.5 [&_ol>li::marker]:text-slate-500',
+            '[&_li>p]:my-0',
+            '[&_blockquote]:border-l-4 [&_blockquote]:border-slate-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:my-3',
+            '[&_mark]:rounded-sm [&_mark]:px-0.5',
+          ].join(' '),
         },
       },
       onUpdate: ({ editor: ed }) => {
@@ -165,7 +297,7 @@ export default function ParagraphBlockEditor({
   return (
     <div className="rounded-lg border border-slate-200 bg-white overflow-hidden shadow-sm focus-within:border-primaryColor focus-within:ring-2 focus-within:ring-primaryColor/15 transition-all">
       <RichToolbar editor={editor} />
-      <EditorContent editor={editor} className="tiptap-paragraph [&_.ProseMirror]:min-h-[120px] [&_.ProseMirror]:outline-none" />
+      <EditorContent editor={editor} className="tiptap-paragraph [&_.ProseMirror]:min-h-[140px] [&_.ProseMirror]:outline-none" />
     </div>
   );
 }

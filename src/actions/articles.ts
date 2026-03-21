@@ -11,6 +11,7 @@ import {
   unpublishArticleRecord,
   updateArticleRecord,
 } from '@/lib/articles';
+import { articleDetailBasePath } from '@/lib/articlePaths';
 import type { Article, ArticleListItem, ArticleStatus, ContentCategory } from '@/types';
 import { routing } from '@/i18n/routing';
 
@@ -23,12 +24,16 @@ async function requireUser() {
   return user;
 }
 
-function revalidateArticlePaths() {
+function revalidateArticlePaths(slug?: string, category?: ContentCategory) {
   for (const locale of routing.locales) {
     revalidatePath(`/${locale}/useful-column`, 'layout');
     revalidatePath(`/${locale}/case-studies`, 'layout');
     revalidatePath(`/${locale}/useful-video`, 'layout');
     revalidatePath(`/${locale}/notice`, 'layout');
+    if (slug && category) {
+      const base = articleDetailBasePath(category);
+      revalidatePath(`/${locale}${base}/${slug}`, 'page');
+    }
   }
 }
 
@@ -56,7 +61,7 @@ export async function listArticlesAdminAction(options: {
 export async function createArticleAction(data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
   await requireUser();
   const id = await createArticleRecord(data);
-  revalidateArticlePaths();
+  revalidateArticlePaths(data.slug, data.category);
   return id;
 }
 
@@ -66,7 +71,7 @@ export async function updateArticleAction(
 ): Promise<void> {
   await requireUser();
   await updateArticleRecord(id, data);
-  revalidateArticlePaths();
+  revalidateArticlePaths(data.slug, data.category);
 }
 
 export async function deleteArticleAction(id: string): Promise<void> {

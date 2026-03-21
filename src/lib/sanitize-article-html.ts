@@ -1,16 +1,51 @@
 import sanitizeHtml from 'sanitize-html';
 
-/** Options aligned with rich paragraph content from Tiptap (no headings/lists in paragraph block). */
+const COLOR_STYLE = /^#([0-9a-f]{3,8})$/i;
+const RGB_STYLE = /^rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(,\s*[\d.]+\s*)?\)$/i;
+
+/** Rich paragraph HTML from Tiptap (lists, quotes, alignment, colors — no inline code). */
 const PARAGRAPH_SANITIZE: sanitizeHtml.IOptions = {
-  allowedTags: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'strike', 'span', 'a', 'code'],
+  allowedTags: [
+    'p',
+    'br',
+    'strong',
+    'b',
+    'em',
+    'i',
+    'u',
+    's',
+    'strike',
+    'span',
+    'a',
+    'mark',
+    'sub',
+    'sup',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'hr',
+  ],
   allowedAttributes: {
     a: ['href', 'target', 'rel', 'class'],
-    span: ['class'],
-    p: ['class'],
-    code: ['class'],
+    span: ['class', 'style'],
+    mark: ['class', 'style', 'data-color'],
+    p: ['class', 'style'],
+    ol: ['start', 'class', 'style', 'type'],
+    ul: ['class', 'style'],
+    li: ['class', 'style'],
+    blockquote: ['class', 'style'],
+    hr: ['class'],
   },
   allowedClasses: {
     p: ['whitespace-pre-wrap'],
+  },
+  allowedStyles: {
+    '*': {
+      color: [COLOR_STYLE, RGB_STYLE],
+      'background-color': [COLOR_STYLE, RGB_STYLE],
+      'text-align': [/^left$/, /^right$/, /^center$/, /^justify$/],
+    },
   },
   allowedSchemes: ['http', 'https', 'mailto', 'tel'],
 };

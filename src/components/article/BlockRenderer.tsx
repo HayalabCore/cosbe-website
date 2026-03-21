@@ -45,7 +45,7 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
       }
       return (
         <div
-          className="text-gray-700 leading-[1.9] mb-5 text-[15px] prose prose-sm max-w-none prose-p:mb-3 prose-p:last:mb-0 prose-a:text-primaryColor prose-strong:text-gray-900"
+          className="text-gray-700 leading-[1.9] mb-5 text-[15px] prose prose-sm max-w-none prose-p:mb-3 prose-p:last:mb-0 prose-a:text-primaryColor prose-strong:text-gray-900 prose-ul:my-3 prose-ol:my-3 prose-li:my-1 prose-blockquote:border-l-4 prose-blockquote:border-primaryColor/25 prose-blockquote:bg-gray-50/80 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:italic prose-hr:my-8 prose-hr:border-gray-200 prose-mark:px-0.5 prose-mark:rounded-sm [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-3 [&_li]:my-1 [&_li>p]:my-0 [&_li>p:last-child]:mb-0 [&_li::marker]:text-slate-500 [&_blockquote]:border-l-4 [&_blockquote]:border-primaryColor/30 [&_blockquote]:bg-gray-50/60 [&_blockquote]:py-2 [&_blockquote]:px-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_mark]:rounded-sm [&_mark]:px-0.5"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       );

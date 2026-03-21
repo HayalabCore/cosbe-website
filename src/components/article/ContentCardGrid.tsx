@@ -35,8 +35,8 @@ export default function ContentCardGrid({
   return (
     <div className={`grid ${gridClass} gap-6`}>
       {items.map((item) => (
-        <Link key={item.id} href={`${detailBasePath}/${item.slug}`} className="group block">
-          <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-primaryColor/15 hover:border-primaryColor h-full flex flex-col">
+        <Link key={item.id} href={`${detailBasePath}/${item.slug}`} className="group block active:scale-[0.98] transition-transform duration-100">
+          <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-primaryColor/15 hover:border-primaryColor h-full flex flex-col group-active:opacity-80">
             <div className="relative aspect-[4/3] overflow-hidden">
               <Image
                 src={imageSrcOrFallback(item.featuredImage, fallbackImage)}

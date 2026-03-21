@@ -1224,6 +1224,11 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-code/-/extension-code-3.20.4.tgz#4feeb541a5984573f8cbd8d709bfd52c3546a0f7"
   integrity sha512-7j8Hi964bH1SZ9oLdZC1fkqWz27mliSDV7M8lmL/M14+Qw42D/VOAKS4Aw9OCFtHMlTsjLR6qsoVxL8Lpkt6NA==
 
+"@tiptap/extension-color@^3.20.4":
+  version "3.20.4"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-color/-/extension-color-3.20.4.tgz#ac38006c2747c86c6b61faea20cc39842154e230"
+  integrity sha512-+OT9wWEJnqoWmzfqPYt0oWm8LZcH+D44Z3jA2TNzBj4tLGQ2YPxN2SyS12AlRi7MuguVT7utFy7qDXrfir8eUA==
+
 "@tiptap/extension-document@^3.20.4":
   version "3.20.4"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-document/-/extension-document-3.20.4.tgz#9bf58b9e3cbc6d1637c7c88dab62e0ecbcdd20e4"
@@ -1253,6 +1258,11 @@
   version "3.20.4"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-heading/-/extension-heading-3.20.4.tgz#6d31857f5d9fb5a61214ae6f45cf063c2e3238ea"
   integrity sha512-xsnkmTGggJc5P2iCwS1lv8KFG31xC/GNPJKoi/3UH67j/lKDhA3AdtshsLeyv2FKtTtYDb8oV0IqzHB1MM6a7w==
+
+"@tiptap/extension-highlight@^3.20.4":
+  version "3.20.4"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-highlight/-/extension-highlight-3.20.4.tgz#96d2b891f4aea543dc811d71e28e9f3ab9f96324"
+  integrity sha512-CyTVPorVWwE4v89+k1nmaoAvjXLo7/fYWBsYlHW6b9Y1Un0iLANgKMFmmuapyfpaqpvg7V0Eg5ElG9U9+rogVA==
 
 "@tiptap/extension-horizontal-rule@^3.20.4":
   version "3.20.4"
@@ -1305,6 +1315,16 @@
   version "3.20.4"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-strike/-/extension-strike-3.20.4.tgz#e76ddad8948e0882db38c88320108db19cf12b73"
   integrity sha512-It1Px9uDGTsVqyyg6cy7DigLoenljpQwqdI0jssM7QclZrHnsrye9fZxBBiiuCzzV1305MxKgHvratkHwqmVNA==
+
+"@tiptap/extension-text-align@^3.20.4":
+  version "3.20.4"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-text-align/-/extension-text-align-3.20.4.tgz#12e38896603c73387c582b73a296ca4e9dd8bd0b"
+  integrity sha512-6ZuRyClIyCimXu+S5LQ54DueEsYg5VOVOmubOVbG+WAjM9svn9Z8gv2sNDah2yEqXrX06B02zYcSyMiD7CHbfA==
+
+"@tiptap/extension-text-style@^3.20.4":
+  version "3.20.4"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-text-style/-/extension-text-style-3.20.4.tgz#3adbf7c4f7d0b7a779c2af4976b4e3413904dde9"
+  integrity sha512-PvW0Ja7ahWpo4bRuR8YCCVv4PH8lXjzhzlBAa4bMbsumOg+GbhX8Su7fwqd+IIPrHqfPXz9HTBMApSfzP6/08A==
 
 "@tiptap/extension-text@^3.20.4":
   version "3.20.4"
@@ -3460,6 +3480,11 @@ lru-cache@^5.1.1:
   integrity sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==
   dependencies:
     yallist "^3.0.2"
+
+lucide-react@^0.577.0:
+  version "0.577.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.577.0.tgz#8ae89edd8415f99c6319a38b40d9c513f6fa5062"
+  integrity sha512-4LjoFv2eEPwYDPg/CUdBJQSDfPyzXCRrVW1X7jrx/trgxnxkHFjnVZINbzvzxjN70dxychOfg+FTYwBiS3pQ5A==
 
 magic-string@^0.30.21:
   version "0.30.21"
