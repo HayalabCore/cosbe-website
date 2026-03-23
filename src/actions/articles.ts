@@ -12,7 +12,12 @@ import {
   updateArticleRecord,
 } from '@/lib/articles';
 import { articleDetailBasePath } from '@/lib/articlePaths';
-import type { Article, ArticleListItem, ArticleStatus, ContentCategory } from '@/types';
+import type {
+  Article,
+  ArticleListItem,
+  ArticleStatus,
+  ContentCategory,
+} from '@/types';
 import { routing } from '@/i18n/routing';
 
 async function requireUser() {
@@ -37,7 +42,9 @@ function revalidateArticlePaths(slug?: string, category?: ContentCategory) {
   }
 }
 
-export async function getArticleByIdAction(id: string): Promise<Article | null> {
+export async function getArticleByIdAction(
+  id: string
+): Promise<Article | null> {
   await requireUser();
   return getArticleByIdAdmin(id);
 }
@@ -58,7 +65,9 @@ export async function listArticlesAdminAction(options: {
   return getArticles(opts, true);
 }
 
-export async function createArticleAction(data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+export async function createArticleAction(
+  data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<string> {
   await requireUser();
   const id = await createArticleRecord(data);
   revalidateArticlePaths(data.slug, data.category);

@@ -3,9 +3,14 @@
 import { useEffect, useRef } from 'react';
 import { useLocale } from 'next-intl';
 
-const HUBSPOT_PORTAL_ID = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || '242892919';
-const HUBSPOT_FORM_ID_EN = process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID_EN || '0d5cad56-b943-4915-a0dd-9962f172d287';
-const HUBSPOT_FORM_ID_JA = process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID_JA || 'e12c67ce-3c60-46b3-a798-c0856d8a8edf';
+const HUBSPOT_PORTAL_ID =
+  process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || '242892919';
+const HUBSPOT_FORM_ID_EN =
+  process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID_EN ||
+  '0d5cad56-b943-4915-a0dd-9962f172d287';
+const HUBSPOT_FORM_ID_JA =
+  process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID_JA ||
+  'e12c67ce-3c60-46b3-a798-c0856d8a8edf';
 
 export default function HubSpotForm() {
   const locale = useLocale();
@@ -50,11 +55,10 @@ export default function HubSpotForm() {
   }, [locale]);
 
   return (
-    <div 
+    <div
       id={`hubspot-form-${locale}`}
       ref={formContainerRef}
       className="hubspot-form-container"
     />
   );
 }
-

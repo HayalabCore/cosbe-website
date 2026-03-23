@@ -11,7 +11,10 @@ function setCookie(name: string, value: string) {
 
 type Variant = 'dark' | 'light';
 
-const STYLES: Record<Variant, { wrapper: string; active: string; inactive: string }> = {
+const STYLES: Record<
+  Variant,
+  { wrapper: string; active: string; inactive: string }
+> = {
   dark: {
     wrapper: 'border-white/15 bg-white/5',
     active: 'bg-white/15 text-white',
@@ -29,7 +32,10 @@ type Props = {
   className?: string;
 };
 
-export default function AdminLocaleSwitcher({ variant = 'dark', className = '' }: Props) {
+export default function AdminLocaleSwitcher({
+  variant = 'dark',
+  className = '',
+}: Props) {
   const router = useRouter();
   const locale = useLocale() as AdminLocale;
   const t = useTranslations('admin.common');
@@ -65,6 +71,10 @@ export default function AdminLocaleSwitcher({ variant = 'dark', className = '' }
   );
 }
 
-export function AdminLocaleSwitcherLight({ className = '' }: { className?: string }) {
+export function AdminLocaleSwitcherLight({
+  className = '',
+}: {
+  className?: string;
+}) {
   return <AdminLocaleSwitcher variant="light" className={className} />;
 }

@@ -3,7 +3,8 @@
 import { useTranslations } from 'next-intl';
 import type { ListBlock } from '@/types';
 
-const INPUT_CLS = 'flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
+const INPUT_CLS =
+  'flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
 
 export default function ListBlockEditor({
   block,
@@ -50,11 +51,26 @@ export default function ListBlockEditor({
           <button
             type="button"
             title={t('removeItem')}
-            onClick={() => onChange({ ...block, items: block.items.filter((_, j) => j !== idx) })}
+            onClick={() =>
+              onChange({
+                ...block,
+                items: block.items.filter((_, j) => j !== idx),
+              })
+            }
             className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors flex-shrink-0"
           >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -65,8 +81,18 @@ export default function ListBlockEditor({
         onClick={() => onChange({ ...block, items: [...block.items, ''] })}
         className="inline-flex items-center gap-1.5 text-xs font-medium text-primaryColor hover:text-primaryHover transition-colors"
       >
-        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        <svg
+          className="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4v16m8-8H4"
+          />
         </svg>
         {t('addItem')}
       </button>

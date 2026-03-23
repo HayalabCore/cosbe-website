@@ -2,7 +2,11 @@ import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ArticleDetailLayout } from '@/components';
 import { generateTOC } from '@/lib/article-utils';
-import { getArticleBySlug, getRelatedArticles, incrementViewCount } from '@/lib/articles';
+import {
+  getArticleBySlug,
+  getRelatedArticles,
+  incrementViewCount,
+} from '@/lib/articles';
 import type { Metadata } from 'next';
 
 type Props = {
@@ -34,7 +38,10 @@ export default async function CaseStudyArticlePage({ params }: Props) {
   }
 
   const toc = article.toc?.length ? article.toc : generateTOC(article.blocks);
-  const relatedArticles = await getRelatedArticles(article.id, article.relatedArticleIds || []);
+  const relatedArticles = await getRelatedArticles(
+    article.id,
+    article.relatedArticleIds || []
+  );
 
   return (
     <ArticleDetailLayout

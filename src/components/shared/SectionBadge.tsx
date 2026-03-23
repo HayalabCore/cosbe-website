@@ -9,7 +9,8 @@ export default function SectionBadge({
   variant = 'primary',
   className = '',
 }: SectionBadgeProps) {
-  const baseClasses = 'px-4 py-2 rounded text-sm font-bold inline-flex items-center';
+  const baseClasses =
+    'px-4 py-2 rounded text-sm font-bold inline-flex items-center';
   const variantClasses = {
     primary: 'bg-primaryColor text-white',
     secondary: 'bg-primaryColor/15 text-primaryDark',

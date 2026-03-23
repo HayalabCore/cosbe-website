@@ -33,7 +33,7 @@ export function useDropdown(closeDelay = 150): UseDropdownReturn {
   }, [clearTimeoutRef]);
 
   const toggle = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   const handleMouseEnter = useCallback(() => {

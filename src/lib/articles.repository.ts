@@ -50,7 +50,9 @@ function mapRow(row: DbArticle): Article {
     blocks: asBlocks(row.blocks),
     toc: asToc(row.toc),
     seo: asSeo(row.seo),
-    relatedArticleIds: row.relatedArticleIds?.length ? row.relatedArticleIds : undefined,
+    relatedArticleIds: row.relatedArticleIds?.length
+      ? row.relatedArticleIds
+      : undefined,
     publishedAt: row.publishedAt?.toISOString() ?? null,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
@@ -73,7 +75,10 @@ function toListItem(row: DbArticle): ArticleListItem {
   };
 }
 
-export async function getArticleById(id: string, includeDrafts = false): Promise<Article | null> {
+export async function getArticleById(
+  id: string,
+  includeDrafts = false
+): Promise<Article | null> {
   const row = await prisma.article.findUnique({ where: { id } });
   if (!row) return null;
   if (!includeDrafts && row.status !== 'published') return null;
@@ -85,7 +90,10 @@ export async function getArticleByIdAdmin(id: string): Promise<Article | null> {
   return row ? mapRow(row) : null;
 }
 
-export async function getArticleBySlug(slug: string, includeDrafts = false): Promise<Article | null> {
+export async function getArticleBySlug(
+  slug: string,
+  includeDrafts = false
+): Promise<Article | null> {
   const row = await prisma.article.findUnique({ where: { slug } });
   if (!row) return null;
   if (!includeDrafts && row.status !== 'published') return null;
@@ -133,7 +141,10 @@ export async function getArticles(
   return rows.map(toListItem);
 }
 
-export async function getRelatedArticles(articleId: string, relatedIds: string[]): Promise<ArticleListItem[]> {
+export async function getRelatedArticles(
+  articleId: string,
+  relatedIds: string[]
+): Promise<ArticleListItem[]> {
   if (!relatedIds.length) return [];
 
   const out: ArticleListItem[] = [];
@@ -181,7 +192,8 @@ export async function updateArticleRecord(
   if (data.slug !== undefined) patch.slug = data.slug;
   if (data.title !== undefined) patch.title = data.title;
   if (data.excerpt !== undefined) patch.excerpt = data.excerpt ?? null;
-  if (data.featuredImage !== undefined) patch.featuredImage = data.featuredImage ?? null;
+  if (data.featuredImage !== undefined)
+    patch.featuredImage = data.featuredImage ?? null;
   if (data.status !== undefined) patch.status = data.status;
   if (data.category !== undefined) patch.category = data.category;
   if (data.tags !== undefined) patch.tags = data.tags;
@@ -194,7 +206,8 @@ export async function updateArticleRecord(
   if (data.seo !== undefined) {
     patch.seo = data.seo != null ? toJson(data.seo) : Prisma.JsonNull;
   }
-  if (data.relatedArticleIds !== undefined) patch.relatedArticleIds = data.relatedArticleIds ?? [];
+  if (data.relatedArticleIds !== undefined)
+    patch.relatedArticleIds = data.relatedArticleIds ?? [];
   if (data.viewCount !== undefined) patch.viewCount = data.viewCount;
   if (data.publishedAt !== undefined) {
     patch.publishedAt = data.publishedAt ? new Date(data.publishedAt) : null;

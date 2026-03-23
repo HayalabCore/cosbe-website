@@ -7,7 +7,9 @@ type PageProps = {
   params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'contact' });
 
@@ -33,7 +35,9 @@ export default async function ContactPage() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-textPrimary mb-4">
               <div>{t('pageTitlePrefix')}</div>
-              <div className="text-primaryColor underline decoration-2 underline-offset-4">{t('pageTitleInquiry')}</div>
+              <div className="text-primaryColor underline decoration-2 underline-offset-4">
+                {t('pageTitleInquiry')}
+              </div>
             </h1>
           </div>
           <p className="text-lg text-textSecondary leading-relaxed">
@@ -85,7 +89,10 @@ export default async function ContactPage() {
         {/* Privacy Policy */}
         <div className="mt-8 text-center">
           <p className="text-sm text-textTertiary">
-            <Link href="/privacy-policy" className="text-primaryColor hover:underline">
+            <Link
+              href="/privacy-policy"
+              className="text-primaryColor hover:underline"
+            >
               {t('form.privacyPolicy')}
             </Link>
             {t('form.privacyPolicyAgree')}

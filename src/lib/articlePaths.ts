@@ -18,6 +18,9 @@ export function articleDetailBasePath(category: ContentCategory): string {
   }
 }
 
-export function articleDetailHref(category: ContentCategory, slug: string): string {
+export function articleDetailHref(
+  category: ContentCategory,
+  slug: string
+): string {
   return `${articleDetailBasePath(category)}/${slug}`;
 }

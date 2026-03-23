@@ -137,10 +137,19 @@
       "paragraph": { "label": "Paragraph", "description": "Rich text block" },
       "list": { "label": "List", "description": "Bullet or numbered list" },
       "quote": { "label": "Quote", "description": "Pull quote with citation" },
-      "callout": { "label": "Callout", "description": "Info, warning, or tip box" },
+      "callout": {
+        "label": "Callout",
+        "description": "Info, warning, or tip box"
+      },
       "image": { "label": "Image", "description": "Upload or link an image" },
-      "code": { "label": "Code", "description": "Syntax-highlighted code block" },
-      "divider": { "label": "Divider", "description": "Horizontal separator rule" },
+      "code": {
+        "label": "Code",
+        "description": "Syntax-highlighted code block"
+      },
+      "divider": {
+        "label": "Divider",
+        "description": "Horizontal separator rule"
+      },
       "embed": { "label": "Embed", "description": "YouTube, Twitter, or URL" }
     }
   },

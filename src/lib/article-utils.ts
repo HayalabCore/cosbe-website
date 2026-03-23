@@ -2,7 +2,10 @@ import type { ContentBlock, HeadingBlock } from '@/types';
 import { stripHtmlForMetrics } from '@/lib/sanitize-article-html';
 
 /** Next/Image throws if `src` is not a valid absolute URL or root-relative path. */
-export function imageSrcOrFallback(raw: string | undefined | null, fallback: string): string {
+export function imageSrcOrFallback(
+  raw: string | undefined | null,
+  fallback: string
+): string {
   const s = typeof raw === 'string' ? raw.trim() : '';
   if (!s) return fallback;
   if (s.startsWith('/')) return s;
@@ -60,7 +63,10 @@ export function createFallbackSlug(seed?: string): string {
   return `article-${generateId().slice(0, 8)}`;
 }
 
-export function generateExcerpt(blocks: ContentBlock[], maxLength = 160): string {
+export function generateExcerpt(
+  blocks: ContentBlock[],
+  maxLength = 160
+): string {
   const paragraphs = blocks.filter((b) => b.type === 'paragraph');
   if (paragraphs.length === 0) return '';
 

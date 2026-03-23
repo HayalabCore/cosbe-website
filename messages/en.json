@@ -22,7 +22,8 @@
     "jpLine2": "A teammate you can rely on",
     "characterAlt": "Cosbe character",
     "formPlaceholderTitle": "HubSpot form",
-    "formPlaceholderBody": "This area is reserved for the embedded HubSpot form."  },
+    "formPlaceholderBody": "This area is reserved for the embedded HubSpot form."
+  },
   "company": {
     "title": "Company Overview",
     "subtitle": "About CosBe",
@@ -1388,7 +1389,10 @@
     },
     "publishedDate": "February 26, 2025",
     "categories": ["Case studies", "New Businesses and Innovations"],
-    "tags": ["LLM (Large Language Model)", "RAG (Retrieval Augmented Generation)"],
+    "tags": [
+      "LLM (Large Language Model)",
+      "RAG (Retrieval Augmented Generation)"
+    ],
     "tableOfContents": "Table of contents",
     "sections": {
       "introduction": {
@@ -1775,4 +1779,3 @@
     }
   }
 }
-

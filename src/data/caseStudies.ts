@@ -32,17 +32,38 @@ export const caseStudies: CaseStudy[] = [
 
 export const caseStudyCategories: Category[] = [
   { id: 'all', labelKey: 'categories.all', href: '/case-studies' },
-  { id: 'efficiency', labelKey: 'categories.efficiency', href: '/case-studies/efficiency' },
-  { id: 'hrImprovement', labelKey: 'categories.hrImprovement', href: '/case-studies/hr-improvement' },
-  { id: 'innovation', labelKey: 'categories.innovation', href: '/case-studies/innovation' },
-  { id: 'customerMarketing', labelKey: 'categories.customerMarketing', href: '/case-studies/customer-marketing' },
+  {
+    id: 'efficiency',
+    labelKey: 'categories.efficiency',
+    href: '/case-studies/efficiency',
+  },
+  {
+    id: 'hrImprovement',
+    labelKey: 'categories.hrImprovement',
+    href: '/case-studies/hr-improvement',
+  },
+  {
+    id: 'innovation',
+    labelKey: 'categories.innovation',
+    href: '/case-studies/innovation',
+  },
+  {
+    id: 'customerMarketing',
+    labelKey: 'categories.customerMarketing',
+    href: '/case-studies/customer-marketing',
+  },
 ];
 
 export const categoryToCaseStudies: Record<string, number[]> = {
-  'efficiency': [],
+  efficiency: [],
   'hr-improvement': [2, 3],
-  'innovation': [1],
+  innovation: [1],
   'customer-marketing': [],
 };
 
-export const validCategorySlugs = ['efficiency', 'hr-improvement', 'innovation', 'customer-marketing'];
+export const validCategorySlugs = [
+  'efficiency',
+  'hr-improvement',
+  'innovation',
+  'customer-marketing',
+];

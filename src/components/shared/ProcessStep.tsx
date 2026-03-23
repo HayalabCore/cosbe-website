@@ -12,9 +12,11 @@ export default function ProcessStep({
   className = '',
 }: ProcessStepProps) {
   const formattedNumber = String(stepNumber).padStart(2, '0');
-  
+
   return (
-    <div className={`relative bg-white rounded-xl shadow-lg p-6 border border-borderPrimary hover:shadow-xl transition-shadow ${className}`}>
+    <div
+      className={`relative bg-white rounded-xl shadow-lg p-6 border border-borderPrimary hover:shadow-xl transition-shadow ${className}`}
+    >
       <div className="absolute -top-3 left-6 bg-primaryColor text-white px-4 py-1 rounded-full text-sm font-bold">
         STEP {formattedNumber}
       </div>

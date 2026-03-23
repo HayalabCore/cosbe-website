@@ -114,11 +114,7 @@ export interface AuthorReference {
 
 export type ArticleStatus = 'draft' | 'published' | 'archived';
 
-export type ContentCategory =
-  | 'useful-info'
-  | 'case-study'
-  | 'video'
-  | 'notice';
+export type ContentCategory = 'useful-info' | 'case-study' | 'video' | 'notice';
 
 export interface ArticleSEO {
   metaTitle?: string;

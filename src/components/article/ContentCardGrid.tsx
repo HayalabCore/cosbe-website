@@ -26,16 +26,23 @@ export default function ContentCardGrid({
   emptyMessage,
   columns = '3',
 }: ContentCardGridProps) {
-  const gridClass = columns === '2' ? 'md:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3';
+  const gridClass =
+    columns === '2' ? 'md:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3';
 
   if (items.length === 0 && emptyMessage) {
-    return <p className="text-center text-textTertiary py-16">{emptyMessage}</p>;
+    return (
+      <p className="text-center text-textTertiary py-16">{emptyMessage}</p>
+    );
   }
 
   return (
     <div className={`grid ${gridClass} gap-6`}>
       {items.map((item) => (
-        <Link key={item.id} href={`${detailBasePath}/${item.slug}`} className="group block active:scale-[0.98] transition-transform duration-100">
+        <Link
+          key={item.id}
+          href={`${detailBasePath}/${item.slug}`}
+          className="group block active:scale-[0.98] transition-transform duration-100"
+        >
           <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-primaryColor/15 hover:border-primaryColor h-full flex flex-col group-active:opacity-80">
             <div className="relative aspect-[4/3] overflow-hidden">
               <Image
@@ -58,11 +65,18 @@ export default function ContentCardGrid({
                 {item.title}
               </h3>
               {item.excerpt && (
-                <p className="text-sm text-textSecondary line-clamp-2 mb-4 flex-1">{item.excerpt}</p>
+                <p className="text-sm text-textSecondary line-clamp-2 mb-4 flex-1">
+                  {item.excerpt}
+                </p>
               )}
               <div className="flex items-center justify-between text-sm text-textTertiary mt-auto pt-2 border-t border-gray-100">
                 <span className="flex items-center gap-1">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -75,7 +89,10 @@ export default function ContentCardGrid({
                 <span className="flex items-center gap-2 min-w-0">
                   <span className="relative w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                     <Image
-                      src={imageSrcOrFallback(item.author.avatarUrl, fallbackAuthorImage)}
+                      src={imageSrcOrFallback(
+                        item.author.avatarUrl,
+                        fallbackAuthorImage
+                      )}
                       alt={item.author.name}
                       fill
                       className="object-cover"

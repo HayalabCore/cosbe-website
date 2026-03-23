@@ -14,7 +14,9 @@ export async function signOut(supabase: SupabaseClient): Promise<void> {
   await supabase.auth.signOut();
 }
 
-export async function getSession(supabase: SupabaseClient): Promise<Session | null> {
+export async function getSession(
+  supabase: SupabaseClient
+): Promise<Session | null> {
   const { data } = await supabase.auth.getSession();
   return data.session;
 }

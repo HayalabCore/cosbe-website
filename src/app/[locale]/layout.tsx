@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -7,11 +7,18 @@ import { Navbar, Footer } from '@/components';
 import LocaleHtmlLang from '@/components/shared/LocaleHtmlLang';
 
 export const metadata: Metadata = {
-  keywords: ["AI", "transformation", "consulting", "business", "innovation", "CosBE"],
+  keywords: [
+    'AI',
+    'transformation',
+    'consulting',
+    'business',
+    'innovation',
+    'CosBE',
+  ],
   openGraph: {
-    type: "website",
-    siteName: "CosBE",
-    locale: "en_US",
+    type: 'website',
+    siteName: 'CosBE',
+    locale: 'en_US',
   },
 };
 
@@ -27,7 +34,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  
+
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as Locale)) {
     notFound();
@@ -46,4 +53,3 @@ export default async function LocaleLayout({
     </NextIntlClientProvider>
   );
 }
-

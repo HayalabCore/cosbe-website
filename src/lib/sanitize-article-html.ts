@@ -1,7 +1,8 @@
 import sanitizeHtml from 'sanitize-html';
 
 const COLOR_STYLE = /^#([0-9a-f]{3,8})$/i;
-const RGB_STYLE = /^rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(,\s*[\d.]+\s*)?\)$/i;
+const RGB_STYLE =
+  /^rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(,\s*[\d.]+\s*)?\)$/i;
 
 /** Rich paragraph HTML from Tiptap (lists, quotes, alignment, colors — no inline code). */
 const PARAGRAPH_SANITIZE: sanitizeHtml.IOptions = {
@@ -67,9 +68,14 @@ export function paragraphContentToHtml(stored: string): string {
   const t = stored.trim();
   if (!t) return '';
   if (/^<[a-z]/i.test(t)) return sanitizeArticleHtml(t);
-  return sanitizeArticleHtml(`<p class="whitespace-pre-wrap">${escapeHtml(t)}</p>`);
+  return sanitizeArticleHtml(
+    `<p class="whitespace-pre-wrap">${escapeHtml(t)}</p>`
+  );
 }
 
 export function stripHtmlForMetrics(html: string): string {
-  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  return html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }

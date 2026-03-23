@@ -5,7 +5,11 @@ import en from '../../../messages/en.json';
 import ja from '../../../messages/ja.json';
 import adminEn from '../../../messages/admin-en.json';
 import adminJa from '../../../messages/admin-ja.json';
-import { ADMIN_LOCALE_COOKIE, parseAdminLocale, type AdminLocale } from '@/lib/admin-locale';
+import {
+  ADMIN_LOCALE_COOKIE,
+  parseAdminLocale,
+  type AdminLocale,
+} from '@/lib/admin-locale';
 
 function buildMessages(locale: AdminLocale): AbstractIntlMessages {
   const base = locale === 'ja' ? ja : en;
@@ -13,7 +17,11 @@ function buildMessages(locale: AdminLocale): AbstractIntlMessages {
   return { ...base, admin } as unknown as AbstractIntlMessages;
 }
 
-export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminRootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const cookieStore = await cookies();
   const locale = parseAdminLocale(cookieStore.get(ADMIN_LOCALE_COOKIE)?.value);
   const messages = buildMessages(locale);

@@ -21,12 +21,7 @@ export default function ContentSection({
 }: ContentSectionProps) {
   const imageComponent = (
     <div className="relative h-80 bg-gradient-to-br from-primaryColor/20 to-primaryColor/10 rounded-2xl overflow-hidden">
-      <Image
-        src={image}
-        alt={imageAlt}
-        fill
-        className="object-contain p-8"
-      />
+      <Image src={image} alt={imageAlt} fill className="object-contain p-8" />
     </div>
   );
 
@@ -35,9 +30,7 @@ export default function ContentSection({
       <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
         {title}
       </h2>
-      <p className="text-textSecondary mb-6 leading-relaxed">
-        {description}
-      </p>
+      <p className="text-textSecondary mb-6 leading-relaxed">{description}</p>
       <ul className="space-y-3">
         {points.map((point, index) => (
           <li key={index} className="flex items-start">

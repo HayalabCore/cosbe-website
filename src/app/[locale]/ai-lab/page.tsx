@@ -70,12 +70,19 @@ export default function AiLabPage() {
         <section className="mb-16">
           <div className="bg-bgAccent rounded-3xl p-8 lg:p-12">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-textPrimary mb-10">
-              {t('challenges.title')} <span className="text-primaryColor">{t('challenges.titleHighlight')}</span>{locale === 'ja' && t('challenges.titleEnd')}
+              {t('challenges.title')}{' '}
+              <span className="text-primaryColor">
+                {t('challenges.titleHighlight')}
+              </span>
+              {locale === 'ja' && t('challenges.titleEnd')}
             </h2>
-            
+
             <div className="space-y-8">
               {challenges.map((challenge, index) => (
-                <div key={challenge.key} className="grid md:grid-cols-[1fr_auto] gap-8 items-start">
+                <div
+                  key={challenge.key}
+                  className="grid md:grid-cols-[1fr_auto] gap-8 items-start"
+                >
                   <div>
                     <div className="flex items-center gap-3 mb-3">
                       <span className="inline-block px-4 py-1.5 bg-primaryColor text-white text-sm font-bold rounded">
@@ -112,7 +119,9 @@ export default function AiLabPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-primaryColor/5 to-primaryColor/20" />
           <div className="relative py-16 text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-textPrimary mb-4">
-              <span className="text-primaryColor">{t('transition.cosbeName')}</span>
+              <span className="text-primaryColor">
+                {t('transition.cosbeName')}
+              </span>
               {t('transition.text')}
             </h2>
           </div>
@@ -125,44 +134,48 @@ export default function AiLabPage() {
               {t('features.title')}
             </h2>
           </div>
-          
-          <div className="bg-gradient-to-b from-primaryColor/10 to-white rounded-3xl p-8 lg:p-12">
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={feature.key} className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-primaryColor">
-                <div className="flex justify-center mb-6">
-                  <div className="w-48 h-48 rounded-full overflow-hidden">
-                    <Image
-                      src={feature.image}
-                      alt={t(`features.${feature.key}.imageAlt`)}
-                      width={300}
-                      height={300}
-                      className="w-full h-full object-cover"
-                    />
+          <div className="bg-gradient-to-b from-primaryColor/10 to-white rounded-3xl p-8 lg:p-12">
+            <div className="grid md:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
+                <div
+                  key={feature.key}
+                  className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-primaryColor"
+                >
+                  <div className="flex justify-center mb-6">
+                    <div className="w-48 h-48 rounded-full overflow-hidden">
+                      <Image
+                        src={feature.image}
+                        alt={t(`features.${feature.key}.imageAlt`)}
+                        width={300}
+                        height={300}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
+                  <div className="mb-3">
+                    <span className="inline-block px-3 py-1 bg-primaryColor text-white text-sm font-bold rounded">
+                      Case {String(index + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <h4 className="text-lg font-bold text-textPrimary mb-3">
+                    {t(`features.${feature.key}.title`)}
+                  </h4>
+                  <p className="text-sm text-textSecondary leading-relaxed">
+                    {t(`features.${feature.key}.description`)}
+                  </p>
                 </div>
-                <div className="mb-3">
-                  <span className="inline-block px-3 py-1 bg-primaryColor text-white text-sm font-bold rounded">
-                    Case {String(index + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h4 className="text-lg font-bold text-textPrimary mb-3">
-                  {t(`features.${feature.key}.title`)}
-                </h4>
-                <p className="text-sm text-textSecondary leading-relaxed">
-                  {t(`features.${feature.key}.description`)}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Benefits Section */}
         <section className="mb-16 bg-gradient-to-br from-primaryColor to-primaryColor rounded-3xl p-8 lg:p-12 text-white">
           <div className="mb-8">
-            <p className="text-sm mb-2 opacity-90">{locale === 'ja' ? 'メリット' : 'Benefits of'}</p>
+            <p className="text-sm mb-2 opacity-90">
+              {locale === 'ja' ? 'メリット' : 'Benefits of'}
+            </p>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">
               {t('benefits.title')}
             </h2>
@@ -294,7 +307,7 @@ export default function AiLabPage() {
                   className="w-full h-auto rounded-2xl"
                 />
               </div>
-              
+
               {/* Text Card - Overlays on desktop */}
               <div className="w-full md:w-auto md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-10 order-1 md:order-2">
                 <div className="bg-white rounded-2xl shadow-lg border border-primaryColor/20 p-6 md:p-8 md:max-w-[480px]">
@@ -343,9 +356,15 @@ export default function AiLabPage() {
               <h4 className="text-lg md:text-xl font-bold text-textPrimary mb-2">
                 {t('pricing.comparison.subtitle')}
               </h4>
-              <p className="text-textSecondary mb-2">{t('pricing.comparison.text1')}</p>
-              <p className="text-textSecondary mb-2">{t('pricing.comparison.text2')}</p>
-              <p className="text-textPrimary font-bold">{t('pricing.comparison.text3')}</p>
+              <p className="text-textSecondary mb-2">
+                {t('pricing.comparison.text1')}
+              </p>
+              <p className="text-textSecondary mb-2">
+                {t('pricing.comparison.text2')}
+              </p>
+              <p className="text-textPrimary font-bold">
+                {t('pricing.comparison.text3')}
+              </p>
             </div>
 
             <div className="overflow-x-auto">
@@ -354,13 +373,19 @@ export default function AiLabPage() {
                   <tr>
                     <th className="p-4 text-left"></th>
                     <th className="p-4 text-center font-bold">CosBE</th>
-                    <th className="p-4 text-center font-bold">{t('pricing.comparison.companyA')}</th>
-                    <th className="p-4 text-center font-bold">{t('pricing.comparison.companyB')}</th>
+                    <th className="p-4 text-center font-bold">
+                      {t('pricing.comparison.companyA')}
+                    </th>
+                    <th className="p-4 text-center font-bold">
+                      {t('pricing.comparison.companyB')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
                   <tr className="border-b border-gray-200">
-                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.agile')}</td>
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">
+                      {t('pricing.comparison.agile')}
+                    </td>
                     <td className="p-4 text-center bg-white">
                       <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
                     </td>
@@ -372,42 +397,68 @@ export default function AiLabPage() {
                     </td>
                   </tr>
                   <tr className="border-b border-gray-200">
-                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.consulting')}</td>
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">
+                      {t('pricing.comparison.consulting')}
+                    </td>
                     <td className="p-4 text-center bg-white">
                       <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
                     </td>
                     <td className="p-4 text-center bg-white">
-                      <span className="text-errorColor text-2xl font-light">×</span>
+                      <span className="text-errorColor text-2xl font-light">
+                        ×
+                      </span>
                     </td>
                     <td className="p-4 text-center bg-white">
-                      <span className="text-errorColor text-2xl font-light">×</span>
+                      <span className="text-errorColor text-2xl font-light">
+                        ×
+                      </span>
                     </td>
                   </tr>
                   <tr className="border-b border-gray-200">
-                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.serverTools')}</td>
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">
+                      {t('pricing.comparison.serverTools')}
+                    </td>
                     <td className="p-4 text-center bg-white">
                       <span className="inline-block w-6 h-6 border-2 border-successColor rounded-full" />
                     </td>
                     <td className="p-4 text-center bg-white">
-                      <span className="text-errorColor text-2xl font-light">×</span>
+                      <span className="text-errorColor text-2xl font-light">
+                        ×
+                      </span>
                     </td>
                     <td className="p-4 text-center bg-white">
-                      <span className="text-errorColor text-2xl font-light">×</span>
+                      <span className="text-errorColor text-2xl font-light">
+                        ×
+                      </span>
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">{t('pricing.comparison.price')}</td>
-                    <td className="p-4 text-center bg-white">
-                      <p className="font-bold text-lg">{t('pricing.comparison.cosbePrice')}</p>
-                      <p className="text-xs text-textTertiary">{t('pricing.comparison.cosbeNote')}</p>
+                    <td className="p-4 font-semibold bg-primaryColor text-white text-center">
+                      {t('pricing.comparison.price')}
                     </td>
                     <td className="p-4 text-center bg-white">
-                      <p className="font-bold text-lg">{t('pricing.comparison.companyAPrice')}</p>
-                      <p className="text-xs text-textTertiary">{t('pricing.comparison.companyANote')}</p>
+                      <p className="font-bold text-lg">
+                        {t('pricing.comparison.cosbePrice')}
+                      </p>
+                      <p className="text-xs text-textTertiary">
+                        {t('pricing.comparison.cosbeNote')}
+                      </p>
                     </td>
                     <td className="p-4 text-center bg-white">
-                      <p className="font-bold text-lg">{t('pricing.comparison.companyBPrice')}</p>
-                      <p className="text-xs text-textTertiary">{t('pricing.comparison.companyBNote')}</p>
+                      <p className="font-bold text-lg">
+                        {t('pricing.comparison.companyAPrice')}
+                      </p>
+                      <p className="text-xs text-textTertiary">
+                        {t('pricing.comparison.companyANote')}
+                      </p>
+                    </td>
+                    <td className="p-4 text-center bg-white">
+                      <p className="font-bold text-lg">
+                        {t('pricing.comparison.companyBPrice')}
+                      </p>
+                      <p className="text-xs text-textTertiary">
+                        {t('pricing.comparison.companyBNote')}
+                      </p>
                     </td>
                   </tr>
                 </tbody>
@@ -430,7 +481,10 @@ export default function AiLabPage() {
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {caseStudies.map((caseStudy) => (
-              <div key={caseStudy.key} className="bg-white rounded-2xl overflow-hidden shadow-lg">
+              <div
+                key={caseStudy.key}
+                className="bg-white rounded-2xl overflow-hidden shadow-lg"
+              >
                 <div className="relative h-48">
                   <Image
                     src={caseStudy.image}
@@ -471,60 +525,80 @@ export default function AiLabPage() {
           <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-8">
             {t('faq.title')}
           </h2>
-          
+
           <div className="space-y-4">
             <div className="border border-borderPrimary rounded-2xl p-6">
               <h4 className="text-lg font-bold text-textPrimary mb-3 flex items-start">
-                <span className="inline-block w-8 h-8 bg-error text-white rounded-full flex items-center justify-center mr-3 flex-shrink-0">Q</span>
+                <span className="inline-block w-8 h-8 bg-error text-white rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  Q
+                </span>
                 {t('faq.q1.question')}
               </h4>
               <p className="text-textSecondary ml-11">
-                <span className="inline-block w-8 h-8 bg-primaryColor text-white rounded-full flex items-center justify-center mr-3 mb-2">A</span>
+                <span className="inline-block w-8 h-8 bg-primaryColor text-white rounded-full flex items-center justify-center mr-3 mb-2">
+                  A
+                </span>
                 {t('faq.q1.answer')}
               </p>
             </div>
 
             <div className="border border-borderPrimary rounded-2xl p-6">
               <h4 className="text-lg font-bold text-textPrimary mb-3 flex items-start">
-                <span className="inline-block w-8 h-8 bg-error text-white rounded-full flex items-center justify-center mr-3 flex-shrink-0">Q</span>
+                <span className="inline-block w-8 h-8 bg-error text-white rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  Q
+                </span>
                 {t('faq.q2.question')}
               </h4>
               <p className="text-textSecondary ml-11">
-                <span className="inline-block w-8 h-8 bg-primaryColor text-white rounded-full flex items-center justify-center mr-3 mb-2">A</span>
+                <span className="inline-block w-8 h-8 bg-primaryColor text-white rounded-full flex items-center justify-center mr-3 mb-2">
+                  A
+                </span>
                 {t('faq.q2.answer')}
               </p>
             </div>
           </div>
         </section>
-
       </div>
 
       {/* Final CTA Section */}
       <section className="relative py-20 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/bg_image.jpeg')" }}></div>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/bg_image.jpeg')" }}
+        ></div>
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 whitespace-pre-line">
-              {t('finalCta.title')}
-            </h2>
-            <p className="text-white/90 mb-2 text-base">
-              {t('finalCta.subtitle')}
-            </p>
-            <p className="text-white/80 mb-2 text-sm max-w-2xl mx-auto">
-              {t('finalCta.description')}
-            </p>
-            <p className="text-white/80 mb-10 text-sm max-w-2xl mx-auto">
-              {t('finalCta.additionalText')}
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 whitespace-pre-line">
+            {t('finalCta.title')}
+          </h2>
+          <p className="text-white/90 mb-2 text-base">
+            {t('finalCta.subtitle')}
+          </p>
+          <p className="text-white/80 mb-2 text-sm max-w-2xl mx-auto">
+            {t('finalCta.description')}
+          </p>
+          <p className="text-white/80 mb-10 text-sm max-w-2xl mx-auto">
+            {t('finalCta.additionalText')}
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              {t('finalCta.button')}
-            </Link>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            {t('finalCta.button')}
+          </Link>
         </div>
       </section>
     </div>

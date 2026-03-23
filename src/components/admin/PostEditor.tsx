@@ -5,14 +5,26 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
-import { createEmptyBlock, createFallbackSlug, generateTOC, normalizeSlugInput } from '@/lib/article-utils';
+import {
+  createEmptyBlock,
+  createFallbackSlug,
+  generateTOC,
+  normalizeSlugInput,
+} from '@/lib/article-utils';
 import { stripHtmlForMetrics } from '@/lib/sanitize-article-html';
 import {
   createArticleAction,
   getArticleByIdAction,
   updateArticleAction,
 } from '@/actions/articles';
-import type { Article, ArticleSEO, ArticleStatus, ContentBlock, ContentCategory, ParagraphBlock } from '@/types';
+import type {
+  Article,
+  ArticleSEO,
+  ArticleStatus,
+  ContentBlock,
+  ContentCategory,
+  ParagraphBlock,
+} from '@/types';
 import PostMetaForm, { type PostMetaPatch } from './PostMetaForm';
 import BlockEditor from './BlockEditor';
 import BlockRenderer from '@/components/article/BlockRenderer';
@@ -85,8 +97,19 @@ function SaveIndicator({ saving, label }: { saving: boolean; label: string }) {
   return (
     <span className="flex items-center gap-1.5 text-xs text-slate-400">
       <svg className="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+        />
       </svg>
       {label}
     </span>
@@ -112,9 +135,13 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const [tags, setTags] = useState('');
   const [status, setStatus] = useState<ArticleStatus>('draft');
   const [authorName, setAuthorName] = useState(defaultAuthor.name);
-  const [authorDesignation, setAuthorDesignation] = useState(defaultAuthor.designation);
+  const [authorDesignation, setAuthorDesignation] = useState(
+    defaultAuthor.designation
+  );
   const [seo, setSeo] = useState<ArticleSEO>({});
-  const [blocks, setBlocks] = useState<ContentBlock[]>([createEmptyBlock('paragraph')]);
+  const [blocks, setBlocks] = useState<ContentBlock[]>([
+    createEmptyBlock('paragraph'),
+  ]);
   const [persistedId, setPersistedId] = useState<string | undefined>(articleId);
 
   const load = useCallback(async () => {
@@ -156,12 +183,14 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     if (patch.title !== undefined) setTitle(patch.title);
     if (patch.slug !== undefined) setSlug(normalizeSlugInput(patch.slug));
     if (patch.excerpt !== undefined) setExcerpt(patch.excerpt);
-    if (patch.featuredImage !== undefined) setFeaturedImage(patch.featuredImage);
+    if (patch.featuredImage !== undefined)
+      setFeaturedImage(patch.featuredImage);
     if (patch.category !== undefined) setCategory(patch.category);
     if (patch.tags !== undefined) setTags(patch.tags);
     if (patch.status !== undefined) setStatus(patch.status);
     if (patch.authorName !== undefined) setAuthorName(patch.authorName);
-    if (patch.authorDesignation !== undefined) setAuthorDesignation(patch.authorDesignation);
+    if (patch.authorDesignation !== undefined)
+      setAuthorDesignation(patch.authorDesignation);
     if (patch.seo !== undefined) setSeo(patch.seo);
   }
 
@@ -169,7 +198,11 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     setSaving(true);
     setSaveSuccess(false);
     try {
-      const st: ArticleStatus = publish ? 'published' : status === 'published' ? 'draft' : status;
+      const st: ArticleStatus = publish
+        ? 'published'
+        : status === 'published'
+          ? 'draft'
+          : status;
       const payload = buildArticlePayload(
         title,
         slug,
@@ -208,8 +241,19 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex items-center gap-2.5 text-slate-400">
           <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
           </svg>
           <span className="text-sm">{t('loadingPost')}</span>
         </div>
@@ -229,8 +273,18 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
           href="/admin/dashboard"
           className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors flex-shrink-0"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           <span className="hidden sm:inline">{t('allPosts')}</span>
         </Link>
@@ -250,8 +304,14 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
           }`}
         >
-          <span className={`w-1.5 h-1.5 rounded-full ${isPublished ? 'bg-emerald-500' : 'bg-amber-400'}`} />
-          {isPublished ? t('statusPublished') : status === 'archived' ? t('statusArchived') : t('statusDraft')}
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${isPublished ? 'bg-emerald-500' : 'bg-amber-400'}`}
+          />
+          {isPublished
+            ? t('statusPublished')
+            : status === 'archived'
+              ? t('statusArchived')
+              : t('statusDraft')}
         </span>
 
         {/* Edit / Preview toggle */}
@@ -260,7 +320,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             type="button"
             onClick={() => setTab('edit')}
             className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-              tab === 'edit' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              tab === 'edit'
+                ? 'bg-slate-900 text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             {t('tabEdit')}
@@ -269,7 +331,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             type="button"
             onClick={() => setTab('preview')}
             className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-              tab === 'preview' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              tab === 'preview'
+                ? 'bg-slate-900 text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             {t('tabPreview')}
@@ -280,8 +344,16 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
         {saveSuccess && !saving && (
           <span className="hidden sm:flex items-center gap-1.5 text-xs text-emerald-600">
-            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            <svg
+              className="w-3.5 h-3.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
             </svg>
             {t('saved')}
           </span>
@@ -310,8 +382,14 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
       {tab === 'preview' ? (
         <div className="w-full min-w-0 px-4 md:px-8 lg:px-10 py-10">
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 md:p-10 lg:p-12">
-            <h1 className="text-3xl font-bold text-slate-900 mb-6">{title || t('untitled')}</h1>
-            {excerpt && <p className="text-base text-slate-500 mb-8 leading-relaxed border-l-4 border-primaryColor pl-4">{excerpt}</p>}
+            <h1 className="text-3xl font-bold text-slate-900 mb-6">
+              {title || t('untitled')}
+            </h1>
+            {excerpt && (
+              <p className="text-base text-slate-500 mb-8 leading-relaxed border-l-4 border-primaryColor pl-4">
+                {excerpt}
+              </p>
+            )}
             {blocks.map((b) => (
               <BlockRenderer key={b.id} block={b} />
             ))}
@@ -342,11 +420,17 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
             {/* Word count */}
             <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-100">
-              <span className="text-[11px] font-medium text-slate-400">{t('words', { count: words })}</span>
+              <span className="text-[11px] font-medium text-slate-400">
+                {t('words', { count: words })}
+              </span>
               <span className="text-slate-200">·</span>
-              <span className="text-[11px] font-medium text-slate-400">{t('minRead', { count: readingMins })}</span>
+              <span className="text-[11px] font-medium text-slate-400">
+                {t('minRead', { count: readingMins })}
+              </span>
               <span className="text-slate-200">·</span>
-              <span className="text-[11px] font-medium text-slate-400">{t('blocksLabel', { count: blocks.length })}</span>
+              <span className="text-[11px] font-medium text-slate-400">
+                {t('blocksLabel', { count: blocks.length })}
+              </span>
             </div>
 
             <BlockEditor
@@ -382,7 +466,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
           {/* Mobile: settings below blocks */}
           <div className="xl:hidden w-full px-4 pb-8 mt-4 border-t border-slate-100 pt-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">{t('postSettings')}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
+              {t('postSettings')}
+            </p>
             <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
               <PostMetaForm
                 supabase={supabase}

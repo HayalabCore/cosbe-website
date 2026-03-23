@@ -7,7 +7,9 @@ type PageProps = {
   params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'hero' });
 
@@ -43,8 +45,12 @@ export default async function Home() {
               'radial-gradient(closest-side at 20% 30%, var(--color-textHeading, #0F172A), transparent 60%)',
               'radial-gradient(closest-side at 85% 70%, var(--color-textHeading, #0F172A), transparent 65%)',
             ].join(','),
-            backgroundSize: ['48px 48px', '900px 900px', '950px 950px'].join(','),
-            backgroundPosition: ['0 0', '-200px -200px', '200px 200px'].join(','),
+            backgroundSize: ['48px 48px', '900px 900px', '950px 950px'].join(
+              ','
+            ),
+            backgroundPosition: ['0 0', '-200px -200px', '200px 200px'].join(
+              ','
+            ),
             opacity: 0.05,
           }}
         />
@@ -82,12 +88,8 @@ export default async function Home() {
             </div>
 
             <div className="mt-6 sm:mt-8 lg:mt-10 space-y-3 sm:space-y-4 text-[18px] sm:text-[22px] md:text-[24px] font-semibold leading-relaxed text-textBody lg:text-[28px]">
-              <p>
-                {t('jpLine1')}
-              </p>
-              <p>
-                {t('jpLine2')}
-              </p>
+              <p>{t('jpLine1')}</p>
+              <p>{t('jpLine2')}</p>
             </div>
           </div>
 

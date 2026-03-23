@@ -41,67 +41,68 @@ async function scrapeArticle(url: string): Promise<{
     $('article img').first().attr('src') ||
     '';
 
-  const metaDescription = $('meta[name="description"]').attr('content')?.trim() || '';
+  const metaDescription =
+    $('meta[name="description"]').attr('content')?.trim() || '';
 
   const blocks: ContentBlock[] = [];
   const articleRoot = $('article').length ? $('article') : $('.entry-content');
 
-  articleRoot
-    .find('h2, h3, h4, p, ul, ol, blockquote, img')
-    .each((_, el) => {
-      const $el = $(el);
-      const tag = el.tagName.toLowerCase();
-      if (tag === 'h2' || tag === 'h3' || tag === 'h4') {
-        const level = (tag === 'h2' ? 2 : tag === 'h3' ? 3 : 4) as 2 | 3 | 4;
-        blocks.push({
-          id: generateId(),
-          type: 'heading',
-          level,
-          content: $el.text().trim(),
-        });
-      } else if (tag === 'p') {
-        const text = $el.text().trim();
-        if (text) {
-          blocks.push({ id: generateId(), type: 'paragraph', content: text });
-        }
-      } else if (tag === 'ul' || tag === 'ol') {
-        const items = $el
-          .find('li')
-          .map((_, li) => $(li).text().trim())
-          .get()
-          .filter(Boolean);
-        if (items.length) {
-          blocks.push({
-            id: generateId(),
-            type: 'list',
-            listType: tag === 'ol' ? 'numbered' : 'bullet',
-            items,
-          });
-        }
-      } else if (tag === 'blockquote') {
-        blocks.push({
-          id: generateId(),
-          type: 'quote',
-          content: $el.text().trim(),
-        });
-      } else if (tag === 'img') {
-        const src = $el.attr('src');
-        if (src) {
-          blocks.push({
-            id: generateId(),
-            type: 'image',
-            url: src.startsWith('http') ? src : new URL(src, url).href,
-            alt: $el.attr('alt') || '',
-          });
-        }
+  articleRoot.find('h2, h3, h4, p, ul, ol, blockquote, img').each((_, el) => {
+    const $el = $(el);
+    const tag = el.tagName.toLowerCase();
+    if (tag === 'h2' || tag === 'h3' || tag === 'h4') {
+      const level = (tag === 'h2' ? 2 : tag === 'h3' ? 3 : 4) as 2 | 3 | 4;
+      blocks.push({
+        id: generateId(),
+        type: 'heading',
+        level,
+        content: $el.text().trim(),
+      });
+    } else if (tag === 'p') {
+      const text = $el.text().trim();
+      if (text) {
+        blocks.push({ id: generateId(), type: 'paragraph', content: text });
       }
-    });
+    } else if (tag === 'ul' || tag === 'ol') {
+      const items = $el
+        .find('li')
+        .map((_, li) => $(li).text().trim())
+        .get()
+        .filter(Boolean);
+      if (items.length) {
+        blocks.push({
+          id: generateId(),
+          type: 'list',
+          listType: tag === 'ol' ? 'numbered' : 'bullet',
+          items,
+        });
+      }
+    } else if (tag === 'blockquote') {
+      blocks.push({
+        id: generateId(),
+        type: 'quote',
+        content: $el.text().trim(),
+      });
+    } else if (tag === 'img') {
+      const src = $el.attr('src');
+      if (src) {
+        blocks.push({
+          id: generateId(),
+          type: 'image',
+          url: src.startsWith('http') ? src : new URL(src, url).href,
+          alt: $el.attr('alt') || '',
+        });
+      }
+    }
+  });
 
   if (blocks.length === 0) {
     blocks.push({
       id: generateId(),
       type: 'paragraph',
-      content: articleRoot.text().trim().slice(0, 8000) || 'Imported article (no structured content detected).',
+      content:
+        articleRoot.text().trim().slice(0, 8000) ||
+        'Imported article (no structured content detected).',
     });
   }
 
@@ -124,7 +125,9 @@ async function main() {
   }
 
   if (!process.env.DATABASE_URL) {
-    console.error('Set DATABASE_URL (and DIRECT_URL for migrations) in .env or the environment.');
+    console.error(
+      'Set DATABASE_URL (and DIRECT_URL for migrations) in .env or the environment.'
+    );
     process.exit(1);
   }
 

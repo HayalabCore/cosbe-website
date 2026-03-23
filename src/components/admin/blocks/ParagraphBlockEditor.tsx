@@ -104,36 +104,64 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
   const t = useTranslations('admin.paragraph');
 
   if (!editor) {
-    return <div className="h-10 border-b border-slate-200 bg-slate-50/80 rounded-t-lg animate-pulse" />;
+    return (
+      <div className="h-10 border-b border-slate-200 bg-slate-50/80 rounded-t-lg animate-pulse" />
+    );
   }
 
   const setLink = () => {
     const prev = editor.getAttributes('link').href as string | undefined;
-    const url = window.prompt(t('linkPromptTitle'), prev ?? t('linkPromptDefault'));
+    const url = window.prompt(
+      t('linkPromptTitle'),
+      prev ?? t('linkPromptDefault')
+    );
     if (url === null) return;
     const trimmed = url.trim();
     if (trimmed === '') {
       editor.chain().focus().extendMarkRange('link').unsetLink().run();
       return;
     }
-    editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run();
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .setLink({ href: trimmed })
+      .run();
   };
 
-  const currentColor = (editor.getAttributes('textStyle').color as string | undefined) ?? '';
-  const highlightColor = (editor.getAttributes('highlight').color as string | undefined) ?? '';
+  const currentColor =
+    (editor.getAttributes('textStyle').color as string | undefined) ?? '';
+  const highlightColor =
+    (editor.getAttributes('highlight').color as string | undefined) ?? '';
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 border-b border-slate-200 bg-slate-50/80 rounded-t-lg px-2 py-1.5">
-      <Btn title={tt('bold')} active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
+      <Btn
+        title={tt('bold')}
+        active={editor.isActive('bold')}
+        onClick={() => editor.chain().focus().toggleBold().run()}
+      >
         <Bold size={14} strokeWidth={2.5} />
       </Btn>
-      <Btn title={tt('italic')} active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
+      <Btn
+        title={tt('italic')}
+        active={editor.isActive('italic')}
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+      >
         <Italic size={14} strokeWidth={2.5} />
       </Btn>
-      <Btn title={tt('underline')} active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+      <Btn
+        title={tt('underline')}
+        active={editor.isActive('underline')}
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+      >
         <UnderlineIcon size={14} strokeWidth={2.5} />
       </Btn>
-      <Btn title={tt('strike')} active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()}>
+      <Btn
+        title={tt('strike')}
+        active={editor.isActive('strike')}
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+      >
         <Strikethrough size={14} strokeWidth={2.5} />
       </Btn>
 
@@ -145,19 +173,34 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
       >
         <div className="flex flex-col items-center gap-[2px]">
           <Baseline size={12} strokeWidth={2} />
-          <span className="h-[3px] w-[14px] rounded-full" style={{ backgroundColor: currentColor || '#374151' }} />
+          <span
+            className="h-[3px] w-[14px] rounded-full"
+            style={{ backgroundColor: currentColor || '#374151' }}
+          />
         </div>
         <input
           type="color"
           className="sr-only"
-          value={currentColor && /^#/.test(currentColor) ? currentColor : '#374151'}
-          onInput={(e) => editor.chain().focus().setColor((e.target as HTMLInputElement).value).run()}
+          value={
+            currentColor && /^#/.test(currentColor) ? currentColor : '#374151'
+          }
+          onInput={(e) =>
+            editor
+              .chain()
+              .focus()
+              .setColor((e.target as HTMLInputElement).value)
+              .run()
+          }
         />
       </label>
       <select
         title={tt('textColorPreset')}
         className={selectCls}
-        value={TEXT_COLOR_KEYS.some((c) => c.value === currentColor) ? currentColor : '__custom__'}
+        value={
+          TEXT_COLOR_KEYS.some((c) => c.value === currentColor)
+            ? currentColor
+            : '__custom__'
+        }
         onChange={(e) => {
           const v = e.target.value;
           if (v === '__custom__') return;
@@ -179,16 +222,25 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
         title={tt('toggleHighlight')}
         active={editor.isActive('highlight')}
         onClick={() => {
-          if (editor.isActive('highlight')) editor.chain().focus().unsetHighlight().run();
+          if (editor.isActive('highlight'))
+            editor.chain().focus().unsetHighlight().run();
           else editor.chain().focus().setHighlight({ color: '#fef08a' }).run();
         }}
       >
-        <Highlighter size={14} strokeWidth={2} style={{ color: highlightColor || undefined }} />
+        <Highlighter
+          size={14}
+          strokeWidth={2}
+          style={{ color: highlightColor || undefined }}
+        />
       </Btn>
       <select
         title={tt('highlightColor')}
         className={selectCls}
-        value={HIGHLIGHT_KEYS.some((h) => h.value === highlightColor) ? highlightColor : '__custom__'}
+        value={
+          HIGHLIGHT_KEYS.some((h) => h.value === highlightColor)
+            ? highlightColor
+            : '__custom__'
+        }
         onChange={(e) => {
           const v = e.target.value;
           if (v === '__custom__') return;
@@ -206,43 +258,82 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
 
       <Sep />
 
-      <Btn title={tt('alignLeft')} active={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
+      <Btn
+        title={tt('alignLeft')}
+        active={editor.isActive({ textAlign: 'left' })}
+        onClick={() => editor.chain().focus().setTextAlign('left').run()}
+      >
         <AlignLeft size={14} strokeWidth={2} />
       </Btn>
-      <Btn title={tt('alignCenter')} active={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()}>
+      <Btn
+        title={tt('alignCenter')}
+        active={editor.isActive({ textAlign: 'center' })}
+        onClick={() => editor.chain().focus().setTextAlign('center').run()}
+      >
         <AlignCenter size={14} strokeWidth={2} />
       </Btn>
-      <Btn title={tt('alignRight')} active={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()}>
+      <Btn
+        title={tt('alignRight')}
+        active={editor.isActive({ textAlign: 'right' })}
+        onClick={() => editor.chain().focus().setTextAlign('right').run()}
+      >
         <AlignRight size={14} strokeWidth={2} />
       </Btn>
-      <Btn title={tt('justify')} active={editor.isActive({ textAlign: 'justify' })} onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
+      <Btn
+        title={tt('justify')}
+        active={editor.isActive({ textAlign: 'justify' })}
+        onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+      >
         <AlignJustify size={14} strokeWidth={2} />
       </Btn>
 
       <Sep />
 
-      <Btn title={tt('bulletList')} active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+      <Btn
+        title={tt('bulletList')}
+        active={editor.isActive('bulletList')}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+      >
         <List size={14} strokeWidth={2} />
       </Btn>
-      <Btn title={tt('numberedList')} active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+      <Btn
+        title={tt('numberedList')}
+        active={editor.isActive('orderedList')}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      >
         <ListOrdered size={14} strokeWidth={2} />
       </Btn>
-      <Btn title={tt('blockquote')} active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+      <Btn
+        title={tt('blockquote')}
+        active={editor.isActive('blockquote')}
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+      >
         <TextQuote size={14} strokeWidth={2} />
       </Btn>
 
       <Sep />
 
-      <Btn title={tt('addLink')} active={editor.isActive('link')} onClick={setLink}>
+      <Btn
+        title={tt('addLink')}
+        active={editor.isActive('link')}
+        onClick={setLink}
+      >
         <LinkIcon size={14} strokeWidth={2} />
       </Btn>
-      <Btn title={tt('removeLink')} disabled={!editor.isActive('link')} onClick={() => editor.chain().focus().unsetLink().run()}>
+      <Btn
+        title={tt('removeLink')}
+        disabled={!editor.isActive('link')}
+        onClick={() => editor.chain().focus().unsetLink().run()}
+      >
         <Link2Off size={14} strokeWidth={2} />
       </Btn>
 
       <Sep />
 
-      <Btn title={tt('clearFormatting')} onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+      <Btn
+        title={tt('clearFormatting')}
+        onClick={() => editor.chain().focus().unsetAllMarks().run()}
+      >
         <RemoveFormatting size={14} strokeWidth={2} />
       </Btn>
     </div>
@@ -309,7 +400,10 @@ export default function ParagraphBlockEditor({
   return (
     <div className="rounded-lg border border-slate-200 bg-white overflow-hidden shadow-sm focus-within:border-primaryColor focus-within:ring-2 focus-within:ring-primaryColor/15 transition-all">
       <RichToolbar editor={editor} />
-      <EditorContent editor={editor} className="tiptap-paragraph [&_.ProseMirror]:min-h-[140px] [&_.ProseMirror]:outline-none" />
+      <EditorContent
+        editor={editor}
+        className="tiptap-paragraph [&_.ProseMirror]:min-h-[140px] [&_.ProseMirror]:outline-none"
+      />
     </div>
   );
 }

@@ -18,10 +18,16 @@ export const metadata: Metadata = {
     'CosBE provides AI transformation consulting services to help businesses leverage cutting-edge AI technology for growth and innovation.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} font-sans antialiased bg-white`}>{children}</body>
+      <body className={`${poppins.variable} font-sans antialiased bg-white`}>
+        {children}
+      </body>
     </html>
   );
 }

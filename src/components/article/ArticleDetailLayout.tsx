@@ -50,7 +50,9 @@ export default function ArticleDetailLayout({
   cta,
 }: ArticleDetailLayoutProps) {
   const featuredSrc = imageSrcOrFallback(article.featuredImage, '');
-  const publishedDate = article.publishedAt ? new Date(article.publishedAt) : null;
+  const publishedDate = article.publishedAt
+    ? new Date(article.publishedAt)
+    : null;
   const year = publishedDate?.getFullYear();
   const month = publishedDate ? publishedDate.getMonth() + 1 : 0;
   const day = publishedDate?.getDate();
@@ -81,7 +83,12 @@ export default function ArticleDetailLayout({
 
           <div className="flex flex-wrap items-center gap-3 mt-5 pl-0 md:pl-20">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primaryColor text-white text-xs font-medium rounded">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -92,7 +99,12 @@ export default function ArticleDetailLayout({
               {categoryBadgeLabel}
             </span>
             <span className="text-sm text-textTertiary flex items-center gap-1.5">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -133,7 +145,10 @@ export default function ArticleDetailLayout({
             <div className="mt-12 p-6 bg-gray-50 rounded-xl flex items-start gap-4">
               <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white shadow">
                 <Image
-                  src={imageSrcOrFallback(article.author.avatarUrl, '/useful-column/author-portrait.jpg')}
+                  src={imageSrcOrFallback(
+                    article.author.avatarUrl,
+                    '/useful-column/author-portrait.jpg'
+                  )}
                   alt={article.author.name}
                   fill
                   sizes="56px"
@@ -141,15 +156,23 @@ export default function ArticleDetailLayout({
                 />
               </div>
               <div>
-                <p className="text-xs text-textTertiary mb-1">{writtenByLabel}</p>
-                <p className="font-bold text-textPrimary">{article.author.name}</p>
-                <p className="text-sm text-textSecondary">{article.author.designation}</p>
+                <p className="text-xs text-textTertiary mb-1">
+                  {writtenByLabel}
+                </p>
+                <p className="font-bold text-textPrimary">
+                  {article.author.name}
+                </p>
+                <p className="text-sm text-textSecondary">
+                  {article.author.designation}
+                </p>
               </div>
             </div>
 
             {relatedArticles.length > 0 && (
               <section className="mt-12 pt-8 border-t border-gray-200">
-                <h2 className="text-xl font-bold text-textPrimary mb-6">{relatedArticlesTitle}</h2>
+                <h2 className="text-xl font-bold text-textPrimary mb-6">
+                  {relatedArticlesTitle}
+                </h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {relatedArticles.map((a) => (
                     <Link
@@ -159,7 +182,10 @@ export default function ArticleDetailLayout({
                     >
                       <div className="relative aspect-video">
                         <Image
-                          src={imageSrcOrFallback(a.featuredImage, '/useful-column/article-01.png')}
+                          src={imageSrcOrFallback(
+                            a.featuredImage,
+                            '/useful-column/article-01.png'
+                          )}
                           alt={a.title}
                           fill
                           sizes="(max-width: 768px) 100vw, 350px"
@@ -204,7 +230,12 @@ export default function ArticleDetailLayout({
               href="/contact"
               className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

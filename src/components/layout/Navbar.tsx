@@ -46,8 +46,10 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
-  
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(
+    null
+  );
+
   const aiTransformationDropdown = useDropdown(200);
   const usefulInfoDropdown = useDropdown(200);
 
@@ -105,7 +107,12 @@ export default function Navbar() {
                           stroke="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
                         </svg>
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primaryColor transition-all duration-200 group-hover:w-full" />
                       </button>
@@ -144,10 +151,22 @@ export default function Navbar() {
             <button
               onClick={() => switchLocale(locale === 'en' ? 'ja' : 'en')}
               className="flex items-center gap-1.5 px-3 md:px-3.5 py-2 rounded-full border border-borderPrimary bg-white hover:bg-bgSecondary shadow-sm transition-all duration-200 group"
-              title={locale === 'en' ? 'Switch to Japanese' : 'Switch to English'}
+              title={
+                locale === 'en' ? 'Switch to Japanese' : 'Switch to English'
+              }
             >
-              <svg className="w-4 h-4 text-textTertiary group-hover:text-primaryColor transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+              <svg
+                className="w-4 h-4 text-textTertiary group-hover:text-primaryColor transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                />
               </svg>
               <span className="text-xs font-semibold text-textSecondary group-hover:text-primaryColor transition-colors">
                 {locale === 'en' ? 'EN' : 'JA'}
@@ -158,8 +177,18 @@ export default function Navbar() {
               href="/contact"
               className="inline-flex items-center gap-2 px-4 md:px-5 lg:px-6 py-2 md:py-2.5 bg-primaryColor text-white rounded-full shadow-[0_4px_0_var(--color-primaryHover)] hover:bg-primaryLight hover:shadow-[0_3px_0_var(--color-primaryHover)] active:shadow-[0_1px_0_var(--color-primaryHover)] active:translate-y-[2px] transition-all duration-150 text-xs md:text-sm font-bold whitespace-nowrap"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                />
               </svg>
               {t('button')}
             </Link>
@@ -170,10 +199,22 @@ export default function Navbar() {
             <button
               onClick={() => switchLocale(locale === 'en' ? 'ja' : 'en')}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-borderPrimary bg-white hover:bg-bgSecondary shadow-sm transition-all duration-200"
-              title={locale === 'en' ? 'Switch to Japanese' : 'Switch to English'}
+              title={
+                locale === 'en' ? 'Switch to Japanese' : 'Switch to English'
+              }
             >
-              <svg className="w-3.5 h-3.5 text-textTertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+              <svg
+                className="w-3.5 h-3.5 text-textTertiary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                />
               </svg>
               <span className="text-xs font-semibold text-textSecondary">
                 {locale === 'en' ? 'EN' : 'JA'}
@@ -185,7 +226,15 @@ export default function Navbar() {
               className="p-2 rounded-lg text-textTertiary hover:bg-bgTertiary transition-colors"
               aria-label="Toggle menu"
             >
-              <svg className="h-6 w-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 {mobileMenuOpen ? (
                   <path d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -202,9 +251,13 @@ export default function Navbar() {
             <div className="px-4 md:px-6 py-6 md:py-8 space-y-0 max-w-2xl md:mx-auto">
               {navItems.map((item) => {
                 if (item.children) {
-                  const dropdownKey = item.labelKey === 'aiTransformation' ? 'ai' : 'useful';
+                  const dropdownKey =
+                    item.labelKey === 'aiTransformation' ? 'ai' : 'useful';
                   return (
-                    <div key={item.labelKey} className="border-b border-surface-tertiary">
+                    <div
+                      key={item.labelKey}
+                      className="border-b border-surface-tertiary"
+                    >
                       <button
                         onClick={() => toggleMobileDropdown(dropdownKey)}
                         className="w-full flex items-center justify-between py-3 md:py-4 text-base md:text-lg text-textSecondary hover:text-primaryColor transition-colors font-medium"
@@ -216,7 +269,12 @@ export default function Navbar() {
                           stroke="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
                         </svg>
                       </button>
                       {mobileDropdownOpen === dropdownKey && (
@@ -254,8 +312,18 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 w-full mt-4 md:mt-6 px-6 py-3 md:py-3.5 bg-primaryColor text-white rounded-full shadow-[0_4px_0_var(--color-primaryHover)] hover:bg-primaryLight hover:shadow-[0_3px_0_var(--color-primaryHover)] active:shadow-[0_1px_0_var(--color-primaryHover)] active:translate-y-[2px] transition-all duration-150 text-sm md:text-base font-bold"
                 onClick={closeMobileMenu}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                  />
                 </svg>
                 {t('button')}
               </Link>

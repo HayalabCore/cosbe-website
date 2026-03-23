@@ -1387,14 +1387,8 @@
       "innovation": "新規事業・イノベーション"
     },
     "publishedDate": "2025年2月26日",
-    "categories": [
-      "導入事例",
-      "新規事業・イノベーション"
-    ],
-    "tags": [
-      "LLM（大規模言語モデル）",
-      "RAG（検索拡張生成）"
-    ],
+    "categories": ["導入事例", "新規事業・イノベーション"],
+    "tags": ["LLM（大規模言語モデル）", "RAG（検索拡張生成）"],
     "tableOfContents": "目次",
     "sections": {
       "introduction": {

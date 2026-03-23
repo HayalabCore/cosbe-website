@@ -77,7 +77,9 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
       const quote = block as QuoteBlock;
       return (
         <blockquote className="border-l-4 border-primaryColor/40 pl-5 py-4 my-8 bg-gradient-to-r from-gray-50 to-transparent rounded-r-lg">
-          <p className="text-gray-600 italic text-[15px] leading-relaxed">{quote.content}</p>
+          <p className="text-gray-600 italic text-[15px] leading-relaxed">
+            {quote.content}
+          </p>
           {quote.citation && (
             <cite className="text-sm text-textTertiary mt-3 block not-italic font-medium">
               — {quote.citation}
@@ -89,7 +91,10 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
 
     case 'callout': {
       const callout = block as CalloutBlock;
-      const variantStyles: Record<string, { bg: string; border: string; icon: string }> = {
+      const variantStyles: Record<
+        string,
+        { bg: string; border: string; icon: string }
+      > = {
         info: { bg: 'bg-blue-50', border: 'border-blue-400', icon: 'ℹ️' },
         warning: { bg: 'bg-amber-50', border: 'border-amber-400', icon: '⚠️' },
         tip: { bg: 'bg-emerald-50', border: 'border-emerald-400', icon: '💡' },
@@ -97,7 +102,9 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
       };
       const style = variantStyles[callout.variant] || variantStyles.info;
       return (
-        <div className={`${style.bg} border-l-4 ${style.border} p-5 my-8 rounded-r-xl`}>
+        <div
+          className={`${style.bg} border-l-4 ${style.border} p-5 my-8 rounded-r-xl`}
+        >
           {callout.title && (
             <p className="font-bold mb-2 text-textPrimary flex items-center gap-2">
               <span>{style.icon}</span>
@@ -140,7 +147,9 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
       return (
         <pre className="my-6 p-4 rounded-xl bg-gray-900 text-gray-100 text-sm overflow-x-auto border border-gray-700">
           {code.language && (
-            <span className="block text-xs text-gray-400 mb-2 font-sans">{code.language}</span>
+            <span className="block text-xs text-gray-400 mb-2 font-sans">
+              {code.language}
+            </span>
           )}
           <code className="font-mono whitespace-pre">{code.code}</code>
         </pre>
@@ -157,7 +166,12 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
         if (!id) {
           return (
             <p className="my-6 text-sm text-textTertiary">
-              <a href={embed.url} className="text-primaryColor underline" target="_blank" rel="noreferrer">
+              <a
+                href={embed.url}
+                className="text-primaryColor underline"
+                target="_blank"
+                rel="noreferrer"
+              >
                 {embed.title || embed.url}
               </a>
             </p>

@@ -25,7 +25,15 @@ function formatDate(iso: string | null, locale: string): string {
 }
 
 async function ArticleGridInner(props: ArticleGridProps) {
-  const { category, detailBasePath, locale, categoryLabel, emptyMessage, columns = '3', fallbackImage } = props;
+  const {
+    category,
+    detailBasePath,
+    locale,
+    categoryLabel,
+    emptyMessage,
+    columns = '3',
+    fallbackImage,
+  } = props;
   let items: Awaited<ReturnType<typeof getArticles>> = [];
   try {
     items = await getArticles({ category });
@@ -51,7 +59,9 @@ async function ArticleGridInner(props: ArticleGridProps) {
  */
 export default function ArticleGrid(props: ArticleGridProps) {
   return (
-    <Suspense fallback={<ArticleCardGridSkeleton columns={props.columns ?? '3'} />}>
+    <Suspense
+      fallback={<ArticleCardGridSkeleton columns={props.columns ?? '3'} />}
+    >
       <ArticleGridInner {...props} />
     </Suspense>
   );

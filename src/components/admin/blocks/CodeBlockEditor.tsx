@@ -3,7 +3,19 @@
 import { useTranslations } from 'next-intl';
 import type { CodeBlock } from '@/types';
 
-const LANGUAGES = ['javascript', 'typescript', 'python', 'html', 'css', 'bash', 'sql', 'json', 'yaml', 'markdown', 'other'];
+const LANGUAGES = [
+  'javascript',
+  'typescript',
+  'python',
+  'html',
+  'css',
+  'bash',
+  'sql',
+  'json',
+  'yaml',
+  'markdown',
+  'other',
+];
 
 export default function CodeBlockEditor({
   block,
@@ -21,7 +33,9 @@ export default function CodeBlockEditor({
         onChange={(e) => onChange({ ...block, language: e.target.value })}
       >
         {LANGUAGES.map((l) => (
-          <option key={l} value={l}>{l}</option>
+          <option key={l} value={l}>
+            {l}
+          </option>
         ))}
       </select>
       <textarea

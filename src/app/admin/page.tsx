@@ -37,9 +37,13 @@ export default function AdminLoginPage() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-lg bg-primaryColor flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-sm leading-none">C</span>
+              <span className="text-white font-bold text-sm leading-none">
+                C
+              </span>
             </div>
-            <span className="text-white font-semibold text-base tracking-tight">CosBE</span>
+            <span className="text-white font-semibold text-base tracking-tight">
+              CosBE
+            </span>
           </div>
           <AdminLocaleSwitcherLight />
         </div>
@@ -47,17 +51,23 @@ export default function AdminLoginPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primaryColor/15 border border-primaryColor/30 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-primaryColor animate-pulse" />
-            <span className="text-xs font-medium text-primaryColor">{t('badge')}</span>
+            <span className="text-xs font-medium text-primaryColor">
+              {t('badge')}
+            </span>
           </div>
           <h1 className="text-4xl font-bold text-white leading-tight mb-4">
             {t('headlineLine1')}
             <br />
             {t('headlineLine2')}
           </h1>
-          <p className="text-slate-400 text-base leading-relaxed max-w-xs">{t('description')}</p>
+          <p className="text-slate-400 text-base leading-relaxed max-w-xs">
+            {t('description')}
+          </p>
         </div>
 
-        <p className="text-slate-600 text-xs">© {new Date().getFullYear()} CosBE Inc.</p>
+        <p className="text-slate-600 text-xs">
+          © {new Date().getFullYear()} CosBE Inc.
+        </p>
       </div>
 
       {/* Right panel — form */}
@@ -69,17 +79,24 @@ export default function AdminLoginPage() {
               <div className="w-8 h-8 rounded-lg bg-primaryColor flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-sm">C</span>
               </div>
-              <span className="font-semibold text-slate-900 truncate">CosBE Admin</span>
+              <span className="font-semibold text-slate-900 truncate">
+                CosBE Admin
+              </span>
             </div>
             <AdminLocaleSwitcherLight className="flex-shrink-0" />
           </div>
 
-          <h2 className="text-2xl font-bold text-slate-900 mb-1">{t('signInTitle')}</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-1">
+            {t('signInTitle')}
+          </h2>
           <p className="text-sm text-slate-500 mb-8">{t('signInSubtitle')}</p>
 
           <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
+              <label
+                htmlFor="email"
+                className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5"
+              >
                 {t('email')}
               </label>
               <input
@@ -95,7 +112,10 @@ export default function AdminLoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
+              <label
+                htmlFor="password"
+                className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5"
+              >
                 {t('password')}
               </label>
               <input
@@ -112,8 +132,16 @@ export default function AdminLoginPage() {
 
             {error && (
               <div className="flex items-start gap-2.5 rounded-xl bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
-                <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4 flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 {error}
               </div>
@@ -126,9 +154,24 @@ export default function AdminLoginPage() {
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  <svg
+                    className="animate-spin w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
                   </svg>
                   {t('signingIn')}
                 </span>

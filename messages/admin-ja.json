@@ -133,11 +133,17 @@
     "noBlocksHint": "下から最初のブロックを追加してください",
     "addBlock": "ブロックを追加",
     "types": {
-      "heading": { "label": "見出し", "description": "セクションタイトル（H2〜H4）" },
+      "heading": {
+        "label": "見出し",
+        "description": "セクションタイトル（H2〜H4）"
+      },
       "paragraph": { "label": "段落", "description": "リッチテキスト" },
       "list": { "label": "リスト", "description": "箇条書き・番号付き" },
       "quote": { "label": "引用", "description": "引用と出典" },
-      "callout": { "label": "コールアウト", "description": "情報・注意・ヒント枠" },
+      "callout": {
+        "label": "コールアウト",
+        "description": "情報・注意・ヒント枠"
+      },
       "image": { "label": "画像", "description": "アップロードまたはURL" },
       "code": { "label": "コード", "description": "シンタックスハイライト" },
       "divider": { "label": "区切り線", "description": "横方向の区切り" },

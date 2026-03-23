@@ -3,7 +3,11 @@
 import { useTranslations } from 'next-intl';
 import type { EmbedBlock } from '@/types';
 
-const EMBED_TYPES: { value: EmbedBlock['embedType']; labelKey: 'youtube' | 'twitter' | 'link'; icon: string }[] = [
+const EMBED_TYPES: {
+  value: EmbedBlock['embedType'];
+  labelKey: 'youtube' | 'twitter' | 'link';
+  icon: string;
+}[] = [
   { value: 'youtube', labelKey: 'youtube', icon: '▶' },
   { value: 'twitter', labelKey: 'twitter', icon: '✗' },
   { value: 'link', labelKey: 'link', icon: '🔗' },
