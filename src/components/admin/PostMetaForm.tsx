@@ -1,23 +1,19 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import type { ArticleSEO, ArticleStatus, ContentCategory } from '@/types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createFallbackSlug, imageSrcOrFallback, normalizeSlugInput } from '@/lib/article-utils';
 import ImageUpload from './ImageUpload';
 
-const categories: { value: ContentCategory; label: string }[] = [
-  { value: 'useful-info', label: 'Useful Info' },
-  { value: 'case-study', label: 'Case Study' },
-  { value: 'video', label: 'Video' },
-  { value: 'notice', label: 'Notice' },
-];
+const CATEGORY_VALUES: ContentCategory[] = ['useful-info', 'case-study', 'video', 'notice'];
 
-const statuses: { value: ArticleStatus; label: string; dot: string }[] = [
-  { value: 'draft', label: 'Draft', dot: 'bg-amber-400' },
-  { value: 'published', label: 'Published', dot: 'bg-emerald-500' },
-  { value: 'archived', label: 'Archived', dot: 'bg-slate-400' },
+const STATUSES: { value: ArticleStatus; dot: string }[] = [
+  { value: 'draft', dot: 'bg-amber-400' },
+  { value: 'published', dot: 'bg-emerald-500' },
+  { value: 'archived', dot: 'bg-slate-400' },
 ];
 
 export type PostMetaPatch = {
@@ -99,6 +95,29 @@ export default function PostMetaForm({
   seo,
   onChange,
 }: Props) {
+  const t = useTranslations('admin.meta');
+
+  const categoryLabel = useCallback(
+    (value: ContentCategory) => {
+      if (value === 'useful-info') return t('categoryUsefulInfo');
+      if (value === 'case-study') return t('categoryCaseStudy');
+      if (value === 'video') return t('categoryVideo');
+      if (value === 'notice') return t('categoryNotice');
+      return value;
+    },
+    [t]
+  );
+
+  const statusLabel = useCallback(
+    (value: ArticleStatus) => {
+      if (value === 'draft') return t('statusDraft');
+      if (value === 'published') return t('statusPublished');
+      if (value === 'archived') return t('statusArchived');
+      return value;
+    },
+    [t]
+  );
+
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     publish: true,
     media: true,
@@ -123,7 +142,7 @@ export default function PostMetaForm({
       {/* Publishing */}
       <div>
         <SectionHeader
-          label="Publishing"
+          label={t('publishing')}
           open={openSections.publish}
           onToggle={() => toggle('publish')}
           icon={
@@ -135,9 +154,9 @@ export default function PostMetaForm({
         {openSections.publish && (
           <div className="px-4 pb-4 space-y-3">
             <div>
-              <label className={LABEL_CLS}>Status</label>
+              <label className={LABEL_CLS}>{t('status')}</label>
               <div className="flex flex-col gap-1">
-                {statuses.map((s) => (
+                {STATUSES.map((s) => (
                   <label
                     key={s.value}
                     className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 cursor-pointer transition-colors ${
@@ -156,7 +175,7 @@ export default function PostMetaForm({
                     />
                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${s.dot}`} />
                     <span className={`text-sm font-medium ${status === s.value ? 'text-primaryColor' : 'text-slate-700'}`}>
-                      {s.label}
+                      {statusLabel(s.value)}
                     </span>
                     {status === s.value && (
                       <svg className="w-3.5 h-3.5 text-primaryColor ml-auto" fill="currentColor" viewBox="0 0 20 20">
@@ -168,19 +187,17 @@ export default function PostMetaForm({
               </div>
             </div>
             <div>
-              <label className={LABEL_CLS}>URL Slug</label>
+              <label className={LABEL_CLS}>{t('urlSlug')}</label>
               <input
                 className={`${INPUT_CLS} font-mono text-xs`}
-                placeholder="my-post-slug"
+                placeholder={t('slugPlaceholder')}
                 value={slug}
                 onChange={(e) => onChange({ slug: normalizeSlugInput(e.target.value) })}
               />
-              <p className="mt-1 text-[10px] text-slate-400">
-                Lowercase letters, numbers, and hyphens only. Leave blank to auto-generate from title.
-              </p>
+              <p className="mt-1 text-[10px] text-slate-400">{t('slugHint')}</p>
               <div className="mt-2 rounded-lg border border-slate-100 bg-slate-50/80 px-2.5 py-2">
                 <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 mb-1">
-                  URL preview
+                  {t('urlPreview')}
                 </p>
                 <p className="min-w-0 break-all font-mono text-[11px] text-slate-700 leading-snug">
                   {previewPath}
@@ -194,7 +211,7 @@ export default function PostMetaForm({
       {/* Featured Image */}
       <div>
         <SectionHeader
-          label="Featured Image"
+          label={t('featuredImage')}
           open={openSections.media}
           onToggle={() => toggle('media')}
           icon={
@@ -207,7 +224,7 @@ export default function PostMetaForm({
           <div className="px-4 pb-4 space-y-2.5">
             {previewSrc ? (
               <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-slate-100 group">
-                <Image src={previewSrc} alt="Featured" fill className="object-cover" sizes="280px" />
+                <Image src={previewSrc} alt="" fill className="object-cover" sizes="280px" />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
                   <button
                     type="button"
@@ -217,7 +234,7 @@ export default function PostMetaForm({
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    Remove
+                    {t('remove')}
                   </button>
                 </div>
               </div>
@@ -229,14 +246,14 @@ export default function PostMetaForm({
                 <ImageUpload
                   supabase={supabase}
                   articleId={draftId}
-                  label="Upload featured image"
+                  label={t('uploadFeaturedImage')}
                   onUploaded={(url) => onChange({ featuredImage: url })}
                 />
               </div>
             )}
             <input
               className={`${INPUT_CLS} text-xs`}
-              placeholder="Or paste image URL…"
+              placeholder={t('pasteImageUrl')}
               value={featuredImage}
               onChange={(e) => onChange({ featuredImage: e.target.value })}
             />
@@ -247,7 +264,7 @@ export default function PostMetaForm({
       {/* Organization */}
       <div>
         <SectionHeader
-          label="Organization"
+          label={t('organization')}
           open={openSections.organize}
           onToggle={() => toggle('organize')}
           icon={
@@ -259,33 +276,33 @@ export default function PostMetaForm({
         {openSections.organize && (
           <div className="px-4 pb-4 space-y-3">
             <div>
-              <label className={LABEL_CLS}>Category</label>
+              <label className={LABEL_CLS}>{t('category')}</label>
               <div className="grid grid-cols-2 gap-1.5">
-                {categories.map((c) => (
+                {CATEGORY_VALUES.map((value) => (
                   <button
-                    key={c.value}
+                    key={value}
                     type="button"
-                    onClick={() => onChange({ category: c.value })}
+                    onClick={() => onChange({ category: value })}
                     className={`rounded-lg border py-2 text-xs font-medium transition-colors ${
-                      category === c.value
+                      category === value
                         ? 'border-primaryColor bg-primaryColor/8 text-primaryColor'
                         : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                     }`}
                   >
-                    {c.label}
+                    {categoryLabel(value)}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label className={LABEL_CLS}>Tags</label>
+              <label className={LABEL_CLS}>{t('tags')}</label>
               <input
                 className={INPUT_CLS}
-                placeholder="ai, technology, guide"
+                placeholder={t('tagsPlaceholder')}
                 value={tags}
                 onChange={(e) => onChange({ tags: e.target.value })}
               />
-              <p className="mt-1 text-[10px] text-slate-400">Comma-separated</p>
+              <p className="mt-1 text-[10px] text-slate-400">{t('tagsHint')}</p>
             </div>
           </div>
         )}
@@ -294,7 +311,7 @@ export default function PostMetaForm({
       {/* Author */}
       <div>
         <SectionHeader
-          label="Author"
+          label={t('author')}
           open={openSections.author}
           onToggle={() => toggle('author')}
           icon={
@@ -306,19 +323,19 @@ export default function PostMetaForm({
         {openSections.author && (
           <div className="px-4 pb-4 space-y-3">
             <div>
-              <label className={LABEL_CLS}>Name</label>
+              <label className={LABEL_CLS}>{t('authorName')}</label>
               <input
                 className={INPUT_CLS}
-                placeholder="Author name"
+                placeholder={t('authorNamePlaceholder')}
                 value={authorName}
                 onChange={(e) => onChange({ authorName: e.target.value })}
               />
             </div>
             <div>
-              <label className={LABEL_CLS}>Role / Designation</label>
+              <label className={LABEL_CLS}>{t('authorRole')}</label>
               <input
                 className={INPUT_CLS}
-                placeholder="e.g. Senior Editor"
+                placeholder={t('authorRolePlaceholder')}
                 value={authorDesignation}
                 onChange={(e) => onChange({ authorDesignation: e.target.value })}
               />
@@ -330,7 +347,7 @@ export default function PostMetaForm({
       {/* SEO */}
       <div>
         <SectionHeader
-          label="SEO"
+          label={t('seo')}
           open={openSections.seo}
           onToggle={() => toggle('seo')}
           icon={
@@ -342,30 +359,30 @@ export default function PostMetaForm({
         {openSections.seo && (
           <div className="px-4 pb-4 space-y-3">
             <div>
-              <label className={LABEL_CLS}>Meta title</label>
+              <label className={LABEL_CLS}>{t('metaTitle')}</label>
               <input
                 className={INPUT_CLS}
-                placeholder="Overrides post title in search results"
+                placeholder={t('metaTitlePlaceholder')}
                 value={seo.metaTitle ?? ''}
                 onChange={(e) => onChange({ seo: { ...seo, metaTitle: e.target.value } })}
               />
               {(seo.metaTitle ?? '').length > 0 && (
                 <p className={`mt-1 text-[10px] ${(seo.metaTitle ?? '').length > 60 ? 'text-amber-600' : 'text-slate-400'}`}>
-                  {(seo.metaTitle ?? '').length}/60 chars
+                  {t('metaChars', { count: (seo.metaTitle ?? '').length })}
                 </p>
               )}
             </div>
             <div>
-              <label className={LABEL_CLS}>Meta description</label>
+              <label className={LABEL_CLS}>{t('metaDescription')}</label>
               <textarea
                 className={`${INPUT_CLS} min-h-[80px] resize-y`}
-                placeholder="Summary shown in search results (150–160 chars ideal)"
+                placeholder={t('metaDescriptionPlaceholder')}
                 value={seo.metaDescription ?? ''}
                 onChange={(e) => onChange({ seo: { ...seo, metaDescription: e.target.value } })}
               />
               {(seo.metaDescription ?? '').length > 0 && (
                 <p className={`mt-1 text-[10px] ${(seo.metaDescription ?? '').length > 160 ? 'text-amber-600' : 'text-slate-400'}`}>
-                  {(seo.metaDescription ?? '').length}/160 chars
+                  {t('metaDescChars', { count: (seo.metaDescription ?? '').length })}
                 </p>
               )}
             </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { QuoteBlock } from '@/types';
 
 const INPUT_CLS = 'w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
@@ -11,6 +12,7 @@ export default function QuoteBlockEditor({
   block: QuoteBlock;
   onChange: (b: QuoteBlock) => void;
 }) {
+  const t = useTranslations('admin.quote');
   return (
     <div className="space-y-2.5">
       <div className="relative">
@@ -19,14 +21,14 @@ export default function QuoteBlockEditor({
         </svg>
         <textarea
           className="w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 min-h-[80px] resize-y transition-all italic"
-          placeholder="Quote text…"
+          placeholder={t('placeholder')}
           value={block.content}
           onChange={(e) => onChange({ ...block, content: e.target.value })}
         />
       </div>
       <input
         className={INPUT_CLS}
-        placeholder="— Citation (optional)"
+        placeholder={t('citationPlaceholder')}
         value={block.citation ?? ''}
         onChange={(e) => onChange({ ...block, citation: e.target.value })}
       />

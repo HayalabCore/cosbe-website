@@ -1,0 +1,242 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "english": "English",
+    "japanese": "日本語",
+    "language": "Language"
+  },
+  "login": {
+    "badge": "Content Management",
+    "headlineLine1": "Your content,",
+    "headlineLine2": "under control.",
+    "description": "Create, edit and publish articles with a streamlined block-based editor built for speed.",
+    "signInTitle": "Sign in",
+    "signInSubtitle": "Access the CosBE admin panel",
+    "email": "Email",
+    "password": "Password",
+    "signingIn": "Signing in…",
+    "signInCta": "Sign in →"
+  },
+  "sidebar": {
+    "brand": "CosBE Admin",
+    "contentSection": "Content",
+    "allPosts": "All Posts",
+    "newPost": "New Post",
+    "viewSite": "View Site",
+    "signOut": "Sign Out"
+  },
+  "dashboard": {
+    "title": "All Posts",
+    "subtitle": "Manage and publish your content",
+    "newPost": "New Post",
+    "totalPosts": "Total Posts",
+    "published": "Published",
+    "drafts": "Drafts",
+    "archived": "Archived",
+    "searchPlaceholder": "Search by title…",
+    "filterStatusAll": "All statuses",
+    "filterStatusDraft": "Draft",
+    "filterStatusPublished": "Published",
+    "filterStatusArchived": "Archived",
+    "filterCategoryAll": "All categories",
+    "categoryUsefulInfo": "Useful Info",
+    "categoryCaseStudy": "Case Study",
+    "categoryVideo": "Video",
+    "categoryNotice": "Notice",
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "statusArchived": "Archived",
+    "noPostsTitle": "No posts found",
+    "noPostsFiltered": "Try adjusting your filters.",
+    "noPostsEmpty": "Create your first post to get started.",
+    "createFirstPost": "Create first post",
+    "tableTitle": "Title",
+    "tableCategory": "Category",
+    "tableStatus": "Status",
+    "tablePublished": "Published",
+    "tableActions": "Actions",
+    "showing": "Showing {shown} of {total} posts",
+    "deleteConfirm": "Delete \"{title}\"? This cannot be undone.",
+    "editTitle": "Edit",
+    "unpublishTitle": "Unpublish",
+    "publishTitle": "Publish",
+    "deleteTitle": "Delete"
+  },
+  "editor": {
+    "loadingPost": "Loading post…",
+    "allPosts": "All posts",
+    "editPost": "Edit post",
+    "newPost": "New post",
+    "untitled": "Untitled",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "saveFailed": "Save failed",
+    "saveDraft": "Save draft",
+    "update": "Update",
+    "publish": "Publish",
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "statusArchived": "Archived",
+    "tabEdit": "Edit",
+    "tabPreview": "Preview",
+    "postTitlePlaceholder": "Post title…",
+    "excerptPlaceholder": "Add a short excerpt… (optional)",
+    "words": "{count} words",
+    "minRead": "{count} min read",
+    "blocksLabel": "{count} blocks",
+    "postSettings": "Post settings"
+  },
+  "meta": {
+    "publishing": "Publishing",
+    "featuredImage": "Featured Image",
+    "organization": "Organization",
+    "author": "Author",
+    "seo": "SEO",
+    "status": "Status",
+    "categoryUsefulInfo": "Useful Info",
+    "categoryCaseStudy": "Case Study",
+    "categoryVideo": "Video",
+    "categoryNotice": "Notice",
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "statusArchived": "Archived",
+    "urlSlug": "URL Slug",
+    "slugPlaceholder": "my-post-slug",
+    "slugHint": "Lowercase letters, numbers, and hyphens only. Leave blank to auto-generate from title.",
+    "urlPreview": "URL preview",
+    "remove": "Remove",
+    "uploadFeaturedImage": "Upload featured image",
+    "pasteImageUrl": "Or paste image URL…",
+    "category": "Category",
+    "tags": "Tags",
+    "tagsPlaceholder": "ai, technology, guide",
+    "tagsHint": "Comma-separated",
+    "authorName": "Name",
+    "authorNamePlaceholder": "Author name",
+    "authorRole": "Role / Designation",
+    "authorRolePlaceholder": "e.g. Senior Editor",
+    "metaTitle": "Meta title",
+    "metaTitlePlaceholder": "Overrides post title in search results",
+    "metaChars": "{count}/60 chars",
+    "metaDescription": "Meta description",
+    "metaDescriptionPlaceholder": "Summary shown in search results (150–160 chars ideal)",
+    "metaDescChars": "{count}/160 chars"
+  },
+  "blocks": {
+    "insertBlock": "Insert block",
+    "insertBelow": "Insert below",
+    "dragReorder": "Drag to reorder",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "removeBlock": "Remove block",
+    "noBlocksTitle": "No blocks yet",
+    "noBlocksHint": "Add your first content block below",
+    "addBlock": "Add block",
+    "types": {
+      "heading": { "label": "Heading", "description": "Section title (H2–H4)" },
+      "paragraph": { "label": "Paragraph", "description": "Rich text block" },
+      "list": { "label": "List", "description": "Bullet or numbered list" },
+      "quote": { "label": "Quote", "description": "Pull quote with citation" },
+      "callout": { "label": "Callout", "description": "Info, warning, or tip box" },
+      "image": { "label": "Image", "description": "Upload or link an image" },
+      "code": { "label": "Code", "description": "Syntax-highlighted code block" },
+      "divider": { "label": "Divider", "description": "Horizontal separator rule" },
+      "embed": { "label": "Embed", "description": "YouTube, Twitter, or URL" }
+    }
+  },
+  "paragraph": {
+    "placeholder": "Write paragraph text…",
+    "linkPromptTitle": "Link URL",
+    "linkPromptDefault": "https://",
+    "colorPicker": "Color…",
+    "highlightPicker": "Highlight…",
+    "textColors": {
+      "default": "Default",
+      "body": "Body",
+      "primary": "Primary",
+      "heading": "Heading",
+      "muted": "Muted",
+      "success": "Success",
+      "warning": "Warning",
+      "danger": "Danger"
+    },
+    "highlights": {
+      "none": "None",
+      "yellow": "Yellow",
+      "green": "Green",
+      "blue": "Blue",
+      "pink": "Pink",
+      "amber": "Amber"
+    },
+    "toolbar": {
+      "bold": "Bold (⌘B)",
+      "italic": "Italic (⌘I)",
+      "underline": "Underline (⌘U)",
+      "strike": "Strikethrough",
+      "customTextColor": "Custom text color",
+      "textColorPreset": "Text color preset",
+      "toggleHighlight": "Toggle highlight",
+      "highlightColor": "Highlight color",
+      "alignLeft": "Align left (⌘⇧L)",
+      "alignCenter": "Align center (⌘⇧E)",
+      "alignRight": "Align right (⌘⇧R)",
+      "justify": "Justify (⌘⇧J)",
+      "bulletList": "Bullet list",
+      "numberedList": "Numbered list",
+      "blockquote": "Blockquote",
+      "addLink": "Add link",
+      "removeLink": "Remove link",
+      "clearFormatting": "Clear formatting"
+    }
+  },
+  "heading": {
+    "placeholder": "Heading text…"
+  },
+  "list": {
+    "bullet": "• Bullet",
+    "numbered": "1. Numbered",
+    "itemPlaceholder": "Item {n}",
+    "removeItem": "Remove item",
+    "addItem": "Add item"
+  },
+  "quote": {
+    "placeholder": "Quote text…",
+    "citationPlaceholder": "— Citation (optional)"
+  },
+  "callout": {
+    "variants": {
+      "info": "ℹ Info",
+      "warning": "⚠ Warning",
+      "tip": "💡 Tip",
+      "related": "🔗 Related"
+    },
+    "titlePlaceholder": "Title (optional)",
+    "contentPlaceholder": "Callout content…"
+  },
+  "image": {
+    "previewAlt": "Preview",
+    "removeImage": "Remove image",
+    "upload": "Upload image",
+    "pasteUrl": "Or paste image URL",
+    "altPlaceholder": "Alt text (for accessibility)",
+    "captionPlaceholder": "Caption (optional)"
+  },
+  "code": {
+    "placeholder": "// Your code here…"
+  },
+  "embed": {
+    "youtube": "YouTube",
+    "twitter": "X / Twitter",
+    "link": "Link",
+    "urlPlaceholder": "Paste URL…",
+    "titlePlaceholder": "Title (optional)"
+  },
+  "divider": {
+    "label": "Horizontal divider"
+  },
+  "imageUpload": {
+    "defaultLabel": "Upload image",
+    "uploading": "Uploading…",
+    "uploadFailed": "Upload failed"
+  }
+}

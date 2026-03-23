@@ -2,10 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { signIn } from '@/lib/auth';
+import { AdminLocaleSwitcherLight } from '@/components/admin/AdminLocaleSwitcher';
 
 export default function AdminLoginPage() {
+  const t = useTranslations('admin.login');
   const router = useRouter();
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [email, setEmail] = useState('');
@@ -31,24 +34,27 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen">
       {/* Left panel — branding */}
       <div className="hidden lg:flex lg:w-[45%] flex-col justify-between bg-slate-950 px-14 py-12">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-primaryColor flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-sm leading-none">C</span>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-primaryColor flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-sm leading-none">C</span>
+            </div>
+            <span className="text-white font-semibold text-base tracking-tight">CosBE</span>
           </div>
-          <span className="text-white font-semibold text-base tracking-tight">CosBE</span>
+          <AdminLocaleSwitcherLight />
         </div>
 
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primaryColor/15 border border-primaryColor/30 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-primaryColor animate-pulse" />
-            <span className="text-xs font-medium text-primaryColor">Content Management</span>
+            <span className="text-xs font-medium text-primaryColor">{t('badge')}</span>
           </div>
           <h1 className="text-4xl font-bold text-white leading-tight mb-4">
-            Your content,<br />under control.
+            {t('headlineLine1')}
+            <br />
+            {t('headlineLine2')}
           </h1>
-          <p className="text-slate-400 text-base leading-relaxed max-w-xs">
-            Create, edit and publish articles with a streamlined block-based editor built for speed.
-          </p>
+          <p className="text-slate-400 text-base leading-relaxed max-w-xs">{t('description')}</p>
         </div>
 
         <p className="text-slate-600 text-xs">© {new Date().getFullYear()} CosBE Inc.</p>
@@ -58,20 +64,23 @@ export default function AdminLoginPage() {
       <div className="flex flex-1 flex-col items-center justify-center bg-slate-50 px-6 py-12">
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-10 lg:hidden">
-            <div className="w-8 h-8 rounded-lg bg-primaryColor flex items-center justify-center">
-              <span className="text-white font-bold text-sm">C</span>
+          <div className="flex items-center justify-between gap-3 mb-10 lg:hidden">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-primaryColor flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-bold text-sm">C</span>
+              </div>
+              <span className="font-semibold text-slate-900 truncate">CosBE Admin</span>
             </div>
-            <span className="font-semibold text-slate-900">CosBE Admin</span>
+            <AdminLocaleSwitcherLight className="flex-shrink-0" />
           </div>
 
-          <h2 className="text-2xl font-bold text-slate-900 mb-1">Sign in</h2>
-          <p className="text-sm text-slate-500 mb-8">Access the CosBE admin panel</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-1">{t('signInTitle')}</h2>
+          <p className="text-sm text-slate-500 mb-8">{t('signInSubtitle')}</p>
 
           <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
-                Email
+                {t('email')}
               </label>
               <input
                 id="email"
@@ -87,7 +96,7 @@ export default function AdminLoginPage() {
 
             <div>
               <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">
-                Password
+                {t('password')}
               </label>
               <input
                 id="password"
@@ -121,10 +130,10 @@ export default function AdminLoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Signing in…
+                  {t('signingIn')}
                 </span>
               ) : (
-                'Sign in →'
+                t('signInCta')
               )}
             </button>
           </form>

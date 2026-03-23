@@ -1,7 +1,8 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
 import {
   DndContext,
   KeyboardSensor,
@@ -46,101 +47,120 @@ type BlockMeta = {
   description: string;
 };
 
-const BLOCK_META: Record<ContentBlock['type'], BlockMeta> = {
-  heading: {
-    label: 'Heading',
-    description: 'Section title (H2–H4)',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h8" />
-      </svg>
-    ),
-  },
-  paragraph: {
-    label: 'Paragraph',
-    description: 'Rich text block',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h12" />
-      </svg>
-    ),
-  },
-  list: {
-    label: 'List',
-    description: 'Bullet or numbered list',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
-      </svg>
-    ),
-  },
-  quote: {
-    label: 'Quote',
-    description: 'Pull quote with citation',
-    icon: (
-      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-      </svg>
-    ),
-  },
-  callout: {
-    label: 'Callout',
-    description: 'Info, warning, or tip box',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-  image: {
-    label: 'Image',
-    description: 'Upload or link an image',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    ),
-  },
-  code: {
-    label: 'Code',
-    description: 'Syntax-highlighted code block',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-    ),
-  },
-  divider: {
-    label: 'Divider',
-    description: 'Horizontal separator rule',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
-      </svg>
-    ),
-  },
-  embed: {
-    label: 'Embed',
-    description: 'YouTube, Twitter, or URL',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-      </svg>
-    ),
-  },
+const BLOCK_ICONS: Record<ContentBlock['type'], React.ReactNode> = {
+  heading: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h8" />
+    </svg>
+  ),
+  paragraph: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h12" />
+    </svg>
+  ),
+  list: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+    </svg>
+  ),
+  quote: (
+    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+    </svg>
+  ),
+  callout: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  image: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  ),
+  code: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+    </svg>
+  ),
+  divider: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
+    </svg>
+  ),
+  embed: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+    </svg>
+  ),
 };
 
-const BLOCK_TYPES = Object.keys(BLOCK_META) as ContentBlock['type'][];
+function useBlockMeta(): Record<ContentBlock['type'], BlockMeta> {
+  const t = useTranslations('admin.blocks.types');
+  return useMemo(
+    () =>
+      ({
+        heading: {
+          label: t('heading.label'),
+          description: t('heading.description'),
+          icon: BLOCK_ICONS.heading,
+        },
+        paragraph: {
+          label: t('paragraph.label'),
+          description: t('paragraph.description'),
+          icon: BLOCK_ICONS.paragraph,
+        },
+        list: {
+          label: t('list.label'),
+          description: t('list.description'),
+          icon: BLOCK_ICONS.list,
+        },
+        quote: {
+          label: t('quote.label'),
+          description: t('quote.description'),
+          icon: BLOCK_ICONS.quote,
+        },
+        callout: {
+          label: t('callout.label'),
+          description: t('callout.description'),
+          icon: BLOCK_ICONS.callout,
+        },
+        image: {
+          label: t('image.label'),
+          description: t('image.description'),
+          icon: BLOCK_ICONS.image,
+        },
+        code: {
+          label: t('code.label'),
+          description: t('code.description'),
+          icon: BLOCK_ICONS.code,
+        },
+        divider: {
+          label: t('divider.label'),
+          description: t('divider.description'),
+          icon: BLOCK_ICONS.divider,
+        },
+        embed: {
+          label: t('embed.label'),
+          description: t('embed.description'),
+          icon: BLOCK_ICONS.embed,
+        },
+      }) as Record<ContentBlock['type'], BlockMeta>,
+    [t]
+  );
+}
 
-function BlockTypeIcon({ type }: { type: ContentBlock['type'] }) {
-  const meta = BLOCK_META[type];
+const BLOCK_TYPES = Object.keys(BLOCK_ICONS) as ContentBlock['type'][];
+
+function BlockTypeIcon({ type, meta }: { type: ContentBlock['type']; meta: Record<ContentBlock['type'], BlockMeta> }) {
+  const m = meta[type];
   return (
     <span
-      title={meta.label}
+      title={m.label}
       className="inline-flex items-center gap-1.5 rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500"
     >
-      {meta.icon}
-      {meta.label}
+      {m.icon}
+      {m.label}
     </span>
   );
 }
@@ -148,16 +168,18 @@ function BlockTypeIcon({ type }: { type: ContentBlock['type'] }) {
 function DragHandle({
   attributes,
   listeners,
+  label,
 }: {
   attributes: DraggableAttributes;
   listeners: Record<string, unknown> | undefined;
+  label: string;
 }) {
   return (
     <button
       type="button"
       className="touch-none cursor-grab active:cursor-grabbing p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors"
-      title="Drag to reorder"
-      aria-label="Drag to reorder block"
+      title={label}
+      aria-label={label}
       {...attributes}
       {...listeners}
     >
@@ -181,10 +203,14 @@ function InsertMenu({
   anchorRef,
   onInsert,
   onClose,
+  blockMeta,
+  insertBlockTitle,
 }: {
   anchorRef: RefObject<HTMLElement | null>;
   onInsert: (type: ContentBlock['type']) => void;
   onClose: () => void;
+  blockMeta: Record<ContentBlock['type'], BlockMeta>;
+  insertBlockTitle: string;
 }) {
   const menuRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
@@ -252,16 +278,16 @@ function InsertMenu({
         }
       >
         <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">
-          Insert block
+          {insertBlockTitle}
         </p>
         <div className="grid grid-cols-2 gap-1">
-          {BLOCK_TYPES.map((t) => {
-            const m = BLOCK_META[t];
+          {BLOCK_TYPES.map((bt) => {
+            const m = blockMeta[bt];
             return (
               <button
-                key={t}
+                key={bt}
                 type="button"
-                onClick={() => onInsert(t)}
+                onClick={() => onInsert(bt)}
                 className="flex items-start gap-2.5 rounded-lg px-2.5 py-2 text-left hover:bg-slate-50 transition-colors group"
               >
                 <span className="mt-0.5 text-slate-400 group-hover:text-primaryColor transition-colors flex-shrink-0">
@@ -295,6 +321,13 @@ function SortableBlockRow({
   removeAt,
   move,
   insertAt,
+  blockMeta,
+  dragLabel,
+  moveUpLabel,
+  moveDownLabel,
+  removeLabel,
+  insertBelowLabel,
+  insertBlockTitle,
 }: {
   block: ContentBlock;
   index: number;
@@ -307,6 +340,13 @@ function SortableBlockRow({
   removeAt: (index: number) => void;
   move: (index: number, dir: -1 | 1) => void;
   insertAt: (index: number, type: ContentBlock['type']) => void;
+  blockMeta: Record<ContentBlock['type'], BlockMeta>;
+  dragLabel: string;
+  moveUpLabel: string;
+  moveDownLabel: string;
+  removeLabel: string;
+  insertBelowLabel: string;
+  insertBlockTitle: string;
 }) {
   const insertBtnRef = useRef<HTMLButtonElement>(null);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -331,12 +371,12 @@ function SortableBlockRow({
         }`}
       >
         <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100 bg-slate-50/60">
-          <BlockTypeIcon type={block.type} />
+          <BlockTypeIcon type={block.type} meta={blockMeta} />
           <div className="flex items-center gap-0.5">
-            <DragHandle attributes={attributes} listeners={listeners} />
+            <DragHandle attributes={attributes} listeners={listeners} label={dragLabel} />
             <button
               type="button"
-              title="Move up"
+              title={moveUpLabel}
               disabled={i === 0}
               onClick={() => move(i, -1)}
               className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -347,7 +387,7 @@ function SortableBlockRow({
             </button>
             <button
               type="button"
-              title="Move down"
+              title={moveDownLabel}
               disabled={i === blocksLength - 1}
               onClick={() => move(i, 1)}
               className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -358,7 +398,7 @@ function SortableBlockRow({
             </button>
             <button
               type="button"
-              title="Remove block"
+              title={removeLabel}
               onClick={() => removeAt(i)}
               className="p-1.5 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
             >
@@ -409,20 +449,22 @@ function SortableBlockRow({
           <button
             ref={insertBtnRef}
             type="button"
-            title="Insert block below"
+            title={insertBelowLabel}
             onClick={() => setOpenMenu(openMenu === i ? null : i)}
             className="flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-[11px] font-semibold text-slate-400 shadow-sm hover:border-primaryColor hover:text-primaryColor opacity-0 group-hover/block:opacity-100 transition-all hover:shadow"
           >
             <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            Insert below
+            {insertBelowLabel}
           </button>
           {openMenu === i && (
             <InsertMenu
               anchorRef={insertBtnRef}
-              onInsert={(t) => insertAt(i + 1, t)}
+              onInsert={(ty) => insertAt(i + 1, ty)}
               onClose={() => setOpenMenu(null)}
+              blockMeta={blockMeta}
+              insertBlockTitle={insertBlockTitle}
             />
           )}
         </div>
@@ -432,6 +474,8 @@ function SortableBlockRow({
 }
 
 export default function BlockEditor({ blocks, onChange, supabase, draftId }: Props) {
+  const t = useTranslations('admin.blocks');
+  const blockMeta = useBlockMeta();
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const emptyAddBtnRef = useRef<HTMLButtonElement>(null);
   const endAddBtnRef = useRef<HTMLButtonElement>(null);
@@ -490,8 +534,8 @@ export default function BlockEditor({ blocks, onChange, supabase, draftId }: Pro
           <svg className="w-8 h-8 text-slate-300 mb-3" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          <p className="text-sm font-medium text-slate-500 mb-1">No blocks yet</p>
-          <p className="text-xs text-slate-400 mb-4">Add your first content block below</p>
+          <p className="text-sm font-medium text-slate-500 mb-1">{t('noBlocksTitle')}</p>
+          <p className="text-xs text-slate-400 mb-4">{t('noBlocksHint')}</p>
           <div className="relative">
             <button
               ref={emptyAddBtnRef}
@@ -502,13 +546,15 @@ export default function BlockEditor({ blocks, onChange, supabase, draftId }: Pro
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
-              Add block
+              {t('addBlock')}
             </button>
             {openMenu === -1 && (
               <InsertMenu
                 anchorRef={emptyAddBtnRef}
-                onInsert={(t) => insertAt(0, t)}
+                onInsert={(ty) => insertAt(0, ty)}
                 onClose={() => setOpenMenu(null)}
+                blockMeta={blockMeta}
+                insertBlockTitle={t('insertBlock')}
               />
             )}
           </div>
@@ -532,6 +578,13 @@ export default function BlockEditor({ blocks, onChange, supabase, draftId }: Pro
                 removeAt={removeAt}
                 move={move}
                 insertAt={insertAt}
+                blockMeta={blockMeta}
+                dragLabel={t('dragReorder')}
+                moveUpLabel={t('moveUp')}
+                moveDownLabel={t('moveDown')}
+                removeLabel={t('removeBlock')}
+                insertBelowLabel={t('insertBelow')}
+                insertBlockTitle={t('insertBlock')}
               />
             ))}
           </SortableContext>
@@ -549,13 +602,15 @@ export default function BlockEditor({ blocks, onChange, supabase, draftId }: Pro
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            Add block
+            {t('addBlock')}
           </button>
           {openMenu === blocks.length && (
             <InsertMenu
               anchorRef={endAddBtnRef}
-              onInsert={(t) => insertAt(blocks.length, t)}
+              onInsert={(ty) => insertAt(blocks.length, ty)}
               onClose={() => setOpenMenu(null)}
+              blockMeta={blockMeta}
+              insertBlockTitle={t('insertBlock')}
             />
           )}
         </div>

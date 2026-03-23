@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { HeadingBlock } from '@/types';
 
 const INPUT_CLS = 'w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
@@ -12,6 +13,7 @@ export default function HeadingBlockEditor({
   block: HeadingBlock;
   onChange: (b: HeadingBlock) => void;
 }) {
+  const t = useTranslations('admin.heading');
   return (
     <div className="flex gap-2">
       <select
@@ -25,7 +27,7 @@ export default function HeadingBlockEditor({
       </select>
       <input
         className={INPUT_CLS}
-        placeholder="Heading text…"
+        placeholder={t('placeholder')}
         value={block.content}
         onChange={(e) => onChange({ ...block, content: e.target.value })}
       />

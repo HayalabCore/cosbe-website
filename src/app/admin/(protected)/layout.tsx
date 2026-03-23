@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { signOut } from '@/lib/auth';
+import AdminLocaleSwitcher, { AdminLocaleSwitcherLight } from '@/components/admin/AdminLocaleSwitcher';
 
 function NavItem({
   href,
@@ -49,30 +51,33 @@ function Sidebar({
   userEmail: string | null;
   onSignOut: () => void;
 }) {
+  const t = useTranslations('admin.sidebar');
+  const locale = useLocale();
   const initials = userEmail ? userEmail.slice(0, 2).toUpperCase() : 'AD';
   return (
     <div className="flex flex-col h-full py-4">
       {/* Logo */}
-      <div className="px-5 mb-5">
-        <Link href="/admin/dashboard" className="flex items-center gap-2.5 group">
+      <div className="px-5 mb-5 flex items-start justify-between gap-2">
+        <Link href="/admin/dashboard" className="flex items-center gap-2.5 group min-w-0">
           <div className="w-7 h-7 rounded-lg bg-primaryColor flex items-center justify-center flex-shrink-0 shadow-sm">
             <span className="text-white font-bold text-xs leading-none">C</span>
           </div>
-          <span className="text-white font-semibold text-sm tracking-tight">CosBE Admin</span>
+          <span className="text-white font-semibold text-sm tracking-tight truncate">{t('brand')}</span>
         </Link>
+        <AdminLocaleSwitcher className="flex-shrink-0" />
       </div>
 
       <div className="mx-4 border-t border-white/10 mb-4" />
 
       <div className="px-3 mb-1">
-        <p className="px-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">Content</p>
+        <p className="px-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">{t('contentSection')}</p>
       </div>
 
       <div className="flex-1 px-3 space-y-0.5">
         <NavItem
           href="/admin/dashboard"
           active={pathname === '/admin/dashboard'}
-          label="All Posts"
+          label={t('allPosts')}
           icon={
             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -82,7 +87,7 @@ function Sidebar({
         <NavItem
           href="/admin/posts/new"
           active={pathname === '/admin/posts/new'}
-          label="New Post"
+          label={t('newPost')}
           icon={
             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -93,9 +98,9 @@ function Sidebar({
 
       <div className="px-3 mt-4 space-y-0.5 border-t border-white/10 pt-4">
         <NavItem
-          href="/en"
+          href={`/${locale}`}
           active={false}
-          label="View Site"
+          label={t('viewSite')}
           icon={
             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -103,7 +108,7 @@ function Sidebar({
           }
         />
         <NavItem
-          label="Sign Out"
+          label={t('signOut')}
           onClick={onSignOut}
           icon={
             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
@@ -129,6 +134,8 @@ function Sidebar({
 export default function AdminProtectedLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const tCommon = useTranslations('admin.common');
+  const tSidebar = useTranslations('admin.sidebar');
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [ready, setReady] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -164,7 +171,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <span className="text-sm">Loading…</span>
+          <span className="text-sm">{tCommon('loading')}</span>
         </div>
       </div>
     );
@@ -207,7 +214,8 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <span className="font-semibold text-slate-900 text-sm">CosBE Admin</span>
+          <span className="font-semibold text-slate-900 text-sm flex-1 min-w-0 truncate">{tSidebar('brand')}</span>
+          <AdminLocaleSwitcherLight className="flex-shrink-0" />
         </header>
 
         <main className="flex-1">{children}</main>

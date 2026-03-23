@@ -1,0 +1,242 @@
+{
+  "common": {
+    "loading": "読み込み中…",
+    "english": "English",
+    "japanese": "日本語",
+    "language": "言語"
+  },
+  "login": {
+    "badge": "コンテンツ管理",
+    "headlineLine1": "コンテンツを、",
+    "headlineLine2": "思い通りに。",
+    "description": "ブロックベースのエディターで、記事の作成・編集・公開をスムーズに行えます。",
+    "signInTitle": "ログイン",
+    "signInSubtitle": "CosBE 管理画面",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "signingIn": "ログイン中…",
+    "signInCta": "ログイン →"
+  },
+  "sidebar": {
+    "brand": "CosBE 管理",
+    "contentSection": "コンテンツ",
+    "allPosts": "すべての記事",
+    "newPost": "新規記事",
+    "viewSite": "サイトを見る",
+    "signOut": "ログアウト"
+  },
+  "dashboard": {
+    "title": "すべての記事",
+    "subtitle": "コンテンツの管理と公開",
+    "newPost": "新規記事",
+    "totalPosts": "記事数",
+    "published": "公開中",
+    "drafts": "下書き",
+    "archived": "アーカイブ",
+    "searchPlaceholder": "タイトルで検索…",
+    "filterStatusAll": "すべてのステータス",
+    "filterStatusDraft": "下書き",
+    "filterStatusPublished": "公開",
+    "filterStatusArchived": "アーカイブ",
+    "filterCategoryAll": "すべてのカテゴリ",
+    "categoryUsefulInfo": "お役立ち情報",
+    "categoryCaseStudy": "導入事例",
+    "categoryVideo": "動画",
+    "categoryNotice": "お知らせ",
+    "statusPublished": "公開",
+    "statusDraft": "下書き",
+    "statusArchived": "アーカイブ",
+    "noPostsTitle": "記事がありません",
+    "noPostsFiltered": "条件を変えてお試しください。",
+    "noPostsEmpty": "最初の記事を作成しましょう。",
+    "createFirstPost": "最初の記事を作成",
+    "tableTitle": "タイトル",
+    "tableCategory": "カテゴリ",
+    "tableStatus": "ステータス",
+    "tablePublished": "公開日",
+    "tableActions": "操作",
+    "showing": "{total} 件中 {shown} 件を表示",
+    "deleteConfirm": "「{title}」を削除しますか？この操作は取り消せません。",
+    "editTitle": "編集",
+    "unpublishTitle": "非公開にする",
+    "publishTitle": "公開する",
+    "deleteTitle": "削除"
+  },
+  "editor": {
+    "loadingPost": "記事を読み込み中…",
+    "allPosts": "すべての記事",
+    "editPost": "記事を編集",
+    "newPost": "新規記事",
+    "untitled": "無題",
+    "saving": "保存中…",
+    "saved": "保存しました",
+    "saveFailed": "保存に失敗しました",
+    "saveDraft": "下書き保存",
+    "update": "更新",
+    "publish": "公開",
+    "statusPublished": "公開",
+    "statusDraft": "下書き",
+    "statusArchived": "アーカイブ",
+    "tabEdit": "編集",
+    "tabPreview": "プレビュー",
+    "postTitlePlaceholder": "記事タイトル…",
+    "excerptPlaceholder": "短い要約を入力…（任意）",
+    "words": "{count} 語",
+    "minRead": "約 {count} 分",
+    "blocksLabel": "{count} ブロック",
+    "postSettings": "記事設定"
+  },
+  "meta": {
+    "publishing": "公開設定",
+    "featuredImage": "アイキャッチ画像",
+    "organization": "分類",
+    "author": "著者",
+    "seo": "SEO",
+    "status": "ステータス",
+    "categoryUsefulInfo": "お役立ち情報",
+    "categoryCaseStudy": "導入事例",
+    "categoryVideo": "動画",
+    "categoryNotice": "お知らせ",
+    "statusPublished": "公開",
+    "statusDraft": "下書き",
+    "statusArchived": "アーカイブ",
+    "urlSlug": "URLスラッグ",
+    "slugPlaceholder": "my-post-slug",
+    "slugHint": "小文字・数字・ハイフンのみ。空欄の場合はタイトルから自動生成します。",
+    "urlPreview": "URLプレビュー",
+    "remove": "削除",
+    "uploadFeaturedImage": "アイキャッチ画像をアップロード",
+    "pasteImageUrl": "または画像URLを貼り付け…",
+    "category": "カテゴリ",
+    "tags": "タグ",
+    "tagsPlaceholder": "ai, technology, guide",
+    "tagsHint": "カンマ区切り",
+    "authorName": "名前",
+    "authorNamePlaceholder": "著者名",
+    "authorRole": "役職・肩書",
+    "authorRolePlaceholder": "例：シニアエディター",
+    "metaTitle": "メタタイトル",
+    "metaTitlePlaceholder": "検索結果で表示するタイトル（未入力時は記事タイトル）",
+    "metaChars": "{count}/60 文字",
+    "metaDescription": "メタディスクリプション",
+    "metaDescriptionPlaceholder": "検索結果に表示する概要（150〜160文字程度が目安）",
+    "metaDescChars": "{count}/160 文字"
+  },
+  "blocks": {
+    "insertBlock": "ブロックを挿入",
+    "insertBelow": "下に挿入",
+    "dragReorder": "ドラッグして並べ替え",
+    "moveUp": "上へ",
+    "moveDown": "下へ",
+    "removeBlock": "ブロックを削除",
+    "noBlocksTitle": "ブロックがありません",
+    "noBlocksHint": "下から最初のブロックを追加してください",
+    "addBlock": "ブロックを追加",
+    "types": {
+      "heading": { "label": "見出し", "description": "セクションタイトル（H2〜H4）" },
+      "paragraph": { "label": "段落", "description": "リッチテキスト" },
+      "list": { "label": "リスト", "description": "箇条書き・番号付き" },
+      "quote": { "label": "引用", "description": "引用と出典" },
+      "callout": { "label": "コールアウト", "description": "情報・注意・ヒント枠" },
+      "image": { "label": "画像", "description": "アップロードまたはURL" },
+      "code": { "label": "コード", "description": "シンタックスハイライト" },
+      "divider": { "label": "区切り線", "description": "横方向の区切り" },
+      "embed": { "label": "埋め込み", "description": "YouTube、X、URL" }
+    }
+  },
+  "paragraph": {
+    "placeholder": "段落のテキストを入力…",
+    "linkPromptTitle": "リンクURL",
+    "linkPromptDefault": "https://",
+    "colorPicker": "色…",
+    "highlightPicker": "ハイライト…",
+    "textColors": {
+      "default": "デフォルト",
+      "body": "本文",
+      "primary": "プライマリ",
+      "heading": "見出し",
+      "muted": "控えめ",
+      "success": "成功",
+      "warning": "警告",
+      "danger": "危険"
+    },
+    "highlights": {
+      "none": "なし",
+      "yellow": "黄",
+      "green": "緑",
+      "blue": "青",
+      "pink": "ピンク",
+      "amber": "琥珀"
+    },
+    "toolbar": {
+      "bold": "太字 (⌘B)",
+      "italic": "斜体 (⌘I)",
+      "underline": "下線 (⌘U)",
+      "strike": "取り消し線",
+      "customTextColor": "文字色（カスタム）",
+      "textColorPreset": "文字色プリセット",
+      "toggleHighlight": "ハイライト切替",
+      "highlightColor": "ハイライト色",
+      "alignLeft": "左揃え (⌘⇧L)",
+      "alignCenter": "中央揃え (⌘⇧E)",
+      "alignRight": "右揃え (⌘⇧R)",
+      "justify": "両端揃え (⌘⇧J)",
+      "bulletList": "箇条書き",
+      "numberedList": "番号付きリスト",
+      "blockquote": "引用",
+      "addLink": "リンクを追加",
+      "removeLink": "リンクを解除",
+      "clearFormatting": "書式をクリア"
+    }
+  },
+  "heading": {
+    "placeholder": "見出しテキスト…"
+  },
+  "list": {
+    "bullet": "• 箇条書き",
+    "numbered": "1. 番号付き",
+    "itemPlaceholder": "項目 {n}",
+    "removeItem": "項目を削除",
+    "addItem": "項目を追加"
+  },
+  "quote": {
+    "placeholder": "引用文…",
+    "citationPlaceholder": "— 出典（任意）"
+  },
+  "callout": {
+    "variants": {
+      "info": "ℹ 情報",
+      "warning": "⚠ 注意",
+      "tip": "💡 ヒント",
+      "related": "🔗 関連"
+    },
+    "titlePlaceholder": "タイトル（任意）",
+    "contentPlaceholder": "コールアウトの本文…"
+  },
+  "image": {
+    "previewAlt": "プレビュー",
+    "removeImage": "画像を削除",
+    "upload": "画像をアップロード",
+    "pasteUrl": "または画像URLを貼り付け",
+    "altPlaceholder": "代替テキスト（アクセシビリティ）",
+    "captionPlaceholder": "キャプション（任意）"
+  },
+  "code": {
+    "placeholder": "// コードを入力…"
+  },
+  "embed": {
+    "youtube": "YouTube",
+    "twitter": "X / Twitter",
+    "link": "リンク",
+    "urlPlaceholder": "URLを貼り付け…",
+    "titlePlaceholder": "タイトル（任意）"
+  },
+  "divider": {
+    "label": "横方向の区切り線"
+  },
+  "imageUpload": {
+    "defaultLabel": "画像をアップロード",
+    "uploading": "アップロード中…",
+    "uploadFailed": "アップロードに失敗しました"
+  }
+}

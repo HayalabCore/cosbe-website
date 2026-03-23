@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   deleteArticleAction,
   listArticlesAdminAction,
@@ -10,17 +11,17 @@ import {
 } from '@/actions/articles';
 import type { ArticleListItem, ArticleStatus, ContentCategory } from '@/types';
 
-const CATEGORY_CONFIG: Record<string, { label: string; cls: string }> = {
-  'useful-info': { label: 'Useful Info', cls: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200' },
-  'case-study': { label: 'Case Study', cls: 'bg-purple-50 text-purple-700 ring-1 ring-purple-200' },
-  'video': { label: 'Video', cls: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200' },
-  'notice': { label: 'Notice', cls: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' },
+const CATEGORY_CLS: Record<string, string> = {
+  'useful-info': 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+  'case-study': 'bg-purple-50 text-purple-700 ring-1 ring-purple-200',
+  video: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
+  notice: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
 };
 
-const STATUS_CONFIG: Record<string, { label: string; dot: string; cls: string }> = {
-  published: { label: 'Published', dot: 'bg-emerald-500', cls: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' },
-  draft: { label: 'Draft', dot: 'bg-amber-400', cls: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' },
-  archived: { label: 'Archived', dot: 'bg-slate-400', cls: 'bg-slate-100 text-slate-600 ring-1 ring-slate-200' },
+const STATUS_STYLE: Record<string, { dot: string; cls: string }> = {
+  published: { dot: 'bg-emerald-500', cls: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' },
+  draft: { dot: 'bg-amber-400', cls: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' },
+  archived: { dot: 'bg-slate-400', cls: 'bg-slate-100 text-slate-600 ring-1 ring-slate-200' },
 };
 
 function StatCard({ label, value, icon, color }: { label: string; value: number; icon: React.ReactNode; color: string }) {
@@ -38,6 +39,9 @@ function StatCard({ label, value, icon, color }: { label: string; value: number;
 }
 
 export default function AdminDashboardPage() {
+  const t = useTranslations('admin.dashboard');
+  const locale = useLocale();
+  const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
   const [allItems, setAllItems] = useState<ArticleListItem[]>([]);
   const [statusFilter, setStatusFilter] = useState<ArticleStatus | 'all'>('all');
   const [categoryFilter, setCategoryFilter] = useState<ContentCategory | 'all'>('all');
@@ -77,8 +81,29 @@ export default function AdminDashboardPage() {
     });
   }, [allItems, statusFilter, categoryFilter, search]);
 
+  const categoryLabel = useCallback(
+    (k: string) => {
+      if (k === 'useful-info') return t('categoryUsefulInfo');
+      if (k === 'case-study') return t('categoryCaseStudy');
+      if (k === 'video') return t('categoryVideo');
+      if (k === 'notice') return t('categoryNotice');
+      return k;
+    },
+    [t]
+  );
+
+  const statusLabel = useCallback(
+    (k: string) => {
+      if (k === 'published') return t('statusPublished');
+      if (k === 'draft') return t('statusDraft');
+      if (k === 'archived') return t('statusArchived');
+      return k;
+    },
+    [t]
+  );
+
   async function handleDelete(id: string, title: string) {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    if (!confirm(t('deleteConfirm', { title }))) return;
     await deleteArticleAction(id);
     void load();
   }
@@ -88,8 +113,8 @@ export default function AdminDashboardPage() {
       {/* Page header */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">All Posts</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Manage and publish your content</p>
+          <h1 className="text-xl font-bold text-slate-900">{t('title')}</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{t('subtitle')}</p>
         </div>
         <Link
           href="/admin/posts/new"
@@ -98,14 +123,14 @@ export default function AdminDashboardPage() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          New Post
+          {t('newPost')}
         </Link>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
-          label="Total Posts"
+          label={t('totalPosts')}
           value={stats.total}
           color="bg-slate-100"
           icon={
@@ -115,7 +140,7 @@ export default function AdminDashboardPage() {
           }
         />
         <StatCard
-          label="Published"
+          label={t('published')}
           value={stats.published}
           color="bg-emerald-50"
           icon={
@@ -125,7 +150,7 @@ export default function AdminDashboardPage() {
           }
         />
         <StatCard
-          label="Drafts"
+          label={t('drafts')}
           value={stats.draft}
           color="bg-amber-50"
           icon={
@@ -135,7 +160,7 @@ export default function AdminDashboardPage() {
           }
         />
         <StatCard
-          label="Archived"
+          label={t('archived')}
           value={stats.archived}
           color="bg-slate-100"
           icon={
@@ -154,7 +179,7 @@ export default function AdminDashboardPage() {
           </svg>
           <input
             type="search"
-            placeholder="Search by title…"
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all shadow-sm"
@@ -166,10 +191,10 @@ export default function AdminDashboardPage() {
           onChange={(e) => setStatusFilter(e.target.value as ArticleStatus | 'all')}
           className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15 shadow-sm"
         >
-          <option value="all">All statuses</option>
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-          <option value="archived">Archived</option>
+          <option value="all">{t('filterStatusAll')}</option>
+          <option value="draft">{t('filterStatusDraft')}</option>
+          <option value="published">{t('filterStatusPublished')}</option>
+          <option value="archived">{t('filterStatusArchived')}</option>
         </select>
 
         <select
@@ -177,11 +202,11 @@ export default function AdminDashboardPage() {
           onChange={(e) => setCategoryFilter(e.target.value as ContentCategory | 'all')}
           className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15 shadow-sm"
         >
-          <option value="all">All categories</option>
-          <option value="useful-info">Useful Info</option>
-          <option value="case-study">Case Study</option>
-          <option value="video">Video</option>
-          <option value="notice">Notice</option>
+          <option value="all">{t('filterCategoryAll')}</option>
+          <option value="useful-info">{t('categoryUsefulInfo')}</option>
+          <option value="case-study">{t('categoryCaseStudy')}</option>
+          <option value="video">{t('categoryVideo')}</option>
+          <option value="notice">{t('categoryNotice')}</option>
         </select>
       </div>
 
@@ -202,11 +227,11 @@ export default function AdminDashboardPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <p className="font-semibold text-slate-700 mb-1">No posts found</p>
+              <p className="font-semibold text-slate-700 mb-1">{t('noPostsTitle')}</p>
               <p className="text-sm text-slate-400">
                 {search || statusFilter !== 'all' || categoryFilter !== 'all'
-                  ? 'Try adjusting your filters.'
-                  : 'Create your first post to get started.'}
+                  ? t('noPostsFiltered')
+                  : t('noPostsEmpty')}
               </p>
               {!search && statusFilter === 'all' && categoryFilter === 'all' && (
                 <Link
@@ -216,7 +241,7 @@ export default function AdminDashboardPage() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  Create first post
+                  {t('createFirstPost')}
                 </Link>
               )}
             </div>
@@ -225,19 +250,19 @@ export default function AdminDashboardPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/80">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Title</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 hidden md:table-cell">Category</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 hidden lg:table-cell">Published</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Actions</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('tableTitle')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 hidden md:table-cell">{t('tableCategory')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('tableStatus')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 hidden lg:table-cell">{t('tablePublished')}</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">{t('tableActions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {displayItems.map((row) => {
-                    const cat = CATEGORY_CONFIG[row.category] ?? { label: row.category, cls: 'bg-slate-100 text-slate-600' };
-                    const st = STATUS_CONFIG[row.status ?? ''] ?? STATUS_CONFIG['draft'];
+                    const catCls = CATEGORY_CLS[row.category] ?? 'bg-slate-100 text-slate-600';
+                    const st = STATUS_STYLE[row.status ?? ''] ?? STATUS_STYLE.draft;
                     const publishedDate = row.publishedAt
-                      ? new Date(row.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                      ? new Date(row.publishedAt).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })
                       : null;
                     return (
                       <tr key={row.id} className="group hover:bg-slate-50/70 transition-colors">
@@ -250,14 +275,14 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
                         <td className="px-4 py-3.5 hidden md:table-cell">
-                          <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${cat.cls}`}>
-                            {cat.label}
+                          <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${catCls}`}>
+                            {categoryLabel(row.category)}
                           </span>
                         </td>
                         <td className="px-4 py-3.5">
                           <span className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium ${st.cls}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
-                            {st.label}
+                            {statusLabel(row.status ?? '')}
                           </span>
                         </td>
                         <td className="px-4 py-3.5 hidden lg:table-cell">
@@ -268,7 +293,7 @@ export default function AdminDashboardPage() {
                             {/* Edit */}
                             <Link
                               href={`/admin/posts/${row.id}`}
-                              title="Edit"
+                              title={t('editTitle')}
                               className="p-1.5 rounded-lg text-slate-400 hover:text-primaryColor hover:bg-primaryColor/8 transition-colors"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
@@ -280,7 +305,7 @@ export default function AdminDashboardPage() {
                             {row.status === 'published' ? (
                               <button
                                 type="button"
-                                title="Unpublish"
+                                title={t('unpublishTitle')}
                                 onClick={() => void unpublishArticleAction(row.id).then(load)}
                                 className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
                               >
@@ -291,7 +316,7 @@ export default function AdminDashboardPage() {
                             ) : (
                               <button
                                 type="button"
-                                title="Publish"
+                                title={t('publishTitle')}
                                 onClick={() => void publishArticleAction(row.id).then(load)}
                                 className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
                               >
@@ -304,7 +329,7 @@ export default function AdminDashboardPage() {
                             {/* Delete */}
                             <button
                               type="button"
-                              title="Delete"
+                              title={t('deleteTitle')}
                               onClick={() => void handleDelete(row.id, row.title)}
                               className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                             >
@@ -326,7 +351,7 @@ export default function AdminDashboardPage() {
 
       {!loading && displayItems.length > 0 && (
         <p className="text-xs text-slate-400 mt-3 text-right">
-          Showing {displayItems.length} of {allItems.length} posts
+          {t('showing', { shown: displayItems.length, total: allItems.length })}
         </p>
       )}
     </div>

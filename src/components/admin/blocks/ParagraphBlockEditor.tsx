@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import type { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
@@ -10,6 +11,7 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import TextAlign from '@tiptap/extension-text-align';
+import { useTranslations } from 'next-intl';
 import {
   Bold,
   Italic,
@@ -31,57 +33,45 @@ import {
 import type { ParagraphBlock } from '@/types';
 import { escapeHtml } from '@/lib/sanitize-article-html';
 
-const TEXT_COLORS = [
-  { label: 'Default', value: '' },
-  { label: 'Body', value: '#374151' },
-  { label: 'Primary', value: '#549FE3' },
-  { label: 'Heading', value: '#111827' },
-  { label: 'Muted', value: '#6B7280' },
-  { label: 'Success', value: '#15803d' },
-  { label: 'Warning', value: '#b45309' },
-  { label: 'Danger', value: '#b91c1c' },
-];
+const TEXT_COLOR_KEYS = [
+  { key: 'default', value: '' },
+  { key: 'body', value: '#374151' },
+  { key: 'primary', value: '#549FE3' },
+  { key: 'heading', value: '#111827' },
+  { key: 'muted', value: '#6B7280' },
+  { key: 'success', value: '#15803d' },
+  { key: 'warning', value: '#b45309' },
+  { key: 'danger', value: '#b91c1c' },
+] as const;
 
-const HIGHLIGHTS = [
-  { label: 'None', value: '' },
-  { label: 'Yellow', value: '#fef08a' },
-  { label: 'Green', value: '#bbf7d0' },
-  { label: 'Blue', value: '#bfdbfe' },
-  { label: 'Pink', value: '#fbcfe8' },
-  { label: 'Amber', value: '#fde68a' },
-];
-
-const extensions = [
-  StarterKit.configure({
-    heading: false,
-    code: false,
-    codeBlock: false,
-    horizontalRule: false,
-  }),
-  TextStyle,
-  Color,
-  Highlight.configure({ multicolor: true }),
-  Underline,
-  TextAlign.configure({
-    types: ['paragraph'],
-    alignments: ['left', 'center', 'right', 'justify'],
-  }),
-  Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
-  Placeholder.configure({ placeholder: 'Write paragraph text…' }),
-];
+const HIGHLIGHT_KEYS = [
+  { key: 'none', value: '' },
+  { key: 'yellow', value: '#fef08a' },
+  { key: 'green', value: '#bbf7d0' },
+  { key: 'blue', value: '#bfdbfe' },
+  { key: 'pink', value: '#fbcfe8' },
+  { key: 'amber', value: '#fde68a' },
+] as const;
 
 function toEditorHtml(stored: string): string {
-  const t = stored.trim();
-  if (!t) return '<p></p>';
-  if (/^<[a-z]/i.test(t)) return stored;
-  return `<p>${escapeHtml(t)}</p>`;
+  const raw = stored.trim();
+  if (!raw) return '<p></p>';
+  if (/^<[a-z]/i.test(raw)) return stored;
+  return `<p>${escapeHtml(raw)}</p>`;
 }
 
-// ── Primitives ────────────────────────────────────────────────────────────────
 function Btn({
-  onClick, active, disabled, title, children,
+  onClick,
+  active,
+  disabled,
+  title,
+  children,
 }: {
-  onClick: () => void; active?: boolean; disabled?: boolean; title: string; children: React.ReactNode;
+  onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
+  title: string;
+  children: React.ReactNode;
 }) {
   return (
     <button
@@ -107,15 +97,19 @@ function Sep() {
 const selectCls =
   'h-7 rounded border border-slate-200 bg-white px-1.5 text-[11px] text-slate-600 focus:outline-none focus:border-primaryColor cursor-pointer shrink-0';
 
-// ── Toolbar ───────────────────────────────────────────────────────────────────
 function RichToolbar({ editor }: { editor: Editor | null }) {
+  const tt = useTranslations('admin.paragraph.toolbar');
+  const tc = useTranslations('admin.paragraph.textColors');
+  const th = useTranslations('admin.paragraph.highlights');
+  const t = useTranslations('admin.paragraph');
+
   if (!editor) {
     return <div className="h-10 border-b border-slate-200 bg-slate-50/80 rounded-t-lg animate-pulse" />;
   }
 
   const setLink = () => {
     const prev = editor.getAttributes('link').href as string | undefined;
-    const url = window.prompt('Link URL', prev ?? 'https://');
+    const url = window.prompt(t('linkPromptTitle'), prev ?? t('linkPromptDefault'));
     if (url === null) return;
     const trimmed = url.trim();
     if (trimmed === '') {
@@ -130,33 +124,28 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 border-b border-slate-200 bg-slate-50/80 rounded-t-lg px-2 py-1.5">
-      {/* ── Inline marks ── */}
-      <Btn title="Bold (⌘B)" active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
+      <Btn title={tt('bold')} active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
         <Bold size={14} strokeWidth={2.5} />
       </Btn>
-      <Btn title="Italic (⌘I)" active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
+      <Btn title={tt('italic')} active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
         <Italic size={14} strokeWidth={2.5} />
       </Btn>
-      <Btn title="Underline (⌘U)" active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+      <Btn title={tt('underline')} active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}>
         <UnderlineIcon size={14} strokeWidth={2.5} />
       </Btn>
-      <Btn title="Strikethrough" active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()}>
+      <Btn title={tt('strike')} active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()}>
         <Strikethrough size={14} strokeWidth={2.5} />
       </Btn>
 
       <Sep />
 
-      {/* ── Text color: swatch picker + preset dropdown ── */}
       <label
         className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded transition-colors shrink-0 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
-        title="Custom text color"
+        title={tt('customTextColor')}
       >
         <div className="flex flex-col items-center gap-[2px]">
           <Baseline size={12} strokeWidth={2} />
-          <span
-            className="h-[3px] w-[14px] rounded-full"
-            style={{ backgroundColor: currentColor || '#374151' }}
-          />
+          <span className="h-[3px] w-[14px] rounded-full" style={{ backgroundColor: currentColor || '#374151' }} />
         </div>
         <input
           type="color"
@@ -166,9 +155,9 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
         />
       </label>
       <select
-        title="Text color preset"
+        title={tt('textColorPreset')}
         className={selectCls}
-        value={TEXT_COLORS.some((c) => c.value === currentColor) ? currentColor : '__custom__'}
+        value={TEXT_COLOR_KEYS.some((c) => c.value === currentColor) ? currentColor : '__custom__'}
         onChange={(e) => {
           const v = e.target.value;
           if (v === '__custom__') return;
@@ -176,17 +165,18 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
           else editor.chain().focus().setColor(v).run();
         }}
       >
-        <option value="__custom__">Color…</option>
-        {TEXT_COLORS.map((c) => (
-          <option key={c.label} value={c.value}>{c.label}</option>
+        <option value="__custom__">{t('colorPicker')}</option>
+        {TEXT_COLOR_KEYS.map((c) => (
+          <option key={c.key} value={c.value}>
+            {tc(c.key)}
+          </option>
         ))}
       </select>
 
       <Sep />
 
-      {/* ── Highlight ── */}
       <Btn
-        title="Toggle highlight"
+        title={tt('toggleHighlight')}
         active={editor.isActive('highlight')}
         onClick={() => {
           if (editor.isActive('highlight')) editor.chain().focus().unsetHighlight().run();
@@ -196,9 +186,9 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
         <Highlighter size={14} strokeWidth={2} style={{ color: highlightColor || undefined }} />
       </Btn>
       <select
-        title="Highlight color"
+        title={tt('highlightColor')}
         className={selectCls}
-        value={HIGHLIGHTS.some((h) => h.value === highlightColor) ? highlightColor : '__custom__'}
+        value={HIGHLIGHT_KEYS.some((h) => h.value === highlightColor) ? highlightColor : '__custom__'}
         onChange={(e) => {
           const v = e.target.value;
           if (v === '__custom__') return;
@@ -206,55 +196,53 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
           else editor.chain().focus().setHighlight({ color: v }).run();
         }}
       >
-        <option value="__custom__">Highlight…</option>
-        {HIGHLIGHTS.map((h) => (
-          <option key={h.label} value={h.value}>{h.label}</option>
+        <option value="__custom__">{t('highlightPicker')}</option>
+        {HIGHLIGHT_KEYS.map((h) => (
+          <option key={h.key} value={h.value}>
+            {th(h.key)}
+          </option>
         ))}
       </select>
 
       <Sep />
 
-      {/* ── Alignment ── */}
-      <Btn title="Align left (⌘⇧L)" active={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
+      <Btn title={tt('alignLeft')} active={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
         <AlignLeft size={14} strokeWidth={2} />
       </Btn>
-      <Btn title="Align center (⌘⇧E)" active={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()}>
+      <Btn title={tt('alignCenter')} active={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()}>
         <AlignCenter size={14} strokeWidth={2} />
       </Btn>
-      <Btn title="Align right (⌘⇧R)" active={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()}>
+      <Btn title={tt('alignRight')} active={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()}>
         <AlignRight size={14} strokeWidth={2} />
       </Btn>
-      <Btn title="Justify (⌘⇧J)" active={editor.isActive({ textAlign: 'justify' })} onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
+      <Btn title={tt('justify')} active={editor.isActive({ textAlign: 'justify' })} onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
         <AlignJustify size={14} strokeWidth={2} />
       </Btn>
 
       <Sep />
 
-      {/* ── Lists & quote ── */}
-      <Btn title="Bullet list" active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+      <Btn title={tt('bulletList')} active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}>
         <List size={14} strokeWidth={2} />
       </Btn>
-      <Btn title="Numbered list" active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+      <Btn title={tt('numberedList')} active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
         <ListOrdered size={14} strokeWidth={2} />
       </Btn>
-      <Btn title="Blockquote" active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+      <Btn title={tt('blockquote')} active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
         <TextQuote size={14} strokeWidth={2} />
       </Btn>
 
       <Sep />
 
-      {/* ── Link ── */}
-      <Btn title="Add link" active={editor.isActive('link')} onClick={setLink}>
+      <Btn title={tt('addLink')} active={editor.isActive('link')} onClick={setLink}>
         <LinkIcon size={14} strokeWidth={2} />
       </Btn>
-      <Btn title="Remove link" disabled={!editor.isActive('link')} onClick={() => editor.chain().focus().unsetLink().run()}>
+      <Btn title={tt('removeLink')} disabled={!editor.isActive('link')} onClick={() => editor.chain().focus().unsetLink().run()}>
         <Link2Off size={14} strokeWidth={2} />
       </Btn>
 
       <Sep />
 
-      {/* ── Clear ── */}
-      <Btn title="Clear formatting" onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+      <Btn title={tt('clearFormatting')} onClick={() => editor.chain().focus().unsetAllMarks().run()}>
         <RemoveFormatting size={14} strokeWidth={2} />
       </Btn>
     </div>
@@ -268,6 +256,30 @@ export default function ParagraphBlockEditor({
   block: ParagraphBlock;
   onChange: (b: ParagraphBlock) => void;
 }) {
+  const t = useTranslations('admin.paragraph');
+
+  const extensions = useMemo(
+    () => [
+      StarterKit.configure({
+        heading: false,
+        code: false,
+        codeBlock: false,
+        horizontalRule: false,
+      }),
+      TextStyle,
+      Color,
+      Highlight.configure({ multicolor: true }),
+      Underline,
+      TextAlign.configure({
+        types: ['paragraph'],
+        alignments: ['left', 'center', 'right', 'justify'],
+      }),
+      Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
+      Placeholder.configure({ placeholder: t('placeholder') }),
+    ],
+    [t]
+  );
+
   const editor = useEditor(
     {
       immediatelyRender: false,
@@ -291,7 +303,7 @@ export default function ParagraphBlockEditor({
         onChange({ ...block, content: ed.getHTML() });
       },
     },
-    [block.id]
+    [block.id, extensions]
   );
 
   return (
