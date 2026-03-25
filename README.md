@@ -2,7 +2,7 @@
 
 Marketing site and CMS built with [Next.js](https://nextjs.org) (App Router), [next-intl](https://next-intl.dev) (`en` / `ja`), and [Prisma](https://www.prisma.io) on PostgreSQL ([Supabase](https://supabase.com)).
 
-## Prerequisites
+## Prerequisites Required
 
 - Node.js 20+ (match [Vercel / Next.js](https://nextjs.org/docs/getting-started/installation) expectations)
 - [Yarn](https://yarnpkg.com) (this repo uses `yarn.lock`)
