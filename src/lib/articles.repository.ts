@@ -41,7 +41,9 @@ function mapRow(row: DbArticle): Article {
     id: row.id,
     slug: row.slug,
     title: row.title,
+    titleEn: row.titleEn ?? undefined,
     excerpt: row.excerpt ?? undefined,
+    excerptEn: row.excerptEn ?? undefined,
     featuredImage: row.featuredImage ?? undefined,
     status: row.status as ArticleStatus,
     category: row.category as ContentCategory,
@@ -65,7 +67,9 @@ function toListItem(row: DbArticle): ArticleListItem {
     id: row.id,
     slug: row.slug,
     title: row.title,
+    titleEn: row.titleEn ?? undefined,
     excerpt: row.excerpt ?? undefined,
+    excerptEn: row.excerptEn ?? undefined,
     featuredImage: row.featuredImage ?? undefined,
     category: row.category as ContentCategory,
     tags: row.tags ?? [],
@@ -166,7 +170,9 @@ export async function createArticleRecord(
     data: {
       slug: data.slug,
       title: data.title,
+      titleEn: data.titleEn ?? null,
       excerpt: data.excerpt ?? null,
+      excerptEn: data.excerptEn ?? null,
       featuredImage: data.featuredImage ?? null,
       status: data.status,
       category: data.category,
@@ -191,7 +197,9 @@ export async function updateArticleRecord(
 
   if (data.slug !== undefined) patch.slug = data.slug;
   if (data.title !== undefined) patch.title = data.title;
+  if (data.titleEn !== undefined) patch.titleEn = data.titleEn ?? null;
   if (data.excerpt !== undefined) patch.excerpt = data.excerpt ?? null;
+  if (data.excerptEn !== undefined) patch.excerptEn = data.excerptEn ?? null;
   if (data.featuredImage !== undefined)
     patch.featuredImage = data.featuredImage ?? null;
   if (data.status !== undefined) patch.status = data.status;

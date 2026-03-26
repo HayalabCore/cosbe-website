@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
+import { translateArticleMetaEnAction } from '@/actions/block-translation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import type { ArticleSEO, ArticleStatus, ContentCategory } from '@/types';
@@ -27,8 +28,10 @@ const STATUSES: { value: ArticleStatus; dot: string }[] = [
 
 export type PostMetaPatch = {
   title?: string;
+  titleEn?: string;
   slug?: string;
   excerpt?: string;
+  excerptEn?: string;
   featuredImage?: string;
   category?: ContentCategory;
   tags?: string;
@@ -42,7 +45,10 @@ type Props = {
   supabase: SupabaseClient;
   draftId: string;
   title: string;
+  titleEn: string;
   slug: string;
+  excerpt: string;
+  excerptEn: string;
   featuredImage: string;
   category: ContentCategory;
   tags: string;
@@ -96,7 +102,10 @@ export default function PostMetaForm({
   supabase,
   draftId,
   title,
+  titleEn,
   slug,
+  excerpt,
+  excerptEn,
   featuredImage,
   category,
   tags,
@@ -107,6 +116,7 @@ export default function PostMetaForm({
   onChange,
 }: Props) {
   const t = useTranslations('admin.meta');
+  const [metaGenerating, setMetaGenerating] = useState(false);
 
   const categoryLabel = useCallback(
     (value: ContentCategory) => {
@@ -131,11 +141,32 @@ export default function PostMetaForm({
 
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     publish: true,
+    translations: true,
     media: true,
     organize: true,
     author: false,
     seo: false,
   });
+
+  async function handleGenerateMetaEnglish() {
+    if (!title.trim()) return;
+    setMetaGenerating(true);
+    try {
+      const r = await translateArticleMetaEnAction({
+        title,
+        excerpt: excerpt || undefined,
+      });
+      onChange({
+        titleEn: r.titleEn,
+        excerptEn: r.excerptEn ?? '',
+      });
+    } catch (e) {
+      console.error(e);
+      alert(e instanceof Error ? e.message : 'Translation failed');
+    } finally {
+      setMetaGenerating(false);
+    }
+  }
 
   function toggle(key: string) {
     setOpenSections((s) => ({ ...s, [key]: !s[key] }));
@@ -238,6 +269,62 @@ export default function PostMetaForm({
                   {previewPath}
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* English title & excerpt (for /en) */}
+      <div>
+        <SectionHeader
+          label={t('translations')}
+          open={openSections.translations}
+          onToggle={() => toggle('translations')}
+          icon={
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 5h12M9 3v2m1.048 9.5a18.022 18.022 0 016.412-9M9.5 14.5a18.022 18.022 0 006.412 9M9.5 9.5a18.022 18.022 0 00-6.412-9"
+              />
+            </svg>
+          }
+        />
+        {openSections.translations && (
+          <div className="px-4 pb-4 space-y-3">
+            <button
+              type="button"
+              disabled={metaGenerating || !title.trim()}
+              onClick={() => void handleGenerateMetaEnglish()}
+              className="w-full rounded-lg border border-primaryColor/30 bg-primaryColor/5 px-3 py-2 text-xs font-semibold text-primaryColor hover:bg-primaryColor/10 disabled:opacity-40 transition-colors"
+            >
+              {metaGenerating
+                ? t('generatingEnglish')
+                : t('generateEnglishMeta')}
+            </button>
+            <div>
+              <label className={LABEL_CLS}>{t('titleEn')}</label>
+              <input
+                className={INPUT_CLS}
+                placeholder={t('titleEnPlaceholder')}
+                value={titleEn}
+                onChange={(e) => onChange({ titleEn: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className={LABEL_CLS}>{t('excerptEn')}</label>
+              <textarea
+                className={`${INPUT_CLS} min-h-[72px] resize-y`}
+                placeholder={t('excerptEnPlaceholder')}
+                value={excerptEn}
+                onChange={(e) => onChange({ excerptEn: e.target.value })}
+              />
             </div>
           </div>
         )}

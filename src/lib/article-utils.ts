@@ -1,4 +1,4 @@
-import type { ContentBlock, HeadingBlock } from '@/types';
+import type { ContentBlock, HeadingBlock, TOCItem } from '@/types';
 import { stripHtmlForMetrics } from '@/lib/sanitize-article-html';
 
 /** Next/Image throws if `src` is not a valid absolute URL or root-relative path. */
@@ -29,13 +29,30 @@ export function generateId(): string {
   return crypto.randomUUID();
 }
 
-export function generateTOC(blocks: ContentBlock[]) {
+export function generateTOC(blocks: ContentBlock[]): TOCItem[] {
   return blocks
     .filter((block): block is HeadingBlock => block.type === 'heading')
     .map((block) => ({
       id: block.id,
       level: block.level,
       text: block.content,
+    }));
+}
+
+/** Headings for TOC on localized pages (English uses contentEn when set). */
+export function generateTOCForLocale(
+  blocks: ContentBlock[],
+  locale: string
+): TOCItem[] {
+  if (locale !== 'en') {
+    return generateTOC(blocks);
+  }
+  return blocks
+    .filter((block): block is HeadingBlock => block.type === 'heading')
+    .map((block) => ({
+      id: block.id,
+      level: block.level,
+      text: block.contentEn?.trim() ? block.contentEn : block.content,
     }));
 }
 

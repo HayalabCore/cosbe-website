@@ -1,7 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { translateBlockEnAction } from '@/actions/block-translation';
 import type { CalloutBlock } from '@/types';
+import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
 
 const VARIANTS: {
   value: CalloutBlock['variant'];
@@ -42,8 +45,42 @@ export default function CalloutBlockEditor({
 }) {
   const t = useTranslations('admin.callout.variants');
   const tc = useTranslations('admin.callout');
+  const [tab, setTab] = useState<'original' | 'english'>('original');
+  const [generating, setGenerating] = useState(false);
+
+  async function handleGenerate() {
+    setGenerating(true);
+    try {
+      const result = await translateBlockEnAction({
+        type: 'callout',
+        title: block.title,
+        content: block.content,
+      });
+      if (result.type === 'callout') {
+        onChange({
+          ...block,
+          titleEn: result.titleEn,
+          contentEn: result.contentEn,
+        });
+        setTab('english');
+      }
+    } catch (e) {
+      console.error(e);
+      alert(e instanceof Error ? e.message : 'Translation failed');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
   return (
     <div className="space-y-2.5">
+      <BlockLocaleTabs
+        tab={tab}
+        onTabChange={setTab}
+        onGenerateEnglish={handleGenerate}
+        generating={generating}
+        generateDisabled={!block.content.trim()}
+      />
       <div className="flex flex-wrap gap-1.5">
         {VARIANTS.map((v) => (
           <button
@@ -63,14 +100,22 @@ export default function CalloutBlockEditor({
       <input
         className={INPUT_CLS}
         placeholder={tc('titlePlaceholder')}
-        value={block.title ?? ''}
-        onChange={(e) => onChange({ ...block, title: e.target.value })}
+        value={tab === 'original' ? (block.title ?? '') : (block.titleEn ?? '')}
+        onChange={(e) =>
+          tab === 'original'
+            ? onChange({ ...block, title: e.target.value })
+            : onChange({ ...block, titleEn: e.target.value })
+        }
       />
       <textarea
         className={`${INPUT_CLS} min-h-[80px] resize-y`}
         placeholder={tc('contentPlaceholder')}
-        value={block.content}
-        onChange={(e) => onChange({ ...block, content: e.target.value })}
+        value={tab === 'original' ? block.content : (block.contentEn ?? '')}
+        onChange={(e) =>
+          tab === 'original'
+            ? onChange({ ...block, content: e.target.value })
+            : onChange({ ...block, contentEn: e.target.value })
+        }
       />
     </div>
   );

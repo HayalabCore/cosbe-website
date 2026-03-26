@@ -1,7 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ArticleDetailLayout } from '@/components';
-import { generateTOC } from '@/lib/article-utils';
+import { generateTOC, generateTOCForLocale } from '@/lib/article-utils';
+import { resolveArticleTitle } from '@/lib/article-locale';
+import { buildArticlePageMetadata } from '@/lib/article-page-metadata';
 import {
   getArticleBySlug,
   getRelatedArticles,
@@ -14,13 +16,10 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const article = await getArticleBySlug(slug);
   if (!article) return { title: 'Case study' };
-  return {
-    title: article.seo?.metaTitle || article.title,
-    description: article.seo?.metaDescription || article.excerpt,
-  };
+  return buildArticlePageMetadata(article, locale);
 }
 
 export default async function CaseStudyArticlePage({ params }: Props) {
@@ -37,7 +36,12 @@ export default async function CaseStudyArticlePage({ params }: Props) {
     /* optional */
   }
 
-  const toc = article.toc?.length ? article.toc : generateTOC(article.blocks);
+  const toc =
+    locale === 'en'
+      ? generateTOCForLocale(article.blocks, locale)
+      : article.toc?.length
+        ? article.toc
+        : generateTOC(article.blocks);
   const relatedArticles = await getRelatedArticles(
     article.id,
     article.relatedArticleIds || []
@@ -51,7 +55,7 @@ export default async function CaseStudyArticlePage({ params }: Props) {
       homeLabel={commonT('breadcrumb.home')}
       breadcrumbItems={[
         { label: commonT('breadcrumb.caseStudies'), href: '/case-studies' },
-        { label: article.title },
+        { label: resolveArticleTitle(article, locale) },
       ]}
       categoryBadgeLabel={commonT('breadcrumb.caseStudies')}
       tableOfContentsTitle={articleT('tableOfContents')}

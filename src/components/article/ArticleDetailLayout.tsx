@@ -5,6 +5,10 @@ import TableOfContents from './TableOfContents';
 import BlockRenderer from './BlockRenderer';
 import { imageSrcOrFallback } from '@/lib/article-utils';
 import { articleDetailHref } from '@/lib/articlePaths';
+import {
+  resolveArticleTitle,
+  resolveBlocksForLocale,
+} from '@/lib/article-locale';
 import type { Article, ArticleListItem, TOCItem } from '@/types';
 
 function formatDateIso(iso: string | null, locale: string): string {
@@ -49,13 +53,9 @@ export default function ArticleDetailLayout({
   relatedArticles,
   cta,
 }: ArticleDetailLayoutProps) {
+  const displayTitle = resolveArticleTitle(article, locale);
   const featuredSrc = imageSrcOrFallback(article.featuredImage, '');
-  const publishedDate = article.publishedAt
-    ? new Date(article.publishedAt)
-    : null;
-  const year = publishedDate?.getFullYear();
-  const month = publishedDate ? publishedDate.getMonth() + 1 : 0;
-  const day = publishedDate?.getDate();
+  const publishedLabel = formatDateIso(article.publishedAt, locale);
 
   return (
     <div className="min-h-screen bg-white pt-20">
@@ -67,27 +67,18 @@ export default function ArticleDetailLayout({
 
       <header className="border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-start gap-5">
-            {publishedDate && (
-              <div className="flex-shrink-0 text-center border-r border-gray-200 pr-5">
-                <span className="block text-xs text-textTertiary">{year}</span>
-                <span className="block text-3xl font-bold text-textPrimary leading-tight">
-                  {month}/{day}
-                </span>
-              </div>
-            )}
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-textPrimary leading-snug flex-1">
-              {article.title}
-            </h1>
-          </div>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-textPrimary leading-snug">
+            {displayTitle}
+          </h1>
 
-          <div className="flex flex-wrap items-center gap-3 mt-5 pl-0 md:pl-20">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primaryColor text-white text-xs font-medium rounded">
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200/80 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-700">
               <svg
-                className="w-3 h-3"
+                className="h-3.5 w-3.5 shrink-0 text-slate-500"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden
               >
                 <path
                   strokeLinecap="round"
@@ -98,22 +89,36 @@ export default function ArticleDetailLayout({
               </svg>
               {categoryBadgeLabel}
             </span>
-            <span className="text-sm text-textTertiary flex items-center gap-1.5">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              {formatDateIso(article.publishedAt, locale)}
-            </span>
+            {publishedLabel && article.publishedAt ? (
+              <>
+                <span
+                  className="hidden sm:inline text-slate-300 select-none"
+                  aria-hidden
+                >
+                  ·
+                </span>
+                <time
+                  dateTime={article.publishedAt}
+                  className="inline-flex items-center gap-1.5 text-textTertiary"
+                >
+                  <svg
+                    className="h-4 w-4 shrink-0 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  {publishedLabel}
+                </time>
+              </>
+            ) : null}
           </div>
         </div>
       </header>
@@ -126,7 +131,7 @@ export default function ArticleDetailLayout({
                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-sm">
                   <Image
                     src={featuredSrc}
-                    alt={article.title}
+                    alt={displayTitle}
                     fill
                     sizes="(max-width: 768px) 100vw, 700px"
                     className="object-cover"
@@ -137,7 +142,7 @@ export default function ArticleDetailLayout({
             ) : null}
 
             <article className="max-w-none">
-              {article.blocks.map((block) => (
+              {resolveBlocksForLocale(article.blocks, locale).map((block) => (
                 <BlockRenderer key={block.id} block={block} />
               ))}
             </article>
@@ -174,34 +179,37 @@ export default function ArticleDetailLayout({
                   {relatedArticlesTitle}
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {relatedArticles.map((a) => (
-                    <Link
-                      key={a.id}
-                      href={articleDetailHref(a.category, a.slug)}
-                      className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100"
-                    >
-                      <div className="relative aspect-video">
-                        <Image
-                          src={imageSrcOrFallback(
-                            a.featuredImage,
-                            '/useful-column/article-01.png'
-                          )}
-                          alt={a.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 350px"
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-bold text-textPrimary group-hover:text-primaryColor transition-colors line-clamp-2 text-sm">
-                          {a.title}
-                        </h3>
-                        <p className="text-xs text-textTertiary mt-2">
-                          {formatDateIso(a.publishedAt, locale)}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
+                  {relatedArticles.map((a) => {
+                    const relatedTitle = resolveArticleTitle(a, locale);
+                    return (
+                      <Link
+                        key={a.id}
+                        href={articleDetailHref(a.category, a.slug)}
+                        className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100"
+                      >
+                        <div className="relative aspect-video">
+                          <Image
+                            src={imageSrcOrFallback(
+                              a.featuredImage,
+                              '/useful-column/article-01.png'
+                            )}
+                            alt={relatedTitle}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 350px"
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-bold text-textPrimary group-hover:text-primaryColor transition-colors line-clamp-2 text-sm">
+                            {relatedTitle}
+                          </h3>
+                          <p className="text-xs text-textTertiary mt-2">
+                            {formatDateIso(a.publishedAt, locale)}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               </section>
             )}

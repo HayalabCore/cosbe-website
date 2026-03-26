@@ -1,16 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import type { Editor } from '@tiptap/core';
-import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
-import Underline from '@tiptap/extension-underline';
-import Placeholder from '@tiptap/extension-placeholder';
-import { TextStyle } from '@tiptap/extension-text-style';
-import Color from '@tiptap/extension-color';
-import Highlight from '@tiptap/extension-highlight';
-import TextAlign from '@tiptap/extension-text-align';
 import { useTranslations } from 'next-intl';
 import {
   Bold,
@@ -31,7 +23,16 @@ import {
   RemoveFormatting,
 } from 'lucide-react';
 import type { ParagraphBlock } from '@/types';
-import { escapeHtml } from '@/lib/sanitize-article-html';
+import {
+  paragraphContentToHtml,
+  stripHtmlForMetrics,
+} from '@/lib/sanitize-article-html';
+import { translateBlockEnAction } from '@/actions/block-translation';
+import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
+import {
+  createParagraphExtensions,
+  toEditorHtmlForParagraph,
+} from '@/components/admin/paragraph-editor-extensions';
 
 const TEXT_COLOR_KEYS = [
   { key: 'default', value: '' },
@@ -53,12 +54,15 @@ const HIGHLIGHT_KEYS = [
   { key: 'amber', value: '#fde68a' },
 ] as const;
 
-function toEditorHtml(stored: string): string {
-  const raw = stored.trim();
-  if (!raw) return '<p></p>';
-  if (/^<[a-z]/i.test(raw)) return stored;
-  return `<p>${escapeHtml(raw)}</p>`;
-}
+const EDITOR_CHROME_CLASS = [
+  'prose prose-sm max-w-none focus:outline-none min-h-[140px] px-3 py-2.5 text-slate-900',
+  '[&_a]:text-primaryColor [&_a]:underline',
+  '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2 [&_ul>li]:my-0.5 [&_ul>li::marker]:text-slate-500',
+  '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2 [&_ol>li]:my-0.5 [&_ol>li::marker]:text-slate-500',
+  '[&_li>p]:my-0',
+  '[&_blockquote]:border-l-4 [&_blockquote]:border-slate-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:my-3',
+  '[&_mark]:rounded-sm [&_mark]:px-0.5',
+].join(' ');
 
 function Btn({
   onClick,
@@ -340,61 +344,33 @@ function RichToolbar({ editor }: { editor: Editor | null }) {
   );
 }
 
-export default function ParagraphBlockEditor({
-  block,
-  onChange,
+function RichParagraphPane({
+  paneKey,
+  extensions,
+  html,
+  onHtmlChange,
 }: {
-  block: ParagraphBlock;
-  onChange: (b: ParagraphBlock) => void;
+  paneKey: string;
+  extensions: ReturnType<typeof createParagraphExtensions>;
+  html: string;
+  onHtmlChange: (html: string) => void;
 }) {
-  const t = useTranslations('admin.paragraph');
-
-  const extensions = useMemo(
-    () => [
-      StarterKit.configure({
-        heading: false,
-        code: false,
-        codeBlock: false,
-        horizontalRule: false,
-      }),
-      TextStyle,
-      Color,
-      Highlight.configure({ multicolor: true }),
-      Underline,
-      TextAlign.configure({
-        types: ['paragraph'],
-        alignments: ['left', 'center', 'right', 'justify'],
-      }),
-      Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
-      Placeholder.configure({ placeholder: t('placeholder') }),
-    ],
-    [t]
-  );
-
   const editor = useEditor(
     {
       immediatelyRender: false,
       shouldRerenderOnTransaction: true,
       extensions,
-      content: toEditorHtml(block.content),
+      content: toEditorHtmlForParagraph(html),
       editorProps: {
         attributes: {
-          class: [
-            'prose prose-sm max-w-none focus:outline-none min-h-[140px] px-3 py-2.5 text-slate-900',
-            '[&_a]:text-primaryColor [&_a]:underline',
-            '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2 [&_ul>li]:my-0.5 [&_ul>li::marker]:text-slate-500',
-            '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2 [&_ol>li]:my-0.5 [&_ol>li::marker]:text-slate-500',
-            '[&_li>p]:my-0',
-            '[&_blockquote]:border-l-4 [&_blockquote]:border-slate-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:my-3',
-            '[&_mark]:rounded-sm [&_mark]:px-0.5',
-          ].join(' '),
+          class: EDITOR_CHROME_CLASS,
         },
       },
       onUpdate: ({ editor: ed }) => {
-        onChange({ ...block, content: ed.getHTML() });
+        onHtmlChange(ed.getHTML());
       },
     },
-    [block.id, extensions]
+    [paneKey, extensions]
   );
 
   return (
@@ -404,6 +380,80 @@ export default function ParagraphBlockEditor({
         editor={editor}
         className="tiptap-paragraph [&_.ProseMirror]:min-h-[140px] [&_.ProseMirror]:outline-none"
       />
+    </div>
+  );
+}
+
+export default function ParagraphBlockEditor({
+  block,
+  onChange,
+}: {
+  block: ParagraphBlock;
+  onChange: (b: ParagraphBlock) => void;
+}) {
+  const t = useTranslations('admin.paragraph');
+  const te = useTranslations('admin.blockLocale');
+  const [tab, setTab] = useState<'original' | 'english'>('original');
+  const [generating, setGenerating] = useState(false);
+  const [englishEditorTick, setEnglishEditorTick] = useState(0);
+
+  async function handleGenerate() {
+    setGenerating(true);
+    try {
+      const result = await translateBlockEnAction({
+        type: 'paragraph',
+        contentHtml: block.content,
+      });
+      if (result.type === 'paragraph') {
+        const contentEn = paragraphContentToHtml(result.contentEn);
+        onChange({ ...block, contentEn });
+        setEnglishEditorTick((x) => x + 1);
+        setTab('english');
+      }
+    } catch (e) {
+      console.error(e);
+      alert(e instanceof Error ? e.message : 'Translation failed');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  const hasPrimary = Boolean(stripHtmlForMetrics(block.content).trim());
+
+  const extensionsOriginal = useMemo(
+    () => createParagraphExtensions(t('placeholder')),
+    [t]
+  );
+  const extensionsEnglish = useMemo(
+    () => createParagraphExtensions(te('englishPlaceholder')),
+    [te]
+  );
+
+  return (
+    <div className="space-y-2">
+      <BlockLocaleTabs
+        tab={tab}
+        onTabChange={setTab}
+        onGenerateEnglish={handleGenerate}
+        generating={generating}
+        generateDisabled={!hasPrimary}
+      />
+      {tab === 'original' && (
+        <RichParagraphPane
+          paneKey={`${block.id}-orig`}
+          extensions={extensionsOriginal}
+          html={block.content}
+          onHtmlChange={(html) => onChange({ ...block, content: html })}
+        />
+      )}
+      {tab === 'english' && (
+        <RichParagraphPane
+          paneKey={`${block.id}-en-${englishEditorTick}`}
+          extensions={extensionsEnglish}
+          html={block.contentEn ?? ''}
+          onHtmlChange={(html) => onChange({ ...block, contentEn: html })}
+        />
+      )}
     </div>
   );
 }

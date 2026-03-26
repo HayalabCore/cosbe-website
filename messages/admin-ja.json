@@ -84,7 +84,17 @@
     "words": "{count} 語",
     "minRead": "約 {count} 分",
     "blocksLabel": "{count} ブロック",
-    "postSettings": "記事設定"
+    "postSettings": "記事設定",
+    "previewAs": "プレビュー表示",
+    "previewOriginal": "日本語",
+    "previewEnglish": "英語"
+  },
+  "blockLocale": {
+    "original": "日本語",
+    "english": "英語",
+    "generateEnglish": "英語を生成",
+    "generating": "生成中…",
+    "englishPlaceholder": "英語テキスト…"
   },
   "meta": {
     "publishing": "公開設定",
@@ -120,7 +130,14 @@
     "metaChars": "{count}/60 文字",
     "metaDescription": "メタディスクリプション",
     "metaDescriptionPlaceholder": "検索結果に表示する概要（150〜160文字程度が目安）",
-    "metaDescChars": "{count}/160 文字"
+    "metaDescChars": "{count}/160 文字",
+    "translations": "翻訳・英語",
+    "titleEn": "タイトル（英語）",
+    "titleEnPlaceholder": "/en ページ用の英語タイトル（任意）",
+    "excerptEn": "抜粋（英語）",
+    "excerptEnPlaceholder": "/en ページ用の英語抜粋（任意）",
+    "generateEnglishMeta": "タイトル・抜粋から英語を生成",
+    "generatingEnglish": "生成中…"
   },
   "blocks": {
     "insertBlock": "ブロックを挿入",

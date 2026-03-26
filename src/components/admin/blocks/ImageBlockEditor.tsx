@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { translateBlockEnAction } from '@/actions/block-translation';
 import type { ImageBlock } from '@/types';
 import { imageSrcOrFallback } from '@/lib/article-utils';
 import ImageUpload from '../ImageUpload';
+import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
 
 const INPUT_CLS =
   'w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
@@ -22,7 +25,36 @@ export default function ImageBlockEditor({
   draftId: string;
 }) {
   const t = useTranslations('admin.image');
+  const [tab, setTab] = useState<'original' | 'english'>('original');
+  const [generating, setGenerating] = useState(false);
   const preview = imageSrcOrFallback(block.url, '');
+
+  async function handleGenerate() {
+    setGenerating(true);
+    try {
+      const result = await translateBlockEnAction({
+        type: 'image',
+        alt: block.alt,
+        caption: block.caption,
+      });
+      if (result.type === 'image') {
+        onChange({
+          ...block,
+          altEn: result.altEn,
+          captionEn: result.captionEn,
+        });
+        setTab('english');
+      }
+    } catch (e) {
+      console.error(e);
+      alert(e instanceof Error ? e.message : 'Translation failed');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  const canGenerate = Boolean(block.alt.trim());
+
   return (
     <div className="space-y-2.5">
       {preview && (
@@ -85,18 +117,45 @@ export default function ImageBlockEditor({
         value={block.url}
         onChange={(e) => onChange({ ...block, url: e.target.value })}
       />
-      <input
-        className={INPUT_CLS}
-        placeholder={t('altPlaceholder')}
-        value={block.alt}
-        onChange={(e) => onChange({ ...block, alt: e.target.value })}
+
+      <BlockLocaleTabs
+        tab={tab}
+        onTabChange={setTab}
+        onGenerateEnglish={handleGenerate}
+        generating={generating}
+        generateDisabled={!canGenerate}
       />
-      <input
-        className={INPUT_CLS}
-        placeholder={t('captionPlaceholder')}
-        value={block.caption ?? ''}
-        onChange={(e) => onChange({ ...block, caption: e.target.value })}
-      />
+      {tab === 'original' ? (
+        <>
+          <input
+            className={INPUT_CLS}
+            placeholder={t('altPlaceholder')}
+            value={block.alt}
+            onChange={(e) => onChange({ ...block, alt: e.target.value })}
+          />
+          <input
+            className={INPUT_CLS}
+            placeholder={t('captionPlaceholder')}
+            value={block.caption ?? ''}
+            onChange={(e) => onChange({ ...block, caption: e.target.value })}
+          />
+        </>
+      ) : (
+        <>
+          <input
+            className={INPUT_CLS}
+            placeholder={t('altPlaceholder')}
+            value={block.altEn ?? ''}
+            onChange={(e) => onChange({ ...block, altEn: e.target.value })}
+          />
+          <input
+            className={INPUT_CLS}
+            placeholder={t('captionPlaceholder')}
+            value={block.captionEn ?? ''}
+            onChange={(e) => onChange({ ...block, captionEn: e.target.value })}
+          />
+        </>
+      )}
     </div>
   );
 }

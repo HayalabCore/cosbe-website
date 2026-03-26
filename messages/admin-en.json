@@ -84,7 +84,17 @@
     "words": "{count} words",
     "minRead": "{count} min read",
     "blocksLabel": "{count} blocks",
-    "postSettings": "Post settings"
+    "postSettings": "Post settings",
+    "previewAs": "Preview as",
+    "previewOriginal": "Japanese",
+    "previewEnglish": "English"
+  },
+  "blockLocale": {
+    "original": "Japanese",
+    "english": "English",
+    "generateEnglish": "Generate English",
+    "generating": "Generating…",
+    "englishPlaceholder": "English text…"
   },
   "meta": {
     "publishing": "Publishing",
@@ -120,7 +130,14 @@
     "metaChars": "{count}/60 chars",
     "metaDescription": "Meta description",
     "metaDescriptionPlaceholder": "Summary shown in search results (150–160 chars ideal)",
-    "metaDescChars": "{count}/160 chars"
+    "metaDescChars": "{count}/160 chars",
+    "translations": "Translations",
+    "titleEn": "Title (English)",
+    "titleEnPlaceholder": "Optional English title for /en pages",
+    "excerptEn": "Excerpt (English)",
+    "excerptEnPlaceholder": "Optional English excerpt",
+    "generateEnglishMeta": "Generate English from title & excerpt",
+    "generatingEnglish": "Generating…"
   },
   "blocks": {
     "insertBlock": "Insert block",

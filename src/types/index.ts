@@ -22,23 +22,30 @@ export interface HeadingBlock extends BaseBlock {
   type: 'heading';
   level: 1 | 2 | 3 | 4;
   content: string;
+  /** English alternate (plain); shown on /en when set */
+  contentEn?: string;
 }
 
 export interface ParagraphBlock extends BaseBlock {
   type: 'paragraph';
   content: string;
+  /** English alternate (HTML, same semantics as `content`); shown on /en when set */
+  contentEn?: string;
 }
 
 export interface ListBlock extends BaseBlock {
   type: 'list';
   listType: 'bullet' | 'numbered';
   items: string[];
+  itemsEn?: string[];
 }
 
 export interface QuoteBlock extends BaseBlock {
   type: 'quote';
   content: string;
   citation?: string;
+  contentEn?: string;
+  citationEn?: string;
 }
 
 export interface CalloutBlock extends BaseBlock {
@@ -47,6 +54,8 @@ export interface CalloutBlock extends BaseBlock {
   title?: string;
   content: string;
   linkedArticleId?: string;
+  titleEn?: string;
+  contentEn?: string;
 }
 
 export interface ImageBlock extends BaseBlock {
@@ -54,6 +63,8 @@ export interface ImageBlock extends BaseBlock {
   url: string;
   alt: string;
   caption?: string;
+  altEn?: string;
+  captionEn?: string;
 }
 
 export interface CodeBlock extends BaseBlock {
@@ -71,6 +82,7 @@ export interface EmbedBlock extends BaseBlock {
   embedType: 'youtube' | 'twitter' | 'link';
   url: string;
   title?: string;
+  titleEn?: string;
 }
 
 export type ContentBlock =
@@ -127,7 +139,9 @@ export interface Article {
   id: string;
   slug: string;
   title: string;
+  titleEn?: string;
   excerpt?: string;
+  excerptEn?: string;
   featuredImage?: string;
   status: ArticleStatus;
   category: ContentCategory;
@@ -147,7 +161,9 @@ export interface ArticleListItem {
   id: string;
   slug: string;
   title: string;
+  titleEn?: string;
   excerpt?: string;
+  excerptEn?: string;
   featuredImage?: string;
   category: ContentCategory;
   tags: string[];

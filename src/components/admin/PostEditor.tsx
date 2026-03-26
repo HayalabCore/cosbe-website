@@ -11,6 +11,11 @@ import {
   generateTOC,
   normalizeSlugInput,
 } from '@/lib/article-utils';
+import {
+  resolveArticleExcerpt,
+  resolveArticleTitle,
+  resolveBlocksForLocale,
+} from '@/lib/article-locale';
 import { stripHtmlForMetrics } from '@/lib/sanitize-article-html';
 import {
   createArticleAction,
@@ -35,8 +40,10 @@ const defaultAuthor = { id: 'author-1', name: 'Editor', designation: 'CosBE' };
 
 function buildArticlePayload(
   title: string,
+  titleEn: string,
   slug: string,
   excerpt: string,
+  excerptEn: string,
   featuredImage: string,
   category: ContentCategory,
   tagsStr: string,
@@ -57,7 +64,9 @@ function buildArticlePayload(
   return {
     slug: safeSlug,
     title: title || untitledFallback,
+    titleEn: titleEn.trim() || undefined,
     excerpt: excerpt || undefined,
+    excerptEn: excerptEn.trim() || undefined,
     featuredImage: featuredImage || undefined,
     status,
     category,
@@ -128,8 +137,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const titleRef = useRef<HTMLTextAreaElement>(null);
 
   const [title, setTitle] = useState('');
+  const [titleEn, setTitleEn] = useState('');
   const [slug, setSlug] = useState('');
   const [excerpt, setExcerpt] = useState('');
+  const [excerptEn, setExcerptEn] = useState('');
   const [featuredImage, setFeaturedImage] = useState('');
   const [category, setCategory] = useState<ContentCategory>('useful-info');
   const [tags, setTags] = useState('');
@@ -140,9 +151,11 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   );
   const [seo, setSeo] = useState<ArticleSEO>({});
   const [blocks, setBlocks] = useState<ContentBlock[]>([
+    createEmptyBlock('heading'),
     createEmptyBlock('paragraph'),
   ]);
   const [persistedId, setPersistedId] = useState<string | undefined>(articleId);
+  const [previewLocale, setPreviewLocale] = useState<'ja' | 'en'>('ja');
 
   const load = useCallback(async () => {
     if (!articleId) return;
@@ -152,8 +165,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
       return;
     }
     setTitle(row.title);
+    setTitleEn(row.titleEn ?? '');
     setSlug(row.slug);
     setExcerpt(row.excerpt ?? '');
+    setExcerptEn(row.excerptEn ?? '');
     setFeaturedImage(row.featuredImage ?? '');
     setCategory(row.category);
     setTags(row.tags.join(', '));
@@ -161,7 +176,11 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     setAuthorName(row.author.name);
     setAuthorDesignation(row.author.designation);
     setSeo(row.seo ?? {});
-    setBlocks(row.blocks.length ? row.blocks : [createEmptyBlock('paragraph')]);
+    setBlocks(
+      row.blocks.length
+        ? row.blocks
+        : [createEmptyBlock('heading'), createEmptyBlock('paragraph')]
+    );
     setPersistedId(row.id);
     setLoaded(true);
   }, [articleId, router]);
@@ -181,8 +200,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
   function applyMeta(patch: PostMetaPatch) {
     if (patch.title !== undefined) setTitle(patch.title);
+    if (patch.titleEn !== undefined) setTitleEn(patch.titleEn);
     if (patch.slug !== undefined) setSlug(normalizeSlugInput(patch.slug));
     if (patch.excerpt !== undefined) setExcerpt(patch.excerpt);
+    if (patch.excerptEn !== undefined) setExcerptEn(patch.excerptEn);
     if (patch.featuredImage !== undefined)
       setFeaturedImage(patch.featuredImage);
     if (patch.category !== undefined) setCategory(patch.category);
@@ -205,8 +226,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
           : status;
       const payload = buildArticlePayload(
         title,
+        titleEn,
         slug,
         excerpt,
+        excerptEn,
         featuredImage,
         category,
         tags,
@@ -264,6 +287,15 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const words = wordCount(blocks);
   const readingMins = Math.max(1, Math.ceil(words / 200));
   const isPublished = status === 'published';
+
+  const previewLocaleStr = previewLocale;
+  const previewTitle =
+    resolveArticleTitle({ title, titleEn }, previewLocaleStr) || t('untitled');
+  const previewExcerptResolved = resolveArticleExcerpt(
+    { excerpt, excerptEn },
+    previewLocaleStr
+  );
+  const previewBlocks = resolveBlocksForLocale(blocks, previewLocaleStr);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -340,6 +372,33 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
           </button>
         </div>
 
+        {tab === 'preview' && (
+          <div className="hidden sm:flex rounded-lg border border-slate-200 p-0.5 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setPreviewLocale('ja')}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
+                previewLocale === 'ja'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              {t('previewOriginal')}
+            </button>
+            <button
+              type="button"
+              onClick={() => setPreviewLocale('en')}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
+                previewLocale === 'en'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              {t('previewEnglish')}
+            </button>
+          </div>
+        )}
+
         <SaveIndicator saving={saving} label={t('saving')} />
 
         {saveSuccess && !saving && (
@@ -383,14 +442,14 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         <div className="w-full min-w-0 px-4 md:px-8 lg:px-10 py-10">
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 md:p-10 lg:p-12">
             <h1 className="text-3xl font-bold text-slate-900 mb-6">
-              {title || t('untitled')}
+              {previewTitle}
             </h1>
-            {excerpt && (
+            {previewExcerptResolved ? (
               <p className="text-base text-slate-500 mb-8 leading-relaxed border-l-4 border-primaryColor pl-4">
-                {excerpt}
+                {previewExcerptResolved}
               </p>
-            )}
-            {blocks.map((b) => (
+            ) : null}
+            {previewBlocks.map((b) => (
               <BlockRenderer key={b.id} block={b} />
             ))}
           </div>
@@ -451,7 +510,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 supabase={supabase}
                 draftId={persistedId ?? draftId}
                 title={title}
+                titleEn={titleEn}
                 slug={slug}
+                excerpt={excerpt}
+                excerptEn={excerptEn}
                 featuredImage={featuredImage}
                 category={category}
                 tags={tags}
@@ -474,7 +536,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 supabase={supabase}
                 draftId={persistedId ?? draftId}
                 title={title}
+                titleEn={titleEn}
                 slug={slug}
+                excerpt={excerpt}
+                excerptEn={excerptEn}
                 featuredImage={featuredImage}
                 category={category}
                 tags={tags}

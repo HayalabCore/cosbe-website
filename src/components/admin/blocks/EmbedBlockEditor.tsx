@@ -1,7 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { translateBlockEnAction } from '@/actions/block-translation';
 import type { EmbedBlock } from '@/types';
+import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
 
 const EMBED_TYPES: {
   value: EmbedBlock['embedType'];
@@ -24,6 +27,28 @@ export default function EmbedBlockEditor({
   onChange: (b: EmbedBlock) => void;
 }) {
   const t = useTranslations('admin.embed');
+  const [tab, setTab] = useState<'original' | 'english'>('original');
+  const [generating, setGenerating] = useState(false);
+
+  async function handleGenerate() {
+    setGenerating(true);
+    try {
+      const result = await translateBlockEnAction({
+        type: 'embed',
+        title: block.title,
+      });
+      if (result.type === 'embed') {
+        onChange({ ...block, titleEn: result.titleEn });
+        setTab('english');
+      }
+    } catch (e) {
+      console.error(e);
+      alert(e instanceof Error ? e.message : 'Translation failed');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
   return (
     <div className="space-y-2.5">
       <div className="flex gap-1.5">
@@ -49,11 +74,22 @@ export default function EmbedBlockEditor({
         value={block.url}
         onChange={(e) => onChange({ ...block, url: e.target.value })}
       />
+      <BlockLocaleTabs
+        tab={tab}
+        onTabChange={setTab}
+        onGenerateEnglish={handleGenerate}
+        generating={generating}
+        generateDisabled={!block.title?.trim()}
+      />
       <input
         className={INPUT_CLS}
         placeholder={t('titlePlaceholder')}
-        value={block.title ?? ''}
-        onChange={(e) => onChange({ ...block, title: e.target.value })}
+        value={tab === 'original' ? (block.title ?? '') : (block.titleEn ?? '')}
+        onChange={(e) =>
+          tab === 'original'
+            ? onChange({ ...block, title: e.target.value })
+            : onChange({ ...block, titleEn: e.target.value })
+        }
       />
     </div>
   );

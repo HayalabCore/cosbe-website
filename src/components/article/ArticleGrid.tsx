@@ -43,6 +43,7 @@ async function ArticleGridInner(props: ArticleGridProps) {
   return (
     <ContentCardGrid
       items={items}
+      locale={locale}
       detailBasePath={detailBasePath}
       categoryLabel={categoryLabel}
       columns={columns}

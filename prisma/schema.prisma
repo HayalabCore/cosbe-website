@@ -13,7 +13,9 @@ model Article {
   id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   slug              String    @unique
   title             String
+  titleEn           String?   @map("title_en")
   excerpt           String?
+  excerptEn         String?   @map("excerpt_en")
   featuredImage     String?   @map("featured_image")
   status            String    @default("draft")
   category          String
