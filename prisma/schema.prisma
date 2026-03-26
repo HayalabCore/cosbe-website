@@ -8,28 +8,64 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum ArticleStatus {
+  draft
+  published
+  archived
+}
+
+/// Author entity — shared across articles to avoid denormalization.
+model Author {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  designation String    @default("")
+  bio         String?
+  avatarUrl   String?   @map("avatar_url")
+  socialLinks Json?     @map("social_links")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  articles    Article[]
+
+  @@map("authors")
+}
+
 /// CMS article row (managed via Prisma Migrate — do not hand-edit SQL for this table).
 model Article {
-  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  slug              String    @unique
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug              String        @unique
   title             String
-  titleEn           String?   @map("title_en")
+  titleEn           String?       @map("title_en")
   excerpt           String?
-  excerptEn         String?   @map("excerpt_en")
-  featuredImage     String?   @map("featured_image")
-  status            String    @default("draft")
+  excerptEn         String?       @map("excerpt_en")
+  featuredImage     String?       @map("featured_image")
+  status            ArticleStatus @default(draft)
   category          String
-  tags              String[]  @default([])
-  author            Json
+  tags              String[]      @default([])
+  authorId          String        @map("author_id") @db.Uuid
+  author            Author        @relation(fields: [authorId], references: [id])
   blocks            Json
   toc               Json
   seo               Json?
-  relatedArticleIds String[]  @default([]) @map("related_article_ids")
-  viewCount         Int       @default(0) @map("view_count")
-  publishedAt       DateTime? @map("published_at") @db.Timestamptz(6)
-  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  relatedArticleIds String[]      @default([]) @map("related_article_ids")
+  viewCount         Int           @default(0) @map("view_count")
+  publishedAt       DateTime?     @map("published_at") @db.Timestamptz(6)
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  views             ArticleView[]
 
   @@index([status, category, publishedAt(sort: Desc)])
+  @@index([tags], type: Gin, map: "articles_tags_gin_idx")
   @@map("articles")
+}
+
+/// Append-only view log for analytics. The hot write path uses this instead of
+/// incrementing view_count inline on every page request.
+model ArticleView {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  articleId String   @map("article_id") @db.Uuid
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  viewedAt  DateTime @default(now()) @map("viewed_at") @db.Timestamptz(6)
+
+  @@index([articleId, viewedAt])
+  @@map("article_views")
 }

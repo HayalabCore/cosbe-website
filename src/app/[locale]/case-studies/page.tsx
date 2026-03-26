@@ -7,11 +7,12 @@ import type { Metadata } from 'next';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
 };
 
 export async function generateMetadata({
   params,
-}: PageProps): Promise<Metadata> {
+}: Pick<PageProps, 'params'>): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'caseStudiesPage' });
   return {
@@ -25,8 +26,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function CaseStudiesPage({ params }: PageProps) {
+export default async function CaseStudiesPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { locale } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? '1', 10) || 1);
   const t = await getTranslations('caseStudiesPage');
 
   const categories = caseStudyCategories.map((cat) => ({
@@ -80,12 +86,8 @@ export default async function CaseStudiesPage({ params }: PageProps) {
             categoryLabel={t('breadcrumb.caseStudies')}
             emptyMessage={t('noArticles')}
             columns="3"
+            page={page}
           />
-          <div className="flex justify-center mb-16 mt-12">
-            <span className="px-4 py-2 bg-primaryColor text-white rounded font-semibold">
-              1
-            </span>
-          </div>
         </div>
       </div>
 

@@ -4,9 +4,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import {
-  deleteArticleAction,
+  archiveArticleAction,
+  hardDeleteArticleAction,
   listArticlesAdminAction,
   publishArticleAction,
+  restoreArticleAction,
   unpublishArticleAction,
 } from '@/actions/articles';
 import type { ArticleListItem, ArticleStatus, ContentCategory } from '@/types';
@@ -134,9 +136,30 @@ export default function AdminDashboardPage() {
     [t]
   );
 
-  async function handleDelete(id: string, title: string) {
-    if (!confirm(t('deleteConfirm', { title }))) return;
-    await deleteArticleAction(id);
+  async function handleArchive(
+    id: string,
+    title: string,
+    slug: string,
+    category: ContentCategory
+  ) {
+    if (!confirm(t('archiveConfirm', { title }))) return;
+    await archiveArticleAction(id, slug, category);
+    void load();
+  }
+
+  async function handleRestore(id: string) {
+    await restoreArticleAction(id);
+    void load();
+  }
+
+  async function handleHardDelete(
+    id: string,
+    title: string,
+    slug: string,
+    category: ContentCategory
+  ) {
+    if (!confirm(t('hardDeleteConfirm', { title }))) return;
+    await hardDeleteArticleAction(id, slug, category);
     void load();
   }
 
@@ -528,29 +551,89 @@ export default function AdminDashboardPage() {
                               </button>
                             )}
 
-                            {/* Delete */}
-                            <button
-                              type="button"
-                              title={t('deleteTitle')}
-                              onClick={() =>
-                                void handleDelete(row.id, row.title)
-                              }
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth={1.75}
-                                viewBox="0 0 24 24"
+                            {/* Archive / Restore / Hard-delete */}
+                            {row.status === 'archived' ? (
+                              <>
+                                {/* Restore */}
+                                <button
+                                  type="button"
+                                  title={t('restoreTitle')}
+                                  onClick={() => void handleRestore(row.id)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                                >
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={1.75}
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                  </svg>
+                                </button>
+                                {/* Hard delete — only shown for archived */}
+                                <button
+                                  type="button"
+                                  title={t('hardDeleteTitle')}
+                                  onClick={() =>
+                                    void handleHardDelete(
+                                      row.id,
+                                      row.title,
+                                      row.slug,
+                                      row.category
+                                    )
+                                  }
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                >
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={1.75}
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    />
+                                  </svg>
+                                </button>
+                              </>
+                            ) : (
+                              /* Archive */
+                              <button
+                                type="button"
+                                title={t('archiveTitle')}
+                                onClick={() =>
+                                  void handleArchive(
+                                    row.id,
+                                    row.title,
+                                    row.slug,
+                                    row.category
+                                  )
+                                }
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                />
-                              </svg>
-                            </button>
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth={1.75}
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                                  />
+                                </svg>
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>

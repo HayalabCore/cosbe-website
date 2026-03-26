@@ -56,11 +56,14 @@
     "tablePublished": "公開日",
     "tableActions": "操作",
     "showing": "{total} 件中 {shown} 件を表示",
-    "deleteConfirm": "「{title}」を削除しますか？この操作は取り消せません。",
+    "archiveConfirm": "「{title}」をアーカイブしますか？サイトから非表示になりますが、後で復元できます。",
+    "hardDeleteConfirm": "「{title}」を完全に削除しますか？この操作は取り消せません。",
     "editTitle": "編集",
     "unpublishTitle": "非公開にする",
     "publishTitle": "公開する",
-    "deleteTitle": "削除"
+    "archiveTitle": "アーカイブ",
+    "restoreTitle": "下書きに戻す",
+    "hardDeleteTitle": "完全に削除"
   },
   "editor": {
     "loadingPost": "記事を読み込み中…",

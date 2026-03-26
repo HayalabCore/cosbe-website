@@ -4,10 +4,11 @@ import { ArticleDetailLayout } from '@/components';
 import { generateTOC, generateTOCForLocale } from '@/lib/article-utils';
 import { resolveArticleTitle } from '@/lib/article-locale';
 import { buildArticlePageMetadata } from '@/lib/article-page-metadata';
+import { after } from 'next/server';
 import {
   getArticleBySlug,
   getRelatedArticles,
-  incrementViewCount,
+  logArticleView,
 } from '@/lib/articles';
 import type { Metadata } from 'next';
 
@@ -29,11 +30,8 @@ export default async function UsefulColumnArticlePage({ params }: Props) {
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  try {
-    await incrementViewCount(article.id);
-  } catch {
-    /* RPC optional */
-  }
+  // Log the view after the response is sent — decoupled from render time
+  after(() => logArticleView(article.id).catch(() => {}));
 
   const toc =
     locale === 'en'

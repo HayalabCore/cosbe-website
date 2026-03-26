@@ -56,11 +56,14 @@
     "tablePublished": "Published",
     "tableActions": "Actions",
     "showing": "Showing {shown} of {total} posts",
-    "deleteConfirm": "Delete \"{title}\"? This cannot be undone.",
+    "archiveConfirm": "Archive \"{title}\"? It will be hidden from the site but can be restored.",
+    "hardDeleteConfirm": "Permanently delete \"{title}\"? This cannot be undone.",
     "editTitle": "Edit",
     "unpublishTitle": "Unpublish",
     "publishTitle": "Publish",
-    "deleteTitle": "Delete"
+    "archiveTitle": "Archive",
+    "restoreTitle": "Restore to draft",
+    "hardDeleteTitle": "Permanently delete"
   },
   "editor": {
     "loadingPost": "Loading post…",

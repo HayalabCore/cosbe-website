@@ -6,10 +6,13 @@ import ArticleGrid from '@/components/article/ArticleGrid';
 
 interface Props {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
-export default async function NoticePage({ params }: Props) {
+export default async function NoticePage({ params, searchParams }: Props) {
   const { locale } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? '1', 10) || 1);
   const t = await getTranslations('noticePage');
 
   return (
@@ -49,12 +52,8 @@ export default async function NoticePage({ params }: Props) {
           columns="3"
           fallbackImage="/notice/notice-01.jpeg"
           emptyMessage={t('heroSubtitle')}
+          page={page}
         />
-        <div className="flex justify-center items-center gap-2 mt-12">
-          <span className="w-10 h-10 flex items-center justify-center bg-primaryColor text-white rounded font-medium">
-            1
-          </span>
-        </div>
       </main>
 
       <section className="relative py-20 md:py-24 overflow-hidden">
