@@ -27,7 +27,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ContentBlock } from '@/types';
 import { createEmptyBlock } from '@/lib/article-utils';
 import HeadingBlockEditor from './blocks/HeadingBlockEditor';
@@ -43,8 +42,6 @@ import DividerBlockEditor from './blocks/DividerBlockEditor';
 type Props = {
   blocks: ContentBlock[];
   onChange: (blocks: ContentBlock[]) => void;
-  supabase: SupabaseClient;
-  draftId: string;
 };
 
 type BlockMeta = {
@@ -409,8 +406,6 @@ function SortableBlockRow({
   block,
   index,
   blocksLength,
-  supabase,
-  draftId,
   openMenu,
   setOpenMenu,
   updateAt,
@@ -428,8 +423,6 @@ function SortableBlockRow({
   block: ContentBlock;
   index: number;
   blocksLength: number;
-  supabase: SupabaseClient;
-  draftId: string;
   openMenu: number | null;
   setOpenMenu: (v: number | null) => void;
   updateAt: (index: number, block: ContentBlock) => void;
@@ -574,12 +567,7 @@ function SortableBlockRow({
             />
           )}
           {block.type === 'image' && (
-            <ImageBlockEditor
-              block={block}
-              onChange={(b) => updateAt(i, b)}
-              supabase={supabase}
-              draftId={draftId}
-            />
+            <ImageBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
           )}
           {block.type === 'code' && (
             <CodeBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
@@ -631,12 +619,7 @@ function SortableBlockRow({
   );
 }
 
-export default function BlockEditor({
-  blocks,
-  onChange,
-  supabase,
-  draftId,
-}: Props) {
+export default function BlockEditor({ blocks, onChange }: Props) {
   const t = useTranslations('admin.blocks');
   const blockMeta = useBlockMeta();
   const [openMenu, setOpenMenu] = useState<number | null>(null);
@@ -762,8 +745,6 @@ export default function BlockEditor({
                 block={block}
                 index={i}
                 blocksLength={blocks.length}
-                supabase={supabase}
-                draftId={draftId}
                 openMenu={openMenu}
                 setOpenMenu={setOpenMenu}
                 updateAt={updateAt}

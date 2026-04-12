@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { revalidatePath } from 'next/cache';
-import { articleDetailBasePath } from '@/lib/articlePaths';
+import { articleDetailBasePath } from '@/lib/article-paths';
 import { routing } from '@/i18n/routing';
 import type { ContentCategory } from '@/types';
 

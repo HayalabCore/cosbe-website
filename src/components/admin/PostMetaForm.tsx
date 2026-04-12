@@ -5,7 +5,6 @@ import { translateArticleMetaEnAction } from '@/actions/block-translation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import type { ArticleSEO, ArticleStatus, ContentCategory } from '@/types';
-import type { SupabaseClient } from '@supabase/supabase-js';
 import {
   createFallbackSlug,
   imageSrcOrFallback,
@@ -42,8 +41,6 @@ export type PostMetaPatch = {
 };
 
 type Props = {
-  supabase: SupabaseClient;
-  draftId: string;
   title: string;
   titleEn: string;
   slug: string;
@@ -99,8 +96,6 @@ function SectionHeader({
 }
 
 export default function PostMetaForm({
-  supabase,
-  draftId,
   title,
   titleEn,
   slug,
@@ -355,14 +350,16 @@ export default function PostMetaForm({
         {openSections.media && (
           <div className="px-4 pb-4 space-y-2.5">
             {previewSrc ? (
-              <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-slate-100 group">
-                <Image
-                  src={previewSrc}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="280px"
-                />
+              <div className="relative w-full h-[200px] max-h-[min(50vh,360px)] min-h-[120px] rounded-lg overflow-hidden bg-slate-100 group">
+                <div className="absolute inset-2">
+                  <Image
+                    src={previewSrc}
+                    alt=""
+                    fill
+                    className="object-contain"
+                    sizes="280px"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
                   <button
                     type="button"
@@ -402,8 +399,6 @@ export default function PostMetaForm({
                   />
                 </svg>
                 <ImageUpload
-                  supabase={supabase}
-                  articleId={draftId}
                   label={t('uploadFeaturedImage')}
                   onUploaded={(url) => onChange({ featuredImage: url })}
                 />

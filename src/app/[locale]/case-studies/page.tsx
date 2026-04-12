@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import { caseStudyCategories } from '@/data/caseStudies';
+import { caseStudyCategories } from '@/data/case-studies';
 import { Breadcrumb } from '@/components';
 import ArticleGrid from '@/components/article/ArticleGrid';
 import type { Metadata } from 'next';

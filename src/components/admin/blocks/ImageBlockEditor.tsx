@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import type { SupabaseClient } from '@supabase/supabase-js';
 import { translateBlockEnAction } from '@/actions/block-translation';
 import type { ImageBlock } from '@/types';
 import { imageSrcOrFallback } from '@/lib/article-utils';
@@ -16,13 +15,9 @@ const INPUT_CLS =
 export default function ImageBlockEditor({
   block,
   onChange,
-  supabase,
-  draftId,
 }: {
   block: ImageBlock;
   onChange: (b: ImageBlock) => void;
-  supabase: SupabaseClient;
-  draftId: string;
 }) {
   const t = useTranslations('admin.image');
   const [tab, setTab] = useState<'original' | 'english'>('original');
@@ -58,14 +53,16 @@ export default function ImageBlockEditor({
   return (
     <div className="space-y-2.5">
       {preview && (
-        <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
-          <Image
-            src={preview}
-            alt={block.alt || t('previewAlt')}
-            fill
-            className="object-cover"
-            sizes="600px"
-          />
+        <div className="relative w-full h-[min(40vh,420px)] min-h-[140px] max-h-[min(70vh,560px)] rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
+          <div className="absolute inset-2">
+            <Image
+              src={preview}
+              alt={block.alt || t('previewAlt')}
+              fill
+              className="object-contain"
+              sizes="600px"
+            />
+          </div>
           <button
             type="button"
             onClick={() => onChange({ ...block, url: '' })}
@@ -104,8 +101,6 @@ export default function ImageBlockEditor({
             />
           </svg>
           <ImageUpload
-            supabase={supabase}
-            articleId={draftId}
             label={t('upload')}
             onUploaded={(url) => onChange({ ...block, url })}
           />

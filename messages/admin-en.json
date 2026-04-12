@@ -22,6 +22,7 @@
     "contentSection": "Content",
     "allPosts": "All Posts",
     "newPost": "New Post",
+    "media": "Media",
     "viewSite": "View Site",
     "signOut": "Sign Out"
   },
@@ -245,7 +246,7 @@
   "image": {
     "previewAlt": "Preview",
     "removeImage": "Remove image",
-    "upload": "Upload image",
+    "upload": "Media library",
     "pasteUrl": "Or paste image URL",
     "altPlaceholder": "Alt text (for accessibility)",
     "captionPlaceholder": "Caption (optional)"
@@ -264,8 +265,31 @@
     "label": "Horizontal divider"
   },
   "imageUpload": {
-    "defaultLabel": "Upload image",
+    "defaultLabel": "Choose from media library",
     "uploading": "Uploading…",
     "uploadFailed": "Upload failed"
+  },
+  "media": {
+    "title": "Media library",
+    "pageTitle": "Media library",
+    "pageSubtitle": "Upload once and reuse images across articles.",
+    "searchPlaceholder": "Search by filename or URL…",
+    "uploadNew": "Upload new",
+    "uploading": "Uploading…",
+    "cancel": "Cancel",
+    "useImage": "Use this image",
+    "loading": "Loading…",
+    "empty": "No images yet. Upload one to get started.",
+    "loadFailed": "Could not load media.",
+    "uploadFailed": "Upload failed.",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {totalPages}",
+    "delete": "Delete",
+    "deleteConfirm": "Remove \"{name}\" from the library? Files still linked in articles will show broken images until you update those articles.",
+    "deleteFailed": "Could not delete.",
+    "viewFull": "View",
+    "lightboxAria": "Full size image",
+    "closeLightbox": "Close"
   }
 }

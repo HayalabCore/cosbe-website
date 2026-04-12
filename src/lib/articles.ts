@@ -1,3 +1,3 @@
 import 'server-only';
 
-export * from './articles.repository';
+export * from './articles-repository';

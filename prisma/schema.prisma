@@ -69,3 +69,17 @@ model ArticleView {
   @@index([articleId, viewedAt])
   @@map("article_views")
 }
+
+/// Centralized media assets for the admin gallery (Supabase Storage + metadata).
+model MediaLibrary {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  filename  String
+  url       String   @unique
+  size      Int?
+  mimeType  String?  @map("mime_type")
+  alt       String   @default("")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([createdAt(sort: Desc)])
+  @@map("media_library")
+}

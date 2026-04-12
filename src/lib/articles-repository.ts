@@ -267,7 +267,7 @@ export async function createArticleRecord(
       titleEn: data.titleEn ?? null,
       excerpt: data.excerpt ?? null,
       excerptEn: data.excerptEn ?? null,
-      featuredImage: data.featuredImage ?? null,
+      featuredImage: data.featuredImage?.trim() || null,
       status: data.status,
       category: data.category,
       tags: data.tags ?? [],
@@ -295,7 +295,7 @@ export async function updateArticleRecord(
   if (data.excerpt !== undefined) patch.excerpt = data.excerpt ?? null;
   if (data.excerptEn !== undefined) patch.excerptEn = data.excerptEn ?? null;
   if (data.featuredImage !== undefined)
-    patch.featuredImage = data.featuredImage ?? null;
+    patch.featuredImage = data.featuredImage?.trim() || null;
   if (data.status !== undefined) patch.status = data.status;
   if (data.category !== undefined) patch.category = data.category;
   if (data.tags !== undefined) patch.tags = data.tags;

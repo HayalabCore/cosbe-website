@@ -1,5 +1,4 @@
 import type { ElementType } from 'react';
-import Image from 'next/image';
 import { imageSrcOrFallback } from '@/lib/article-utils';
 import { paragraphContentToHtml } from '@/lib/sanitize-article-html';
 import {
@@ -124,13 +123,14 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
       if (!src) return null;
       return (
         <figure className="my-8">
-          <div className="relative aspect-video rounded-xl overflow-hidden shadow-md">
-            <Image
+          <div className="rounded-xl bg-neutral-100 shadow-md overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={src}
               alt={image.alt}
-              fill
-              sizes="(max-width: 768px) 100vw, 700px"
-              className="object-cover"
+              className="w-full h-auto max-h-[min(92vh,1400px)] object-contain mx-auto block"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           {image.caption && (

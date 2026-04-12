@@ -22,6 +22,7 @@
     "contentSection": "コンテンツ",
     "allPosts": "すべての記事",
     "newPost": "新規記事",
+    "media": "メディア",
     "viewSite": "サイトを見る",
     "signOut": "ログアウト"
   },
@@ -157,17 +158,38 @@
         "label": "見出し",
         "description": "セクションタイトル（H2〜H4）"
       },
-      "paragraph": { "label": "段落", "description": "リッチテキスト" },
-      "list": { "label": "リスト", "description": "箇条書き・番号付き" },
-      "quote": { "label": "引用", "description": "引用と出典" },
+      "paragraph": {
+        "label": "段落",
+        "description": "リッチテキスト"
+      },
+      "list": {
+        "label": "リスト",
+        "description": "箇条書き・番号付き"
+      },
+      "quote": {
+        "label": "引用",
+        "description": "引用と出典"
+      },
       "callout": {
         "label": "コールアウト",
         "description": "情報・注意・ヒント枠"
       },
-      "image": { "label": "画像", "description": "アップロードまたはURL" },
-      "code": { "label": "コード", "description": "シンタックスハイライト" },
-      "divider": { "label": "区切り線", "description": "横方向の区切り" },
-      "embed": { "label": "埋め込み", "description": "YouTube、X、URL" }
+      "image": {
+        "label": "画像",
+        "description": "アップロードまたはURL"
+      },
+      "code": {
+        "label": "コード",
+        "description": "シンタックスハイライト"
+      },
+      "divider": {
+        "label": "区切り線",
+        "description": "横方向の区切り"
+      },
+      "embed": {
+        "label": "埋め込み",
+        "description": "YouTube、X、URL"
+      }
     }
   },
   "paragraph": {
@@ -242,7 +264,7 @@
   "image": {
     "previewAlt": "プレビュー",
     "removeImage": "画像を削除",
-    "upload": "画像をアップロード",
+    "upload": "メディアライブラリ",
     "pasteUrl": "または画像URLを貼り付け",
     "altPlaceholder": "代替テキスト（アクセシビリティ）",
     "captionPlaceholder": "キャプション（任意）"
@@ -261,8 +283,31 @@
     "label": "横方向の区切り線"
   },
   "imageUpload": {
-    "defaultLabel": "画像をアップロード",
+    "defaultLabel": "メディアライブラリから選択",
     "uploading": "アップロード中…",
     "uploadFailed": "アップロードに失敗しました"
+  },
+  "media": {
+    "title": "メディアライブラリ",
+    "pageTitle": "メディアライブラリ",
+    "pageSubtitle": "一度アップロードすれば、複数の記事で同じ画像を使い回せます。",
+    "searchPlaceholder": "ファイル名やURLで検索…",
+    "uploadNew": "新規アップロード",
+    "uploading": "アップロード中…",
+    "cancel": "キャンセル",
+    "useImage": "この画像を使う",
+    "loading": "読み込み中…",
+    "empty": "画像がありません。アップロードしてください。",
+    "loadFailed": "メディアの読み込みに失敗しました。",
+    "uploadFailed": "アップロードに失敗しました。",
+    "prev": "前へ",
+    "next": "次へ",
+    "pageOf": "{page} / {totalPages} ページ",
+    "delete": "削除",
+    "deleteConfirm": "「{name}」をライブラリから削除しますか？記事で使用中のURLは、記事を直すまで画像が表示されないことがあります。",
+    "deleteFailed": "削除に失敗しました。",
+    "viewFull": "表示",
+    "lightboxAria": "原寸画像",
+    "closeLightbox": "閉じる"
   }
 }

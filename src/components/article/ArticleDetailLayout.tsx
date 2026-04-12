@@ -4,7 +4,7 @@ import Breadcrumb from '@/components/shared/Breadcrumb';
 import TableOfContents from './TableOfContents';
 import BlockRenderer from './BlockRenderer';
 import { imageSrcOrFallback } from '@/lib/article-utils';
-import { articleDetailHref } from '@/lib/articlePaths';
+import { articleDetailHref } from '@/lib/article-paths';
 import {
   resolveArticleTitle,
   resolveBlocksForLocale,
@@ -128,14 +128,13 @@ export default function ArticleDetailLayout({
           <div className="flex-1 min-w-0">
             {featuredSrc ? (
               <div className="mb-10">
-                <div className="relative aspect-video rounded-xl overflow-hidden shadow-sm">
-                  <Image
+                <div className="rounded-xl overflow-hidden shadow-sm bg-neutral-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={featuredSrc}
                     alt={displayTitle}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 700px"
-                    className="object-cover"
-                    priority
+                    className="w-full h-auto max-h-[min(88vh,1200px)] object-contain mx-auto block"
+                    fetchPriority="high"
                   />
                 </div>
               </div>

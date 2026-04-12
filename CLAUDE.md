@@ -39,7 +39,7 @@ Admin routes live under `src/app/admin/(protected)/` and require a Supabase sess
 ### Data Layer
 
 - **Supabase (PostgreSQL)** via **Prisma** — single source of truth for all CMS content.
-- `src/lib/articles.repository.ts` — all article queries (also re-exported via `src/lib/articles.ts`).
+- `src/lib/articles-repository.ts` — all article queries (also re-exported via `src/lib/articles.ts`).
 - `src/actions/articles.ts` — Server Actions for CRUD + cache revalidation.
 - Images are stored in Supabase Storage (`article-images` bucket); see `src/lib/storage.ts`.
 
@@ -58,7 +58,7 @@ Admin routes live under `src/app/admin/(protected)/` and require a Supabase sess
 
 **`ArticleView`** — append-only view log for analytics. Written on every page visit via `logArticleView(id)` inside `after()` so it doesn't block the page render. Also increments `article.viewCount` in the same transaction.
 
-#### Repository functions (`src/lib/articles.repository.ts`)
+#### Repository functions (`src/lib/articles-repository.ts`)
 
 - `getArticles(options, admin?)` — list with `select: listItemSelect` (omits `blocks`/`toc`/`seo`), supports `page`/`pageSize` for offset pagination
 - `countArticles(options, admin?)` — total count for pagination UI

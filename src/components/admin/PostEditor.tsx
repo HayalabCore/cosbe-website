@@ -1,10 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import {
   createEmptyBlock,
   createFallbackSlug,
@@ -67,7 +66,7 @@ function buildArticlePayload(
     titleEn: titleEn.trim() || undefined,
     excerpt: excerpt || undefined,
     excerptEn: excerptEn.trim() || undefined,
-    featuredImage: featuredImage || undefined,
+    featuredImage: featuredImage.trim(),
     status,
     category,
     tags,
@@ -128,8 +127,6 @@ function SaveIndicator({ saving, label }: { saving: boolean; label: string }) {
 export default function PostEditor({ articleId }: { articleId?: string }) {
   const t = useTranslations('admin.editor');
   const router = useRouter();
-  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
-  const [draftId] = useState(() => articleId ?? `draft-${crypto.randomUUID()}`);
   const [tab, setTab] = useState<Tab>('edit');
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(!articleId);
@@ -492,12 +489,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               </span>
             </div>
 
-            <BlockEditor
-              blocks={blocks}
-              onChange={setBlocks}
-              supabase={supabase}
-              draftId={persistedId ?? draftId}
-            />
+            <BlockEditor blocks={blocks} onChange={setBlocks} />
           </div>
 
           {/* Settings sidebar */}
@@ -507,8 +499,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 {t('postSettings')}
               </p>
               <PostMetaForm
-                supabase={supabase}
-                draftId={persistedId ?? draftId}
                 title={title}
                 titleEn={titleEn}
                 slug={slug}
@@ -533,8 +523,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             </p>
             <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
               <PostMetaForm
-                supabase={supabase}
-                draftId={persistedId ?? draftId}
                 title={title}
                 titleEn={titleEn}
                 slug={slug}

@@ -8,7 +8,7 @@
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { createArticleRecord } from '../src/lib/articles.repository';
+import { createArticleRecord } from '../src/lib/articles-repository';
 import { generateId, generateTOC } from '../src/lib/article-utils';
 import type { ContentBlock, ContentCategory } from '../src/types';
 

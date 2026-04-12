@@ -1,0 +1,36 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import {
+  createMediaRecord,
+  deleteMediaRecord,
+  getMediaById,
+} from '@/lib/media-repository';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { deleteFromGallery } from '@/lib/storage';
+import type { CreateMediaInput } from '@/lib/media-repository';
+
+async function requireUser() {
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+  return { supabase, user };
+}
+
+export async function recordMediaAction(data: CreateMediaInput) {
+  await requireUser();
+  const row = await createMediaRecord(data);
+  revalidatePath('/admin/media');
+  return row;
+}
+
+export async function deleteMediaAction(id: string) {
+  const { supabase } = await requireUser();
+  const row = await getMediaById(id);
+  if (!row) throw new Error('Not found');
+  await deleteFromGallery(supabase, row.url);
+  await deleteMediaRecord(id);
+  revalidatePath('/admin/media');
+}

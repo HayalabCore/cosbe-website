@@ -7,7 +7,7 @@ import {
   caseStudyCategories,
   categoryToCaseStudies,
   validCategorySlugs,
-} from '@/data/caseStudies';
+} from '@/data/case-studies';
 import { Breadcrumb } from '@/components';
 
 type CategoryPageProps = {
