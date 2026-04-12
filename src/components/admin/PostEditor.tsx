@@ -37,6 +37,9 @@ type Tab = 'edit' | 'preview';
 
 const defaultAuthor = { id: 'author-1', name: 'Editor', designation: 'CosBE' };
 
+/** Autosave interval when the article has unsaved edits (idle saves are no-ops). */
+const AUTOSAVE_INTERVAL_MS = 10_000;
+
 function buildArticlePayload(
   title: string,
   titleEn: string,
@@ -127,11 +130,17 @@ function SaveIndicator({ saving, label }: { saving: boolean; label: string }) {
 export default function PostEditor({ articleId }: { articleId?: string }) {
   const t = useTranslations('admin.editor');
   const router = useRouter();
+  const isDirtyRef = useRef(false);
+  const autoSavingRef = useRef(false);
+  const savingRef = useRef(false);
+  const titleRef = useRef<HTMLTextAreaElement>(null);
+
   const [tab, setTab] = useState<Tab>('edit');
   const [saving, setSaving] = useState(false);
+  const [autoSavingUi, setAutoSavingUi] = useState(false);
   const [loaded, setLoaded] = useState(!articleId);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const titleRef = useRef<HTMLTextAreaElement>(null);
+  const [saveNotice, setSaveNotice] = useState<'manual' | 'auto' | null>(null);
+  savingRef.current = saving;
 
   const [title, setTitle] = useState('');
   const [titleEn, setTitleEn] = useState('');
@@ -156,6 +165,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
   const load = useCallback(async () => {
     if (!articleId) return;
+    isDirtyRef.current = false;
     const row = await getArticleByIdAction(articleId);
     if (!row) {
       router.replace('/admin/dashboard');
@@ -196,6 +206,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   }, [title]);
 
   function applyMeta(patch: PostMetaPatch) {
+    isDirtyRef.current = true;
     if (patch.title !== undefined) setTitle(patch.title);
     if (patch.titleEn !== undefined) setTitleEn(patch.titleEn);
     if (patch.slug !== undefined) setSlug(normalizeSlugInput(patch.slug));
@@ -212,9 +223,76 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     if (patch.seo !== undefined) setSeo(patch.seo);
   }
 
+  const runAutoSave = useCallback(async () => {
+    const id = persistedId;
+    if (
+      !id ||
+      !isDirtyRef.current ||
+      savingRef.current ||
+      autoSavingRef.current
+    ) {
+      return;
+    }
+    autoSavingRef.current = true;
+    setSaveNotice(null);
+    setAutoSavingUi(true);
+    try {
+      const payload = buildArticlePayload(
+        title,
+        titleEn,
+        slug,
+        excerpt,
+        excerptEn,
+        featuredImage,
+        category,
+        tags,
+        status,
+        authorName,
+        authorDesignation,
+        seo,
+        blocks,
+        t('untitled')
+      );
+      await updateArticleAction(id, payload);
+      isDirtyRef.current = false;
+      setSaveNotice('auto');
+      setTimeout(() => setSaveNotice(null), 2000);
+    } catch (e) {
+      console.error('Autosave failed', e);
+    } finally {
+      autoSavingRef.current = false;
+      setAutoSavingUi(false);
+    }
+  }, [
+    persistedId,
+    title,
+    titleEn,
+    slug,
+    excerpt,
+    excerptEn,
+    featuredImage,
+    category,
+    tags,
+    status,
+    authorName,
+    authorDesignation,
+    seo,
+    blocks,
+    t,
+  ]);
+
+  useEffect(() => {
+    if (!loaded || !persistedId) return;
+    const timer = window.setInterval(
+      () => void runAutoSave(),
+      AUTOSAVE_INTERVAL_MS
+    );
+    return () => window.clearInterval(timer);
+  }, [loaded, persistedId, runAutoSave]);
+
   async function save(publish: boolean) {
     setSaving(true);
-    setSaveSuccess(false);
+    setSaveNotice(null);
     try {
       const st: ArticleStatus = publish
         ? 'published'
@@ -245,8 +323,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         router.replace(`/admin/posts/${id}`);
       }
       if (publish) setStatus('published');
-      setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 2000);
+      isDirtyRef.current = false;
+      setSaveNotice('manual');
+      setTimeout(() => setSaveNotice(null), 2000);
       router.refresh();
     } catch (e) {
       console.error(e);
@@ -396,9 +475,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
           </div>
         )}
 
-        <SaveIndicator saving={saving} label={t('saving')} />
+        <SaveIndicator saving={saving || autoSavingUi} label={t('saving')} />
 
-        {saveSuccess && !saving && (
+        {saveNotice && !saving && !autoSavingUi && (
           <span className="hidden sm:flex items-center gap-1.5 text-xs text-emerald-600">
             <svg
               className="w-3.5 h-3.5"
@@ -411,13 +490,13 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 clipRule="evenodd"
               />
             </svg>
-            {t('saved')}
+            {saveNotice === 'auto' ? t('autoSaved') : t('saved')}
           </span>
         )}
 
         <button
           type="button"
-          disabled={saving}
+          disabled={saving || autoSavingUi}
           onClick={() => void save(false)}
           className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
         >
@@ -426,7 +505,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
         <button
           type="button"
-          disabled={saving}
+          disabled={saving || autoSavingUi}
           onClick={() => void save(true)}
           className="rounded-lg bg-primaryColor px-3 py-1.5 text-xs font-semibold text-white hover:bg-primaryHover disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
         >
@@ -459,7 +538,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             <textarea
               ref={titleRef}
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                isDirtyRef.current = true;
+                setTitle(e.target.value);
+              }}
               placeholder={t('postTitlePlaceholder')}
               rows={1}
               className="w-full resize-none text-3xl md:text-4xl font-bold text-slate-900 placeholder:text-slate-300 bg-transparent border-none outline-none leading-tight mb-4 overflow-hidden"
@@ -468,7 +550,10 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             {/* Excerpt */}
             <textarea
               value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
+              onChange={(e) => {
+                isDirtyRef.current = true;
+                setExcerpt(e.target.value);
+              }}
               placeholder={t('excerptPlaceholder')}
               rows={2}
               className="w-full resize-none text-base text-slate-500 placeholder:text-slate-300 bg-transparent border-none outline-none leading-relaxed mb-6"
@@ -489,7 +574,14 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               </span>
             </div>
 
-            <BlockEditor blocks={blocks} onChange={setBlocks} />
+            <BlockEditor
+              blocks={blocks}
+              onChange={(next) => {
+                isDirtyRef.current = true;
+                setBlocks(next);
+              }}
+              onParagraphBlur={() => void runAutoSave()}
+            />
           </div>
 
           {/* Settings sidebar */}

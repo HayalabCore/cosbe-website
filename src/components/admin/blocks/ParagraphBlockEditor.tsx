@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import type { Editor } from '@tiptap/core';
 import { useTranslations } from 'next-intl';
@@ -349,12 +349,19 @@ function RichParagraphPane({
   extensions,
   html,
   onHtmlChange,
+  onBlur,
 }: {
   paneKey: string;
   extensions: ReturnType<typeof createParagraphExtensions>;
   html: string;
   onHtmlChange: (html: string) => void;
+  onBlur?: () => void;
 }) {
+  const onBlurRef = useRef(onBlur);
+  useLayoutEffect(() => {
+    onBlurRef.current = onBlur;
+  }, [onBlur]);
+
   const editor = useEditor(
     {
       immediatelyRender: false,
@@ -364,6 +371,12 @@ function RichParagraphPane({
       editorProps: {
         attributes: {
           class: EDITOR_CHROME_CLASS,
+        },
+        handleDOMEvents: {
+          blur: () => {
+            onBlurRef.current?.();
+            return false;
+          },
         },
       },
       onUpdate: ({ editor: ed }) => {
@@ -387,9 +400,11 @@ function RichParagraphPane({
 export default function ParagraphBlockEditor({
   block,
   onChange,
+  onBlur,
 }: {
   block: ParagraphBlock;
   onChange: (b: ParagraphBlock) => void;
+  onBlur?: () => void;
 }) {
   const t = useTranslations('admin.paragraph');
   const te = useTranslations('admin.blockLocale');
@@ -444,6 +459,7 @@ export default function ParagraphBlockEditor({
           extensions={extensionsOriginal}
           html={block.content}
           onHtmlChange={(html) => onChange({ ...block, content: html })}
+          onBlur={onBlur}
         />
       )}
       {tab === 'english' && (
@@ -452,6 +468,7 @@ export default function ParagraphBlockEditor({
           extensions={extensionsEnglish}
           html={block.contentEn ?? ''}
           onHtmlChange={(html) => onChange({ ...block, contentEn: html })}
+          onBlur={onBlur}
         />
       )}
     </div>

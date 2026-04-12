@@ -42,6 +42,8 @@ import DividerBlockEditor from './blocks/DividerBlockEditor';
 type Props = {
   blocks: ContentBlock[];
   onChange: (blocks: ContentBlock[]) => void;
+  /** Fired when a TipTap paragraph editor loses focus (e.g. user leaves the field). */
+  onParagraphBlur?: () => void;
 };
 
 type BlockMeta = {
@@ -419,6 +421,7 @@ function SortableBlockRow({
   removeLabel,
   insertBelowLabel,
   insertBlockTitle,
+  onParagraphBlur,
 }: {
   block: ContentBlock;
   index: number;
@@ -436,6 +439,7 @@ function SortableBlockRow({
   removeLabel: string;
   insertBelowLabel: string;
   insertBlockTitle: string;
+  onParagraphBlur?: () => void;
 }) {
   const insertBtnRef = useRef<HTMLButtonElement>(null);
   const {
@@ -552,6 +556,7 @@ function SortableBlockRow({
             <ParagraphBlockEditor
               block={block}
               onChange={(b) => updateAt(i, b)}
+              onBlur={onParagraphBlur}
             />
           )}
           {block.type === 'list' && (
@@ -619,7 +624,11 @@ function SortableBlockRow({
   );
 }
 
-export default function BlockEditor({ blocks, onChange }: Props) {
+export default function BlockEditor({
+  blocks,
+  onChange,
+  onParagraphBlur,
+}: Props) {
   const t = useTranslations('admin.blocks');
   const blockMeta = useBlockMeta();
   const [openMenu, setOpenMenu] = useState<number | null>(null);
@@ -758,6 +767,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                 removeLabel={t('removeBlock')}
                 insertBelowLabel={t('insertBelow')}
                 insertBlockTitle={t('insertBlock')}
+                onParagraphBlur={onParagraphBlur}
               />
             ))}
           </SortableContext>
