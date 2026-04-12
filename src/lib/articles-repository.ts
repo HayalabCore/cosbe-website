@@ -132,6 +132,17 @@ export async function getArticleByIdAdmin(id: string): Promise<Article | null> {
   return row ? mapRow(row) : null;
 }
 
+export async function getArticleSlugCategoryById(
+  id: string
+): Promise<{ slug: string; category: ContentCategory } | null> {
+  const row = await prisma.article.findUnique({
+    where: { id },
+    select: { slug: true, category: true },
+  });
+  if (!row) return null;
+  return { slug: row.slug, category: row.category as ContentCategory };
+}
+
 export async function getArticleBySlug(
   slug: string,
   includeDrafts = false
@@ -153,31 +164,57 @@ export interface GetArticlesOptions {
   excludeId?: string;
   page?: number;
   pageSize?: number;
+  /** Case-insensitive match on Japanese or English title (admin lists). */
+  search?: string;
+}
+
+function buildArticleWhere(
+  options: Pick<
+    GetArticlesOptions,
+    'category' | 'status' | 'tag' | 'excludeId' | 'search'
+  >,
+  admin: boolean
+): Prisma.ArticleWhereInput {
+  const conditions: Prisma.ArticleWhereInput[] = [];
+
+  if (options.excludeId) {
+    conditions.push({ NOT: { id: options.excludeId } });
+  }
+
+  if (!admin) {
+    conditions.push({ status: 'published' });
+  } else if (options.status) {
+    conditions.push({ status: options.status });
+  }
+
+  if (options.category) {
+    conditions.push({ category: options.category });
+  }
+
+  if (options.tag) {
+    conditions.push({ tags: { has: options.tag } });
+  }
+
+  if (options.search?.trim()) {
+    const q = options.search.trim();
+    conditions.push({
+      OR: [
+        { title: { contains: q, mode: 'insensitive' } },
+        { titleEn: { contains: q, mode: 'insensitive' } },
+      ],
+    });
+  }
+
+  if (conditions.length === 0) return {};
+  if (conditions.length === 1) return conditions[0]!;
+  return { AND: conditions };
 }
 
 export async function getArticles(
   options: GetArticlesOptions = {},
   admin = false
 ): Promise<ArticleListItem[]> {
-  const where: Prisma.ArticleWhereInput = {};
-
-  if (options.excludeId) {
-    where.NOT = { id: options.excludeId };
-  }
-
-  if (!admin) {
-    where.status = 'published';
-  } else if (options.status) {
-    where.status = options.status;
-  }
-
-  if (options.category) {
-    where.category = options.category;
-  }
-
-  if (options.tag) {
-    where.tags = { has: options.tag };
-  }
+  const where = buildArticleWhere(options, admin);
 
   const pageSize = options.pageSize ?? options.limitCount;
   const skip =
@@ -195,20 +232,13 @@ export async function getArticles(
 }
 
 export async function countArticles(
-  options: Pick<GetArticlesOptions, 'category' | 'status' | 'tag'> = {},
+  options: Pick<
+    GetArticlesOptions,
+    'category' | 'status' | 'tag' | 'search'
+  > = {},
   admin = false
 ): Promise<number> {
-  const where: Prisma.ArticleWhereInput = {};
-
-  if (!admin) {
-    where.status = 'published';
-  } else if (options.status) {
-    where.status = options.status;
-  }
-
-  if (options.category) where.category = options.category;
-  if (options.tag) where.tags = { has: options.tag };
-
+  const where = buildArticleWhere(options, admin);
   return prisma.article.count({ where });
 }
 
@@ -242,12 +272,14 @@ export async function upsertAuthor(
   name: string,
   designation: string
 ): Promise<string> {
-  const existing = await prisma.author.findFirst({
-    where: { name, designation },
+  const row = await prisma.author.upsert({
+    where: {
+      name_designation: { name, designation },
+    },
+    create: { name, designation },
+    update: {},
   });
-  if (existing) return existing.id;
-  const created = await prisma.author.create({ data: { name, designation } });
-  return created.id;
+  return row.id;
 }
 
 export async function createArticleRecord(

@@ -16,6 +16,7 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Exclude /admin so next-intl does not rewrite it to /[locale]/admin
-  matcher: ['/((?!api|_next|_vercel|admin|.*\\..*).*)'],
+  // Run for all non-static routes except api/_next/_vercel; /admin is included so
+  // updateSession refreshes Supabase cookies on admin navigations.
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
 };

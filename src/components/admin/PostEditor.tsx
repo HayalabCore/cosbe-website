@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -30,8 +31,12 @@ import type {
   ParagraphBlock,
 } from '@/types';
 import PostMetaForm, { type PostMetaPatch } from './PostMetaForm';
-import BlockEditor from './BlockEditor';
-import BlockRenderer from '@/components/article/BlockRenderer';
+
+const BlockEditor = dynamic(() => import('./BlockEditor'), { ssr: false });
+const BlockRenderer = dynamic(
+  () => import('@/components/article/BlockRenderer'),
+  { ssr: false }
+);
 
 type Tab = 'edit' | 'preview';
 

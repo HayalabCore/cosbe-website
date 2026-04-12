@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   archiveArticleAction,
@@ -11,7 +12,32 @@ import {
   restoreArticleAction,
   unpublishArticleAction,
 } from '@/actions/articles';
+import AdminArticleTableSkeleton from '@/components/admin/AdminArticleTableSkeleton';
 import type { ArticleListItem, ArticleStatus, ContentCategory } from '@/types';
+
+const PAGE_SIZE = 20;
+
+const VALID_STATUSES: ArticleStatus[] = ['draft', 'published', 'archived'];
+const VALID_CATEGORIES: ContentCategory[] = [
+  'useful-info',
+  'case-study',
+  'video',
+  'notice',
+];
+
+function parseStatusParam(v: string | null): ArticleStatus | 'all' {
+  if (!v || v === 'all') return 'all';
+  return VALID_STATUSES.includes(v as ArticleStatus)
+    ? (v as ArticleStatus)
+    : 'all';
+}
+
+function parseCategoryParam(v: string | null): ContentCategory | 'all' {
+  if (!v || v === 'all') return 'all';
+  return VALID_CATEGORIES.includes(v as ContentCategory)
+    ? (v as ContentCategory)
+    : 'all';
+}
 
 const CATEGORY_CLS: Record<string, string> = {
   'useful-info': 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
@@ -67,53 +93,103 @@ export default function AdminDashboardPage() {
   const t = useTranslations('admin.dashboard');
   const locale = useLocale();
   const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
-  const [allItems, setAllItems] = useState<ArticleListItem[]>([]);
-  const [statusFilter, setStatusFilter] = useState<ArticleStatus | 'all'>(
-    'all'
-  );
-  const [categoryFilter, setCategoryFilter] = useState<ContentCategory | 'all'>(
-    'all'
-  );
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
+  const sp = useSearchParams();
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const rows = await listArticlesAdminAction({});
-      setAllItems(rows);
-    } catch (e) {
-      console.error(e);
-      setAllItems([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const statusFilter = parseStatusParam(sp.get('status'));
+  const categoryFilter = parseCategoryParam(sp.get('category'));
+  const page = Math.max(1, parseInt(sp.get('page') ?? '1', 10) || 1);
+  const qFromUrl = sp.get('q') ?? '';
+
+  const [searchInput, setSearchInput] = useState(qFromUrl);
+  const [items, setItems] = useState<ArticleListItem[]>([]);
+  const [total, setTotal] = useState(0);
+  const [stats, setStats] = useState({
+    total: 0,
+    published: 0,
+    draft: 0,
+    archived: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  /** Background refresh after row actions (keeps table visible, shows subtle indicator). */
+  const [refreshing, setRefreshing] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [pendingRowId, setPendingRowId] = useState<string | null>(null);
+
+  const tRef = useRef(t);
+  tRef.current = t;
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    setSearchInput(qFromUrl);
+  }, [qFromUrl]);
 
-  const stats = useMemo(
-    () => ({
-      total: allItems.length,
-      published: allItems.filter((i) => i.status === 'published').length,
-      draft: allItems.filter((i) => i.status === 'draft').length,
-      archived: allItems.filter((i) => i.status === 'archived').length,
-    }),
-    [allItems]
+  useEffect(() => {
+    const tmr = setTimeout(() => {
+      const trimmed = searchInput.trim();
+      if (trimmed === qFromUrl.trim()) return;
+      const p = new URLSearchParams(sp.toString());
+      if (trimmed) p.set('q', trimmed);
+      else p.delete('q');
+      p.set('page', '1');
+      router.replace(`${pathname}?${p.toString()}`);
+    }, 400);
+    return () => clearTimeout(tmr);
+  }, [searchInput, qFromUrl, pathname, router, sp]);
+
+  /** `silent`: after row actions, refresh without full-table spinner; use `refreshing` + banner instead. */
+  const fetchDashboard = useCallback(
+    async (options: { silent?: boolean } = {}) => {
+      const silent = options.silent === true;
+      if (silent) setRefreshing(true);
+      else setLoading(true);
+      setLoadError(null);
+      try {
+        const data = await listArticlesAdminAction({
+          status: statusFilter,
+          category: categoryFilter,
+          page,
+          pageSize: PAGE_SIZE,
+          search: qFromUrl.trim() || undefined,
+        });
+        setItems(data.items);
+        setTotal(data.total);
+        setStats(data.stats);
+      } catch (e) {
+        console.error(e);
+        setLoadError(tRef.current('loadError'));
+        if (!silent) {
+          setItems([]);
+          setTotal(0);
+        }
+      } finally {
+        if (silent) setRefreshing(false);
+        else setLoading(false);
+      }
+    },
+    [statusFilter, categoryFilter, page, qFromUrl]
   );
 
-  const displayItems = useMemo(() => {
-    return allItems.filter((item) => {
-      if (statusFilter !== 'all' && item.status !== statusFilter) return false;
-      if (categoryFilter !== 'all' && item.category !== categoryFilter)
-        return false;
-      if (search && !item.title.toLowerCase().includes(search.toLowerCase()))
-        return false;
-      return true;
-    });
-  }, [allItems, statusFilter, categoryFilter, search]);
+  useEffect(() => {
+    void fetchDashboard();
+  }, [fetchDashboard]);
+
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const shownStart = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
+  const shownEnd = Math.min(page * PAGE_SIZE, total);
+
+  const updateQuery = useCallback(
+    (updates: Record<string, string | null | undefined>) => {
+      const p = new URLSearchParams(sp.toString());
+      for (const [key, val] of Object.entries(updates)) {
+        if (val === null || val === undefined || val === '') p.delete(key);
+        else p.set(key, val);
+      }
+      router.replace(`${pathname}?${p.toString()}`);
+    },
+    [pathname, router, sp]
+  );
 
   const categoryLabel = useCallback(
     (k: string) => {
@@ -136,6 +212,23 @@ export default function AdminDashboardPage() {
     [t]
   );
 
+  const runRowAction = useCallback(
+    async (id: string, fn: () => Promise<void>) => {
+      setActionError(null);
+      setPendingRowId(id);
+      try {
+        await fn();
+        await fetchDashboard({ silent: true });
+      } catch (e) {
+        console.error(e);
+        setActionError(t('actionFailed'));
+      } finally {
+        setPendingRowId(null);
+      }
+    },
+    [fetchDashboard, t]
+  );
+
   async function handleArchive(
     id: string,
     title: string,
@@ -143,13 +236,11 @@ export default function AdminDashboardPage() {
     category: ContentCategory
   ) {
     if (!confirm(t('archiveConfirm', { title }))) return;
-    await archiveArticleAction(id, slug, category);
-    void load();
+    await runRowAction(id, () => archiveArticleAction(id, slug, category));
   }
 
   async function handleRestore(id: string) {
-    await restoreArticleAction(id);
-    void load();
+    await runRowAction(id, () => restoreArticleAction(id));
   }
 
   async function handleHardDelete(
@@ -159,13 +250,21 @@ export default function AdminDashboardPage() {
     category: ContentCategory
   ) {
     if (!confirm(t('hardDeleteConfirm', { title }))) return;
-    await hardDeleteArticleAction(id, slug, category);
-    void load();
+    await runRowAction(id, () => hardDeleteArticleAction(id, slug, category));
   }
+
+  const filtersActive = useMemo(
+    () =>
+      statusFilter !== 'all' ||
+      categoryFilter !== 'all' ||
+      qFromUrl.trim().length > 0,
+    [statusFilter, categoryFilter, qFromUrl]
+  );
+
+  const refreshSkeletonRows = Math.min(PAGE_SIZE, Math.max(items.length, 5));
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
-      {/* Page header */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-xl font-bold text-slate-900">{t('title')}</h1>
@@ -192,7 +291,15 @@ export default function AdminDashboardPage() {
         </Link>
       </div>
 
-      {/* Stats */}
+      {(loadError || actionError) && (
+        <div
+          className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          role="alert"
+        >
+          {loadError ?? actionError}
+        </div>
+      )}
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
           label={t('totalPosts')}
@@ -276,7 +383,6 @@ export default function AdminDashboardPage() {
         />
       </div>
 
-      {/* Filters + search */}
       <div className="flex flex-wrap items-center gap-3 mb-5">
         <div className="relative flex-1 min-w-[200px]">
           <svg
@@ -295,17 +401,21 @@ export default function AdminDashboardPage() {
           <input
             type="search"
             placeholder={t('searchPlaceholder')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all shadow-sm"
           />
         </div>
 
         <select
           value={statusFilter}
-          onChange={(e) =>
-            setStatusFilter(e.target.value as ArticleStatus | 'all')
-          }
+          onChange={(e) => {
+            const v = e.target.value as ArticleStatus | 'all';
+            updateQuery({
+              status: v === 'all' ? null : v,
+              page: '1',
+            });
+          }}
           className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15 shadow-sm"
         >
           <option value="all">{t('filterStatusAll')}</option>
@@ -316,9 +426,13 @@ export default function AdminDashboardPage() {
 
         <select
           value={categoryFilter}
-          onChange={(e) =>
-            setCategoryFilter(e.target.value as ContentCategory | 'all')
-          }
+          onChange={(e) => {
+            const v = e.target.value as ContentCategory | 'all';
+            updateQuery({
+              category: v === 'all' ? null : v,
+              page: '1',
+            });
+          }}
           className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15 shadow-sm"
         >
           <option value="all">{t('filterCategoryAll')}</option>
@@ -329,32 +443,19 @@ export default function AdminDashboardPage() {
         </select>
       </div>
 
-      {/* Table */}
       {loading ? (
-        <div className="flex items-center justify-center py-24">
-          <svg
-            className="animate-spin w-6 h-6 text-slate-400"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
-          </svg>
-        </div>
+        <AdminArticleTableSkeleton
+          rows={PAGE_SIZE}
+          aria-label={t('tableLoading')}
+        />
+      ) : refreshing ? (
+        <AdminArticleTableSkeleton
+          rows={refreshSkeletonRows}
+          aria-label={t('refreshingList')}
+        />
       ) : (
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-          {displayItems.length === 0 ? (
+          {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center px-4">
               <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
                 <svg
@@ -375,33 +476,29 @@ export default function AdminDashboardPage() {
                 {t('noPostsTitle')}
               </p>
               <p className="text-sm text-slate-400">
-                {search || statusFilter !== 'all' || categoryFilter !== 'all'
-                  ? t('noPostsFiltered')
-                  : t('noPostsEmpty')}
+                {filtersActive ? t('noPostsFiltered') : t('noPostsEmpty')}
               </p>
-              {!search &&
-                statusFilter === 'all' &&
-                categoryFilter === 'all' && (
-                  <Link
-                    href="/admin/posts/new"
-                    className="mt-5 inline-flex items-center gap-1.5 rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover transition-colors"
+              {!filtersActive && (
+                <Link
+                  href="/admin/posts/new"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover transition-colors"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                    {t('createFirstPost')}
-                  </Link>
-                )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  {t('createFirstPost')}
+                </Link>
+              )}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -426,7 +523,7 @@ export default function AdminDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {displayItems.map((row) => {
+                  {items.map((row) => {
                     const catCls =
                       CATEGORY_CLS[row.category] ??
                       'bg-slate-100 text-slate-600';
@@ -442,6 +539,7 @@ export default function AdminDashboardPage() {
                           }
                         )
                       : null;
+                    const rowBusy = pendingRowId === row.id;
                     return (
                       <tr
                         key={row.id}
@@ -481,7 +579,6 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="px-4 py-3.5">
                           <div className="flex items-center justify-end gap-1">
-                            {/* Edit */}
                             <Link
                               href={`/admin/posts/${row.id}`}
                               title={t('editTitle')}
@@ -502,15 +599,17 @@ export default function AdminDashboardPage() {
                               </svg>
                             </Link>
 
-                            {/* Publish / Unpublish */}
                             {row.status === 'published' ? (
                               <button
                                 type="button"
                                 title={t('unpublishTitle')}
+                                disabled={rowBusy}
                                 onClick={() =>
-                                  void unpublishArticleAction(row.id).then(load)
+                                  void runRowAction(row.id, () =>
+                                    unpublishArticleAction(row.id)
+                                  )
                                 }
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
                               >
                                 <svg
                                   className="w-4 h-4"
@@ -530,10 +629,13 @@ export default function AdminDashboardPage() {
                               <button
                                 type="button"
                                 title={t('publishTitle')}
+                                disabled={rowBusy}
                                 onClick={() =>
-                                  void publishArticleAction(row.id).then(load)
+                                  void runRowAction(row.id, () =>
+                                    publishArticleAction(row.id)
+                                  )
                                 }
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
                               >
                                 <svg
                                   className="w-4 h-4"
@@ -551,15 +653,14 @@ export default function AdminDashboardPage() {
                               </button>
                             )}
 
-                            {/* Archive / Restore / Hard-delete */}
                             {row.status === 'archived' ? (
                               <>
-                                {/* Restore */}
                                 <button
                                   type="button"
                                   title={t('restoreTitle')}
+                                  disabled={rowBusy}
                                   onClick={() => void handleRestore(row.id)}
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
                                 >
                                   <svg
                                     className="w-4 h-4"
@@ -575,10 +676,10 @@ export default function AdminDashboardPage() {
                                     />
                                   </svg>
                                 </button>
-                                {/* Hard delete — only shown for archived */}
                                 <button
                                   type="button"
                                   title={t('hardDeleteTitle')}
+                                  disabled={rowBusy}
                                   onClick={() =>
                                     void handleHardDelete(
                                       row.id,
@@ -587,7 +688,7 @@ export default function AdminDashboardPage() {
                                       row.category
                                     )
                                   }
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
                                 >
                                   <svg
                                     className="w-4 h-4"
@@ -605,10 +706,10 @@ export default function AdminDashboardPage() {
                                 </button>
                               </>
                             ) : (
-                              /* Archive */
                               <button
                                 type="button"
                                 title={t('archiveTitle')}
+                                disabled={rowBusy}
                                 onClick={() =>
                                   void handleArchive(
                                     row.id,
@@ -617,7 +718,7 @@ export default function AdminDashboardPage() {
                                     row.category
                                   )
                                 }
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
                               >
                                 <svg
                                   className="w-4 h-4"
@@ -646,10 +747,45 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {!loading && displayItems.length > 0 && (
-        <p className="text-xs text-slate-400 mt-3 text-right">
-          {t('showing', { shown: displayItems.length, total: allItems.length })}
-        </p>
+      {!loading && !refreshing && items.length > 0 && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
+          <p className="text-xs text-slate-400">
+            {t('showingRange', {
+              start: shownStart,
+              end: shownEnd,
+              total,
+            })}
+          </p>
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={page <= 1 || loading || refreshing}
+                onClick={() =>
+                  updateQuery({ page: String(Math.max(1, page - 1)) })
+                }
+                className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40"
+              >
+                {t('prevPage')}
+              </button>
+              <span className="text-xs text-slate-500 tabular-nums">
+                {t('pageIndicator', { page, totalPages })}
+              </span>
+              <button
+                type="button"
+                disabled={page >= totalPages || loading || refreshing}
+                onClick={() =>
+                  updateQuery({
+                    page: String(Math.min(totalPages, page + 1)),
+                  })
+                }
+                className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40"
+              >
+                {t('nextPage')}
+              </button>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

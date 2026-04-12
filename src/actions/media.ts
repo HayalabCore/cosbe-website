@@ -30,7 +30,12 @@ export async function deleteMediaAction(id: string) {
   const { supabase } = await requireUser();
   const row = await getMediaById(id);
   if (!row) throw new Error('Not found');
-  await deleteFromGallery(supabase, row.url);
+  const url = row.url;
   await deleteMediaRecord(id);
+  try {
+    await deleteFromGallery(supabase, url);
+  } catch {
+    /* Row is gone; object may remain in bucket until manual cleanup. */
+  }
   revalidatePath('/admin/media');
 }
