@@ -11,15 +11,59 @@ Marketing site and CMS built with [Next.js](https://nextjs.org) (App Router), [n
 
 Copy `.env.example` to `.env` and fill in values.
 
-| Variable                        | Purpose                                                                                                                                                   |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`                  | Postgres connection string. On Supabase, use the **pooled** URL (often port `6543` with PgBouncer) for the app runtime.                                   |
-| `DIRECT_URL`                    | Direct Postgres URL for migrations (Supabase “session” / non-pooler host, port `5432`). Required by `prisma/schema.prisma` for `migrate` / introspection. |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL (auth, storage, public client).                                                                                                      |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key.                                                                                                                                   |
-| `NEXT_PUBLIC_HUBSPOT_*`         | HubSpot portal and form IDs for embedded forms.                                                                                                           |
+| Variable                        | Purpose                                                                                                                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                  | Postgres connection string. On Supabase, use the **pooled** URL (often port `6543` with PgBouncer) for the app runtime.                                                   |
+| `DIRECT_URL`                    | Direct Postgres URL for migrations (Supabase “session” / non-pooler host, port `5432`). Required by `prisma/schema.prisma` for `migrate` / introspection.                 |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL (auth, storage, public client).                                                                                                                      |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key.                                                                                                                                                   |
+| `NEXT_PUBLIC_HUBSPOT_*`         | HubSpot portal and form IDs for embedded forms.                                                                                                                           |
+| `API_SECRET_KEY`                | Secret for **machine-to-machine** article creation (`POST /api/articles`). Use a long random string; send as `Authorization: Bearer <key>`. Set in Vercel for production. |
 
 `.env` is gitignored; never commit secrets.
+
+## External article API
+
+Other systems can create CMS articles over HTTP using the same JSON shape as the admin editor. The browser **admin** at `/admin` uses Supabase login; this API uses **`API_SECRET_KEY`** instead (no cookies).
+
+| Method | Path                     | Auth                                     | Description                                                                       |
+| ------ | ------------------------ | ---------------------------------------- | --------------------------------------------------------------------------------- |
+| `GET`  | `/api/articles/metadata` | None                                     | JSON documentation of the request body, fields, block types, and example payload. |
+| `POST` | `/api/articles`          | `Authorization: Bearer <API_SECRET_KEY>` | Create an article; response **`201`** with `{"id":"<uuid>"}`.                     |
+
+**Production:** set `API_SECRET_KEY` in your host’s environment (e.g. Vercel **Settings → Environment Variables**). Use your site origin, for example `https://<your-project>.vercel.app`.
+
+**Discover the schema:**
+
+```bash
+curl -sS "https://<your-domain>/api/articles/metadata"
+```
+
+**Create a draft article (replace domain and secret):**
+
+```bash
+curl -sS -w "\nHTTP %{http_code}\n" -X POST "https://<your-domain>/api/articles" \
+  -H "Authorization: Bearer YOUR_API_SECRET_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "slug": "api-example-'$(date +%s)'",
+    "title": "Example title",
+    "status": "draft",
+    "category": "notice",
+    "tags": ["api"],
+    "author": { "name": "Author", "designation": "Role" },
+    "blocks": [
+      { "id": "b1", "type": "heading", "level": 2, "content": "Heading" },
+      { "id": "b2", "type": "paragraph", "content": "<p>Body</p>" }
+    ],
+    "toc": [],
+    "publishedAt": null
+  }'
+```
+
+**Local dev:** use `http://localhost:3000` and the same `API_SECRET_KEY` from `.env`.
+
+Common HTTP responses: **`201`** created; **`400`** validation error (body includes `details`); **`401`** wrong or missing bearer token; **`409`** duplicate `slug`; **`503`** if `API_SECRET_KEY` is not configured on the server.
 
 ## Install
 
