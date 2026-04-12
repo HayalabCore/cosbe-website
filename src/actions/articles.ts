@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { revalidateArticlePaths } from '@/lib/article-revalidation';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import {
   archiveArticleRecord,
@@ -12,14 +13,12 @@ import {
   unpublishArticleRecord,
   updateArticleRecord,
 } from '@/lib/articles';
-import { articleDetailBasePath } from '@/lib/articlePaths';
 import type {
   Article,
   ArticleListItem,
   ArticleStatus,
   ContentCategory,
 } from '@/types';
-import { routing } from '@/i18n/routing';
 
 async function requireUser() {
   const supabase = await createServerSupabaseClient();
@@ -28,30 +27,6 @@ async function requireUser() {
   } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
   return user;
-}
-
-const CATEGORY_LISTING_PATH: Record<ContentCategory, string> = {
-  'useful-info': '/useful-column',
-  'case-study': '/case-studies',
-  video: '/useful-video',
-  notice: '/notice',
-};
-
-function revalidateArticlePaths(slug?: string, category?: ContentCategory) {
-  // Only revalidate the affected category's listing page; fall back to all when unknown.
-  const listingPaths = category
-    ? [CATEGORY_LISTING_PATH[category]]
-    : Object.values(CATEGORY_LISTING_PATH);
-
-  for (const locale of routing.locales) {
-    for (const path of listingPaths) {
-      revalidatePath(`/${locale}${path}`, 'layout');
-    }
-    if (slug && category) {
-      const base = articleDetailBasePath(category);
-      revalidatePath(`/${locale}${base}/${slug}`, 'page');
-    }
-  }
 }
 
 export async function getArticleByIdAction(
