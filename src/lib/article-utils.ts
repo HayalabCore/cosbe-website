@@ -116,6 +116,16 @@ export function createEmptyBlock(type: ContentBlock['type']): ContentBlock {
       return { id, type: 'divider' };
     case 'embed':
       return { id, type: 'embed', embedType: 'youtube', url: '' };
+    case 'table':
+      return {
+        id,
+        type: 'table',
+        headers: ['', '', ''],
+        rows: [
+          ['', '', ''],
+          ['', '', ''],
+        ],
+      };
     default:
       return { id, type: 'paragraph', content: '' };
   }

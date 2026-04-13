@@ -123,6 +123,8 @@
     "statusPublished": "Published",
     "statusDraft": "Draft",
     "statusArchived": "Archived",
+    "publishedDate": "Publication date",
+    "publishedDateHint": "Defaults to first publish time. Update to backdate or post-date.",
     "urlSlug": "URL Slug",
     "slugPlaceholder": "my-post-slug",
     "slugHint": "Lowercase letters, numbers, and hyphens only. Leave blank to auto-generate from title.",
@@ -180,7 +182,8 @@
         "label": "Divider",
         "description": "Horizontal separator rule"
       },
-      "embed": { "label": "Embed", "description": "YouTube, Twitter, or URL" }
+      "embed": { "label": "Embed", "description": "YouTube, Twitter, or URL" },
+      "table": { "label": "Table", "description": "Rows and columns of data" }
     }
   },
   "paragraph": {
@@ -272,6 +275,22 @@
   },
   "divider": {
     "label": "Horizontal divider"
+  },
+  "table": {
+    "titlePlaceholder": "Table title (optional)",
+    "subtitlePlaceholder": "Table subtitle / description (optional)",
+    "headerPlaceholder": "Header",
+    "cellPlaceholder": "Cell",
+    "captionPlaceholder": "Caption (optional)",
+    "addRow": "Add row",
+    "addColumn": "Add column",
+    "removeRow": "Remove row",
+    "removeColumn": "Remove column",
+    "removeColumnConfirm": "Remove column {n}? All data in this column will be permanently deleted.",
+    "removeRowConfirm": "Remove row {n}? All data in this row will be permanently deleted.",
+    "colLabel": "Col {n}",
+    "rowsCount": "rows",
+    "colsCount": "columns"
   },
   "imageUpload": {
     "defaultLabel": "Choose from media library",

@@ -11,6 +11,7 @@ import {
   ImageBlock,
   CodeBlock,
   EmbedBlock,
+  TableBlock,
 } from '@/types';
 
 export default function BlockRenderer({ block }: { block: ContentBlock }) {
@@ -200,6 +201,63 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
             {embed.title || embed.url}
           </a>
         </p>
+      );
+    }
+
+    case 'table': {
+      const table = block as TableBlock;
+      const hasContent =
+        table.headers.some((h) => h.trim()) ||
+        table.rows.some((r) => r.some((c) => c.trim()));
+      if (!hasContent) return null;
+      return (
+        <figure className="my-8">
+          {table.title && (
+            <p className="text-base font-semibold text-gray-900 mb-1">
+              {table.title}
+            </p>
+          )}
+          {table.subtitle && (
+            <p className="text-sm text-gray-500 mb-3">{table.subtitle}</p>
+          )}
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-[14px] leading-relaxed text-left">
+              {table.headers.some((h) => h.trim()) && (
+                <thead>
+                  <tr>
+                    {table.headers.map((header, ci) => (
+                      <th
+                        key={ci}
+                        className="border border-gray-300 px-4 py-3 font-medium text-gray-800 bg-white text-left align-top"
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+              )}
+              <tbody>
+                {table.rows.map((row, ri) => (
+                  <tr key={ri}>
+                    {row.map((cell, ci) => (
+                      <td
+                        key={ci}
+                        className="border border-gray-300 px-4 py-3 text-gray-700 align-top"
+                      >
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {table.caption && (
+            <figcaption className="text-xs text-textTertiary text-center mt-2 italic">
+              {table.caption}
+            </figcaption>
+          )}
+        </figure>
       );
     }
 

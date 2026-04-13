@@ -13,6 +13,7 @@ import type {
   ListBlock,
   ParagraphBlock,
   QuoteBlock,
+  TableBlock,
 } from '@/types';
 
 export function isEnglishLocale(locale: string): boolean {
@@ -125,6 +126,44 @@ export function resolveBlockForLocale(
       const b = block as EmbedBlock;
       const title = pickForLocale(locale, b.title, b.titleEn);
       return { ...b, title: title || undefined };
+    }
+    case 'table': {
+      const b = block as TableBlock;
+      const title = pickForLocale(locale, b.title, b.titleEn);
+      const subtitle = pickForLocale(locale, b.subtitle, b.subtitleEn);
+      const caption = pickForLocale(locale, b.caption, b.captionEn);
+      if (isEnglishLocale(locale)) {
+        const headersEn = b.headersEn ?? [];
+        const rowsEn = b.rowsEn ?? [];
+        const headers = b.headers.map((h, i) => headersEn[i]?.trim() || h);
+        const rows = b.rows.map((row, ri) =>
+          row.map((cell, ci) => rowsEn[ri]?.[ci]?.trim() || cell)
+        );
+        return {
+          ...b,
+          title: title || undefined,
+          subtitle: subtitle || undefined,
+          headers,
+          rows,
+          caption: caption || undefined,
+        };
+      }
+      const headersEn = b.headersEn ?? [];
+      const rowsEn = b.rowsEn ?? [];
+      const headers = b.headers.map(
+        (h, i) => h.trim() || headersEn[i]?.trim() || ''
+      );
+      const rows = b.rows.map((row, ri) =>
+        row.map((cell, ci) => cell.trim() || rowsEn[ri]?.[ci]?.trim() || '')
+      );
+      return {
+        ...b,
+        title: title || undefined,
+        subtitle: subtitle || undefined,
+        headers,
+        rows,
+        caption: caption || undefined,
+      };
     }
     default:
       return block;

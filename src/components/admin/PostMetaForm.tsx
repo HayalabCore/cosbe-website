@@ -35,6 +35,7 @@ export type PostMetaPatch = {
   category?: ContentCategory;
   tags?: string;
   status?: ArticleStatus;
+  publishedAt?: string | null;
   authorName?: string;
   authorDesignation?: string;
   seo?: ArticleSEO;
@@ -50,6 +51,7 @@ type Props = {
   category: ContentCategory;
   tags: string;
   status: ArticleStatus;
+  publishedAt: string | null;
   authorName: string;
   authorDesignation: string;
   seo: ArticleSEO;
@@ -95,6 +97,18 @@ function SectionHeader({
   );
 }
 
+/** ISO → `datetime-local` input value (local timezone). */
+function isoToDatetimeLocal(iso: string): string {
+  const d = new Date(iso);
+  const tzOffset = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+}
+
+/** `datetime-local` input value → ISO string (UTC). */
+function datetimeLocalToIso(value: string): string {
+  return new Date(value).toISOString();
+}
+
 export default function PostMetaForm({
   title,
   titleEn,
@@ -105,6 +119,7 @@ export default function PostMetaForm({
   category,
   tags,
   status,
+  publishedAt,
   authorName,
   authorDesignation,
   seo,
@@ -245,6 +260,28 @@ export default function PostMetaForm({
                 ))}
               </div>
             </div>
+
+            {status === 'published' && (
+              <div>
+                <label className={LABEL_CLS}>{t('publishedDate')}</label>
+                <input
+                  type="datetime-local"
+                  className={INPUT_CLS}
+                  value={publishedAt ? isoToDatetimeLocal(publishedAt) : ''}
+                  onChange={(e) =>
+                    onChange({
+                      publishedAt: e.target.value
+                        ? datetimeLocalToIso(e.target.value)
+                        : null,
+                    })
+                  }
+                />
+                <p className="mt-1 text-[10px] text-slate-400">
+                  {t('publishedDateHint')}
+                </p>
+              </div>
+            )}
+
             <div>
               <label className={LABEL_CLS}>{t('urlSlug')}</label>
               <input

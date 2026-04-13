@@ -123,6 +123,8 @@
     "statusPublished": "公開",
     "statusDraft": "下書き",
     "statusArchived": "アーカイブ",
+    "publishedDate": "公開日時",
+    "publishedDateHint": "初回公開時に自動設定されます。バックデートや予約投稿も可能です。",
     "urlSlug": "URLスラッグ",
     "slugPlaceholder": "my-post-slug",
     "slugHint": "小文字・数字・ハイフンのみ。空欄の場合はタイトルから自動生成します。",
@@ -198,6 +200,10 @@
       "embed": {
         "label": "埋め込み",
         "description": "YouTube、X、URL"
+      },
+      "table": {
+        "label": "テーブル",
+        "description": "行と列のデータ"
       }
     }
   },
@@ -290,6 +296,22 @@
   },
   "divider": {
     "label": "横方向の区切り線"
+  },
+  "table": {
+    "titlePlaceholder": "テーブルタイトル（任意）",
+    "subtitlePlaceholder": "テーブルサブタイトル・説明（任意）",
+    "headerPlaceholder": "ヘッダー",
+    "cellPlaceholder": "セル",
+    "captionPlaceholder": "キャプション（任意）",
+    "addRow": "行を追加",
+    "addColumn": "列を追加",
+    "removeRow": "行を削除",
+    "removeColumn": "列を削除",
+    "removeColumnConfirm": "{n}列目を削除しますか？この列のデータはすべて完全に削除されます。",
+    "removeRowConfirm": "{n}行目を削除しますか？この行のデータはすべて完全に削除されます。",
+    "colLabel": "{n}列",
+    "rowsCount": "行",
+    "colsCount": "列"
   },
   "imageUpload": {
     "defaultLabel": "メディアライブラリから選択",

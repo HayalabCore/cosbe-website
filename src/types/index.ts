@@ -11,7 +11,8 @@ export type BlockType =
   | 'image'
   | 'code'
   | 'divider'
-  | 'embed';
+  | 'embed'
+  | 'table';
 
 export interface BaseBlock {
   id: string;
@@ -85,6 +86,24 @@ export interface EmbedBlock extends BaseBlock {
   titleEn?: string;
 }
 
+export interface TableBlock extends BaseBlock {
+  type: 'table';
+  title?: string;
+  subtitle?: string;
+  /** Column header labels (primary / Japanese). */
+  headers: string[];
+  /** Data rows — each inner array has one cell per column. */
+  rows: string[][];
+  caption?: string;
+  titleEn?: string;
+  subtitleEn?: string;
+  /** English column headers. */
+  headersEn?: string[];
+  /** English row data. */
+  rowsEn?: string[][];
+  captionEn?: string;
+}
+
 export type ContentBlock =
   | HeadingBlock
   | ParagraphBlock
@@ -94,7 +113,8 @@ export type ContentBlock =
   | ImageBlock
   | CodeBlock
   | DividerBlock
-  | EmbedBlock;
+  | EmbedBlock
+  | TableBlock;
 
 // ============================================
 // Author Types

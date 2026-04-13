@@ -38,6 +38,7 @@ import ImageBlockEditor from './blocks/ImageBlockEditor';
 import CodeBlockEditor from './blocks/CodeBlockEditor';
 import EmbedBlockEditor from './blocks/EmbedBlockEditor';
 import DividerBlockEditor from './blocks/DividerBlockEditor';
+import TableBlockEditor from './blocks/TableBlockEditor';
 
 type Props = {
   blocks: ContentBlock[];
@@ -170,6 +171,30 @@ const BLOCK_ICONS: Record<ContentBlock['type'], React.ReactNode> = {
       />
     </svg>
   ),
+  table: (
+    <svg
+      className="w-4 h-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+    >
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 9h18M3 15h18M9 3v18M15 3v18"
+      />
+    </svg>
+  ),
 };
 
 function useBlockMeta(): Record<ContentBlock['type'], BlockMeta> {
@@ -221,6 +246,11 @@ function useBlockMeta(): Record<ContentBlock['type'], BlockMeta> {
           label: t('embed.label'),
           description: t('embed.description'),
           icon: BLOCK_ICONS.embed,
+        },
+        table: {
+          label: t('table.label'),
+          description: t('table.description'),
+          icon: BLOCK_ICONS.table,
         },
       }) as Record<ContentBlock['type'], BlockMeta>,
     [t]
@@ -580,6 +610,9 @@ function SortableBlockRow({
           {block.type === 'divider' && <DividerBlockEditor />}
           {block.type === 'embed' && (
             <EmbedBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
+          )}
+          {block.type === 'table' && (
+            <TableBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
           )}
         </div>
       </div>

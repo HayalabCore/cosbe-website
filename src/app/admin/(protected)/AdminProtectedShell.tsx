@@ -9,6 +9,10 @@ import { signOut } from '@/lib/auth';
 import AdminLocaleSwitcher, {
   AdminLocaleSwitcherLight,
 } from '@/components/admin/AdminLocaleSwitcher';
+import {
+  AdminViewArticleProvider,
+  useAdminViewArticleLink,
+} from '@/components/admin/AdminViewArticleContext';
 
 function NavItem({
   href,
@@ -16,12 +20,15 @@ function NavItem({
   icon,
   label,
   onClick,
+  openInNewTab,
 }: {
   href?: string;
   active?: boolean;
   icon: React.ReactNode;
   label: string;
   onClick?: () => void;
+  /** When set with `href`, opens in a new tab (e.g. public site from admin). */
+  openInNewTab?: boolean;
 }) {
   const cls = `flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
     active
@@ -30,7 +37,13 @@ function NavItem({
   }`;
   if (href) {
     return (
-      <Link href={href} className={cls}>
+      <Link
+        href={href}
+        className={cls}
+        {...(openInNewTab
+          ? { target: '_blank', rel: 'noopener noreferrer' }
+          : {})}
+      >
         {icon}
         {label}
       </Link>
@@ -55,6 +68,8 @@ function Sidebar({
 }) {
   const t = useTranslations('admin.sidebar');
   const locale = useLocale();
+  const { viewArticleHref } = useAdminViewArticleLink();
+  const viewSiteHref = viewArticleHref ?? `/${locale}`;
   const initials = userEmail ? userEmail.slice(0, 2).toUpperCase() : 'AD';
   return (
     <div className="flex flex-col h-full py-4">
@@ -146,7 +161,8 @@ function Sidebar({
 
       <div className="px-3 mt-4 space-y-0.5 border-t border-white/10 pt-4">
         <NavItem
-          href={`/${locale}`}
+          href={viewSiteHref}
+          openInNewTab
           active={false}
           label={t('viewSite')}
           icon={
@@ -220,63 +236,65 @@ export default function AdminProtectedShell({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <aside className="hidden lg:block w-56 bg-slate-950 fixed inset-y-0 left-0 z-30 flex-shrink-0">
-        <Sidebar
-          pathname={pathname}
-          userEmail={userEmail}
-          onSignOut={() => void handleSignOut()}
-        />
-      </aside>
+    <AdminViewArticleProvider>
+      <div className="flex min-h-screen bg-slate-50">
+        <aside className="hidden lg:block w-56 bg-slate-950 fixed inset-y-0 left-0 z-30 flex-shrink-0">
+          <Sidebar
+            pathname={pathname}
+            userEmail={userEmail}
+            onSignOut={() => void handleSignOut()}
+          />
+        </aside>
 
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black/50 backdrop-blur-sm lg:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
+        {mobileOpen && (
+          <div
+            className="fixed inset-0 z-20 bg-black/50 backdrop-blur-sm lg:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
 
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 w-56 bg-slate-950 flex-shrink-0 transition-transform duration-200 lg:hidden ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <Sidebar
-          pathname={pathname}
-          userEmail={userEmail}
-          onSignOut={() => void handleSignOut()}
-        />
-      </aside>
+        <aside
+          className={`fixed inset-y-0 left-0 z-30 w-56 bg-slate-950 flex-shrink-0 transition-transform duration-200 lg:hidden ${
+            mobileOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <Sidebar
+            pathname={pathname}
+            userEmail={userEmail}
+            onSignOut={() => void handleSignOut()}
+          />
+        </aside>
 
-      <div className="flex-1 lg:ml-56 flex flex-col min-h-screen">
-        <header className="lg:hidden sticky top-0 z-20 flex items-center gap-3 px-4 h-14 bg-white border-b border-slate-200 shadow-sm">
-          <button
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
+        <div className="flex-1 lg:ml-56 flex flex-col min-h-screen">
+          <header className="lg:hidden sticky top-0 z-20 flex items-center gap-3 px-4 h-14 bg-white border-b border-slate-200 shadow-sm">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-          <span className="font-semibold text-slate-900 text-sm flex-1 min-w-0 truncate">
-            {tSidebar('brand')}
-          </span>
-          <AdminLocaleSwitcherLight className="flex-shrink-0" />
-        </header>
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+            <span className="font-semibold text-slate-900 text-sm flex-1 min-w-0 truncate">
+              {tSidebar('brand')}
+            </span>
+            <AdminLocaleSwitcherLight className="flex-shrink-0" />
+          </header>
 
-        <main className="flex-1">{children}</main>
+          <main className="flex-1">{children}</main>
+        </div>
       </div>
-    </div>
+    </AdminViewArticleProvider>
   );
 }

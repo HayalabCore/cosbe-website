@@ -22,7 +22,15 @@ export type TranslateBlockPayload =
   | { type: 'quote'; content: string; citation?: string }
   | { type: 'callout'; title?: string; content: string }
   | { type: 'image'; alt: string; caption?: string }
-  | { type: 'embed'; title?: string };
+  | { type: 'embed'; title?: string }
+  | {
+      type: 'table';
+      title?: string;
+      subtitle?: string;
+      headers: string[];
+      rows: string[][];
+      caption?: string;
+    };
 
 export type TranslateBlockResult =
   | { type: 'heading'; contentEn: string }
@@ -31,7 +39,15 @@ export type TranslateBlockResult =
   | { type: 'quote'; contentEn: string; citationEn?: string }
   | { type: 'callout'; titleEn?: string; contentEn: string }
   | { type: 'image'; altEn: string; captionEn?: string }
-  | { type: 'embed'; titleEn?: string };
+  | { type: 'embed'; titleEn?: string }
+  | {
+      type: 'table';
+      titleEn?: string;
+      subtitleEn?: string;
+      headersEn: string[];
+      rowsEn: string[][];
+      captionEn?: string;
+    };
 
 export async function translateBlockEnAction(
   payload: TranslateBlockPayload
@@ -82,6 +98,29 @@ export async function translateBlockEnAction(
       }
       const titleEn = await translateToEnglish(payload.title);
       return { type: 'embed', titleEn };
+    }
+    case 'table': {
+      const headersEn = await translateStringsToEnglish(payload.headers);
+      const rowsEn = await Promise.all(
+        payload.rows.map((row) => translateStringsToEnglish(row))
+      );
+      let titleEn: string | undefined;
+      if (payload.title?.trim())
+        titleEn = await translateToEnglish(payload.title);
+      let subtitleEn: string | undefined;
+      if (payload.subtitle?.trim())
+        subtitleEn = await translateToEnglish(payload.subtitle);
+      let captionEn: string | undefined;
+      if (payload.caption?.trim())
+        captionEn = await translateToEnglish(payload.caption);
+      return {
+        type: 'table',
+        titleEn,
+        subtitleEn,
+        headersEn,
+        rowsEn,
+        captionEn,
+      };
     }
   }
 }

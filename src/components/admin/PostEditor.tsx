@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   createEmptyBlock,
   createFallbackSlug,
@@ -30,6 +30,8 @@ import type {
   ContentCategory,
   ParagraphBlock,
 } from '@/types';
+import { useAdminViewArticleLink } from '@/components/admin/AdminViewArticleContext';
+import { articleDetailHref } from '@/lib/article-paths';
 import PostMetaForm, { type PostMetaPatch } from './PostMetaForm';
 
 const BlockEditor = dynamic(() => import('./BlockEditor'), { ssr: false });
@@ -59,14 +61,19 @@ function buildArticlePayload(
   authorDesignation: string,
   seo: ArticleSEO,
   blocks: ContentBlock[],
-  untitledFallback: string
+  untitledFallback: string,
+  currentPublishedAt: string | null
 ): Omit<Article, 'id' | 'createdAt' | 'updatedAt'> {
   const tags = tagsStr
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
   const toc = generateTOC(blocks);
-  const publishedAt = status === 'published' ? new Date().toISOString() : null;
+  // Preserve an existing publishedAt; only stamp "now" on first publish.
+  const publishedAt =
+    status === 'published'
+      ? (currentPublishedAt ?? new Date().toISOString())
+      : null;
   const safeSlug = createFallbackSlug(slug || title);
   return {
     slug: safeSlug,
@@ -134,6 +141,8 @@ function SaveIndicator({ saving, label }: { saving: boolean; label: string }) {
 
 export default function PostEditor({ articleId }: { articleId?: string }) {
   const t = useTranslations('admin.editor');
+  const locale = useLocale();
+  const { setViewArticleHref } = useAdminViewArticleLink();
   const router = useRouter();
   const isDirtyRef = useRef(false);
   const autoSavingRef = useRef(false);
@@ -156,6 +165,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const [category, setCategory] = useState<ContentCategory>('useful-info');
   const [tags, setTags] = useState('');
   const [status, setStatus] = useState<ArticleStatus>('draft');
+  const [publishedAt, setPublishedAt] = useState<string | null>(null);
   const [authorName, setAuthorName] = useState(defaultAuthor.name);
   const [authorDesignation, setAuthorDesignation] = useState(
     defaultAuthor.designation
@@ -185,6 +195,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     setCategory(row.category);
     setTags(row.tags.join(', '));
     setStatus(row.status);
+    setPublishedAt(row.publishedAt);
     setAuthorName(row.author.name);
     setAuthorDesignation(row.author.designation);
     setSeo(row.seo ?? {});
@@ -200,6 +211,22 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Sidebar "View site": deep-link to this article on the public site when published.
+  useEffect(() => {
+    if (status !== 'published') {
+      setViewArticleHref(null);
+      return;
+    }
+    const safeSlug = createFallbackSlug(slug || title);
+    if (!safeSlug) {
+      setViewArticleHref(null);
+      return;
+    }
+    const path = articleDetailHref(category, safeSlug);
+    setViewArticleHref(`/${locale}${path}`);
+    return () => setViewArticleHref(null);
+  }, [status, slug, title, category, locale, setViewArticleHref]);
 
   // Auto-resize title textarea
   useEffect(() => {
@@ -226,6 +253,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     if (patch.authorDesignation !== undefined)
       setAuthorDesignation(patch.authorDesignation);
     if (patch.seo !== undefined) setSeo(patch.seo);
+    if ('publishedAt' in patch) setPublishedAt(patch.publishedAt ?? null);
   }
 
   const runAutoSave = useCallback(async () => {
@@ -256,7 +284,8 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         authorDesignation,
         seo,
         blocks,
-        t('untitled')
+        t('untitled'),
+        publishedAt
       );
       await updateArticleAction(id, payload);
       isDirtyRef.current = false;
@@ -279,6 +308,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     category,
     tags,
     status,
+    publishedAt,
     authorName,
     authorDesignation,
     seo,
@@ -318,7 +348,8 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         authorDesignation,
         seo,
         blocks,
-        t('untitled')
+        t('untitled'),
+        publishedAt
       );
       if (persistedId) {
         await updateArticleAction(persistedId, payload);
@@ -327,7 +358,13 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         setPersistedId(id);
         router.replace(`/admin/posts/${id}`);
       }
-      if (publish) setStatus('published');
+      if (publish) {
+        setStatus('published');
+        // Sync the stamped timestamp back into state so subsequent saves preserve it.
+        setPublishedAt(payload.publishedAt);
+      } else if (st !== 'published') {
+        setPublishedAt(null);
+      }
       isDirtyRef.current = false;
       setSaveNotice('manual');
       setTimeout(() => setSaveNotice(null), 2000);
@@ -605,6 +642,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 category={category}
                 tags={tags}
                 status={status}
+                publishedAt={publishedAt}
                 authorName={authorName}
                 authorDesignation={authorDesignation}
                 seo={seo}
@@ -629,6 +667,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 category={category}
                 tags={tags}
                 status={status}
+                publishedAt={publishedAt}
                 authorName={authorName}
                 authorDesignation={authorDesignation}
                 seo={seo}
