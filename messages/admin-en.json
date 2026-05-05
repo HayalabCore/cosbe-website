@@ -23,6 +23,7 @@
     "allPosts": "All Posts",
     "newPost": "New Post",
     "media": "Media",
+    "translations": "Translations",
     "viewSite": "View Site",
     "signOut": "Sign Out"
   },
@@ -319,5 +320,32 @@
     "viewFull": "View",
     "lightboxAria": "Full size image",
     "closeLightbox": "Close"
+  },
+  "translationsEditor": {
+    "title": "Translations",
+    "subtitle": "Edit site copy (Japanese and English). Changes go live after a short cache refresh.",
+    "searchPlaceholder": "Search by key or text…",
+    "emptyDb": "No translation rows in the database. Run yarn db:seed-translations from the project root, then refresh this page.",
+    "noResults": "No matching strings.",
+    "namespaceLabel": "Section",
+    "jaLabel": "Japanese",
+    "enLabel": "English",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "error": "Error",
+    "translateToEn": "Translate JA → EN",
+    "translating": "Translating…",
+    "history": "History",
+    "historyJa": "Japanese history",
+    "historyEn": "English history",
+    "restore": "Restore",
+    "noHistory": "No history yet.",
+    "loadRowsError": "Could not load strings.",
+    "namespaceBadge": "Section: {namespace}",
+    "loadingRows": "Loading…",
+    "deleteHistory": "Delete",
+    "deleteHistoryConfirm": "Remove this history entry? This cannot be undone.",
+    "deleteHistoryConfirmYes": "Delete",
+    "deleteHistoryConfirmNo": "Cancel"
   }
 }

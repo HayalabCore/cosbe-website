@@ -14,6 +14,10 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "import-article": "tsx scripts/import-article.ts",
+    "db:seed-translations": "tsx scripts/seed-translations.ts",
+    "db:pull-translations": "tsx scripts/pull-translations.ts",
+    "db:sync-translations": "tsx scripts/sync-translations.ts",
+    "test:translations-flatten": "tsx src/lib/translations/flatten.roundtrip.test.ts",
     "prepare": "husky",
     "format": "prettier --write ."
   },

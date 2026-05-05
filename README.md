@@ -92,6 +92,60 @@ After pulling changes that include new migrations, run `yarn db:deploy` (or `yar
 
 Optional SQL for the `article-images` bucket and storage policies lives in [`supabase/schema.sql`](supabase/schema.sql). Run it in the Supabase SQL editor if you use image uploads; create the **public** bucket `article-images` in the dashboard if it does not exist.
 
+## Translations
+
+UI copy for public pages (`/en`, `/ja`) and the admin interface is stored in PostgreSQL and edited through the admin dashboard at `/admin/translations`. The source files `messages/ja.json` and `messages/en.json` define which keys exist; the database stores the live values editors can change.
+
+### How it works
+
+- **Marketing editors** log into `/admin/translations`, find the string they want to change by browsing sections or using the search box, edit the Japanese and/or English textarea, and changes go live within seconds (no redeploy needed).
+- **Developers** control which keys exist. Adding, renaming, or removing a key requires a code change.
+
+### Developer workflow — adding or changing a key
+
+1. Edit the default value in `messages/ja.json` and/or `messages/en.json`.
+2. Run the seed command to insert the new key(s) into the database (existing edited values are never overwritten):
+
+```bash
+yarn db:seed-translations
+```
+
+3. Commit `messages/*.json`. The seed command should also run as part of every production deploy (see [Deploy](#deploy)).
+
+### Command reference
+
+```bash
+yarn db:sync-translations            # sync in both directions — use this for everything
+yarn db:sync-translations --dry-run  # preview what would change, no writes
+```
+
+It handles both directions in one pass:
+
+| What sync finds               | Action                                                                     |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| Key in JSON, missing from DB  | Inserts into DB with JSON value as default (`→ DB`)                        |
+| Key in both, DB value differs | Updates `messages/*.json` with DB value — editor edits always win (`← DB`) |
+| Key in both, values match     | Nothing (`✓`)                                                              |
+| Key in DB, missing from JSON  | Warns and skips — orphaned row from a deleted code key (`⚠`)               |
+
+**Disaster recovery only:**
+
+```bash
+yarn db:seed-translations --force   # wipe all DB translation values and restore from JSON defaults
+```
+
+```bash
+yarn test:translations-flatten      # verify messages/*.json survive flatten → unflatten intact
+```
+
+### Typical deploy checklist
+
+```bash
+yarn db:deploy               # apply any new Prisma migrations
+yarn db:sync-translations    # sync new keys → DB and pull any editor changes ← DB
+yarn build                   # production build
+```
+
 ## Scripts
 
 | Script                      | Description                                                                                                                                       |
@@ -109,6 +163,14 @@ Optional SQL for the `article-images` bucket and storage policies lives in [`sup
 
 ## Deploy
 
-Production hosts should set the same env vars as `.env.example`, run `yarn install` (which generates Prisma Client), then `yarn db:deploy` so the database matches migrations, then `yarn build`. On [Vercel](https://vercel.com), add env vars in the project settings and use the Supabase pooled `DATABASE_URL` for runtime.
+Production hosts should set the same env vars as `.env.example`, run `yarn install` (which generates Prisma Client), then run the following in order:
+
+```bash
+yarn db:deploy               # apply pending migrations
+yarn db:sync-translations    # sync translations both ways (safe to run on every deploy)
+yarn build
+```
+
+On [Vercel](https://vercel.com), add env vars in the project settings, use the Supabase pooled `DATABASE_URL` for runtime, and add the above three commands as your build command (or a pre-build script).
 
 For Next.js features and deployment details, see the [Next.js documentation](https://nextjs.org/docs).

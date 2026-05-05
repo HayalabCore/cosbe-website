@@ -19,7 +19,13 @@ yarn db:studio    # Open Prisma Studio GUI
 yarn postinstall  # Re-run prisma generate (needed after schema changes to refresh TS types)
 
 # Utilities
-yarn import-article <url>   # Scrape and import legacy articles
+yarn import-article <url>        # Scrape and import legacy articles
+
+# Translations
+yarn db:sync-translations           # Bidirectional sync (use this for everything)
+yarn db:sync-translations --dry-run # Preview sync without writing
+yarn db:seed-translations --force   # Disaster recovery: wipe DB values and restore from JSON
+yarn test:translations-flatten      # Round-trip test for flatten/unflatten utilities
 ```
 
 Pre-commit hooks (Husky + lint-staged) run Prettier and ESLint on staged files automatically.

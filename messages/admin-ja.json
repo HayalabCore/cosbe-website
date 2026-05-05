@@ -23,6 +23,7 @@
     "allPosts": "すべての記事",
     "newPost": "新規記事",
     "media": "メディア",
+    "translations": "翻訳",
     "viewSite": "サイトを見る",
     "signOut": "ログアウト"
   },
@@ -340,5 +341,32 @@
     "viewFull": "表示",
     "lightboxAria": "原寸画像",
     "closeLightbox": "閉じる"
+  },
+  "translationsEditor": {
+    "title": "翻訳",
+    "subtitle": "サイトの文言（日本語・英語）を編集します。保存後、短い間隔でキャッシュが更新されサイトに反映されます。",
+    "searchPlaceholder": "キーまたは文言で検索…",
+    "emptyDb": "データベースに翻訳がありません。プロジェクトルートで yarn db:seed-translations を実行してから、このページを更新してください。",
+    "noResults": "該当する文言がありません。",
+    "namespaceLabel": "セクション",
+    "jaLabel": "日本語",
+    "enLabel": "英語",
+    "saving": "保存中…",
+    "saved": "保存済み",
+    "error": "エラー",
+    "translateToEn": "日本語から英訳",
+    "translating": "翻訳中…",
+    "history": "履歴",
+    "historyJa": "日本語の履歴",
+    "historyEn": "英語の履歴",
+    "restore": "復元",
+    "noHistory": "履歴はまだありません。",
+    "loadRowsError": "文言の読み込みに失敗しました。",
+    "namespaceBadge": "セクション: {namespace}",
+    "loadingRows": "読み込み中…",
+    "deleteHistory": "削除",
+    "deleteHistoryConfirm": "この履歴エントリを削除しますか？この操作は取り消せません。",
+    "deleteHistoryConfirmYes": "削除する",
+    "deleteHistoryConfirmNo": "キャンセル"
   }
 }

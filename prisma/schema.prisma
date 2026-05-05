@@ -85,3 +85,32 @@ model MediaLibrary {
   @@index([filename])
   @@map("media_library")
 }
+
+/// UI copy for public + admin base messages (values edited in /admin/translations).
+/// Key schema is defined by messages/{en,ja}.json; seed inserts missing keys only.
+model Translation {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  keyPath   String   @map("key_path")
+  locale    String
+  value     String   @db.Text
+  namespace String
+  updatedBy String?  @map("updated_by")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([keyPath, locale])
+  @@index([locale, namespace])
+  @@map("translations")
+}
+
+/// Append-only audit trail for translation value changes (restore from history).
+model TranslationHistory {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  keyPath       String   @map("key_path")
+  locale        String
+  previousValue String   @map("previous_value") @db.Text
+  changedBy     String?  @map("changed_by")
+  changedAt     DateTime @default(now()) @map("changed_at") @db.Timestamptz(6)
+
+  @@index([keyPath, locale, changedAt(sort: Desc)])
+  @@map("translation_history")
+}
