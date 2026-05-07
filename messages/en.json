@@ -357,45 +357,6 @@
       "text": "/AI Agents provided by Hayaku AI Lab/",
       "button": "Learn more about AI Agents"
     },
-    "pricing": {
-      "title": "Consulting + development at this price. Grow your business with high quality and affordability!",
-      "lowPrice": {
-        "title": "Low prices, no compromises. Best prices for development and consulting!",
-        "point1": "We provide consistent support from consulting to development.",
-        "point2": "We cater to a wide range of clients, from startups to large corporations, and have received positive feedback. We offer quality that exceeds expectations while keeping prices low.",
-        "point3": "Even first-time customers can place an order with confidence.",
-        "imageAlt": "Pricing image"
-      },
-      "table": {
-        "badge": "Usage fees provided by CosBE",
-        "title": "We promise high-quality business growth at unbeatable prices"
-      },
-      "amount": {
-        "development": "Fee: 1.5 million yen per month",
-        "developmentNote": "(Development, consulting, server, and various tool costs included *Minimum 2 months)",
-        "maintenance": "Maintenance and operation: from 50,000 yen per month",
-        "maintenanceNote": "(Depending on the product, such as number of users and usage)"
-      },
-      "comparison": {
-        "title": "Service and price comparison with other companies",
-        "subtitle": "We are here to support your new challenges, so we offer the lowest prices in the industry.",
-        "text1": "We have worked alongside many startups and new businesses.",
-        "text2": "Having supported many challenges, we put growth first and provide the most effective methods at the best prices.",
-        "text3": "We will eliminate the anxiety of startups and accelerate new businesses.",
-        "companyA": "Company A",
-        "companyB": "Company B",
-        "agile": "Agile Development",
-        "consulting": "Consulting",
-        "serverTools": "Use of various server tools",
-        "price": "price",
-        "cosbePrice": "1.5 million yen per month",
-        "cosbeNote": "* Minimum 2 months",
-        "companyAPrice": "10 million yen and up",
-        "companyANote": "(development only)",
-        "companyBPrice": "15 million yen -",
-        "companyBNote": "Initial costs and development only"
-      }
-    },
     "caseStudies": {
       "subtitle": "Case study of \"Hayaku AI Lab,\" an agile development service specializing in AI",
       "title": "Cross-industry AI solutions provided by Hayaku AI Lab",
@@ -755,30 +716,6 @@
       "step4": "Improvement",
       "step5": "Add Features",
       "step6": "Business Adaptation"
-    },
-    "pricing": {
-      "badge": "Price",
-      "title": "Information on installation costs",
-      "description": "Hayaku AI Lab provides consistent support to maximize your business impact, with an optimal price design that allows you to start small.",
-      "feeLabel": "Fee",
-      "fee": "1.5 million yen per month",
-      "feeNote": "(Development, consulting, server, and various tool costs included *Minimum 2 months)",
-      "maintenanceLabel": "Maintenance and operation",
-      "maintenance": "from 50,000 yen per month",
-      "maintenanceNote": "(Depending on the product, such as number of users and usage)",
-      "companyA": "Company A",
-      "companyB": "Company B",
-      "agileDev": "Agile Development",
-      "consulting": "Consulting",
-      "serverTools": "Use of various server tools",
-      "priceLabel": "price",
-      "minMonths": "* Minimum 2 months",
-      "cosbePriceMain": "1.5 million yen per",
-      "cosbePriceSub": "month",
-      "companyAPrice": "10 million yen and",
-      "companyAPriceSub": "up (development only)",
-      "companyBPrice": "15 million yen -",
-      "companyBPriceSub": "Initial costs and development only"
     },
     "faq": {
       "badge": "Q&A",

@@ -89,16 +89,18 @@ model MediaLibrary {
 /// UI copy for public + admin base messages (values edited in /admin/translations).
 /// Key schema is defined by messages/{en,ja}.json; seed inserts missing keys only.
 model Translation {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  keyPath   String   @map("key_path")
-  locale    String
-  value     String   @db.Text
-  namespace String
-  updatedBy String?  @map("updated_by")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  keyPath    String   @map("key_path")
+  locale     String
+  value      String   @db.Text
+  namespace  String
+  isOrphaned Boolean  @default(false) @map("is_orphaned")
+  updatedBy  String?  @map("updated_by")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@unique([keyPath, locale])
   @@index([locale, namespace])
+  @@index([isOrphaned])
   @@map("translations")
 }
 

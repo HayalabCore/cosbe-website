@@ -16,7 +16,7 @@
   },
   "hero": {
     "brand": "Cosnia",
-    "tagline": "AI変革の世代t",
+    "tagline": "AIトランスフォーメーションエージェント",
     "jpLine1": "「これ、AIで解決できる？」に",
     "jpLine2": "応えられるチームメイト",
     "characterAlt": "Cosbeキャラクター",
@@ -355,45 +355,6 @@
     "aiAgentLink": {
       "text": "＼速AIラボが提供する「AIエージェント」／",
       "button": "AIエージェントについて詳しく見る"
-    },
-    "pricing": {
-      "title": "コンサル＋開発がこの価格。高品質と手頃さで事業成長を！",
-      "lowPrice": {
-        "title": "低価格でも妥協なし。開発とコンサルのベストプライス！",
-        "point1": "コンサルティングから開発まで、一貫してサポートします。",
-        "point2": "スタートアップから大手企業まで幅広く対応し、高い評価をいただいています。価格を抑えながらも期待以上の品質を提供します。",
-        "point3": "初めての方でも安心してご依頼いただけます。",
-        "imageAlt": "価格イメージ"
-      },
-      "table": {
-        "badge": "CosBEがご提供する利用金額",
-        "title": "他社には真似できない価格で質の高いビジネスの成長をお約束します"
-      },
-      "amount": {
-        "development": "料金：月額150万円",
-        "developmentNote": "（開発・コンサルティング、サーバー、各種ツール費用全て含む※最小2ヶ月〜）",
-        "maintenance": "保守・運用：月額5万円〜",
-        "maintenanceNote": "（ユーザー数、利用量などプロダクトによる）"
-      },
-      "comparison": {
-        "title": "他社とのサービス・料金比較",
-        "subtitle": "私たちは新たな挑戦を支えるため、業界最安値の価格をご提供いたします。",
-        "text1": "私たちは多くのスタートアップや新規事業と共に歩んできました。",
-        "text2": "多くの挑戦を支えたからこそ、成長を第一に考え、最も効果的な方法を最良の価格でご提供します。",
-        "text3": "スタートアップの不安を取り除き、新規事業を加速させます。",
-        "companyA": "A社",
-        "companyB": "B社",
-        "agile": "アジャイル開発",
-        "consulting": "コンサル",
-        "serverTools": "サーバー・各種ツール利用",
-        "price": "価格",
-        "cosbePrice": "月額150万円",
-        "cosbeNote": "※最小2ヶ月から",
-        "companyAPrice": "1000万円〜",
-        "companyANote": "開発のみ",
-        "companyBPrice": "1500万円〜",
-        "companyBNote": "初期費用・開発のみ"
-      }
     },
     "caseStudies": {
       "subtitle": "AI特化型アジャイル開発サービス「速AIラボ」導入事例",
@@ -754,30 +715,6 @@
       "step4": "改善",
       "step5": "機能追加",
       "step6": "業務適応"
-    },
-    "pricing": {
-      "badge": "Price",
-      "title": "導入費用のご案内",
-      "description": "速AIラボでは、経営インパクトを最大化するための一貫した伴走支援を、最適なスモールスタートの価格設計でご提供しています。",
-      "feeLabel": "料金",
-      "fee": "月額150万円",
-      "feeNote": "（開発・コンサルティング、サーバー、各種ツール費用全て含む※最小2ヶ月〜）",
-      "maintenanceLabel": "保守・運用",
-      "maintenance": "月額5万円〜",
-      "maintenanceNote": "（ユーザー数、利用量などプロダクトによる）",
-      "companyA": "A社",
-      "companyB": "B社",
-      "agileDev": "アジャイル開発",
-      "consulting": "コンサル",
-      "serverTools": "サーバー各種ツール利用",
-      "priceLabel": "料金",
-      "minMonths": "※最小2ヶ月から",
-      "cosbePriceMain": "月額150万円",
-      "cosbePriceSub": "",
-      "companyAPrice": "1000万円〜",
-      "companyAPriceSub": "（開発のみ）",
-      "companyBPrice": "1500万円〜",
-      "companyBPriceSub": "初期費用・開発のみ"
     },
     "faq": {
       "badge": "Q&A",
