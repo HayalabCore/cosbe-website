@@ -16,13 +16,96 @@
     "button": "AIの課題を相談する（無料）"
   },
   "hero": {
-    "brand": "Cosnia",
-    "tagline": "AIトランスフォーメーションエージェント",
-    "jpLine1": "「これ、AIで解決できる？」に",
-    "jpLine2": "応えられるチームメイト",
-    "characterAlt": "Cosbeキャラクター",
-    "formPlaceholderTitle": "HubSpotフォーム",
-    "formPlaceholderBody": "ここはHubSpotフォーム埋め込み用のスペースです。"
+    "eyebrow": "経営者の未来を切り拓く",
+    "headline": "AIトランスフォーメーションパートナー",
+    "ctaDownload": "AIトランスフォーメーション資料ダウンロード（無料）",
+    "illustrationAlt": "AIトランスフォーメーションのイメージイラスト",
+    "nav": {
+      "aboutCosbe": "CosBEとは？",
+      "fastAiLab": "速AIラボ",
+      "caseStudies": "導入事例",
+      "notice": "お知らせ"
+    }
+  },
+  "homePage": {
+    "about": {
+      "sectionJa": "CosBEとは？",
+      "sectionEn": "About",
+      "heading": "ビジネスを変革する、\n戦略的AI実装パートナー",
+      "p1": "CosBEは、トップ経営コンサルタントが率いる多国籍AI/ITエンジニア集団です。",
+      "p2": "我々の使命は、世界中の経営者の挑戦を加速させることです。",
+      "p3": "経営の視点に世界水準のAIとグローバルの視座をもたらし、実装を通じて企業変革を実現します。",
+      "viewMore": "詳しく見る",
+      "imageAlt": "CosBEチームのイメージ"
+    },
+    "service": {
+      "sectionJa": "サービス",
+      "sectionEn": "Service",
+      "eyebrow": "AI特化型MVP開発サービス “速AIラボ”",
+      "title": "速AIラボ",
+      "p1": "速AIラボは、AIに特化したMVP開発をスピーディに提供するサービスです。",
+      "p2": "新規事業に深い知見を持つAIコンサルタントと世界トップレベルのAIエンジニアがお客様とタッグを組むことで、アジャイルでスピーディーなMVP開発が実現します。",
+      "viewMore": "詳しく見る",
+      "imageAlt": "速AIラボサービス"
+    },
+    "caseStudies": {
+      "sectionJa": "導入事例",
+      "sectionEn": "Case Study",
+      "title": "速AIラボが提供する、業界を超えたAIソリューション",
+      "description": "CosBEは、国際的に活躍するAIエンジニアによる高い技術力のもと、様々な案件に柔軟に対応いたします。製造業、建設、小売からITまで幅広く対応しています。",
+      "scrollHint": "スクロールできます",
+      "viewAll": "実績一覧へ",
+      "fallback": {
+        "case1": {
+          "category": "新規事業・イノベーション",
+          "title": "【導入事例】AIサービスを2カ月で実現！スピードとスモールスタートが生む新規事業の可能性",
+          "date": "2025年2月26日"
+        },
+        "case2": {
+          "category": "人材・組織改善",
+          "title": "【導入事例】プロフェッショナル講師不足の課題を解決！",
+          "date": "2024年8月31日"
+        },
+        "case3": {
+          "category": "人材・組織改善",
+          "title": "【導入事例】外国人レジュメの書類選考課題を解決！",
+          "date": "2024年8月31日"
+        }
+      }
+    },
+    "news": {
+      "sectionJa": "おしらせ",
+      "sectionEn": "News",
+      "viewAll": "おしらせ一覧へ",
+      "fallback": {
+        "item1": {
+          "date": "2026年4月10日",
+          "title": "株式会社Revopp『AI開発依頼できる君』との紹介契約締結について"
+        },
+        "item2": {
+          "date": "2026年2月10日",
+          "title": "株式会社ecloreが運営するメディア 「Rank-Quest」にて、CosBEが「AIコンサルおすすめ企業」として紹介されました。"
+        },
+        "item3": {
+          "date": "2026年1月15日",
+          "title": "【受賞報告】CEO茂見憲治郎が世界的カンファレンス「Founders 2.0」にて「優秀起業家賞」を受賞"
+        },
+        "item4": {
+          "date": "2026年1月15日",
+          "title": "【無料公開】経営者のための「AIトランスフォーメーション」実践ホワイトペーパーをリリースいたしました"
+        },
+        "item5": {
+          "date": "2026年1月14日",
+          "title": "【1/22 仙台開催】AI超生産性時代のスタートアップ経営セミナー 登壇のお知らせ"
+        }
+      }
+    },
+    "cta": {
+      "title": "様々な側面から貴社のビジネスをサポートいたします\nまずはお気軽にご相談ください",
+      "description": "詳しいサービス内容についてのご相談やお見積りはフォームからお願いします。",
+      "additionalText": "状況にあわせて柔軟に対応しますので、まずは、お気軽にお問い合わせください。",
+      "button": "速AIラボについてお問い合わせ"
+    }
   },
   "company": {
     "title": "会社概要",
@@ -709,7 +792,7 @@
     },
     "ctaConsult": "AI導入について無料相談をする",
     "whatIs": {
-      "badge": "What is an AI Agent?",
+      "badge": "AIエージェントとは？",
       "title": "AIエージェントとは？",
       "subtitle": "AIが自律的にタスクを実行し、「本当に価値ある仕事」を経営者に返す",
       "point1": "AIエージェントは、社内データや既存システムを活用し、必要なタスクを自動で生成・実行する「自律型」のAIシステムです。",
@@ -779,7 +862,7 @@
       }
     },
     "features": {
-      "badge": "Our Strengths",
+      "badge": "CosBEの強み",
       "title": "「速AIラボ」AIエージェントの特徴",
       "subtitle": "短期導入＆柔軟拡張を両立。トップの経営戦略を後押しするAIエージェント。",
       "feature1": {
@@ -811,12 +894,12 @@
       }
     },
     "pricing": {
-      "badge": "CosBE Price",
+      "badge": "CosBEの料金",
       "title": "導入費用のご案内",
       "description": "速AIラボでは、経営インパクトを最大化するための一貫した伴走支援を、最適なスモールスタートの価格設計でご提供しています。"
     },
     "deployment": {
-      "badge": "Deployment Steps",
+      "badge": "導入ステップ",
       "title": "導入プロセス",
       "description1": "弊社のAIエージェント導入は、非常にシンプルな初期要件でスタートし、最短2ヶ月で現場で動作するプロトタイプ（MVP）を構築します。",
       "description2": "この短期間での試作により、現場からのフィードバックをすぐに収集し、3ヶ月目以降は実際の運用データに基づいてAIの精度や使い勝手を改善・機能追加していきます。",
@@ -1240,46 +1323,46 @@
     },
     "pageTitle": "お役立ち動画",
     "category": "お役立ち動画",
-    "readMore": "READ MORE",
+    "readMore": "詳細を見る",
     "video1": {
       "title": "ROI（費用対効果）200％を実現したAI導入の裏側｜経営者が知るべき「AI活用の現場」についてYoutube動画を公開しました",
       "date": "2026年2月6日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "video2": {
       "title": "【AIトランスフォーメーション】導入しない企業が「3年後に後悔する」理由と対策4ステップについてYoutube動画を公開しました",
       "date": "2026年2月5日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "video3": {
       "title": "【10問で診断】あなたの会社はAI導入に向いている？成功確率チェックリスト｜AIトランスフォーメーションについてYoutube動画を公開しました",
       "date": "2026年2月4日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "video4": {
       "title": "ぶっちゃけ「AIトランスフォーメーション」っていくらかかる？費用対効果を徹底公開！についてYoutube動画を公開しました",
       "date": "2026年2月3日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "video5": {
       "title": "【衝撃】ChatGPTが「もっともらしい嘘」をつく理由とは？AI活用で絶対知るべき限界についてYoutube動画を公開しました",
       "date": "2026年2月2日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "video6": {
       "title": "【AIトランスフォーメーション】AIコールセンター失敗から学ぶ、経営者が知るべき戦略についてYoutube動画を公開しました",
       "date": "2026年1月30日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "video7": {
       "title": "【要注意】数千万が「ゴミシステム」に！？AI導入で騙された実例と回避法",
       "date": "2026年1月29日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "video8": {
       "title": "製造業×AIで成功するためのカギ｜失敗を防ぐCosBE流アプローチについてYoutube動画を公開しました",
       "date": "2026年1月28日",
-      "author": "Kenjiro Momi"
+      "author": "茂見 憲治郎"
     },
     "cta": {
       "title": "様々な側面から貴社のビジネスをサポートいたします まずはお気軽にご相談ください",
@@ -1556,7 +1639,7 @@
       "home": "ホーム",
       "usefulColumn": "お役立ち情報"
     },
-    "readMore": "READ MORE »",
+    "readMore": "詳細を見る »",
     "noArticles": "記事が見つかりませんでした。",
     "categoryLabels": {
       "usefulInfo": "お役立ち情報",
@@ -1570,49 +1653,49 @@
         "category": "お役立ち情報",
         "title": "「指示待ち」から「目的達成」へ：AIエージェントが切り拓く中小企業の自律型経営",
         "date": "2026年2月6日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article2": {
         "category": "お役立ち情報",
         "title": "AIを「育てる」経営戦略：「ユーザー統合型アプローチ」で実現するAIの現場定着と精度向上",
         "date": "2026年2月4日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article3": {
         "category": "お役立ち情報",
         "title": "AIトランスフォーメーションで高額投資は不要！「小規模AI群戦略」でリスクを最小化する方法",
         "date": "2026年2月2日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article4": {
         "category": "お役立ち情報",
         "title": "「AI導入ありき」の罠から脱却し、経営を変革するイシュー・ファースト思考",
         "date": "2026年1月29日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article5": {
         "category": "お役立ち情報",
         "title": "AIトランスフォーメーションが中小企業にもたらす「4つの革新的な価値」：AI時代の勝ち筋を可視化する",
         "date": "2026年1月19日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article6": {
         "category": "お役立ち情報",
         "title": "AI導入で失敗しない！中小企業経営者が「経験主義」で未来を拓く方法",
         "date": "2025年9月29日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article7": {
         "category": "お役立ち情報",
         "title": "AI導入の成否を分ける「AI格差」とは？ 中小企業がAIに今すぐ取り組むべき理由",
         "date": "2025年9月16日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article8": {
         "category": "お役立ち情報",
         "title": "なぜあなたの会社のChatGPT活用は「真の経営・事業変革を生まない」で終わるのか？",
         "date": "2025年9月16日",
-        "author": "Kenjiro Momi"
+        "author": "茂見 憲治郎"
       },
       "article9": {
         "category": "お役立ち情報",

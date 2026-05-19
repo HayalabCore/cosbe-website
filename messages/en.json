@@ -17,13 +17,96 @@
     "button": "Consult about AI (Free)"
   },
   "hero": {
-    "brand": "Cosnia",
-    "tagline": "AI transformation agent",
-    "jpLine1": "“Can AI solve this?”",
-    "jpLine2": "A teammate you can rely on",
-    "characterAlt": "Cosbe character",
-    "formPlaceholderTitle": "HubSpot form",
-    "formPlaceholderBody": "This area is reserved for the embedded HubSpot form."
+    "eyebrow": "Opening up the future for business leaders",
+    "headline": "AI Transformation Partner",
+    "ctaDownload": "Download AI Transformation materials (Free)",
+    "illustrationAlt": "AI transformation illustration",
+    "nav": {
+      "aboutCosbe": "What is CosBE?",
+      "fastAiLab": "Fast AI Lab",
+      "caseStudies": "Case Studies",
+      "notice": "News"
+    }
+  },
+  "homePage": {
+    "about": {
+      "sectionJa": "What is CosBE?",
+      "sectionEn": "About",
+      "heading": "A strategic AI implementation partner\nthat transforms your business",
+      "p1": "CosBE is a multinational team of AI/IT engineers led by top management consultants.",
+      "p2": "Our mission is to accelerate the challenges of business leaders around the world.",
+      "p3": "We bring world-class AI and a global perspective to management, and achieve corporate transformation through implementation.",
+      "viewMore": "Learn more",
+      "imageAlt": "CosBE team illustration"
+    },
+    "service": {
+      "sectionJa": "Service",
+      "sectionEn": "Service",
+      "eyebrow": "AI-focused MVP development service \"Fast AI Lab\"",
+      "title": "Fast AI Lab",
+      "p1": "Fast AI Lab provides speedy, AI-focused MVP development.",
+      "p2": "AI consultants with deep expertise in new businesses and world-class AI engineers team up with you to deliver agile, rapid MVP development.",
+      "viewMore": "Learn more",
+      "imageAlt": "Fast AI Lab service"
+    },
+    "caseStudies": {
+      "sectionJa": "Case Studies",
+      "sectionEn": "Case Study",
+      "title": "Cross-industry AI solutions from Fast AI Lab",
+      "description": "With highly skilled AI engineers active internationally, CosBE flexibly handles a wide range of projects—from manufacturing and construction to retail and IT.",
+      "scrollHint": "Scroll horizontally",
+      "viewAll": "View all case studies",
+      "fallback": {
+        "case1": {
+          "category": "New business & innovation",
+          "title": "[Case Study] AI service delivered in 2 months—how speed and a small start unlock new business potential",
+          "date": "February 26, 2025"
+        },
+        "case2": {
+          "category": "HR & organizational improvement",
+          "title": "[Case Study] Solving the shortage of professional instructors",
+          "date": "August 31, 2024"
+        },
+        "case3": {
+          "category": "HR & organizational improvement",
+          "title": "[Case Study] Solving document screening challenges for foreign resumes",
+          "date": "August 31, 2024"
+        }
+      }
+    },
+    "news": {
+      "sectionJa": "News",
+      "sectionEn": "News",
+      "viewAll": "All news",
+      "fallback": {
+        "item1": {
+          "date": "April 10, 2026",
+          "title": "Partnership agreement with Revopp's \"AI Development Request Platform\""
+        },
+        "item2": {
+          "date": "February 10, 2026",
+          "title": "CosBE featured as a recommended AI consulting firm on Rank-Quest media operated by eclore Inc."
+        },
+        "item3": {
+          "date": "January 15, 2026",
+          "title": "[Award] CEO Kenjiro Momi receives Excellent Entrepreneur Award at Founders 2.0"
+        },
+        "item4": {
+          "date": "January 15, 2026",
+          "title": "[Free release] Practical white paper on AI Transformation for business leaders"
+        },
+        "item5": {
+          "date": "January 14, 2026",
+          "title": "[Jan 22, Sendai] Speaking at startup management seminar on the AI hyper-productivity era"
+        }
+      }
+    },
+    "cta": {
+      "title": "We support your business from many angles.\nPlease feel free to contact us.",
+      "description": "For detailed service inquiries and estimates, please use the contact form.",
+      "additionalText": "We respond flexibly to your situation—reach out anytime.",
+      "button": "Contact us about Fast AI Lab"
+    }
   },
   "company": {
     "title": "Company Overview",

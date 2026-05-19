@@ -22,11 +22,26 @@ yarn postinstall  # Re-run prisma generate (needed after schema changes to refre
 yarn import-article <url>        # Scrape and import legacy articles
 
 # Translations
-yarn db:sync-translations           # Bidirectional sync (use this for everything)
-yarn db:sync-translations --dry-run # Preview sync without writing
-yarn db:seed-translations --force   # Disaster recovery: wipe DB values and restore from JSON
-yarn test:translations-flatten      # Round-trip test for flatten/unflatten utilities
+yarn db:pull-translations            # Snapshot DB values into JSON files (DB → JSON)
+yarn db:pull-translations --dry-run  # Preview pull without writing
+yarn db:push-translations            # Push JSON values into DB with history (JSON → DB)
+yarn db:push-translations --dry-run  # Preview push without writing
+yarn db:sync-translations            # Bidirectional sync (DB wins on conflicts, pushes new keys, orphan handling)
+yarn db:sync-translations --dry-run  # Preview sync without writing
+yarn db:seed-translations            # Insert missing keys only (skip existing)
+yarn db:seed-translations --force    # Disaster recovery: wipe DB + history, restore from JSON
+yarn test:translations-flatten       # Round-trip test for flatten/unflatten utilities
 ```
+
+### Translation commands cheat-sheet
+
+| Command                        | Direction | Who wins on conflict? | Writes history? | Use when…                                                      |
+| ------------------------------ | --------- | --------------------- | --------------- | -------------------------------------------------------------- |
+| `db:pull-translations`         | DB → JSON | DB                    | No              | Snapshotting editor changes into the codebase                  |
+| `db:push-translations`         | JSON → DB | JSON                  | Yes             | You edited JSON locally and want DB to match                   |
+| `db:sync-translations`         | DB ↔ JSON | DB                    | No              | Routine sync: pull editor edits + push new keys + mark orphans |
+| `db:seed-translations`         | JSON → DB | Skip existing         | No              | First-time bootstrap or adding new keys only                   |
+| `db:seed-translations --force` | JSON → DB | JSON (nuclear)        | Wipes history   | Disaster recovery — resets everything from JSON                |
 
 Pre-commit hooks (Husky + lint-staged) run Prettier and ESLint on staged files automatically.
 

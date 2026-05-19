@@ -50,9 +50,9 @@ export default async function CompanyPage() {
               <Image
                 src="/ceo-photo.png"
                 alt={t('about.ceoPhotoAlt')}
-                width={300}
-                height={400}
-                className="rounded-lg shadow-lg"
+                width={1024}
+                height={1024}
+                className="h-auto w-auto max-w-[300px] rounded-lg shadow-lg"
                 priority
               />
             </div>

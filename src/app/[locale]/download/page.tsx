@@ -9,9 +9,9 @@ export default async function DownloadPage() {
   return (
     <div className="min-h-screen bg-white pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Title */}
-        <div className="mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-primaryColor mb-4 pb-2 border-b-4 border-primaryColor inline-block">
+        {/* Page Title — matches company / listing pages */}
+        <div className="mb-8 py-12 text-center">
+          <h1 className="mb-4 inline-block border-b-4 border-primaryColor pb-2 text-3xl font-bold text-textPrimary md:text-4xl">
             {t('pageTitle')}
           </h1>
         </div>
@@ -32,6 +32,7 @@ export default async function DownloadPage() {
                 alt={t('documentTitle')}
                 width={600}
                 height={400}
+                priority
                 className="w-full h-full object-cover"
               />
             </div>

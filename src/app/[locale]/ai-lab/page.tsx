@@ -9,21 +9,20 @@ import {
   CtaSection,
   PageHero,
   PAGE_HERO_PRESETS,
-  PriceBreakdownCard,
-  PricingComparisonTable,
 } from '@/components';
 
-function SectionWave({ className }: { className?: string }) {
+/** Blue arc at the bottom of the white band — no overlap into text above */
+function SectionCurveDivider({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 1440 48"
+      viewBox="0 0 1440 100"
       preserveAspectRatio="none"
-      className={`block w-full h-8 md:h-12 ${className ?? ''}`}
+      className={`block w-full h-14 sm:h-16 md:h-20 lg:h-24 text-[#d4e8fa] ${className ?? ''}`}
       aria-hidden
     >
       <path
         fill="currentColor"
-        d="M0,32 C360,48 720,16 1440,32 L1440,48 L0,48 Z"
+        d="M0,100 L1440,100 L1440,80 C960,20 480,20 0,80 Z"
       />
     </svg>
   );
@@ -170,21 +169,23 @@ export default function AiLabPage() {
         </div>
       </section>
 
-      {/* Transition */}
-      <section className="text-center py-12 md:py-16 bg-white">
-        <p className="text-lg md:text-2xl font-bold text-primaryColor leading-relaxed px-4">
-          <span>{t('transition.cosbeName')}</span>
-          {t('transition.text')}
-        </p>
-        <div className="mt-6 flex justify-center" aria-hidden>
-          <span className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-primaryColor" />
+      {/* Transition + curved divider into features band */}
+      <section className="bg-white">
+        <div className="text-center px-4 py-12 md:py-16">
+          <p className="text-lg md:text-2xl font-bold text-primaryColor leading-relaxed">
+            <span>{t('transition.cosbeName')}</span>
+            {t('transition.text')}
+          </p>
+          <div className="mt-6 flex justify-center" aria-hidden>
+            <span className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-primaryColor" />
+          </div>
         </div>
+        <SectionCurveDivider />
       </section>
 
       {/* Features */}
-      <section className="relative bg-gradient-to-b from-[#d4e8fa] via-[#e8f3fc] to-[#f4f9fe] pb-16 md:pb-20">
-        <SectionWave className="text-white -mt-px" />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 md:pt-14">
+      <section className="bg-gradient-to-b from-[#d4e8fa] via-[#e8f3fc] to-[#f4f9fe] pb-16 md:pb-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10">
           <div className="mb-10 md:mb-12">
             <p className="text-primaryColor text-sm md:text-base font-medium mb-2">
               {t('features.sectionEyebrow')}
@@ -285,9 +286,9 @@ export default function AiLabPage() {
         </div>
       </section>
 
-      {/* AI Agent + Pricing */}
+      {/* AI Agent link */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center">
           <p className="text-primaryColor font-bold text-sm md:text-base mb-5">
             {t('aiAgentLink.text')}
           </p>
@@ -298,61 +299,6 @@ export default function AiLabPage() {
             {t('aiAgentLink.button')} →
           </Link>
         </div>
-
-        <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-6 mb-8">
-          <Image
-            src="/ai-lab/price-tag.png"
-            alt=""
-            width={120}
-            height={80}
-            className="w-24 md:w-32 h-auto"
-            aria-hidden
-          />
-          <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-snug pb-1">
-            {t('pricing.heading')}
-          </h2>
-        </div>
-
-        <div className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-bgAccent min-h-[280px]">
-          <div className="relative z-10 max-w-xl p-6 md:p-10 lg:p-12">
-            <h3 className="text-lg md:text-xl font-bold text-primaryColor mb-4 pb-2 border-b-2 border-primaryColor/30 inline-block">
-              {t('pricing.cardTitle')}
-            </h3>
-            <div className="space-y-3 text-sm md:text-base text-textPrimary leading-relaxed mt-6">
-              <p>{t('pricing.p1')}</p>
-              <p>{t('pricing.p2')}</p>
-              <p>{t('pricing.p3')}</p>
-            </div>
-          </div>
-          <div className="absolute inset-y-0 right-0 w-full md:w-[55%] lg:w-[50%]">
-            <Image
-              src="/ai-lab/business-growth.png"
-              alt={t('pricing.imageAlt')}
-              fill
-              className="object-cover object-center"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-bgAccent via-bgAccent/80 to-transparent md:block hidden" />
-          </div>
-        </div>
-      </section>
-
-      {/* Price breakdown */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-20">
-        <div className="mb-6">
-          <span className="inline-block px-4 py-1.5 bg-primaryColor text-white text-sm font-bold rounded-sm">
-            {t('priceBreakdown.badge')}
-          </span>
-        </div>
-        <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-relaxed mb-8 whitespace-pre-line">
-          {t('priceBreakdown.headline')}
-        </h2>
-        <PriceBreakdownCard />
-      </section>
-
-      {/* Comparison */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-20">
-        <PricingComparisonTable />
       </section>
 
       {/* Case studies */}

@@ -81,20 +81,48 @@ export function mergeEnMessagesFromJa(
   return out;
 }
 
+/** JSON provides new keys; DB values win on conflicts (editor updates). */
+export function mergeDbOverJson(
+  json: Record<string, unknown>,
+  db: Record<string, unknown>
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...json };
+
+  for (const key of Object.keys(db)) {
+    const dbVal = db[key];
+    const jsonVal = out[key];
+
+    if (isPlainObject(dbVal) && isPlainObject(jsonVal)) {
+      out[key] = mergeDbOverJson(
+        jsonVal as Record<string, unknown>,
+        dbVal as Record<string, unknown>
+      );
+      continue;
+    }
+
+    out[key] = dbVal;
+  }
+
+  return out;
+}
+
 async function loadMessagesFromDbOrFallback(
   locale: Locale
 ): Promise<Record<string, unknown>> {
+  const json = await loadJsonFallbackMessages(locale);
+
   try {
     const rows = await prisma.translation.findMany({
-      where: { locale },
+      where: { locale, isOrphaned: false },
       select: { keyPath: true, value: true },
     });
     if (rows.length === 0) {
-      return loadJsonFallbackMessages(locale);
+      return json;
     }
-    return unflattenMessages(rows) as Record<string, unknown>;
+    const db = unflattenMessages(rows) as Record<string, unknown>;
+    return mergeDbOverJson(json, db);
   } catch {
-    return loadJsonFallbackMessages(locale);
+    return json;
   }
 }
 

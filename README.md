@@ -114,28 +114,23 @@ yarn db:seed-translations
 
 ### Command reference
 
-```bash
-yarn db:sync-translations            # sync in both directions — use this for everything
-yarn db:sync-translations --dry-run  # preview what would change, no writes
-```
+| Command                        | Direction | Who wins on conflict? | Writes history? | Use when…                                                      |
+| ------------------------------ | --------- | --------------------- | --------------- | -------------------------------------------------------------- |
+| `db:pull-translations`         | DB → JSON | DB                    | No              | Snapshotting editor changes into the codebase                  |
+| `db:push-translations`         | JSON → DB | JSON                  | Yes             | You edited JSON locally and want DB to match                   |
+| `db:sync-translations`         | DB ↔ JSON | DB                    | No              | Routine sync: pull editor edits + push new keys + mark orphans |
+| `db:seed-translations`         | JSON → DB | Skip existing         | No              | First-time bootstrap or adding new keys only                   |
+| `db:seed-translations --force` | JSON → DB | JSON (nuclear)        | Wipes history   | Disaster recovery — resets everything from JSON                |
 
-It handles both directions in one pass:
-
-| What sync finds               | Action                                                                     |
-| ----------------------------- | -------------------------------------------------------------------------- |
-| Key in JSON, missing from DB  | Inserts into DB with JSON value as default (`→ DB`)                        |
-| Key in both, DB value differs | Updates `messages/*.json` with DB value — editor edits always win (`← DB`) |
-| Key in both, values match     | Nothing (`✓`)                                                              |
-| Key in DB, missing from JSON  | Warns and skips — orphaned row from a deleted code key (`⚠`)               |
-
-**Disaster recovery only:**
+All commands support `--dry-run` to preview changes without writing.
 
 ```bash
-yarn db:seed-translations --force   # wipe all DB translation values and restore from JSON defaults
-```
-
-```bash
-yarn test:translations-flatten      # verify messages/*.json survive flatten → unflatten intact
+yarn db:pull-translations            # snapshot DB values into JSON files
+yarn db:push-translations            # push JSON values into DB (with history)
+yarn db:sync-translations            # bidirectional sync (DB wins on conflicts)
+yarn db:seed-translations            # insert missing keys only
+yarn db:seed-translations --force    # disaster recovery: wipe DB + history, restore from JSON
+yarn test:translations-flatten       # verify messages/*.json survive flatten → unflatten intact
 ```
 
 ### Typical deploy checklist
