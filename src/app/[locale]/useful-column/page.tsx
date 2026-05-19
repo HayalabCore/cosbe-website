@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import { Breadcrumb } from '@/components';
+import { Breadcrumb, PageHero, PAGE_HERO_PRESETS } from '@/components';
 import ArticleGrid from '@/components/article/ArticleGrid';
 
 interface Props {
@@ -19,24 +19,11 @@ export default async function UsefulColumnPage({
 
   return (
     <div className="min-h-screen bg-white">
-      <div
-        className="relative min-h-[280px] md:min-h-[320px] flex flex-col items-start justify-center overflow-hidden"
-        style={{
-          backgroundImage: 'url(/useful-column/hero-background.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="absolute inset-0 bg-primaryColor/40" />
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 pt-28">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-            {t('heroTitle')}
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 font-light tracking-wide">
-            {t('heroSubtitle')}
-          </p>
-        </div>
-      </div>
+      <PageHero
+        {...PAGE_HERO_PRESETS.centered}
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
+      />
 
       <Breadcrumb
         homeLabel={t('breadcrumb.home')}

@@ -70,6 +70,12 @@ h6 {
   min-height: 400px;
 }
 
+@media (min-width: 1024px) {
+  .hubspot-form-container .hs-form-field {
+    margin-bottom: 1.75rem !important;
+  }
+}
+
 .hubspot-form-container iframe {
   width: 100% !important;
 }
@@ -104,30 +110,31 @@ h6 {
 .hubspot-form-container select,
 .hubspot-form-container textarea {
   width: 100% !important;
-  border-radius: 0.75rem !important;
-  border: 1.5px solid #d1d5db !important;
-  background: #f9fafb !important;
-  padding: 0.875rem 1rem !important;
+  border: none !important;
+  border-bottom: 1.5px solid var(--color-borderSecondary) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0.5rem 0 !important;
   font-size: 0.9375rem !important;
-  color: #6b7280 !important;
-  transition: all 0.2s !important;
+  color: var(--color-textPrimary) !important;
+  transition: border-color 0.2s !important;
   font-family: var(--font-poppins), sans-serif !important;
+  box-shadow: none !important;
 }
 
 .hubspot-form-container .hs-input::placeholder,
 .hubspot-form-container textarea::placeholder {
-  color: #d1d5db !important;
+  color: var(--color-textDisabled) !important;
 }
 
 .hubspot-form-container .hs-input:focus,
 .hubspot-form-container select:focus,
 .hubspot-form-container textarea:focus {
-  border-color: var(--color-primaryColor) !important;
-  background: #ffffff !important;
+  border-bottom-color: var(--color-primaryColor) !important;
+  background: transparent !important;
   outline: none !important;
-  box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--color-primaryColor) 10%, transparent) !important;
-  color: #1e293b !important;
+  box-shadow: none !important;
+  color: var(--color-textPrimary) !important;
 }
 
 .hubspot-form-container textarea {
@@ -160,34 +167,28 @@ h6 {
 
 /* Submit button */
 .hubspot-form-container .hs-button {
-  background: linear-gradient(
-    to right,
-    var(--color-primaryLight),
-    var(--color-primaryColor)
-  ) !important;
+  background: var(--color-primaryColor) !important;
   color: white !important;
   border: none !important;
-  border-radius: 0.75rem !important;
+  border-radius: 0.5rem !important;
   padding: 1rem 2rem !important;
   font-weight: 600 !important;
   font-size: 1rem !important;
   cursor: pointer !important;
-  transition: all 0.3s !important;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s !important;
   width: 100% !important;
-  margin-top: 1rem !important;
+  margin-top: 1.5rem !important;
   box-shadow: 0 4px 12px
-    color-mix(in srgb, var(--color-primaryColor) 20%, transparent) !important;
+    color-mix(in srgb, var(--color-primaryColor) 25%, transparent) !important;
 }
 
 .hubspot-form-container .hs-button:hover {
-  background: linear-gradient(
-    to right,
-    var(--color-primaryColor),
-    var(--color-primaryHover)
-  ) !important;
-  box-shadow: 0 8px 20px
-    color-mix(in srgb, var(--color-primaryColor) 30%, transparent) !important;
-  transform: translateY(-1px) !important;
+  background: var(--color-primaryHover) !important;
+  box-shadow: 0 6px 16px
+    color-mix(in srgb, var(--color-primaryColor) 35%, transparent) !important;
+  transform: none !important;
 }
 
 .hubspot-form-container .hs-button:active {

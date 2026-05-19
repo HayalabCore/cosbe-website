@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
-import { HubSpotForm } from '@/components';
+import { HubSpotFormCard } from '@/components';
 import { Link } from '@/i18n/routing';
 
 export default async function DownloadPage() {
@@ -70,9 +70,7 @@ export default async function DownloadPage() {
 
           {/* Right Column - Form */}
           <div className="lg:sticky lg:top-24 h-fit">
-            <div className="bg-white rounded-lg shadow-xl p-8 border border-borderPrimary">
-              <HubSpotForm />
-            </div>
+            <HubSpotFormCard className="max-w-none" />
           </div>
         </div>
       </div>

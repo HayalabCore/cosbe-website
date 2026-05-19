@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
-import { Breadcrumb } from '@/components';
+import { Breadcrumb, SectionHeading } from '@/components';
 
 export default function AiTransformationPage() {
   const t = useTranslations('aiTransformationPage');
@@ -38,13 +38,12 @@ export default function AiTransformationPage() {
                 src="/ai-transformation/vision1.png"
                 alt={t('section1.imageAlt')}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain p-8"
               />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
-                {t('section1.title')}
-              </h2>
+              <SectionHeading size="lg">{t('section1.title')}</SectionHeading>
               <p className="text-textSecondary mb-6 leading-relaxed">
                 {t('section1.description')}
               </p>
@@ -76,9 +75,7 @@ export default function AiTransformationPage() {
         <div className="mb-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
-                {t('section2.title')}
-              </h2>
+              <SectionHeading size="lg">{t('section2.title')}</SectionHeading>
               <p className="text-textSecondary mb-6 leading-relaxed">
                 {t('section2.description')}
               </p>
@@ -108,6 +105,7 @@ export default function AiTransformationPage() {
                 src="/ai-transformation/vision2.png"
                 alt={t('section2.imageAlt')}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain p-8"
               />
             </div>
@@ -122,13 +120,12 @@ export default function AiTransformationPage() {
                 src="/ai-transformation/vision3.png"
                 alt={t('section3.imageAlt')}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain p-8"
               />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
-                {t('section3.title')}
-              </h2>
+              <SectionHeading size="lg">{t('section3.title')}</SectionHeading>
               <p className="text-textSecondary mb-6 leading-relaxed">
                 {t('section3.description')}
               </p>

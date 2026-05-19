@@ -23,6 +23,7 @@ const navItems: NavItem[] = [
   {
     labelKey: 'aiTransformation',
     children: [
+      { href: '/about-ait', labelKey: 'aboutAiTransformation' },
       { href: '/ai-transformation', labelKey: 'cosbeAiTransformation' },
       { href: '/ai-lab', labelKey: 'fastAiLab' },
     ],

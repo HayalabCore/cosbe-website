@@ -1,6 +1,11 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
-import { CtaSection, Breadcrumb } from '@/components';
+import {
+  CtaSection,
+  Breadcrumb,
+  PageHero,
+  PAGE_HERO_PRESETS,
+} from '@/components';
 import type { Metadata } from 'next';
 
 type PageProps = {
@@ -29,29 +34,15 @@ export default async function PrivacyPolicyPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative h-[300px] md:h-[350px] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/company/privacy-hero.jpeg"
-            alt="Privacy Policy Background"
-            fill
-            className="object-cover"
-            priority
-          />
-          {/* Blue Overlay */}
-          <div className="absolute inset-0 bg-primaryColor/60"></div>
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 text-center text-white px-4">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            {t('heroTitle')}
-          </h1>
-          <p className="text-lg md:text-xl opacity-90">{t('heroSubtitle')}</p>
-        </div>
-      </section>
+      <PageHero
+        {...PAGE_HERO_PRESETS.centered}
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
+        media="image"
+        backgroundImage="/company/privacy-hero.jpeg"
+        backgroundImageAlt="Privacy Policy Background"
+        overlayClassName="bg-primaryColor/60"
+      />
 
       <Breadcrumb
         homeLabel={t('breadcrumb.home')}

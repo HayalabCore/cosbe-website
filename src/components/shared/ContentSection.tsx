@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import SectionHeading from './SectionHeading';
 
 interface ContentSectionProps {
   title: string;
@@ -27,9 +28,7 @@ export default function ContentSection({
 
   const textComponent = (
     <div>
-      <h2 className="text-3xl font-bold text-textPrimary mb-6 border-l-4 border-primaryColor pl-4">
-        {title}
-      </h2>
+      <SectionHeading size="lg">{title}</SectionHeading>
       <p className="text-textSecondary mb-6 leading-relaxed">{description}</p>
       <ul className="space-y-3">
         {points.map((point, index) => (

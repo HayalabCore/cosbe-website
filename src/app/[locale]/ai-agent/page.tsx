@@ -4,7 +4,24 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useState } from 'react';
 import Image from 'next/image';
-import { Breadcrumb } from '@/components';
+import {
+  Breadcrumb,
+  PageHero,
+  PAGE_HERO_PRESETS,
+  ProcessFlow,
+  type ProcessFlowStep,
+  IndustryTabPanel,
+  PriceBreakdownCard,
+  PricingComparisonTable,
+} from '@/components';
+
+const INDUSTRY_IMAGES = {
+  construction: '/ai-agent/industry-construction.jpg',
+  retail: '/ai-agent/industry-retail.jpg',
+  manufacturing: '/ai-agent/industry-manufacturing.jpg',
+} as const;
+
+type IndustryKey = keyof typeof INDUSTRY_IMAGES;
 
 export default function AiAgentPage() {
   const t = useTranslations('aiAgent');
@@ -12,17 +29,98 @@ export default function AiAgentPage() {
     'construction' | 'retail' | 'manufacturing'
   >('construction');
 
+  const iconClass = 'h-10 w-10 text-primaryColor';
+
+  const processSteps: ProcessFlowStep[] = [
+    {
+      badge: t('process.step1.number'),
+      title: t('process.step1.title'),
+      description: t('process.step1.description'),
+      icon: (
+        <svg
+          className={iconClass}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+          />
+        </svg>
+      ),
+    },
+    {
+      badge: t('process.step2.number'),
+      title: t('process.step2.title'),
+      description: t('process.step2.description'),
+      icon: (
+        <svg
+          className={iconClass}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      ),
+    },
+    {
+      badge: t('process.step3.number'),
+      title: t('process.step3.title'),
+      description: t('process.step3.description'),
+      icon: (
+        <svg
+          className={iconClass}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+          />
+        </svg>
+      ),
+    },
+    {
+      badge: t('process.step4.number'),
+      title: t('process.step4.title'),
+      description: t('process.step4.description'),
+      icon: (
+        <svg
+          className={iconClass}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+          />
+        </svg>
+      ),
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-white pt-16 md:pt-18 lg:pt-20">
-      {/* Hero Section with Background */}
-      <div className="relative bg-gradient-to-r from-primaryColor to-primaryColor">
-        <div className="absolute inset-0 bg-gradient-to-br from-primaryLight/50 to-primaryHover/50" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
-            {t('heroTitle')}
-          </h1>
-        </div>
-      </div>
+    <div className="min-h-screen bg-white">
+      <PageHero
+        {...PAGE_HERO_PRESETS.centered}
+        title={t('heroTitle')}
+        subtitle={t('subtitle')}
+      />
 
       <Breadcrumb
         homeLabel={t('breadcrumb.home')}
@@ -150,10 +248,7 @@ export default function AiAgentPage() {
         <section className="py-20 bg-bgSecondary -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-8 bg-primaryColor rounded flex items-center justify-center text-white font-bold text-sm">
-                CosBE
-              </div>
-              <span className="text-textTertiary text-sm">
+              <span className="text-textTertiary text-base">
                 {t('whatIs.badge')}
               </span>
             </div>
@@ -205,484 +300,63 @@ export default function AiAgentPage() {
               </li>
             </ul>
 
-            {/* Process Steps */}
-            <div className="grid md:grid-cols-4 gap-6">
-              {/* Step 1 */}
-              <div className="relative">
-                <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
-                  <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
-                      {t('process.step1.number')}
-                    </span>
-                  </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
-                    <svg
-                      className="w-10 h-10 text-primaryColor"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-                      />
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">
-                    {t('process.step1.title')}
-                  </h4>
-                  <p className="text-sm text-textTertiary leading-relaxed">
-                    {t('process.step1.description')}
-                  </p>
-                </div>
-                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-textDisabled text-3xl z-10">
-                  ›
-                </div>
-              </div>
-
-              {/* Step 2 */}
-              <div className="relative">
-                <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
-                  <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
-                      {t('process.step2.number')}
-                    </span>
-                  </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
-                    <svg
-                      className="w-10 h-10 text-primaryColor"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">
-                    {t('process.step2.title')}
-                  </h4>
-                  <p className="text-sm text-textTertiary leading-relaxed">
-                    {t('process.step2.description')}
-                  </p>
-                </div>
-                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-textDisabled text-3xl z-10">
-                  ›
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div className="relative">
-                <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
-                  <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
-                      {t('process.step3.number')}
-                    </span>
-                  </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
-                    <svg
-                      className="w-10 h-10 text-primaryColor"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                      />
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">
-                    {t('process.step3.title')}
-                  </h4>
-                  <p className="text-sm text-textTertiary leading-relaxed">
-                    {t('process.step3.description')}
-                  </p>
-                </div>
-                <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-textDisabled text-3xl z-10">
-                  ›
-                </div>
-              </div>
-
-              {/* Step 4 */}
-              <div>
-                <div className="bg-white rounded-2xl shadow-lg p-8 h-full">
-                  <div className="absolute -top-3 left-6">
-                    <span className="inline-block bg-primaryColor text-white text-sm px-4 py-1.5 rounded font-semibold">
-                      {t('process.step4.number')}
-                    </span>
-                  </div>
-                  <div className="w-20 h-20 mx-auto mb-6 mt-4 bg-primaryColor/10 rounded-full flex items-center justify-center border-2 border-primaryColor/30">
-                    <svg
-                      className="w-10 h-10 text-primaryColor"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                      />
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-textPrimary mb-3 text-lg text-center">
-                    {t('process.step4.title')}
-                  </h4>
-                  <p className="text-sm text-textTertiary leading-relaxed">
-                    {t('process.step4.description')}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <ProcessFlow steps={processSteps} />
 
             {/* Industry Examples with Tabs */}
             <div className="mt-20">
-              <h3 className="text-3xl md:text-4xl font-bold text-textPrimary mb-6">
+              <h3 className="mb-6 text-3xl font-bold text-textPrimary md:text-4xl">
                 {t('industries.title')}
               </h3>
-              <p className="text-textSecondary text-lg mb-10 leading-relaxed max-w-5xl">
+              <p className="mb-10 max-w-5xl text-lg leading-relaxed text-textSecondary">
                 {t('industries.description')}
               </p>
 
-              {/* Tabs */}
-              <div className="flex border-b border-borderSecondary mb-8">
-                <button
-                  onClick={() => setActiveTab('construction')}
-                  className={`px-8 py-4 font-semibold text-lg transition-all ${
-                    activeTab === 'construction'
-                      ? 'bg-borderDark text-white border-b-4 border-borderDark'
-                      : 'bg-bgTertiary text-textTertiary hover:bg-borderPrimaryPrimary'
-                  }`}
+              <div className="overflow-hidden rounded-lg border-2 border-borderPrimary bg-white">
+                <div
+                  className="flex"
+                  role="tablist"
+                  aria-label={t('industries.title')}
                 >
-                  {t('industries.construction.title')}
-                </button>
-                <button
-                  onClick={() => setActiveTab('retail')}
-                  className={`px-8 py-4 font-semibold text-lg transition-all ${
-                    activeTab === 'retail'
-                      ? 'bg-borderDark text-white border-b-4 border-borderDark'
-                      : 'bg-bgTertiary text-textTertiary hover:bg-borderPrimaryPrimary'
-                  }`}
-                >
-                  {t('industries.retail.title')}
-                </button>
-                <button
-                  onClick={() => setActiveTab('manufacturing')}
-                  className={`px-8 py-4 font-semibold text-lg transition-all ${
-                    activeTab === 'manufacturing'
-                      ? 'bg-borderDark text-white border-b-4 border-borderDark'
-                      : 'bg-bgTertiary text-textTertiary hover:bg-borderPrimaryPrimary'
-                  }`}
-                >
-                  {t('industries.manufacturing.title')}
-                </button>
-              </div>
+                  {(
+                    [
+                      'construction',
+                      'retail',
+                      'manufacturing',
+                    ] as const satisfies readonly IndustryKey[]
+                  ).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeTab === tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`flex-1 px-4 py-4 text-center text-base font-semibold transition-colors md:text-lg ${
+                        activeTab === tab
+                          ? 'bg-borderDark text-white'
+                          : 'bg-bgTertiary text-textTertiary hover:bg-borderPrimary/30'
+                      }`}
+                    >
+                      {t(`industries.${tab}.title`)}
+                    </button>
+                  ))}
+                </div>
 
-              {/* Tab Content */}
-              <div className="bg-white border-2 border-borderPrimary rounded-lg p-10">
-                {activeTab === 'construction' && (
-                  <div>
-                    <h4 className="text-3xl font-bold text-textPrimary text-center mb-12">
-                      {t('industries.construction.title')}
-                    </h4>
-
-                    <div className="grid lg:grid-cols-2 gap-10 items-start mb-12">
-                      {/* Construction Image */}
-                      <div className="rounded-xl overflow-hidden">
-                        <Image
-                          src="/ai-agent/consulting-service.jpg"
-                          alt="Construction Industry"
-                          width={500}
-                          height={320}
-                          className="w-full h-80 object-cover"
-                        />
-                      </div>
-
-                      {/* Example Assignment */}
-                      <div>
-                        <div className="bg-bgSecondary rounded-lg p-6 mb-8">
-                          <h5 className="text-xl font-bold text-textPrimary mb-4">
-                            {t('industries.construction.problemTitle')}
-                          </h5>
-                          <ul className="space-y-3">
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.construction.problem1')}
-                              </p>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.construction.problem2')}
-                              </p>
-                            </li>
-                          </ul>
-                        </div>
-
-                        {/* AI Agent Introduction */}
-                        <div className="bg-bgSecondary rounded-lg p-6">
-                          <h5 className="text-xl font-bold text-textPrimary mb-4">
-                            {t('industries.construction.solutionTitle')}
-                          </h5>
-                          <ul className="space-y-3">
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.construction.solution1')}
-                              </p>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.construction.solution2')}
-                              </p>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Merit Section */}
-                    <div className="bg-bgSecondary rounded-lg p-8">
-                      <h5 className="text-xl font-bold text-textPrimary mb-6">
-                        {t('industries.construction.benefitTitle')}
-                      </h5>
-                      <ul className="space-y-4">
-                        <li className="flex items-start gap-3">
-                          <span className="text-textPrimary mt-1 font-bold">
-                            •
-                          </span>
-                          <p className="text-textSecondary leading-relaxed">
-                            {t('industries.construction.benefit1')}
-                          </p>
-                        </li>
-                        <li className="flex items-start gap-3">
-                          <span className="text-textPrimary mt-1 font-bold">
-                            •
-                          </span>
-                          <p className="text-textSecondary leading-relaxed">
-                            {t('industries.construction.benefit2')}
-                          </p>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'retail' && (
-                  <div>
-                    <h4 className="text-3xl font-bold text-textPrimary text-center mb-12">
-                      {t('industries.retail.title')}
-                    </h4>
-
-                    <div className="grid lg:grid-cols-2 gap-10 items-start mb-12">
-                      {/* Retail Image */}
-                      <div className="rounded-xl overflow-hidden">
-                        <Image
-                          src="/ai-agent/development-service.jpg"
-                          alt="Retail Industry"
-                          width={500}
-                          height={320}
-                          className="w-full h-80 object-cover"
-                        />
-                      </div>
-
-                      {/* Example Assignment */}
-                      <div>
-                        <div className="bg-bgSecondary rounded-lg p-6 mb-8">
-                          <h5 className="text-xl font-bold text-textPrimary mb-4">
-                            {t('industries.retail.problemTitle')}
-                          </h5>
-                          <ul className="space-y-3">
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.retail.problem1')}
-                              </p>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.retail.problem2')}
-                              </p>
-                            </li>
-                          </ul>
-                        </div>
-
-                        {/* AI Agent Introduction */}
-                        <div className="bg-bgSecondary rounded-lg p-6">
-                          <h5 className="text-xl font-bold text-textPrimary mb-4">
-                            {t('industries.retail.solutionTitle')}
-                          </h5>
-                          <ul className="space-y-3">
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.retail.solution1')}
-                              </p>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.retail.solution2')}
-                              </p>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Merit Section */}
-                    <div className="bg-bgSecondary rounded-lg p-8">
-                      <h5 className="text-xl font-bold text-textPrimary mb-6">
-                        {t('industries.retail.benefitTitle')}
-                      </h5>
-                      <ul className="space-y-4">
-                        <li className="flex items-start gap-3">
-                          <span className="text-textPrimary mt-1 font-bold">
-                            •
-                          </span>
-                          <p className="text-textSecondary leading-relaxed">
-                            {t('industries.retail.benefit1')}
-                          </p>
-                        </li>
-                        <li className="flex items-start gap-3">
-                          <span className="text-textPrimary mt-1 font-bold">
-                            •
-                          </span>
-                          <p className="text-textSecondary leading-relaxed">
-                            {t('industries.retail.benefit2')}
-                          </p>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'manufacturing' && (
-                  <div>
-                    <h4 className="text-3xl font-bold text-textPrimary text-center mb-12">
-                      {t('industries.manufacturing.title')}
-                    </h4>
-
-                    <div className="grid lg:grid-cols-2 gap-10 items-start mb-12">
-                      {/* Manufacturing Image */}
-                      <div className="rounded-xl overflow-hidden">
-                        <Image
-                          src="/ai-agent/development-service.jpg"
-                          alt="Manufacturing Industry"
-                          width={500}
-                          height={320}
-                          className="w-full h-80 object-cover"
-                        />
-                      </div>
-
-                      {/* Example Assignment */}
-                      <div>
-                        <div className="bg-bgSecondary rounded-lg p-6 mb-8">
-                          <h5 className="text-xl font-bold text-textPrimary mb-4">
-                            {t('industries.manufacturing.problemTitle')}
-                          </h5>
-                          <ul className="space-y-3">
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.manufacturing.problem1')}
-                              </p>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.manufacturing.problem2')}
-                              </p>
-                            </li>
-                          </ul>
-                        </div>
-
-                        {/* AI Agent Introduction */}
-                        <div className="bg-bgSecondary rounded-lg p-6">
-                          <h5 className="text-xl font-bold text-textPrimary mb-4">
-                            {t('industries.manufacturing.solutionTitle')}
-                          </h5>
-                          <ul className="space-y-3">
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.manufacturing.solution1')}
-                              </p>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <span className="text-textPrimary mt-1 font-bold">
-                                •
-                              </span>
-                              <p className="text-textSecondary leading-relaxed">
-                                {t('industries.manufacturing.solution2')}
-                              </p>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Merit Section */}
-                    <div className="bg-bgSecondary rounded-lg p-8">
-                      <h5 className="text-xl font-bold text-textPrimary mb-6">
-                        {t('industries.manufacturing.benefitTitle')}
-                      </h5>
-                      <ul className="space-y-4">
-                        <li className="flex items-start gap-3">
-                          <span className="text-textPrimary mt-1 font-bold">
-                            •
-                          </span>
-                          <p className="text-textSecondary leading-relaxed">
-                            {t('industries.manufacturing.benefit1')}
-                          </p>
-                        </li>
-                        <li className="flex items-start gap-3">
-                          <span className="text-textPrimary mt-1 font-bold">
-                            •
-                          </span>
-                          <p className="text-textSecondary leading-relaxed">
-                            {t('industries.manufacturing.benefit2')}
-                          </p>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
+                <div className="p-6 md:p-10" role="tabpanel">
+                  <IndustryTabPanel
+                    title={t(`industries.${activeTab}.title`)}
+                    imageSrc={INDUSTRY_IMAGES[activeTab]}
+                    imageAlt={t(`industries.${activeTab}.title`)}
+                    problemTitle={t(`industries.${activeTab}.problemTitle`)}
+                    problem1={t(`industries.${activeTab}.problem1`)}
+                    problem2={t(`industries.${activeTab}.problem2`)}
+                    solutionTitle={t(`industries.${activeTab}.solutionTitle`)}
+                    solution1={t(`industries.${activeTab}.solution1`)}
+                    solution2={t(`industries.${activeTab}.solution2`)}
+                    benefitTitle={t(`industries.${activeTab}.benefitTitle`)}
+                    benefit1={t(`industries.${activeTab}.benefit1`)}
+                    benefit2={t(`industries.${activeTab}.benefit2`)}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -818,6 +492,25 @@ export default function AiAgentPage() {
               </svg>
             </Link>
           </div>
+        </section>
+
+        {/* Pricing — reuses aiLabPage.priceBreakdown + comparison */}
+        <section className="py-16">
+          <div className="mb-6">
+            <span className="inline-block rounded-sm bg-primaryColor px-4 py-1.5 text-sm font-bold text-white">
+              {t('pricing.badge')}
+            </span>
+          </div>
+          <h2 className="mb-4 text-2xl font-bold text-primaryColor md:text-3xl">
+            {t('pricing.title')}
+          </h2>
+          <p className="mb-8 max-w-4xl text-base leading-relaxed text-textSecondary md:text-lg">
+            {t('pricing.description')}
+          </p>
+          <div className="mb-12 max-w-4xl">
+            <PriceBreakdownCard />
+          </div>
+          <PricingComparisonTable showIntro={false} />
         </section>
 
         {/* Deployment Process Section */}

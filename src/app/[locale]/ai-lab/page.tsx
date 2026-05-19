@@ -4,6 +4,48 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
 import type { Locale } from '@/i18n/routing';
+import {
+  Breadcrumb,
+  CtaSection,
+  PageHero,
+  PAGE_HERO_PRESETS,
+  PriceBreakdownCard,
+  PricingComparisonTable,
+} from '@/components';
+
+function SectionWave({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 1440 48"
+      preserveAspectRatio="none"
+      className={`block w-full h-8 md:h-12 ${className ?? ''}`}
+      aria-hidden
+    >
+      <path
+        fill="currentColor"
+        d="M0,32 C360,48 720,16 1440,32 L1440,48 L0,48 Z"
+      />
+    </svg>
+  );
+}
+
+function GridPatternCard({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-white shadow-sm">
+      <div
+        className="absolute inset-0 opacity-40 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, color-mix(in srgb, var(--color-primaryColor) 12%, transparent) 1px, transparent 1px),
+            linear-gradient(to bottom, color-mix(in srgb, var(--color-primaryColor) 12%, transparent) 1px, transparent 1px)
+          `,
+          backgroundSize: '28px 28px',
+        }}
+      />
+      <div className="relative">{children}</div>
+    </div>
+  );
+}
 
 export default function AiLabPage() {
   const t = useTranslations('aiLabPage');
@@ -13,405 +55,395 @@ export default function AiLabPage() {
     { key: 'challenge1', image: '/ai-lab/challenge1.webp' },
     { key: 'challenge2', image: '/ai-lab/challenge2.webp' },
     { key: 'challenge3', image: '/ai-lab/challenge3.webp' },
-  ];
+  ] as const;
 
   const features = [
     { key: 'feature1', image: '/ai-lab/feature1.webp' },
     { key: 'feature2', image: '/ai-lab/feature2.jpeg' },
     { key: 'feature3', image: '/ai-lab/feature3.jpeg' },
-  ];
+  ] as const;
+
+  const benefits = [
+    { key: 'benefit1', image: '/ai-lab/benefit1.jpg' },
+    { key: 'benefit2', image: '/ai-lab/benefit2.jpg' },
+    { key: 'benefit3', image: '/ai-lab/benefit3.jpg' },
+  ] as const;
 
   const caseStudies = [
     { key: 'case1', image: '/ai-lab/training-agent.png' },
     { key: 'case2', image: '/ai-lab/new-business-2months.png' },
     { key: 'case3', image: '/ai-lab/resume-from-en.png' },
-  ];
+  ] as const;
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-        {/* Hero Section */}
-        <section className="mb-16">
-          <div className="grid lg:grid-cols-2 gap-10 items-center bg-white rounded-3xl p-8 lg:p-12">
-            <div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primaryColor mb-4 pb-3 border-b-2 border-primaryColor">
-                {t('hero.title')}
-              </h2>
-              <p className="text-sm text-primaryColor font-semibold mb-2">
-                {t('hero.subtitle')}
-              </p>
-              <hr className="my-4 border-borderPrimary" />
-              <p className="text-textPrimary text-base leading-relaxed mb-4">
-                {t('hero.description1')}
-              </p>
-              <p className="text-textPrimary text-base leading-relaxed mb-4">
-                {t('hero.description2')}
-              </p>
-              <p className="text-textPrimary text-base leading-relaxed">
-                {t('hero.description3')}
-              </p>
-            </div>
-            <div className="flex justify-center">
-              <div className="relative w-full max-w-md">
-                <Image
-                  src="/ai-lab/brain-core.png"
-                  alt={t('hero.imageAlt')}
-                  width={988}
-                  height={988}
-                  className="w-full h-auto rounded-2xl"
-                  priority
-                />
-              </div>
+      <PageHero
+        {...PAGE_HERO_PRESETS.inline}
+        title={t('hero.title')}
+        subtitle={t('hero.bannerTagline')}
+      />
+
+      <Breadcrumb
+        homeLabel={t('breadcrumb.home')}
+        items={[{ label: t('breadcrumb.current') }]}
+        className="bg-white border-b border-borderPrimary"
+      />
+
+      {/* Intro */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+        <div className="grid lg:grid-cols-[1fr_1fr] gap-10 lg:gap-14 items-start">
+          <div>
+            <h2 className="text-3xl md:text-5xl font-bold text-primaryColor mb-3">
+              {t('hero.title')}
+            </h2>
+            <p className="text-base md:text-lg font-bold text-primaryColor mb-6 leading-snug">
+              {t('hero.subtitle')}
+            </p>
+            <hr className="border-borderPrimary mb-6" />
+            <div className="space-y-4 text-textPrimary text-sm md:text-base leading-relaxed">
+              <p>{t('hero.description1')}</p>
+              <p>{t('hero.description2')}</p>
+              <p>{t('hero.description3')}</p>
             </div>
           </div>
-        </section>
+          <div className="flex justify-center lg:justify-end">
+            <Image
+              src="/ai-lab/brain-core.png"
+              alt={t('hero.imageAlt')}
+              width={720}
+              height={720}
+              className="w-full max-w-md lg:max-w-lg h-auto rounded-2xl shadow-lg"
+              priority
+            />
+          </div>
+        </div>
+      </section>
 
-        {/* Challenges Section */}
-        <section className="mb-16">
-          <div className="bg-bgAccent rounded-3xl p-8 lg:p-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-center text-textPrimary mb-10">
-              {t('challenges.title')}{' '}
-              <span className="text-primaryColor">
-                {t('challenges.titleHighlight')}
-              </span>
-              {locale === 'ja' && t('challenges.titleEnd')}
-            </h2>
+      {/* Challenges */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
+        <div className="bg-bgAccent rounded-3xl px-6 py-10 md:px-10 md:py-12 shadow-sm border border-borderPrimary/50">
+          <h2 className="text-xl md:text-2xl font-bold text-center text-textPrimary mb-10 md:mb-12">
+            {t('challenges.title')}
+            <span className="text-primaryColor">
+              {t('challenges.titleHighlight')}
+            </span>
+            {locale === 'ja'
+              ? t('challenges.titleEnd')
+              : ` ${t('challenges.titleEnd')}`.trim()}
+          </h2>
 
-            <div className="space-y-8">
-              {challenges.map((challenge, index) => (
-                <div
-                  key={challenge.key}
-                  className="grid md:grid-cols-[1fr_auto] gap-8 items-start"
-                >
-                  <div>
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="inline-block px-4 py-1.5 bg-primaryColor text-white text-sm font-bold rounded">
-                        Case{String(index + 1).padStart(2, '0')}
-                      </span>
-                      <h3 className="text-lg font-bold text-textPrimary">
-                        {t(`challenges.${challenge.key}.title`)}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-textSecondary leading-relaxed mb-4">
-                      {t(`challenges.${challenge.key}.description`)}
-                    </p>
-                    <hr className="border-borderSecondary" />
-                  </div>
-                  <div className="flex-shrink-0">
-                    <div className="w-40 h-40 rounded-full overflow-hidden shadow-lg">
+          <div className="space-y-0">
+            {challenges.map((challenge, index) => (
+              <div key={challenge.key}>
+                <div className="grid md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr] gap-6 md:gap-10 items-center py-8 md:py-10">
+                  <div className="flex justify-center md:justify-start order-1 md:order-none">
+                    <div className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden shadow-md ring-4 ring-white">
                       <Image
                         src={challenge.image}
                         alt={t(`challenges.${challenge.key}.imageAlt`)}
-                        width={160}
-                        height={160}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 192px, (max-width: 1024px) 224px, 256px"
                       />
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Transition Section */}
-        <section className="mb-16 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-primaryColor/5 to-primaryColor/20" />
-          <div className="relative py-16 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-textPrimary mb-4">
-              <span className="text-primaryColor">
-                {t('transition.cosbeName')}
-              </span>
-              {t('transition.text')}
-            </h2>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="mb-16">
-          <div className="bg-gradient-to-r from-primaryLight to-primaryColor rounded-2xl py-8 px-8 lg:px-12 mb-10 text-center">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-              {t('features.title')}
-            </h2>
-          </div>
-
-          <div className="bg-gradient-to-b from-primaryColor/10 to-white rounded-3xl p-8 lg:p-12">
-            <div className="grid md:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <div
-                  key={feature.key}
-                  className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-primaryColor"
-                >
-                  <div className="flex justify-center mb-6">
-                    <div className="w-48 h-48 rounded-full overflow-hidden">
-                      <Image
-                        src={feature.image}
-                        alt={t(`features.${feature.key}.imageAlt`)}
-                        width={300}
-                        height={300}
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="order-2 md:order-none text-center md:text-left">
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-3">
+                      <span className="inline-block px-3 py-1 bg-primaryColor text-white text-xs font-bold rounded-sm">
+                        Case{String(index + 1).padStart(2, '0')}
+                      </span>
+                      <h3 className="text-base md:text-lg font-bold text-textPrimary">
+                        {t(`challenges.${challenge.key}.title`)}
+                      </h3>
                     </div>
+                    <p className="text-sm md:text-base text-textSecondary leading-relaxed">
+                      {t(`challenges.${challenge.key}.description`)}
+                    </p>
                   </div>
-                  <div className="mb-3">
-                    <span className="inline-block px-3 py-1 bg-primaryColor text-white text-sm font-bold rounded">
-                      Case {String(index + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-                  <h4 className="text-lg font-bold text-textPrimary mb-3">
-                    {t(`features.${feature.key}.title`)}
-                  </h4>
-                  <p className="text-sm text-textSecondary leading-relaxed">
-                    {t(`features.${feature.key}.description`)}
-                  </p>
                 </div>
-              ))}
-            </div>
+                {index < challenges.length - 1 && (
+                  <hr className="border-borderSecondary" />
+                )}
+              </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Benefits Section */}
-        <section className="mb-16 bg-gradient-to-br from-primaryColor to-primaryColor rounded-3xl p-8 lg:p-12 text-white">
-          <div className="mb-8">
-            <p className="text-sm mb-2 opacity-90">
-              {locale === 'ja' ? 'メリット' : 'Benefits of'}
+      {/* Transition */}
+      <section className="text-center py-12 md:py-16 bg-white">
+        <p className="text-lg md:text-2xl font-bold text-primaryColor leading-relaxed px-4">
+          <span>{t('transition.cosbeName')}</span>
+          {t('transition.text')}
+        </p>
+        <div className="mt-6 flex justify-center" aria-hidden>
+          <span className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-primaryColor" />
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="relative bg-gradient-to-b from-[#d4e8fa] via-[#e8f3fc] to-[#f4f9fe] pb-16 md:pb-20">
+        <SectionWave className="text-white -mt-px" />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 md:pt-14">
+          <div className="mb-10 md:mb-12">
+            <p className="text-primaryColor text-sm md:text-base font-medium mb-2">
+              {t('features.sectionEyebrow')}
             </p>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">
-              {t('benefits.title')}
+            <h2 className="text-2xl md:text-4xl font-bold text-primaryColor">
+              <span>{t('features.titleBrand')}</span>
+              <span className="text-textPrimary">
+                {t('features.titleRest')}
+              </span>
             </h2>
           </div>
 
-          <div className="space-y-6">
-            <div className="bg-white/95 rounded-3xl p-6 lg:p-8 grid md:grid-cols-[2fr_1fr] gap-6 items-start">
-              <div className="text-textPrimary">
-                <h4 className="text-lg font-bold text-primaryColor mb-4">
-                  {t('benefits.benefit1.title')}
-                </h4>
-                <p className="text-sm leading-relaxed mb-3">
-                  {t('benefits.benefit1.point1')}
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {features.map((feature, index) => (
+              <article
+                key={feature.key}
+                className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-white"
+              >
+                <div className="flex justify-center mb-5">
+                  <div className="relative w-40 h-40 md:w-44 md:h-44 rounded-full overflow-hidden ring-2 ring-primaryColor/20">
+                    <Image
+                      src={feature.image}
+                      alt={t(`features.${feature.key}.imageAlt`)}
+                      fill
+                      className="object-cover"
+                      sizes="176px"
+                    />
+                  </div>
+                </div>
+                <span className="inline-block px-2.5 py-0.5 bg-primaryColor text-white text-xs font-bold rounded-sm mb-3">
+                  Case{String(index + 1).padStart(2, '0')}
+                </span>
+                <h3 className="text-base font-bold text-textPrimary mb-3 leading-snug">
+                  {t(`features.${feature.key}.title`)}
+                </h3>
+                <p className="text-sm text-textSecondary leading-relaxed">
+                  {t(`features.${feature.key}.description`)}
                 </p>
-                <p className="text-sm leading-relaxed mb-3">
-                  {t('benefits.benefit1.point2')}
-                </p>
-                <p className="text-sm leading-relaxed font-bold">
-                  {t('benefits.benefit1.point3')}
-                </p>
-              </div>
-              <div className="flex justify-center md:justify-end">
-                <Image
-                  src="/ai-lab/benefit1.jpg"
-                  alt={t('benefits.benefit1.imageAlt')}
-                  width={300}
-                  height={225}
-                  className="w-full max-w-[200px] md:max-w-[250px] h-auto rounded-2xl"
-                />
-              </div>
-            </div>
-
-            <div className="bg-white/95 rounded-3xl p-6 lg:p-8 grid md:grid-cols-[2fr_1fr] gap-6 items-start">
-              <div className="text-textPrimary">
-                <h4 className="text-lg font-bold text-primaryColor mb-4">
-                  {t('benefits.benefit2.title')}
-                </h4>
-                <p className="text-sm leading-relaxed mb-3">
-                  {t('benefits.benefit2.point1')}
-                </p>
-                <p className="text-sm leading-relaxed mb-1">
-                  {t('benefits.benefit2.point2')}
-                </p>
-                <p className="text-sm leading-relaxed mb-3 font-bold">
-                  {t('benefits.benefit2.point2Bold')}
-                </p>
-                <p className="text-sm leading-relaxed">
-                  {t('benefits.benefit2.point3')}
-                </p>
-              </div>
-              <div className="flex justify-center md:justify-end">
-                <Image
-                  src="/ai-lab/benefit2.jpg"
-                  alt={t('benefits.benefit2.imageAlt')}
-                  width={300}
-                  height={225}
-                  className="w-full max-w-[200px] md:max-w-[250px] h-auto rounded-2xl"
-                />
-              </div>
-            </div>
-
-            <div className="bg-white/95 rounded-3xl p-6 lg:p-8 grid md:grid-cols-[2fr_1fr] gap-6 items-start">
-              <div className="text-textPrimary">
-                <h4 className="text-lg font-bold text-primaryColor mb-4">
-                  {t('benefits.benefit3.title')}
-                </h4>
-                <p className="text-sm leading-relaxed mb-3">
-                  {t('benefits.benefit3.point1')}
-                </p>
-                <p className="text-sm leading-relaxed mb-3">
-                  {t('benefits.benefit3.point2')}
-                </p>
-                <p className="text-sm leading-relaxed font-bold">
-                  {t('benefits.benefit3.point3')}
-                </p>
-              </div>
-              <div className="flex justify-center md:justify-end">
-                <Image
-                  src="/ai-lab/benefit3.jpg"
-                  alt={t('benefits.benefit3.imageAlt')}
-                  width={300}
-                  height={225}
-                  className="w-full max-w-[200px] md:max-w-[250px] h-auto rounded-2xl"
-                />
-              </div>
-            </div>
+              </article>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* AI Agent Link */}
-        <section className="mb-16 text-center">
-          <p className="text-primaryColor font-bold mb-4">
+      {/* Benefits */}
+      <section className="bg-gradient-to-b from-[#7eb3e4] to-[#9ec6ea] py-14 md:py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 md:mb-12">
+            <p className="text-white text-sm md:text-base font-medium mb-2">
+              {t('benefits.sectionEyebrow')}
+            </p>
+            <h2 className="text-2xl md:text-4xl font-bold text-white">
+              <span>{t('benefits.titleBrand')}</span>
+              <span>{t('benefits.titleRest')}</span>
+            </h2>
+          </div>
+
+          <div className="space-y-6 md:space-y-8">
+            {benefits.map((benefit) => {
+              const b = benefit.key;
+
+              return (
+                <GridPatternCard key={benefit.key}>
+                  <div className="grid md:grid-cols-5 gap-0 items-stretch">
+                    <div className="md:col-span-2 relative min-h-[220px] md:min-h-full order-1">
+                      <Image
+                        src={benefit.image}
+                        alt={t(`benefits.${b}.imageAlt`)}
+                        fill
+                        className="object-cover rounded-t-2xl md:rounded-t-none md:rounded-l-3xl"
+                        sizes="(max-width: 768px) 100vw, 320px"
+                      />
+                    </div>
+                    <div className="md:col-span-3 p-6 md:p-8 lg:p-10 order-2">
+                      <h3 className="text-lg md:text-xl font-bold text-primaryColor mb-4 md:mb-5 leading-snug border-b border-primaryColor/30 pb-2">
+                        {t(`benefits.${b}.title`)}
+                      </h3>
+                      <div className="space-y-3 text-sm md:text-base text-textPrimary leading-relaxed">
+                        <p>{t(`benefits.${b}.point1`)}</p>
+                        {b === 'benefit2' ? (
+                          <p>
+                            {t(`benefits.${b}.point2`)}
+                            <span className="font-bold">
+                              {t(`benefits.${b}.point2Bold`)}
+                            </span>
+                          </p>
+                        ) : (
+                          <p>{t(`benefits.${b}.point2`)}</p>
+                        )}
+                        <p>{t(`benefits.${b}.point3`)}</p>
+                      </div>
+                    </div>
+                  </div>
+                </GridPatternCard>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Agent + Pricing */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+        <div className="text-center mb-12 md:mb-16">
+          <p className="text-primaryColor font-bold text-sm md:text-base mb-5">
             {t('aiAgentLink.text')}
           </p>
           <Link
             href="/ai-agent"
-            className="inline-block px-8 py-3 bg-primaryColor border border-primaryColor text-white rounded-full font-semibold hover:bg-primaryHover hover:border-primaryHover transition-colors"
+            className="inline-flex items-center justify-center min-w-[280px] md:min-w-[420px] px-10 py-3.5 bg-gradient-to-r from-primaryColor to-primaryLight text-white rounded-full font-bold text-sm md:text-base shadow-md hover:opacity-95 transition-opacity"
           >
             {t('aiAgentLink.button')} →
           </Link>
-        </section>
+        </div>
 
-        {/* Case Studies Section */}
-        <section className="mb-16 bg-bgTertiary rounded-3xl p-8 lg:p-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-2">
+        <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-6 mb-8">
+          <Image
+            src="/ai-lab/price-tag.png"
+            alt=""
+            width={120}
+            height={80}
+            className="w-24 md:w-32 h-auto"
+            aria-hidden
+          />
+          <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-snug pb-1">
+            {t('pricing.heading')}
+          </h2>
+        </div>
+
+        <div className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-bgAccent min-h-[280px]">
+          <div className="relative z-10 max-w-xl p-6 md:p-10 lg:p-12">
+            <h3 className="text-lg md:text-xl font-bold text-primaryColor mb-4 pb-2 border-b-2 border-primaryColor/30 inline-block">
+              {t('pricing.cardTitle')}
+            </h3>
+            <div className="space-y-3 text-sm md:text-base text-textPrimary leading-relaxed mt-6">
+              <p>{t('pricing.p1')}</p>
+              <p>{t('pricing.p2')}</p>
+              <p>{t('pricing.p3')}</p>
+            </div>
+          </div>
+          <div className="absolute inset-y-0 right-0 w-full md:w-[55%] lg:w-[50%]">
+            <Image
+              src="/ai-lab/business-growth.png"
+              alt={t('pricing.imageAlt')}
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-bgAccent via-bgAccent/80 to-transparent md:block hidden" />
+          </div>
+        </div>
+      </section>
+
+      {/* Price breakdown */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-20">
+        <div className="mb-6">
+          <span className="inline-block px-4 py-1.5 bg-primaryColor text-white text-sm font-bold rounded-sm">
+            {t('priceBreakdown.badge')}
+          </span>
+        </div>
+        <h2 className="text-xl md:text-2xl font-bold text-textPrimary leading-relaxed mb-8 whitespace-pre-line">
+          {t('priceBreakdown.headline')}
+        </h2>
+        <PriceBreakdownCard />
+      </section>
+
+      {/* Comparison */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-20">
+        <PricingComparisonTable />
+      </section>
+
+      {/* Case studies */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-16">
+        <div className="bg-bgTertiary rounded-3xl p-8 lg:p-12">
+          <h2 className="text-lg md:text-xl font-bold text-primaryColor mb-2">
             {t('caseStudies.subtitle')}
           </h2>
-          <h3 className="text-xl font-bold text-textPrimary mb-6">
+          <h3 className="text-xl md:text-2xl font-bold text-textPrimary mb-4">
             {t('caseStudies.title')}
           </h3>
-          <p className="text-textSecondary mb-10">
+          <p className="text-textSecondary text-sm md:text-base mb-10">
             {t('caseStudies.description')}
           </p>
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {caseStudies.map((caseStudy) => (
-              <div
+              <article
                 key={caseStudy.key}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg"
+                className="bg-white rounded-2xl overflow-hidden shadow-md"
               >
-                <div className="relative h-48">
+                <div className="relative h-44">
                   <Image
                     src={caseStudy.image}
                     alt={t(`caseStudies.${caseStudy.key}.imageAlt`)}
                     fill
                     className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-primaryColor text-white text-xs font-semibold rounded-full">
-                      {t(`caseStudies.${caseStudy.key}.category`)}
-                    </span>
-                  </div>
+                  <span className="absolute top-3 left-3 px-3 py-1 bg-primaryColor text-white text-xs font-semibold rounded-full">
+                    {t(`caseStudies.${caseStudy.key}.category`)}
+                  </span>
                 </div>
                 <div className="p-5">
-                  <h4 className="text-base font-bold text-textPrimary mb-2 line-clamp-2">
+                  <h4 className="text-sm font-bold text-textPrimary mb-2 line-clamp-3 leading-snug">
                     {t(`caseStudies.${caseStudy.key}.title`)}
                   </h4>
                   <p className="text-xs text-textTertiary">
                     {t(`caseStudies.${caseStudy.key}.date`)}
                   </p>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 
           <div className="text-center">
             <Link
               href="/case-studies"
-              className="inline-block px-8 py-3 bg-primaryColor text-white rounded-full font-semibold hover:bg-primaryHover hover:shadow-lg transition-all"
+              className="inline-block px-8 py-3 bg-primaryColor text-white rounded-full font-semibold hover:bg-primaryHover transition-colors"
             >
               {t('caseStudies.viewAll')} →
             </Link>
           </div>
-        </section>
-
-        {/* FAQ Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-8">
-            {t('faq.title')}
-          </h2>
-
-          <div className="space-y-4">
-            <div className="border border-borderPrimary rounded-2xl p-6">
-              <h4 className="text-lg font-bold text-textPrimary mb-3 flex items-start">
-                <span className="inline-block w-8 h-8 bg-error text-white rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                  Q
-                </span>
-                {t('faq.q1.question')}
-              </h4>
-              <p className="text-textSecondary ml-11">
-                <span className="inline-block w-8 h-8 bg-primaryColor text-white rounded-full flex items-center justify-center mr-3 mb-2">
-                  A
-                </span>
-                {t('faq.q1.answer')}
-              </p>
-            </div>
-
-            <div className="border border-borderPrimary rounded-2xl p-6">
-              <h4 className="text-lg font-bold text-textPrimary mb-3 flex items-start">
-                <span className="inline-block w-8 h-8 bg-error text-white rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                  Q
-                </span>
-                {t('faq.q2.question')}
-              </h4>
-              <p className="text-textSecondary ml-11">
-                <span className="inline-block w-8 h-8 bg-primaryColor text-white rounded-full flex items-center justify-center mr-3 mb-2">
-                  A
-                </span>
-                {t('faq.q2.answer')}
-              </p>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* Final CTA Section */}
-      <section className="relative py-20 md:py-24 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/bg_image.jpeg')" }}
-        ></div>
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 whitespace-pre-line">
-            {t('finalCta.title')}
-          </h2>
-          <p className="text-white/90 mb-2 text-base">
-            {t('finalCta.subtitle')}
-          </p>
-          <p className="text-white/80 mb-2 text-sm max-w-2xl mx-auto">
-            {t('finalCta.description')}
-          </p>
-          <p className="text-white/80 mb-10 text-sm max-w-2xl mx-auto">
-            {t('finalCta.additionalText')}
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            {t('finalCta.button')}
-          </Link>
         </div>
       </section>
+
+      {/* FAQ */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <h2 className="text-2xl md:text-3xl font-bold text-primaryColor mb-8">
+          {t('faq.title')}
+        </h2>
+        <div className="space-y-4">
+          {(['q1', 'q2'] as const).map((q) => (
+            <div
+              key={q}
+              className="border border-borderPrimary rounded-2xl p-6 bg-white"
+            >
+              <h3 className="text-base md:text-lg font-bold text-textPrimary mb-4 flex items-start gap-3">
+                <span className="inline-flex w-8 h-8 shrink-0 items-center justify-center rounded-full bg-error text-white text-sm font-bold">
+                  Q
+                </span>
+                {t(`faq.${q}.question`)}
+              </h3>
+              <p className="text-textSecondary text-sm md:text-base leading-relaxed flex items-start gap-3">
+                <span className="inline-flex w-8 h-8 shrink-0 items-center justify-center rounded-full bg-primaryColor text-white text-sm font-bold">
+                  A
+                </span>
+                <span>{t(`faq.${q}.answer`)}</span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <CtaSection
+        title={t('finalCta.title')}
+        description={t('finalCta.description')}
+        additionalText={t('finalCta.additionalText')}
+        buttonText={t('finalCta.button')}
+        buttonHref="/contact"
+      />
     </div>
   );
 }

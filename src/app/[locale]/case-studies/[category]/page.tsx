@@ -8,7 +8,7 @@ import {
   categoryToCaseStudies,
   validCategorySlugs,
 } from '@/data/case-studies';
-import { Breadcrumb } from '@/components';
+import { Breadcrumb, PageHero, PAGE_HERO_PRESETS } from '@/components';
 
 type CategoryPageProps = {
   params: Promise<{
@@ -47,37 +47,27 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Background */}
-      <div className="relative min-h-[280px] flex flex-col items-start justify-center overflow-hidden px-4 bg-gradient-to-br from-primaryColor/80 to-primaryColor/90">
-        <div className="absolute inset-0 bg-gradient-to-b from-primaryColor/40 to-primaryColor/60"></div>
-        <div className="relative z-10 max-w-7xl mx-auto w-full">
-          <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-              {t('heroTitle')}
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 font-light tracking-wide">
-              {t('heroSubtitle')}
-            </p>
-          </div>
-
-          {/* Category Tags */}
-          <div className="flex flex-wrap gap-3">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={cat.href}
-                className={`px-4 py-2 rounded text-sm font-medium transition-all ${
-                  cat.active
-                    ? 'bg-primaryColor text-white border-2 border-white'
-                    : 'bg-white/20 text-white border border-white/50 hover:bg-white/30'
-                }`}
-              >
-                {cat.label}
-              </Link>
-            ))}
-          </div>
+      <PageHero
+        {...PAGE_HERO_PRESETS.listing}
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
+      >
+        <div className="flex flex-wrap gap-3">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={cat.href}
+              className={`px-4 py-2 rounded text-sm font-medium transition-all ${
+                cat.active
+                  ? 'bg-primaryColor text-white border-2 border-white'
+                  : 'bg-white/20 text-white border border-white/50 hover:bg-white/30'
+              }`}
+            >
+              {cat.label}
+            </Link>
+          ))}
         </div>
-      </div>
+      </PageHero>
 
       <Breadcrumb
         homeLabel={t('breadcrumb.home')}

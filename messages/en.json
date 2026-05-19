@@ -2,6 +2,7 @@
   "navbar": {
     "companyOverview": "Company Overview",
     "aiTransformation": "AI Transformation",
+    "aboutAiTransformation": "What is AI Transformation",
     "cosbeAiTransformation": "CosBe's AI transformation",
     "fastAiLab": "Fast AI Lab",
     "aiPartnerRecruitment": "AI Partner Recruitment",
@@ -53,7 +54,7 @@
     }
   },
   "companyPage": {
-    "pageTitle": "Company Profile Page (About CosBE)",
+    "pageTitle": "Company Overview",
     "about": {
       "title": "About CosBE",
       "heading": "An AI transformation company creating the future",
@@ -75,7 +76,7 @@
       },
       "event2": {
         "date": "May 2024",
-        "title": "Released Hayaku AI Lab",
+        "title": "Released HAYAI Lab",
         "description": "Immediately bring to life managers' AI ideas"
       },
       "event3": {
@@ -93,7 +94,7 @@
       "representative": "Representative",
       "representativeName": "Founder & CEO Kenjiro Momi",
       "business": "Business",
-      "business1": "Hayaku AI Lab (AI MVP Development)",
+      "business1": "HAYAI Lab (AI MVP Development)",
       "business2": "AI Transformation Support",
       "business3": "AI Consulting"
     },
@@ -110,7 +111,7 @@
       "title": "We will support your business in various aspects.",
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquire about Hayaku AI Lab"
+      "button": "Inquire about HAYAI Lab"
     }
   },
   "aiTransformation": {
@@ -157,6 +158,65 @@
     },
     "cta": "Start Your AI Transformation"
   },
+  "aboutAitPage": {
+    "meta": {
+      "title": "What is AI Transformation",
+      "description": "AI Transformation goes beyond simply adopting digital tools—it is a process of fundamentally rebuilding how a company is run and how its business is structured, with AI technology as the foundation."
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "current": "What is AI Transformation"
+    },
+    "title": "What is AI Transformation",
+    "section1": {
+      "title": "The essence of AI Transformation: management reform beyond tool adoption",
+      "imageAlt": "Illustration of AI Transformation concept",
+      "intro": "AI Transformation is not limited to introducing digital tools (AI adoption). It is a transformation process that fundamentally rebuilds how a company is managed and how its business is structured, with AI technology as the foundation.",
+      "body": "While many companies use generative AI, in surveys of executives CosBE has worked with, 84% feel that \"AI adoption\" limited to individual productivity gains does not lead to management improvement. Unlike AI adoption focused on streamlining existing operations, AI Transformation reallocates freed resources to strengthening customer touchpoints and new businesses—expanding AI from points to lines and surfaces, and reaching into business models and organizational design."
+    },
+    "section2": {
+      "title": "The \"AI gap\" that determines corporate survival—and opportunities for SMEs",
+      "p1": "In today's business environment, AI is no longer merely a means of efficiency but a survival strategy that determines whether a company endures, creating a decisive AI gap between early movers and laggards.",
+      "p2": "This AI paradigm shift has the power to overturn industry structures. While the AI gap creates a hard-to-close divide in productivity and profitability, for SMEs with fast decision-making and flexible execution, it is also an opportunity to achieve transformation that surpasses large corporations."
+    },
+    "section3": {
+      "title": "\"Empiricism\" and four practical principles that lead to success",
+      "p1": "To deliver results in an era of high uncertainty, it is essential to move beyond \"planning-ism\"—fixation on detailed plans—and adopt an empirical approach of trying small, learning, and iterating.",
+      "p2": "To succeed in AI Transformation, strategic execution based on the following \"four principles of success\" is required.",
+      "principles": {
+        "title": "Four principles of success",
+        "item1": {
+          "term": "Issue first",
+          "description": ": Start from concrete management issues such as \"reducing inventory loss,\" not from technology."
+        },
+        "item2": {
+          "term": "Lean & agile",
+          "description": ": Build a minimum viable product (MVP) in a short period and repeat improvements."
+        },
+        "item3": {
+          "term": "Small-scale AI group strategy",
+          "description": ": Combine small AIs specialized for specific tasks rather than relying on one all-purpose AI."
+        },
+        "item4": {
+          "term": "User-integrated approach",
+          "description": ": Train AI with feedback from users on the ground to improve accuracy."
+        }
+      }
+    },
+    "section4": {
+      "title": "Essential problem-solving through integrating management perspective and technical implementation",
+      "imageAlt": "Integrating management perspective and technical implementation",
+      "p1": "To achieve true transformation, strategic planning that contributes to solving essential management challenges is required—not superficial tool adoption.",
+      "p2": "A major reason AI initiatives stall is the separation of business strategy and technical implementation. In AI Transformation, we stay close to the business challenges executives face from the PoC (proof of concept) stage, reducing risk while maximizing impact.",
+      "p3": "By integrating planning grounded in management issues—not technology for its own sake—with a flexible agile development capability that responds to change, AI evolves from a mere tool into a strategic asset that opens the future of the company."
+    },
+    "cta": {
+      "title": "We support your business from many angles.\nPlease feel free to contact us.",
+      "description": "For detailed service inquiries or quotes, please use the contact form.",
+      "additionalText": "We respond flexibly to your situation, so please reach out anytime.",
+      "button": "Contact us about Hayaku AI Lab"
+    }
+  },
   "aiTransformationPage": {
     "home": "Home",
     "breadcrumb": "CosBE's AI Transformation",
@@ -199,22 +259,22 @@
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form.",
       "additionalText": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "aiLab": {
     "hero": {
-      "badge": "Hayaku AI Lab",
+      "badge": "HAYAI Lab",
       "title": "Concrete AI results in just 2 months",
       "subtitle": "From \"Can AI solve this?\" to a working MVP that proves value",
-      "description": "Hayaku AI Lab is a rapid AI experimentation lab for executives who want to move from ideas to concrete results fast. In as little as two months, we turn your AI concepts into working services, validate them with real data, and create a foundation for full-scale rollout.",
-      "primaryCta": "Consult about Hayaku AI Lab (Free)",
+      "description": "HAYAI Lab is a rapid AI experimentation lab for executives who want to move from ideas to concrete results fast. In as little as two months, we turn your AI concepts into working services, validate them with real data, and create a foundation for full-scale rollout.",
+      "primaryCta": "Consult about HAYAI Lab (Free)",
       "secondaryCta": "Download detailed materials",
       "imageAlt": "Visual of AI brain connected to digital infrastructure"
     },
     "offerings": {
-      "title": "What you can do with Hayaku AI Lab",
-      "description": "We design and build AI solutions that directly connect to management and business outcomes. Here are three representative projects realized through Hayaku AI Lab.",
+      "title": "What you can do with HAYAI Lab",
+      "description": "We design and build AI solutions that directly connect to management and business outcomes. Here are three representative projects realized through HAYAI Lab.",
       "resume": {
         "label": "HR / Talent",
         "title": "Generate Japanese resumes from English CVs",
@@ -274,14 +334,19 @@
     "ctaSection": {
       "title": "Turn your \"someday\" AI ideas into concrete results now",
       "description": "If you have even a rough idea such as \"Could AI help with this?\", please feel free to talk with us. Together we will design an AI MVP that is realistic for your organization and create visible results within a short time frame.",
-      "button": "Ask about Hayaku AI Lab (Free)"
+      "button": "Ask about HAYAI Lab (Free)"
     }
   },
   "aiLabPage": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Hayai Lab"
+    },
     "hero": {
-      "title": "Hayaku AI Lab",
-      "subtitle": "AI-Specialized Agile Development Service \"Hayaku AI Lab\"",
-      "description1": "Hayaku AI Lab is a service that rapidly develops prototypes of products and services utilizing AI.",
+      "title": "HAYAI Lab",
+      "bannerTagline": "- AI-focused agile development service -",
+      "subtitle": "AI-Specialized Agile Development Service \"HAYAI Lab\"",
+      "description1": "HAYAI Lab is a service that rapidly develops prototypes of products and services utilizing AI.",
       "description2": "For example, it's ideal for companies and entrepreneurs who have concerns such as \"I have an idea for a new AI app but don't know how to create it\" or \"I'm thinking of an AI-powered service but can't move forward because we don't have experts.\"",
       "description3": "By teaming up with our customers, we can achieve flexible and rapid development, with AI consultants who are knowledgeable about new businesses and world-class AI engineers.",
       "imageAlt": "AI development concept image"
@@ -311,7 +376,10 @@
       "text": " will help you solve these problems."
     },
     "features": {
-      "title": "Features of \"Hayaku AI Lab,\" an agile development service specializing in AI",
+      "sectionEyebrow": "AI-focused agile development service",
+      "titleBrand": "\"Hayai Lab\"",
+      "titleRest": " features",
+      "title": "Features of \"HAYAI Lab,\" an agile development service specializing in AI",
       "feature1": {
         "title": "Quickly turn ideas into reality",
         "description": "We can start development immediately from your idea, without the hassle of creating a requirements specification document, and provide you with an MVP as quickly as possible.",
@@ -329,7 +397,10 @@
       }
     },
     "benefits": {
-      "title": "\"Hayaku AI Lab,\" an agile development service specializing in AI",
+      "sectionEyebrow": "AI-focused agile development service",
+      "titleBrand": "\"Hayai Lab\"",
+      "titleRest": " benefits",
+      "title": "\"HAYAI Lab,\" an agile development service specializing in AI",
       "benefit1": {
         "title": "Realize your ideas in as little as two months! Quickly turn your ideas into reality.",
         "point1": "We can start development immediately from your idea, without the hassle of creating a requirements specification document, and provide you with an MVP as quickly as possible.",
@@ -341,8 +412,8 @@
         "title": "The secret to speedy development : \"AI LaaS\"",
         "point1": "\"AILaaS\" stands for AI Laboratory as a Service. We provide a service that acts as your company's AI laboratory.",
         "point2": "Just as knowledgeable researchers use cutting-edge experimental equipment in a real laboratory and conduct trial and error daily,",
-        "point2Bold": "Hayaku AI Lab will develop prototypes of your services within CosBE's well-equipped development environment.",
-        "point3": "Our AI consultants will propose an MVP based on your idea, and our AI engineers will quickly develop the first product. During your time at the Hayaku AI Lab, we will work with you to actually operate and improve the product, verifying your idea.",
+        "point2Bold": "HAYAI Lab will develop prototypes of your services within CosBE's well-equipped development environment.",
+        "point3": "Our AI consultants will propose an MVP based on your idea, and our AI engineers will quickly develop the first product. During your time at the HAYAI Lab, we will work with you to actually operate and improve the product, verifying your idea.",
         "imageAlt": "AI LaaS image"
       },
       "benefit3": {
@@ -354,12 +425,49 @@
       }
     },
     "aiAgentLink": {
-      "text": "/AI Agents provided by Hayaku AI Lab/",
+      "text": "/AI Agents provided by HAYAI Lab/",
       "button": "Learn more about AI Agents"
     },
+    "pricing": {
+      "heading": "Consulting plus development at this price — high-quality growth, affordably",
+      "cardTitle": "No compromise on value: best-price consulting and development",
+      "p1": "End-to-end support from consulting through development.",
+      "p2": "Trusted by startups and enterprises alike. We keep costs lean while delivering quality beyond expectations.",
+      "p3": "First-time clients can engage with confidence.",
+      "imageAlt": "Business growth illustration"
+    },
+    "priceBreakdown": {
+      "badge": "CosBE Pricing",
+      "headline": "An unmatched price for\nthe high-quality growth we promise",
+      "primaryLabel": "Fee",
+      "primaryPrice": "¥1,500,000 / month",
+      "primaryNote": "(Includes development, consulting, servers, and all tooling costs · 2-month minimum)",
+      "maintenanceLabel": "Maintenance & Operations",
+      "maintenancePrice": "From ¥50,000 / month",
+      "maintenanceNote": "(Varies by product usage and number of users)"
+    },
+    "comparison": {
+      "title": "Service & Pricing Comparison",
+      "subtitleLight": "We stand by every new venture —",
+      "subtitleBold": "delivered at industry-leading prices",
+      "p1": "We have walked alongside countless startups and new businesses.",
+      "p2": "Because we have supported so many bold attempts, we put growth first and offer the most effective approach at the best possible price.",
+      "p3": "We remove the anxieties of startups and accelerate new business.",
+      "scrollHint": "Scroll horizontally",
+      "us": "CosBE",
+      "competitorA": "Company A",
+      "competitorB": "Company B",
+      "rowAgile": "Agile development",
+      "rowConsulting": "Consulting",
+      "rowTools": "Servers & tooling",
+      "rowPrice": "Price",
+      "priceUs": "¥1.5M / month\n(2-month minimum)",
+      "priceA": "From ¥10M\nDevelopment only",
+      "priceB": "From ¥15M\nSetup + development only"
+    },
     "caseStudies": {
-      "subtitle": "Case study of \"Hayaku AI Lab,\" an agile development service specializing in AI",
-      "title": "Cross-industry AI solutions provided by Hayaku AI Lab",
+      "subtitle": "Case study of \"HAYAI Lab,\" an agile development service specializing in AI",
+      "title": "Cross-industry AI solutions provided by HAYAI Lab",
       "description": "CosBE has highly skilled AI engineers active internationally, and can flexibly handle a wide range of projects, from manufacturing, construction, and retail to IT.",
       "viewAll": "To the list of achievement",
       "case1": {
@@ -394,10 +502,9 @@
     },
     "finalCta": {
       "title": "We will support your business from various aspects",
-      "subtitle": "Please feel free to contact us first",
       "description": "For detailed service information, consultations, or estimates, please use the form.",
       "additionalText": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquire about Hayaku AI Lab"
+      "button": "Inquire about HAYAI Lab"
     }
   },
   "caseStudies": {
@@ -704,6 +811,11 @@
         "point2": "Post-implementation support and additional development are also provided on an ongoing basis."
       }
     },
+    "pricing": {
+      "badge": "CosBE Price",
+      "title": "Pricing",
+      "description": "Hayai Lab offers consistent support to maximize business impact with a small-start pricing model."
+    },
     "deployment": {
       "badge": "Deployment Steps",
       "title": "Implementation process",
@@ -783,7 +895,7 @@
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form.",
       "message": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "caseStudyDetails": {
@@ -823,7 +935,7 @@
       "section2": {
         "title": "Solution Overview",
         "subtitle": "Improving instructor productivity with AI agents",
-        "description": "\"Hayaku AI Lab\" is a system that utilizes an interactive AI agent to streamline the \"pre-preparation\" stage before training participants consult with instructors, significantly reducing the burden on instructors.",
+        "description": "\"HAYAI Lab\" is a system that utilizes an interactive AI agent to streamline the \"pre-preparation\" stage before training participants consult with instructors, significantly reducing the burden on instructors.",
         "feature1Title": "AI technology",
         "feature1Item1": "We have introduced an AI agent based on a large-scale language model (LLM) and refined requests and issues through repeated dialogue with users.",
         "feature2Title": "Specific functions and approaches",
@@ -841,14 +953,14 @@
         "benefit2Description": "By interacting with an AI agent beforehand, students can organize their thoughts, allowing instructors more time to provide advanced expertise.",
         "benefit3Title": "Creating new business opportunities",
         "benefit3Description": "The functionality has grown significantly from what was initially envisioned, and a model for selling the AI agent itself as a separate service is now in sight. This flexible project approach is creating new business opportunities for both our clients and our company.",
-        "keyPointsIntro": "KANDO introduced \"Hayaku AI Lab\" to prepare for corporate training and achieved the following benefits:",
+        "keyPointsIntro": "KANDO introduced \"HAYAI Lab\" to prepare for corporate training and achieved the following benefits:",
         "keyPoint1": "Participants can freely consult with the AI, allowing for thorough advance preparation.",
         "keyPoint2": "Previously, one instructor would conduct multiple pre-interviews, but this has now been reduced to one or two.",
         "keyPoint3": "Instructors can now focus on highly specialized areas, improving the quality of the training itself."
       },
       "section4": {
         "title": "Summary",
-        "paragraph1": "\"Hayaku AI Lab\" solved KANDO's problem of a lack of professional instructors and achieved the great result of doubling training productivity.",
+        "paragraph1": "\"HAYAI Lab\" solved KANDO's problem of a lack of professional instructors and achieved the great result of doubling training productivity.",
         "paragraph2": "Going forward, we will continue to provide flexible AI solutions that meet the changing needs and business ideas of our customers, supporting their corporate growth and new value creation.",
         "ctaText": "Why not improve your business efficiency with AI?",
         "ctaButton": "Free consultation here"
@@ -929,7 +1041,7 @@
       },
       "section4": {
         "title": "Summary",
-        "paragraph1": "The newly developed and implemented 'Hayaku AI Lab' has solved a major issue for the Global Management Division of our company, namely document screening for foreign recruitment, shortening the selection process from several days to just one hour. This has enabled recruitment staff to focus on more strategic tasks, contributing to the global expansion of the company as a whole.",
+        "paragraph1": "The newly developed and implemented 'HAYAI Lab' has solved a major issue for the Global Management Division of our company, namely document screening for foreign recruitment, shortening the selection process from several days to just one hour. This has enabled recruitment staff to focus on more strategic tasks, contributing to the global expansion of the company as a whole.",
         "paragraph2": "This function has the potential to convert not only resumes but also various other documents into a unified format. For example, it could convert purchase orders that have different formats for each client into a single unified format. We provide flexible AI solutions that meet customer needs, so please feel free to contact us if you have any problems.",
         "ctaText": "Why not improve your business efficiency with AI?",
         "ctaButton": "Free consultation here"
@@ -1174,7 +1286,7 @@
       "title": "We support your business from various perspectives. Please feel free to contact us first.",
       "description1": "Please use the form for consultations and quotes regarding detailed service content.",
       "description2": "We will respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "noticePage": {
@@ -1230,7 +1342,7 @@
       "title": "We will support your business in various aspects. Please feel free to contact us.",
       "description1": "For more information about our services or to request a quote, please fill out the form.",
       "description2": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "downloadPage": {
@@ -1298,7 +1410,7 @@
       "title": "We will support your business in various aspects.",
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "footer": {
@@ -1308,7 +1420,7 @@
     "caseStudies": "Case studies",
     "usefulColumn": "Useful Column",
     "announcement": "Announcement",
-    "homePage": "Home Page",
+    "homePage": "Top Page",
     "privacyPolicy": "Privacy Policy",
     "inquiry": "inquiry",
     "copyright": "© CosBE Incorporated"
@@ -1523,7 +1635,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "privacyPolicyPage": {
@@ -1696,7 +1808,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   },
   "articlePage": {
@@ -1712,7 +1824,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about Hayaku AI Lab"
+      "button": "Inquiries about HAYAI Lab"
     }
   }
 }

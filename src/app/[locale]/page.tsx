@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
-import { HubSpotForm } from '@/components';
+import { HubSpotFormCard } from '@/components';
 import type { Metadata } from 'next';
 
 type PageProps = {
@@ -100,10 +100,11 @@ export default async function Home() {
           </div>
 
           {/* Right - HubSpot form */}
-          <div className="flex w-full justify-center lg:justify-end mt-[280px] sm:mt-[350px] md:mt-[420px] lg:mt-0">
-            <div className="w-[350px] max-w-[480px] sm:max-w-[500px] lg:max-w-[520px] rounded-2xl sm:rounded-3xl bg-white/80 backdrop-blur-sm p-5 sm:p-6 lg:p-8 shadow-lg shadow-primaryColor/10 sm:shadow-xl sm:shadow-primaryColor/15 ring-1 ring-bgAccent border border-white/20">
-              <HubSpotForm />
-            </div>
+          <div className="mt-[280px] flex w-full justify-center sm:mt-[350px] md:mt-[420px] lg:mt-0 lg:justify-end">
+            <HubSpotFormCard
+              variant="hero"
+              className="w-[350px] max-w-[480px] sm:max-w-[500px] lg:max-w-[520px]"
+            />
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import type { Metadata } from 'next';
+import { PageHero, PAGE_HERO_PRESETS, SectionHeading } from '@/components';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -28,18 +29,12 @@ export default async function RecruitPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Background */}
-      <div className="relative min-h-[280px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primaryColor/80 to-primaryColor/90">
-        <div className="absolute inset-0 bg-gradient-to-b from-primaryColor/40 to-primaryColor/60"></div>
-        <div className="relative z-10 text-center px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-            {t('heroTitle')}
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 font-light tracking-wide">
-            {t('heroSubtitle')}
-          </p>
-        </div>
-      </div>
+      {/* Hero — pt accounts for fixed navbar; py centers title in the banner */}
+      <PageHero
+        {...PAGE_HERO_PRESETS.centered}
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
+      />
 
       {/* Main Content */}
       <div className="bg-white py-16">
@@ -68,9 +63,9 @@ export default async function RecruitPage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
             {/* Support We Provide */}
             <div className="bg-white border-2 border-borderPrimary rounded-lg p-8">
-              <h3 className="text-2xl font-bold text-textPrimary mb-6">
+              <SectionHeading as="h3" size="md">
                 {t('benefits.title')}
-              </h3>
+              </SectionHeading>
               <ul className="space-y-4">
                 <li className="flex items-start">
                   <span className="text-primaryColor mr-2">▸</span>
@@ -95,9 +90,9 @@ export default async function RecruitPage() {
 
             {/* What We Look For */}
             <div className="bg-white border-2 border-borderPrimary rounded-lg p-8">
-              <h3 className="text-2xl font-bold text-textPrimary mb-6">
+              <SectionHeading as="h3" size="md">
                 {t('lookingFor.title')}
-              </h3>
+              </SectionHeading>
               <ul className="space-y-4">
                 <li className="flex items-start">
                   <span className="text-primaryColor mr-2">▸</span>

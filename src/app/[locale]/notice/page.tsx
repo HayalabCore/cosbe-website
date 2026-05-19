@@ -1,7 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import Image from 'next/image';
-import { Breadcrumb } from '@/components';
+import { Breadcrumb, PageHero, PAGE_HERO_PRESETS } from '@/components';
 import ArticleGrid from '@/components/article/ArticleGrid';
 
 interface Props {
@@ -17,26 +16,11 @@ export default async function NoticePage({ params, searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="relative min-h-[240px] md:min-h-[280px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/notice/hero-background.jpeg"
-            alt="Notice background"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-primaryColor/40" />
-        </div>
-        <div className="relative z-10 text-center text-white px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">
-            {t('heroTitle')}
-          </h1>
-          <p className="text-lg md:text-xl font-medium drop-shadow">
-            {t('heroSubtitle')}
-          </p>
-        </div>
-      </section>
+      <PageHero
+        {...PAGE_HERO_PRESETS.centered}
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
+      />
 
       <Breadcrumb
         homeLabel={t('breadcrumb.home')}

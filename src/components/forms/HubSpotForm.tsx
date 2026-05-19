@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { useLocale } from 'next-intl';
 
 const HUBSPOT_PORTAL_ID =
@@ -12,24 +12,43 @@ const HUBSPOT_FORM_ID_JA =
   process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID_JA ||
   'e12c67ce-3c60-46b3-a798-c0856d8a8edf';
 
+declare global {
+  interface Window {
+    hbspt?: {
+      forms: {
+        create: (options: {
+          portalId: string;
+          formId: string;
+          region: string;
+          target: string;
+        }) => void;
+      };
+    };
+  }
+}
+
 export default function HubSpotForm() {
   const locale = useLocale();
+  const instanceId = useId().replace(/:/g, '');
+  const targetId = `hubspot-form-${locale}-${instanceId}`;
   const formContainerRef = useRef<HTMLDivElement>(null);
-  const isLoadedRef = useRef(false);
 
   useEffect(() => {
+    const container = formContainerRef.current;
+    if (!container) return;
+
     const formId = locale === 'ja' ? HUBSPOT_FORM_ID_JA : HUBSPOT_FORM_ID_EN;
+    container.innerHTML = '';
 
     const createForm = () => {
-      if (window.hbspt && formContainerRef.current && !isLoadedRef.current) {
-        window.hbspt.forms.create({
-          portalId: HUBSPOT_PORTAL_ID,
-          formId: formId,
-          region: 'na2',
-          target: `#hubspot-form-${locale}`,
-        });
-        isLoadedRef.current = true;
-      }
+      if (!window.hbspt || !formContainerRef.current) return;
+
+      window.hbspt.forms.create({
+        portalId: HUBSPOT_PORTAL_ID,
+        formId,
+        region: 'na2',
+        target: `#${targetId}`,
+      });
     };
 
     if (window.hbspt) {
@@ -37,11 +56,22 @@ export default function HubSpotForm() {
       return;
     }
 
+    const existing = document.querySelector(
+      'script[data-hubspot-forms-v2="true"]'
+    );
+
+    if (existing) {
+      existing.addEventListener('load', createForm);
+      if (window.hbspt) createForm();
+      return () => existing.removeEventListener('load', createForm);
+    }
+
     const script = document.createElement('script');
-    script.src = '//js-na2.hsforms.net/forms/embed/v2.js';
+    script.src = 'https://js-na2.hsforms.net/forms/embed/v2.js';
     script.charset = 'utf-8';
     script.type = 'text/javascript';
     script.async = true;
+    script.dataset.hubspotFormsV2 = 'true';
     script.onload = createForm;
     script.onerror = () => {
       console.error('Failed to load HubSpot form script');
@@ -50,13 +80,13 @@ export default function HubSpotForm() {
     document.body.appendChild(script);
 
     return () => {
-      isLoadedRef.current = false;
+      script.removeEventListener('load', createForm);
     };
-  }, [locale]);
+  }, [locale, targetId]);
 
   return (
     <div
-      id={`hubspot-form-${locale}`}
+      id={targetId}
       ref={formContainerRef}
       className="hubspot-form-container"
     />
