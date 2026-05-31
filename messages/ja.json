@@ -29,8 +29,7 @@
   },
   "homePage": {
     "about": {
-      "sectionJa": "CosBEとは？",
-      "sectionEn": "About",
+      "section": "CosBEとは？",
       "heading": "ビジネスを変革する、\n戦略的AI実装パートナー",
       "p1": "CosBEは、トップ経営コンサルタントが率いる多国籍AI/ITエンジニア集団です。",
       "p2": "我々の使命は、世界中の経営者の挑戦を加速させることです。",
@@ -39,8 +38,7 @@
       "imageAlt": "CosBEチームのイメージ"
     },
     "service": {
-      "sectionJa": "サービス",
-      "sectionEn": "Service",
+      "section": "サービス",
       "eyebrow": "AI特化型MVP開発サービス “速AIラボ”",
       "title": "速AIラボ",
       "p1": "速AIラボは、AIに特化したMVP開発をスピーディに提供するサービスです。",
@@ -49,8 +47,7 @@
       "imageAlt": "速AIラボサービス"
     },
     "caseStudies": {
-      "sectionJa": "導入事例",
-      "sectionEn": "Case Study",
+      "section": "導入事例",
       "title": "速AIラボが提供する、業界を超えたAIソリューション",
       "description": "CosBEは、国際的に活躍するAIエンジニアによる高い技術力のもと、様々な案件に柔軟に対応いたします。製造業、建設、小売からITまで幅広く対応しています。",
       "scrollHint": "スクロールできます",
@@ -74,8 +71,7 @@
       }
     },
     "news": {
-      "sectionJa": "おしらせ",
-      "sectionEn": "News",
+      "section": "おしらせ",
       "viewAll": "おしらせ一覧へ",
       "fallback": {
         "item1": {

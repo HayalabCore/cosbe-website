@@ -35,7 +35,7 @@ export default async function HomeCaseStudiesSection({
     cards = articles.map((item) => ({
       href: `/case-studies/${item.slug}`,
       title: resolveArticleTitle(item, locale),
-      category: item.tags[0] ?? t('sectionJa'),
+      category: item.tags[0] ?? t('section'),
       date: formatArticleDate(item.publishedAt, locale),
       image: item.featuredImage,
     }));
@@ -59,20 +59,16 @@ export default async function HomeCaseStudiesSection({
       className="scroll-mt-24 bg-bgAccent py-14 md:py-20"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <HomeSectionTitle
-          sectionJa={t('sectionJa')}
-          sectionEn={t('sectionEn')}
-          className="mb-8 md:mb-10"
-        />
+        <HomeSectionTitle section={t('section')} className="mb-8 md:mb-10" />
 
-        <h3 className="text-center text-lg font-bold text-textHeading md:text-xl">
+        <h3 className="text-lg font-bold text-textHeading md:text-xl">
           {t('title')}
         </h3>
-        <p className="mx-auto mt-4 max-w-3xl text-center text-sm leading-relaxed text-textSecondary md:text-base">
+        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-textSecondary md:text-base">
           {t('description')}
         </p>
 
-        <p className="mt-6 text-center text-xs text-textTertiary md:hidden">
+        <p className="mt-6 text-xs text-textTertiary md:hidden">
           {t('scrollHint')}
         </p>
 

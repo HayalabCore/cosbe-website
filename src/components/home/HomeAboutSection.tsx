@@ -10,11 +10,8 @@ export default async function HomeAboutSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
           <div>
-            <p className="text-sm font-semibold text-primaryColor md:text-base">
-              {t('sectionJa')}
-            </p>
-            <h2 className="mt-1 text-3xl font-bold text-primaryColor md:text-4xl lg:text-[2.5rem]">
-              {t('sectionEn')}
+            <h2 className="text-3xl font-bold text-primaryColor md:text-4xl lg:text-[2.5rem]">
+              {t('section')}
             </h2>
             <h3 className="mt-6 whitespace-pre-line text-lg font-bold leading-snug text-textPrimary md:text-xl lg:text-2xl">
               {t('heading')}

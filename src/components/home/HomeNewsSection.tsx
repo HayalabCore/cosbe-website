@@ -1,3 +1,4 @@
+import { Clock, FolderOpen, ArrowRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getArticles } from '@/lib/articles';
@@ -9,6 +10,8 @@ type NewsItem = {
   href: string;
   title: string;
   date: string;
+  dateTime?: string;
+  category: string;
 };
 
 type HomeNewsSectionProps = {
@@ -32,6 +35,8 @@ export default async function HomeNewsSection({
       href: `/notice/${item.slug}`,
       title: resolveArticleTitle(item, locale),
       date: formatArticleDate(item.publishedAt, locale),
+      dateTime: item.publishedAt ?? undefined,
+      category: item.tags[0] ?? t('section'),
     }));
   } catch {
     items = [];
@@ -43,43 +48,54 @@ export default async function HomeNewsSection({
       href: '/notice',
       title: t(`fallback.${key}.title`),
       date: t(`fallback.${key}.date`),
+      category: t('section'),
     }));
   }
 
   return (
     <section id="news" className="scroll-mt-24 bg-white py-14 md:py-20">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <HomeSectionTitle
-          sectionJa={t('sectionJa')}
-          sectionEn={t('sectionEn')}
-          className="mb-10 md:mb-12"
-        />
-
-        <ul className="divide-y divide-gray-200 border-y border-gray-200">
-          {items.map((item) => (
-            <li key={`${item.href}-${item.title}`}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)] lg:items-start lg:gap-12 xl:gap-16">
+          <div>
+            <HomeSectionTitle section={t('section')} />
+            <div className="mt-8">
               <Link
-                href={item.href}
-                className="group flex flex-col gap-1 py-5 transition-colors hover:bg-bgAccent/50 sm:flex-row sm:items-baseline sm:gap-6 sm:px-2"
+                href="/notice"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-primaryColor px-8 py-3.5 text-sm font-bold text-white shadow-md transition-colors hover:bg-primaryHover"
               >
-                <time className="flex-shrink-0 text-sm font-medium text-textTertiary sm:w-36">
-                  {item.date}
-                </time>
-                <span className="text-sm font-medium leading-relaxed text-textHeading group-hover:text-primaryColor md:text-base">
-                  {item.title}
-                </span>
+                {t('viewAll')}
+                <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
-            </li>
-          ))}
-        </ul>
+            </div>
+          </div>
 
-        <div className="mt-10 text-center">
-          <Link
-            href="/notice"
-            className="inline-flex items-center justify-center rounded-full border-2 border-primaryColor bg-white px-8 py-3 text-sm font-bold text-primaryColor transition-colors hover:bg-primaryColor hover:text-white"
-          >
-            {t('viewAll')}
-          </Link>
+          <ul className="divide-y divide-gray-200 border-y border-gray-200">
+            {items.map((item) => (
+              <li key={`${item.href}-${item.title}`}>
+                <Link
+                  href={item.href}
+                  className="group block px-2 py-5 transition-colors hover:bg-bgAccent/60 sm:px-3"
+                >
+                  <div className="mb-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-textTertiary">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                      <time dateTime={item.dateTime}>{item.date}</time>
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <FolderOpen
+                        className="h-3.5 w-3.5 shrink-0"
+                        aria-hidden
+                      />
+                      {item.category}
+                    </span>
+                  </div>
+                  <p className="text-sm font-bold leading-relaxed text-textHeading group-hover:text-primaryColor md:text-base">
+                    {item.title}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

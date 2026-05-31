@@ -13,11 +13,8 @@ export default async function HomeServiceSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
           <div className="text-white">
-            <p className="text-sm font-semibold md:text-base">
-              {t('sectionJa')}
-            </p>
-            <h2 className="mt-1 text-3xl font-bold md:text-4xl lg:text-[2.5rem]">
-              {t('sectionEn')}
+            <h2 className="text-3xl font-bold md:text-4xl lg:text-[2.5rem]">
+              {t('section')}
             </h2>
             <h3 className="mt-6 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl">
               {t('title')}

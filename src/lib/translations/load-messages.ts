@@ -132,7 +132,7 @@ async function loadMessagesFromDbOrFallback(
 export function getCachedMessagesForLocale(locale: Locale) {
   return unstable_cache(
     async () => loadMessagesFromDbOrFallback(locale),
-    ['translations-db', locale],
+    ['translations-db', locale, 'v2'],
     { tags: [`translations-${locale}`] }
   );
 }

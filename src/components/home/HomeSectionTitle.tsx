@@ -1,21 +1,16 @@
 type HomeSectionTitleProps = {
-  sectionJa: string;
-  sectionEn: string;
+  section: string;
   className?: string;
 };
 
 export default function HomeSectionTitle({
-  sectionJa,
-  sectionEn,
+  section,
   className = '',
 }: HomeSectionTitleProps) {
   return (
-    <div className={`text-center ${className}`}>
+    <div className={`text-left ${className}`}>
       <h2 className="inline-block border-b-4 border-primaryColor pb-2 text-2xl font-bold text-textHeading md:text-3xl">
-        <span>{sectionJa}</span>
-        <span className="ml-2 text-base font-semibold text-textTertiary md:text-lg">
-          {sectionEn}
-        </span>
+        {section}
       </h2>
     </div>
   );

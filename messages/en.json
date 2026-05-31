@@ -30,8 +30,7 @@
   },
   "homePage": {
     "about": {
-      "sectionJa": "What is CosBE?",
-      "sectionEn": "About",
+      "section": "About",
       "heading": "A strategic AI implementation partner\nthat transforms your business",
       "p1": "CosBE is a multinational team of AI/IT engineers led by top management consultants.",
       "p2": "Our mission is to accelerate the challenges of business leaders around the world.",
@@ -40,8 +39,7 @@
       "imageAlt": "CosBE team illustration"
     },
     "service": {
-      "sectionJa": "Service",
-      "sectionEn": "Service",
+      "section": "Service",
       "eyebrow": "AI-focused MVP development service \"Fast AI Lab\"",
       "title": "Fast AI Lab",
       "p1": "Fast AI Lab provides speedy, AI-focused MVP development.",
@@ -50,8 +48,7 @@
       "imageAlt": "Fast AI Lab service"
     },
     "caseStudies": {
-      "sectionJa": "Case Studies",
-      "sectionEn": "Case Study",
+      "section": "Case Studies",
       "title": "Cross-industry AI solutions from Fast AI Lab",
       "description": "With highly skilled AI engineers active internationally, CosBE flexibly handles a wide range of projects—from manufacturing and construction to retail and IT.",
       "scrollHint": "Scroll horizontally",
@@ -75,8 +72,7 @@
       }
     },
     "news": {
-      "sectionJa": "News",
-      "sectionEn": "News",
+      "section": "News",
       "viewAll": "All news",
       "fallback": {
         "item1": {
