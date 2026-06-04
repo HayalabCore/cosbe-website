@@ -7,10 +7,10 @@ const HUBSPOT_PORTAL_ID =
   process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || '242892919';
 const HUBSPOT_FORM_ID_EN =
   process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID_EN ||
-  '0d5cad56-b943-4915-a0dd-9962f172d287';
+  '1fcab1a2-255d-48cd-9153-967053a636cb';
 const HUBSPOT_FORM_ID_JA =
   process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID_JA ||
-  'e12c67ce-3c60-46b3-a798-c0856d8a8edf';
+  '8c1f461a-fa65-4aae-ad12-bd5950ae9024';
 
 declare global {
   interface Window {
