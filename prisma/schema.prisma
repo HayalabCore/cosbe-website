@@ -47,6 +47,12 @@ model Article {
   blocks            Json
   toc               Json
   seo               Json?
+  // Case-study specific metadata (null for non-case-study articles)
+  clientName        String?       @map("client_name")
+  clientLocation    String?       @map("client_location")
+  clientUrl         String?       @map("client_url")
+  aiModels          String[]      @default([]) @map("ai_models")
+  mainChallenges    String?       @map("main_challenges")
   relatedArticleIds String[]      @default([]) @map("related_article_ids")
   viewCount         Int           @default(0) @map("view_count")
   publishedAt       DateTime?     @map("published_at") @db.Timestamptz(6)
