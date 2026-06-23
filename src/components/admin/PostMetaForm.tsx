@@ -4,13 +4,19 @@ import { useCallback, useMemo, useState } from 'react';
 import { translateArticleMetaEnAction } from '@/actions/block-translation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import type { ArticleSEO, ArticleStatus, ContentCategory } from '@/types';
+import type {
+  ArticleSEO,
+  ArticleStatus,
+  CaseStudyMeta,
+  ContentCategory,
+} from '@/types';
 import {
   createFallbackSlug,
   imageSrcOrFallback,
   normalizeSlugInput,
 } from '@/lib/article-utils';
 import ImageUpload from './ImageUpload';
+import CaseStudyMetaFields from './CaseStudyMetaFields';
 
 const CATEGORY_VALUES: ContentCategory[] = [
   'useful-info',
@@ -39,6 +45,7 @@ export type PostMetaPatch = {
   authorName?: string;
   authorDesignation?: string;
   seo?: ArticleSEO;
+  caseStudy?: Partial<CaseStudyMeta>;
 };
 
 type Props = {
@@ -55,6 +62,7 @@ type Props = {
   authorName: string;
   authorDesignation: string;
   seo: ArticleSEO;
+  caseStudy: CaseStudyMeta;
   onChange: (patch: PostMetaPatch) => void;
 };
 
@@ -123,9 +131,11 @@ export default function PostMetaForm({
   authorName,
   authorDesignation,
   seo,
+  caseStudy,
   onChange,
 }: Props) {
   const t = useTranslations('admin.meta');
+  const tCs = useTranslations('admin.caseStudyMeta');
   const [metaGenerating, setMetaGenerating] = useState(false);
 
   const categoryLabel = useCallback(
@@ -154,6 +164,7 @@ export default function PostMetaForm({
     translations: true,
     media: true,
     organize: true,
+    caseStudy: true,
     author: false,
     seo: false,
   });
@@ -507,6 +518,42 @@ export default function PostMetaForm({
           </div>
         )}
       </div>
+
+      {/* Client info (case studies only) */}
+      {category === 'case-study' && (
+        <div>
+          <SectionHeader
+            label={tCs('sectionTitle')}
+            open={openSections.caseStudy}
+            onToggle={() => toggle('caseStudy')}
+            icon={
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            }
+          />
+          {openSections.caseStudy && (
+            <div className="px-4 pb-4">
+              <CaseStudyMetaFields
+                value={caseStudy}
+                onChange={(patch) =>
+                  onChange({ caseStudy: { ...caseStudy, ...patch } })
+                }
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Author */}
       <div>

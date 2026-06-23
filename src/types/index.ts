@@ -155,6 +155,27 @@ export interface ArticleSEO {
   keywords?: string[];
 }
 
+export interface CaseStudyMeta {
+  clientName?: string;
+  clientLocation?: string;
+  clientUrl?: string;
+  /** AI models / technologies adopted; e.g. ["AIエージェント", "LLM"]. */
+  aiModels: string[];
+  mainChallenges?: string;
+}
+
+/** Returns true if at least one case-study field is set (used by the public page). */
+export function hasCaseStudyMeta(m: CaseStudyMeta | undefined): boolean {
+  if (!m) return false;
+  return Boolean(
+    m.clientName ||
+    m.clientLocation ||
+    m.clientUrl ||
+    m.aiModels.length ||
+    m.mainChallenges
+  );
+}
+
 export interface Article {
   id: string;
   slug: string;
@@ -175,6 +196,7 @@ export interface Article {
   createdAt: string;
   updatedAt: string;
   viewCount?: number;
+  caseStudy?: CaseStudyMeta;
 }
 
 export interface ArticleListItem {
@@ -190,6 +212,8 @@ export interface ArticleListItem {
   author: AuthorReference;
   publishedAt: string | null;
   status?: ArticleStatus;
+  /** Only set for case-study category; used on the listing card to show the client. */
+  clientName?: string;
 }
 
 // ============================================

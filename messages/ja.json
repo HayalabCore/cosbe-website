@@ -932,6 +932,14 @@
       "button": "速AIラボについてお問い合わせ"
     }
   },
+  "caseStudyPanel": {
+    "title": "企業情報",
+    "clientName": "社名",
+    "clientLocation": "所在地",
+    "clientUrl": "URL",
+    "aiModels": "導入AIモデル",
+    "mainChallenges": "主な課題"
+  },
   "caseStudiesPage": {
     "heroTitle": "導入事例",
     "heroSubtitle": "Case Studies",

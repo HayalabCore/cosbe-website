@@ -256,6 +256,19 @@
     "titlePlaceholder": "Title (optional)",
     "contentPlaceholder": "Callout content…"
   },
+  "caseStudyMeta": {
+    "sectionTitle": "Client info",
+    "clientName": "Client name",
+    "clientNamePlaceholder": "e.g. KANDO Inc.",
+    "clientLocation": "Location",
+    "clientLocationPlaceholder": "e.g. Tokyo, Japan",
+    "clientUrl": "Client website",
+    "aiModels": "AI models adopted",
+    "aiModelsPlaceholder": "AI agent, LLM",
+    "aiModelsHint": "Comma-separated list of AI technologies used.",
+    "mainChallenges": "Main challenges",
+    "mainChallengesPlaceholder": "Short description of the customer's main pain point."
+  },
   "image": {
     "previewAlt": "Preview",
     "removeImage": "Remove image",

@@ -16,6 +16,31 @@ import type {
   ArticleSEO,
 } from '@/types';
 
+function caseStudyFromRow(row: {
+  clientName: string | null;
+  clientLocation: string | null;
+  clientUrl: string | null;
+  aiModels: string[];
+  mainChallenges: string | null;
+}): import('@/types').CaseStudyMeta | undefined {
+  if (
+    !row.clientName &&
+    !row.clientLocation &&
+    !row.clientUrl &&
+    !row.aiModels.length &&
+    !row.mainChallenges
+  ) {
+    return undefined;
+  }
+  return {
+    clientName: row.clientName ?? undefined,
+    clientLocation: row.clientLocation ?? undefined,
+    clientUrl: row.clientUrl ?? undefined,
+    aiModels: row.aiModels,
+    mainChallenges: row.mainChallenges ?? undefined,
+  };
+}
+
 function toJson(value: unknown): Prisma.InputJsonValue {
   return value as unknown as Prisma.InputJsonValue;
 }
@@ -62,6 +87,7 @@ const listItemSelect = {
   author: true,
   publishedAt: true,
   status: true,
+  clientName: true,
 } as const satisfies Prisma.ArticleSelect;
 
 type ArticleListRow = Prisma.ArticleGetPayload<{
@@ -91,6 +117,7 @@ function mapRow(row: ArticleWithAuthor): Article {
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
     viewCount: row.viewCount,
+    caseStudy: caseStudyFromRow(row),
   };
 }
 
@@ -108,6 +135,7 @@ function toListItem(row: ArticleListRow): ArticleListItem {
     author: authorToRef(row.author),
     publishedAt: row.publishedAt?.toISOString() ?? null,
     status: row.status as ArticleStatus,
+    clientName: row.clientName ?? undefined,
   };
 }
 
@@ -310,6 +338,11 @@ export async function createArticleRecord(
       relatedArticleIds: data.relatedArticleIds ?? [],
       viewCount: data.viewCount ?? 0,
       publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
+      clientName: data.caseStudy?.clientName?.trim() || null,
+      clientLocation: data.caseStudy?.clientLocation?.trim() || null,
+      clientUrl: data.caseStudy?.clientUrl?.trim() || null,
+      aiModels: data.caseStudy?.aiModels ?? [],
+      mainChallenges: data.caseStudy?.mainChallenges?.trim() || null,
     },
   });
   return row.id;
@@ -352,6 +385,13 @@ export async function updateArticleRecord(
   if (data.viewCount !== undefined) patch.viewCount = data.viewCount;
   if (data.publishedAt !== undefined) {
     patch.publishedAt = data.publishedAt ? new Date(data.publishedAt) : null;
+  }
+  if (data.caseStudy !== undefined) {
+    patch.clientName = data.caseStudy?.clientName?.trim() || null;
+    patch.clientLocation = data.caseStudy?.clientLocation?.trim() || null;
+    patch.clientUrl = data.caseStudy?.clientUrl?.trim() || null;
+    patch.aiModels = data.caseStudy?.aiModels ?? [];
+    patch.mainChallenges = data.caseStudy?.mainChallenges?.trim() || null;
   }
 
   await prisma.article.update({ where: { id }, data: patch });

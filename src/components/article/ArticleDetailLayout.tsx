@@ -3,6 +3,7 @@ import { Link } from '@/i18n/routing';
 import Breadcrumb from '@/components/shared/Breadcrumb';
 import TableOfContents from './TableOfContents';
 import BlockRenderer from './BlockRenderer';
+import CaseStudyInfoPanel from './CaseStudyInfoPanel';
 import { imageSrcOrFallback } from '@/lib/article-utils';
 import { articleDetailHref } from '@/lib/article-paths';
 import {
@@ -138,6 +139,10 @@ export default function ArticleDetailLayout({
                   />
                 </div>
               </div>
+            ) : null}
+
+            {article.category === 'case-study' ? (
+              <CaseStudyInfoPanel meta={article.caseStudy} locale={locale} />
             ) : null}
 
             <article className="max-w-none">

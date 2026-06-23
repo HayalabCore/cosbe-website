@@ -277,6 +277,19 @@
     "titlePlaceholder": "タイトル（任意）",
     "contentPlaceholder": "コールアウトの本文…"
   },
+  "caseStudyMeta": {
+    "sectionTitle": "クライアント情報",
+    "clientName": "社名",
+    "clientNamePlaceholder": "例：KANDO株式会社",
+    "clientLocation": "所在地",
+    "clientLocationPlaceholder": "例：東京都千代田区",
+    "clientUrl": "クライアントWebサイト",
+    "aiModels": "導入AIモデル",
+    "aiModelsPlaceholder": "AIエージェント, LLM",
+    "aiModelsHint": "カンマ区切りで導入したAI技術を入力します。",
+    "mainChallenges": "主な課題",
+    "mainChallengesPlaceholder": "顧客の主な課題を簡潔に記述します。"
+  },
   "image": {
     "previewAlt": "プレビュー",
     "removeImage": "画像を削除",

@@ -933,6 +933,14 @@
       "button": "Contact about Fast AI Lab"
     }
   },
+  "caseStudyPanel": {
+    "title": "Company info",
+    "clientName": "Company",
+    "clientLocation": "Location",
+    "clientUrl": "Website",
+    "aiModels": "AI models adopted",
+    "mainChallenges": "Main challenges"
+  },
   "caseStudiesPage": {
     "heroTitle": "Case",
     "heroSubtitle": "Studies",

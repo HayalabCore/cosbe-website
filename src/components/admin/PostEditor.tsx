@@ -26,6 +26,7 @@ import type {
   Article,
   ArticleSEO,
   ArticleStatus,
+  CaseStudyMeta,
   ContentBlock,
   ContentCategory,
   ParagraphBlock,
@@ -43,6 +44,10 @@ const BlockRenderer = dynamic(
 type Tab = 'edit' | 'preview';
 
 const defaultAuthor = { id: 'author-1', name: 'Editor', designation: 'CosBE' };
+
+const emptyCaseStudyMeta: CaseStudyMeta = {
+  aiModels: [],
+};
 
 /** Autosave interval when the article has unsaved edits (idle saves are no-ops). */
 const AUTOSAVE_INTERVAL_MS = 10_000;
@@ -62,7 +67,8 @@ function buildArticlePayload(
   seo: ArticleSEO,
   blocks: ContentBlock[],
   untitledFallback: string,
-  currentPublishedAt: string | null
+  currentPublishedAt: string | null,
+  caseStudy: CaseStudyMeta
 ): Omit<Article, 'id' | 'createdAt' | 'updatedAt'> {
   const tags = tagsStr
     .split(',')
@@ -96,6 +102,7 @@ function buildArticlePayload(
     relatedArticleIds: [],
     publishedAt,
     viewCount: 0,
+    caseStudy: category === 'case-study' ? caseStudy : undefined,
   };
 }
 
@@ -171,6 +178,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     defaultAuthor.designation
   );
   const [seo, setSeo] = useState<ArticleSEO>({});
+  const [caseStudy, setCaseStudy] = useState<CaseStudyMeta>(emptyCaseStudyMeta);
   const [blocks, setBlocks] = useState<ContentBlock[]>([
     createEmptyBlock('heading'),
     createEmptyBlock('paragraph'),
@@ -199,6 +207,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     setAuthorName(row.author.name);
     setAuthorDesignation(row.author.designation);
     setSeo(row.seo ?? {});
+    setCaseStudy(row.caseStudy ?? emptyCaseStudyMeta);
     setBlocks(
       row.blocks.length
         ? row.blocks
@@ -254,6 +263,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
       setAuthorDesignation(patch.authorDesignation);
     if (patch.seo !== undefined) setSeo(patch.seo);
     if ('publishedAt' in patch) setPublishedAt(patch.publishedAt ?? null);
+    if (patch.caseStudy !== undefined) {
+      setCaseStudy((prev) => ({ ...prev, ...patch.caseStudy }));
+    }
   }
 
   const runAutoSave = useCallback(async () => {
@@ -285,7 +297,8 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         seo,
         blocks,
         t('untitled'),
-        publishedAt
+        publishedAt,
+        caseStudy
       );
       await updateArticleAction(id, payload);
       isDirtyRef.current = false;
@@ -313,6 +326,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     authorDesignation,
     seo,
     blocks,
+    caseStudy,
     t,
   ]);
 
@@ -349,7 +363,8 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         seo,
         blocks,
         t('untitled'),
-        publishedAt
+        publishedAt,
+        caseStudy
       );
       if (persistedId) {
         await updateArticleAction(persistedId, payload);
@@ -646,6 +661,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 authorName={authorName}
                 authorDesignation={authorDesignation}
                 seo={seo}
+                caseStudy={caseStudy}
                 onChange={applyMeta}
               />
             </div>
@@ -671,6 +687,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 authorName={authorName}
                 authorDesignation={authorDesignation}
                 seo={seo}
+                caseStudy={caseStudy}
                 onChange={applyMeta}
               />
             </div>
