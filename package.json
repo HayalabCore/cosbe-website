@@ -18,6 +18,8 @@
     "db:pull-translations": "tsx scripts/pull-translations.ts",
     "db:push-translations": "tsx scripts/push-translations.ts",
     "db:sync-translations": "tsx scripts/sync-translations.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:translations-flatten": "tsx src/lib/translations/flatten.roundtrip.test.ts",
     "prepare": "husky",
     "format": "prettier --write ."
@@ -61,7 +63,8 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "sanitize-html": "^2.17.2",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
@@ -77,7 +80,8 @@
     "prisma": "6.19.0",
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

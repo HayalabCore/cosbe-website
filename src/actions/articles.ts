@@ -4,6 +4,11 @@ import { revalidatePath } from 'next/cache';
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
 import { requireUser } from '@/lib/require-user';
 import {
+  createArticleSchema,
+  updateArticleSchema,
+  zodErrorDetails,
+} from '@/lib/validation/article';
+import {
   archiveArticleRecord,
   countArticles,
   createArticleRecord,
@@ -78,6 +83,12 @@ export async function createArticleAction(
   data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<string> {
   await requireUser();
+  const parsed = createArticleSchema.safeParse(data);
+  if (!parsed.success) {
+    throw new Error(
+      `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`
+    );
+  }
   const id = await createArticleRecord(data);
   revalidateArticlePaths(data.slug, data.category);
   return id;
@@ -88,6 +99,12 @@ export async function updateArticleAction(
   data: Partial<Omit<Article, 'id' | 'createdAt'>>
 ): Promise<void> {
   await requireUser();
+  const parsed = updateArticleSchema.safeParse(data);
+  if (!parsed.success) {
+    throw new Error(
+      `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`
+    );
+  }
   await updateArticleRecord(id, data);
   revalidateArticlePaths(data.slug, data.category);
 }
