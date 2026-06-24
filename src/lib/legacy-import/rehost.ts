@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ContentBlock } from '@/types';
 import { ImageRehostError } from './types';
+import { assertPublicHttpUrl, assertRedirectTargetAllowed } from './url-guard';
 
 const BUCKET = 'article-images';
 
@@ -10,7 +11,6 @@ function extFromContentType(contentType: string): string {
   if (contentType.includes('png')) return 'png';
   if (contentType.includes('webp')) return 'webp';
   if (contentType.includes('gif')) return 'gif';
-  if (contentType.includes('svg')) return 'svg';
   return 'jpg';
 }
 
@@ -18,13 +18,22 @@ async function downloadImage(
   url: string
 ): Promise<{ buffer: Buffer; contentType: string } | null> {
   try {
+    // SSRF guard: reject private/reserved/loopback targets before fetching.
+    await assertPublicHttpUrl(url);
     const res = await axios.get<ArrayBuffer>(url, {
       responseType: 'arraybuffer',
       timeout: 20000,
+      maxRedirects: 3,
+      beforeRedirect: (options) => {
+        assertRedirectTargetAllowed(String(options.hostname ?? ''));
+      },
       headers: { 'User-Agent': 'CosBE-Importer/1.0' },
     });
     const contentType = String(res.headers['content-type'] ?? '');
     if (!contentType.startsWith('image/')) return null;
+    // SVG can carry inline scripts; served from our storage domain it becomes a
+    // stored-XSS vector, so refuse to rehost it (the import surfaces a warning).
+    if (contentType.includes('svg')) return null;
     return { buffer: Buffer.from(res.data), contentType };
   } catch {
     return null;

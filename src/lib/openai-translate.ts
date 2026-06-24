@@ -16,22 +16,35 @@ function model(): string {
   return process.env.OPENAI_MODEL ?? 'gpt-4o-mini';
 }
 
-/** GPT-5 / o-series use `max_completion_tokens`; older chat models use `max_tokens`. */
-function completionLimitParams(): {
-  max_tokens?: number;
-  max_completion_tokens?: number;
-} {
+/** GPT-5 / o-series are "reasoning" models with two API quirks vs. older chat models. */
+function isReasoningModel(): boolean {
   const m = model().toLowerCase();
-  const useCompletionTokens =
+  return (
     m.startsWith('gpt-5') ||
     m.startsWith('o1') ||
     m.startsWith('o2') ||
     m.startsWith('o3') ||
-    m.startsWith('o4');
-  if (useCompletionTokens) {
+    m.startsWith('o4')
+  );
+}
+
+/** Reasoning models use `max_completion_tokens`; older chat models use `max_tokens`. */
+function completionLimitParams(): {
+  max_tokens?: number;
+  max_completion_tokens?: number;
+} {
+  if (isReasoningModel()) {
     return { max_completion_tokens: 4096 };
   }
   return { max_tokens: 4096 };
+}
+
+/**
+ * Reasoning models only support the default temperature (1) and return a 400 if
+ * any other value is sent, so omit the parameter entirely for them.
+ */
+function temperatureParams(): { temperature?: number } {
+  return isReasoningModel() ? {} : { temperature: 0.3 };
 }
 
 function assertLength(s: string, label: string) {
@@ -59,7 +72,7 @@ export async function translateToEnglish(text: string): Promise<string> {
       },
       { role: 'user', content: t },
     ],
-    temperature: 0.3,
+    ...temperatureParams(),
     ...completionLimitParams(),
   });
   const out = res.choices[0]?.message?.content?.trim() ?? '';
@@ -86,7 +99,7 @@ export async function translateStringsToEnglish(
       },
       { role: 'user', content: payload },
     ],
-    temperature: 0.3,
+    ...temperatureParams(),
     ...completionLimitParams(),
   });
   const raw = res.choices[0]?.message?.content?.trim() ?? '{}';

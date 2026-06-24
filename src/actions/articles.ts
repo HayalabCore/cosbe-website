@@ -5,6 +5,7 @@ import { revalidateArticlePaths } from '@/lib/article-revalidation';
 import { requireUser } from '@/lib/require-user';
 import {
   createArticleSchema,
+  toCreateArticlePayload,
   updateArticleSchema,
   zodErrorDetails,
 } from '@/lib/validation/article';
@@ -89,8 +90,11 @@ export async function createArticleAction(
       `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`
     );
   }
-  const id = await createArticleRecord(data);
-  revalidateArticlePaths(data.slug, data.category);
+  // Persist the validated + normalized payload (unknown keys stripped, fields
+  // trimmed) rather than the raw client object — defense in depth.
+  const payload = toCreateArticlePayload(parsed.data);
+  const id = await createArticleRecord(payload);
+  revalidateArticlePaths(payload.slug, payload.category);
   return id;
 }
 
