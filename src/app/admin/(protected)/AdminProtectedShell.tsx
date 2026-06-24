@@ -139,6 +139,26 @@ function Sidebar({
           }
         />
         <NavItem
+          href="/admin/import"
+          active={pathname === '/admin/import'}
+          label={t('import')}
+          icon={
+            <svg
+              className="w-4 h-4 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.75}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+              />
+            </svg>
+          }
+        />
+        <NavItem
           href="/admin/media"
           active={pathname === '/admin/media'}
           label={t('media')}
@@ -274,7 +294,7 @@ export default function AdminProtectedShell({
           />
         </aside>
 
-        <div className="flex-1 lg:ml-56 flex flex-col min-h-screen">
+        <div className="flex-1 lg:ml-56 flex flex-col min-h-screen min-w-0">
           <header className="lg:hidden sticky top-0 z-20 flex items-center gap-3 px-4 h-14 bg-white border-b border-slate-200 shadow-sm">
             <button
               type="button"
@@ -301,7 +321,7 @@ export default function AdminProtectedShell({
             <AdminLocaleSwitcherLight className="flex-shrink-0" />
           </header>
 
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 min-w-0 overflow-x-clip">{children}</main>
         </div>
       </div>
     </AdminViewArticleProvider>

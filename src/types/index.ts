@@ -230,16 +230,6 @@ export interface TOCItem {
 // Legacy Types (for backward compatibility)
 // ============================================
 
-export interface CaseStudy {
-  id: number;
-  slug: string;
-  image: string;
-  categoryKey: string;
-  titleKey: string;
-  dateKey: string;
-  authorKey: string;
-}
-
 export interface Video {
   id: number;
   slug?: string;

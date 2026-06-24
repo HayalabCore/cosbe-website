@@ -1,43 +1,69 @@
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import {
-  caseStudies,
   caseStudyCategories,
-  categoryToCaseStudies,
+  categorySlugToTag,
   validCategorySlugs,
 } from '@/data/case-studies';
 import { Breadcrumb, PageHero, PAGE_HERO_PRESETS } from '@/components';
+import ArticleGrid from '@/components/article/ArticleGrid';
+import type { Metadata } from 'next';
 
 type CategoryPageProps = {
   params: Promise<{
     locale: string;
     category: string;
   }>;
+  searchParams: Promise<{ page?: string }>;
 };
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { category } = await params;
+export async function generateMetadata({
+  params,
+}: Pick<CategoryPageProps, 'params'>): Promise<Metadata> {
+  const { locale, category } = await params;
+
+  if (!validCategorySlugs.includes(category)) {
+    return {};
+  }
+
+  const t = await getTranslations({ locale, namespace: 'caseStudiesPage' });
+  const categoryLabelKey =
+    category === 'hr-improvement'
+      ? 'categories.hrImprovement'
+      : category === 'customer-marketing'
+        ? 'categories.customerMarketing'
+        : (`categories.${category}` as 'categories.efficiency');
+
+  return {
+    title: `${t(categoryLabelKey)} | ${t('heroTitle')}`,
+    description: t('heroSubtitle'),
+  };
+}
+
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: CategoryPageProps) {
+  const { locale, category } = await params;
+  const { page: pageParam } = await searchParams;
 
   if (!validCategorySlugs.includes(category)) {
     notFound();
   }
 
+  const page = Math.max(1, parseInt(pageParam ?? '1', 10) || 1);
   const t = await getTranslations('caseStudiesPage');
+  const tag = categorySlugToTag[category];
 
-  const categoryLabelMap: Record<string, string> = {
-    efficiency: t('categories.efficiency'),
-    'hr-improvement': t('categories.hrImprovement'),
-    innovation: t('categories.innovation'),
-    'customer-marketing': t('categories.customerMarketing'),
-  };
+  const categoryLabelKey =
+    category === 'hr-improvement'
+      ? 'categories.hrImprovement'
+      : category === 'customer-marketing'
+        ? 'categories.customerMarketing'
+        : (`categories.${category}` as 'categories.efficiency');
 
-  const currentCategoryTitle = categoryLabelMap[category];
-  const caseStudyIds = categoryToCaseStudies[category] || [];
-  const filteredCaseStudies = caseStudies.filter((study) =>
-    caseStudyIds.includes(study.id)
-  );
+  const currentCategoryTitle = t(categoryLabelKey);
 
   const categories = caseStudyCategories.map((cat) => ({
     ...cat,
@@ -77,99 +103,26 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         ]}
       />
 
-      {/* Main Content */}
-      <div className="bg-white py-12 min-h-[400px]">
+      <div className="bg-bgAccent py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Page Title */}
-          <div className="mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-textPrimary border-b-2 border-borderPrimary pb-4">
-              {currentCategoryTitle}
-              <small className="text-sm font-normal text-textTertiary ml-3">
-                – category –
-              </small>
-            </h2>
-          </div>
-
-          {/* Category Navigation */}
-          <div className="flex flex-wrap gap-3 mb-12">
-            <Link
-              href="/case-studies"
-              className="px-4 py-2 bg-primaryColor text-white text-sm font-medium rounded hover:bg-primaryColor transition-colors"
-            >
-              {t('categories.all')}
-            </Link>
-            <span className="px-4 py-2 bg-primaryColor text-white text-sm font-medium rounded border-2 border-primaryHover">
-              {currentCategoryTitle}
-            </span>
-          </div>
-
-          {/* Case Studies Grid or No Articles */}
-          {filteredCaseStudies.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-6 mb-16">
-              {filteredCaseStudies.map((study) => (
-                <Link
-                  key={study.id}
-                  href={`/case-studies/details/${study.slug}`}
-                >
-                  <div className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-surface-tertiary cursor-pointer">
-                    <div className="relative h-64 overflow-hidden">
-                      <Image
-                        src={study.image}
-                        alt={t(study.titleKey)}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute top-4 right-4">
-                        <span className="px-4 py-1.5 bg-primaryColor/90 backdrop-blur-sm text-white text-sm font-semibold rounded">
-                          {t(study.categoryKey)}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-textPrimary mb-4 line-clamp-2 group-hover:text-primaryColor transition-colors">
-                        {t(study.titleKey)}
-                      </h3>
-                      <div className="flex items-center gap-4 text-sm text-textTertiary">
-                        <div className="flex items-center">
-                          <svg
-                            className="w-4 h-4 mr-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                          <span>{t(study.dateKey)}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <div className="w-6 h-6 rounded-full bg-borderSecondary mr-2"></div>
-                          <span>{t(study.authorKey)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <p className="text-lg text-textTertiary">{t('noArticles')}</p>
-            </div>
-          )}
+          <ArticleGrid
+            category="case-study"
+            detailBasePath="/case-studies/details"
+            locale={locale}
+            categoryLabel={currentCategoryTitle}
+            emptyMessage={t('noArticles')}
+            columns="3"
+            page={page}
+            tag={tag}
+          />
         </div>
       </div>
 
-      {/* CTA Section */}
       <section className="relative py-20 md:py-24 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/bg_image.jpeg')" }}
-        ></div>
+        />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 whitespace-pre-line">
@@ -182,19 +135,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             href="/contact"
             className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
             {t('cta.button')}
           </Link>
         </div>

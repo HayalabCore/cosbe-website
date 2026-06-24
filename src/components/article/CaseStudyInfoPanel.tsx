@@ -14,11 +14,11 @@ export default async function CaseStudyInfoPanel({ meta, locale }: Props) {
   const m = meta!;
 
   return (
-    <div className="mb-10 rounded-xl border border-slate-200 bg-slate-50/60 p-5 md:p-6">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-4">
-        {t('title')}
-      </h2>
-      <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm">
+    <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div className="bg-gray-50 px-5 py-4 border-b border-gray-100">
+        <h2 className="text-sm font-bold text-textPrimary">{t('title')}</h2>
+      </div>
+      <dl className="p-4 space-y-3 text-sm">
         {m.clientName ? (
           <div className="flex flex-col">
             <dt className="text-xs text-slate-500">{t('clientName')}</dt>
@@ -62,7 +62,7 @@ export default async function CaseStudyInfoPanel({ meta, locale }: Props) {
           </div>
         ) : null}
         {m.mainChallenges ? (
-          <div className="md:col-span-2 flex flex-col">
+          <div className="flex flex-col">
             <dt className="text-xs text-slate-500">{t('mainChallenges')}</dt>
             <dd className="text-slate-700 whitespace-pre-line">
               {m.mainChallenges}

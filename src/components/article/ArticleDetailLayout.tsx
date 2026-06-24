@@ -142,7 +142,9 @@ export default function ArticleDetailLayout({
             ) : null}
 
             {article.category === 'case-study' ? (
-              <CaseStudyInfoPanel meta={article.caseStudy} locale={locale} />
+              <div className="mb-8 lg:hidden">
+                <CaseStudyInfoPanel meta={article.caseStudy} locale={locale} />
+              </div>
             ) : null}
 
             <article className="max-w-none">
@@ -220,7 +222,12 @@ export default function ArticleDetailLayout({
           </div>
 
           <aside className="hidden lg:block lg:w-[320px] xl:w-[360px] flex-shrink-0">
-            <TableOfContents items={toc} title={tableOfContentsTitle} />
+            <div className="sticky top-28 space-y-4">
+              {article.category === 'case-study' ? (
+                <CaseStudyInfoPanel meta={article.caseStudy} locale={locale} />
+              ) : null}
+              <TableOfContents items={toc} title={tableOfContentsTitle} />
+            </div>
           </aside>
         </div>
       </div>

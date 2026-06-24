@@ -1,170 +1,89 @@
 /**
- * Scrape a CosBE / WordPress-style article and insert via Prisma into `articles`.
+ * Scrape a CosBE legacy article and insert via Prisma into `articles`.
  *
- * Usage: DATABASE_URL=... yarn import-article <URL>
- *
- * Prisma loads `.env` from the project root (same as `yarn prisma migrate`).
+ * Usage: DATABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... yarn import-article <URL> [--publish]
  */
 
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+import { createClient } from '@supabase/supabase-js';
+import { previewImport, isImportSlugAvailable } from '../src/lib/legacy-import';
+import { rehostImportImages } from '../src/lib/legacy-import/rehost';
+import { SlugCollisionError } from '../src/lib/legacy-import/types';
 import { createArticleRecord } from '../src/lib/articles-repository';
-import { generateId, generateTOC } from '../src/lib/article-utils';
-import type { ContentBlock, ContentCategory } from '../src/types';
-
-async function scrapeArticle(url: string): Promise<{
-  slug: string;
-  title: string;
-  excerpt: string;
-  featuredImage: string;
-  blocks: ContentBlock[];
-  tags: string[];
-  category: ContentCategory;
-}> {
-  const { data: html } = await axios.get<string>(url, { timeout: 30000 });
-  const $ = cheerio.load(html);
-
-  const title =
-    $('meta[property="og:title"]').attr('content')?.trim() ||
-    $('h1').first().text().trim() ||
-    'Untitled';
-
-  const slug =
-    new URL(url).pathname
-      .split('/')
-      .filter(Boolean)
-      .pop()
-      ?.replace(/\/$/, '') || generateId().slice(0, 8);
-
-  const featuredImage =
-    $('meta[property="og:image"]').attr('content')?.trim() ||
-    $('article img').first().attr('src') ||
-    '';
-
-  const metaDescription =
-    $('meta[name="description"]').attr('content')?.trim() || '';
-
-  const blocks: ContentBlock[] = [];
-  const articleRoot = $('article').length ? $('article') : $('.entry-content');
-
-  articleRoot.find('h2, h3, h4, p, ul, ol, blockquote, img').each((_, el) => {
-    const $el = $(el);
-    const tag = el.tagName.toLowerCase();
-    if (tag === 'h2' || tag === 'h3' || tag === 'h4') {
-      const level = (tag === 'h2' ? 2 : tag === 'h3' ? 3 : 4) as 2 | 3 | 4;
-      blocks.push({
-        id: generateId(),
-        type: 'heading',
-        level,
-        content: $el.text().trim(),
-      });
-    } else if (tag === 'p') {
-      const text = $el.text().trim();
-      if (text) {
-        blocks.push({ id: generateId(), type: 'paragraph', content: text });
-      }
-    } else if (tag === 'ul' || tag === 'ol') {
-      const items = $el
-        .find('li')
-        .map((_, li) => $(li).text().trim())
-        .get()
-        .filter(Boolean);
-      if (items.length) {
-        blocks.push({
-          id: generateId(),
-          type: 'list',
-          listType: tag === 'ol' ? 'numbered' : 'bullet',
-          items,
-        });
-      }
-    } else if (tag === 'blockquote') {
-      blocks.push({
-        id: generateId(),
-        type: 'quote',
-        content: $el.text().trim(),
-      });
-    } else if (tag === 'img') {
-      const src = $el.attr('src');
-      if (src) {
-        blocks.push({
-          id: generateId(),
-          type: 'image',
-          url: src.startsWith('http') ? src : new URL(src, url).href,
-          alt: $el.attr('alt') || '',
-        });
-      }
-    }
-  });
-
-  if (blocks.length === 0) {
-    blocks.push({
-      id: generateId(),
-      type: 'paragraph',
-      content:
-        articleRoot.text().trim().slice(0, 8000) ||
-        'Imported article (no structured content detected).',
-    });
-  }
-
-  return {
-    slug,
-    title,
-    excerpt: metaDescription,
-    featuredImage,
-    blocks,
-    tags: [],
-    category: 'useful-info',
-  };
-}
+import { generateTOC } from '../src/lib/article-utils';
 
 async function main() {
-  const pageUrl = process.argv[2];
+  const args = process.argv.slice(2);
+  const publish = args.includes('--publish');
+  const pageUrl = args.find((a) => !a.startsWith('--'));
+
   if (!pageUrl) {
-    console.error('Usage: yarn import-article <URL>');
+    console.error('Usage: yarn import-article <URL> [--publish]');
     process.exit(1);
   }
 
   if (!process.env.DATABASE_URL) {
+    console.error('Set DATABASE_URL in .env');
+    process.exit(1);
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceRoleKey) {
     console.error(
-      'Set DATABASE_URL (and DIRECT_URL for migrations) in .env or the environment.'
+      'Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for image rehosting'
     );
     process.exit(1);
   }
 
   console.log('Scraping…');
-  const scraped = await scrapeArticle(pageUrl);
-  const toc = generateTOC(scraped.blocks);
-  const publishedAt = new Date().toISOString();
+  const preview = await previewImport(pageUrl);
+
+  if (!(await isImportSlugAvailable(preview.slug))) {
+    throw new SlugCollisionError(preview.slug);
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  console.log('Rehosting images…');
+  const { featuredImageUrl, blocks, warnings } = await rehostImportImages(
+    supabase,
+    preview.featuredImageRemoteUrl,
+    preview.blocks
+  );
+  warnings.forEach((w) => console.warn('Warning:', w));
+  preview.warnings.forEach((w) => console.warn('Warning:', w));
 
   const id = await createArticleRecord({
-    slug: scraped.slug,
-    title: scraped.title,
-    excerpt: scraped.excerpt || undefined,
-    featuredImage: scraped.featuredImage || undefined,
-    status: 'published',
-    category: scraped.category,
-    tags: scraped.tags,
+    slug: preview.slug,
+    title: preview.title,
+    excerpt: preview.excerpt || undefined,
+    featuredImage: featuredImageUrl || undefined,
+    status: publish ? 'published' : 'draft',
+    category: preview.category,
+    tags: preview.tags,
     author: {
       id: 'import',
-      name: 'Import',
-      designation: 'Script',
+      name: 'Kenjiro Momi',
+      designation: '代表取締役社長',
     },
-    blocks: scraped.blocks,
-    toc,
+    blocks,
+    toc: generateTOC(blocks),
     seo: {
-      metaTitle: scraped.title,
-      metaDescription: scraped.excerpt,
-      ogImage: scraped.featuredImage || undefined,
+      metaTitle: preview.title,
+      metaDescription: preview.excerpt,
+      ogImage: featuredImageUrl || undefined,
     },
     relatedArticleIds: [],
-    publishedAt,
+    publishedAt: publish ? preview.publishedAt : null,
     viewCount: 0,
+    caseStudy:
+      preview.category === 'case-study' ? preview.caseStudyMeta : undefined,
   });
 
   console.log('Inserted article id:', id);
 }
 
 main().catch((e) => {
-  console.error(e);
+  console.error(e instanceof Error ? e.message : e);
   process.exit(1);
 });

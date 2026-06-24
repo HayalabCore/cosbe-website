@@ -1,6 +1,10 @@
 import type { ElementType } from 'react';
 import { imageSrcOrFallback } from '@/lib/article-utils';
-import { paragraphContentToHtml } from '@/lib/sanitize-article-html';
+import {
+  paragraphContentToHtml,
+  inlineHtmlToPlainText,
+  containsHtmlMarkup,
+} from '@/lib/sanitize-article-html';
 import {
   ContentBlock,
   HeadingBlock,
@@ -54,21 +58,25 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
     case 'list': {
       const list = block as ListBlock;
       const ListTag = list.listType === 'numbered' ? 'ol' : 'ul';
+      const itemClassName = `
+                text-gray-700 leading-relaxed text-[15px] pl-6 relative
+                ${list.listType !== 'numbered' ? "before:content-['•'] before:absolute before:left-0 before:text-primaryColor before:font-bold" : ''}
+              `;
       return (
         <ListTag
           className={`mb-6 space-y-3 ${list.listType === 'numbered' ? 'list-decimal' : 'list-none'} pl-0`}
         >
-          {list.items.map((item, index) => (
-            <li
-              key={index}
-              className={`
-                text-gray-700 leading-relaxed text-[15px] pl-6 relative
-                ${list.listType !== 'numbered' ? "before:content-['•'] before:absolute before:left-0 before:text-primaryColor before:font-bold" : ''}
-              `}
-            >
-              {item}
-            </li>
-          ))}
+          {list.items.map((item, index) => {
+            const trimmed = item.trim();
+            const display = containsHtmlMarkup(trimmed)
+              ? inlineHtmlToPlainText(trimmed)
+              : trimmed;
+            return (
+              <li key={index} className={itemClassName}>
+                {display}
+              </li>
+            );
+          })}
         </ListTag>
       );
     }
@@ -179,7 +187,7 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
           );
         }
         return (
-          <div className="my-8 aspect-video rounded-xl overflow-hidden shadow-md">
+          <div className="my-8 mx-auto w-full max-w-full aspect-video rounded-xl overflow-hidden shadow-md">
             <iframe
               title={embed.title || 'Video'}
               className="h-full w-full"

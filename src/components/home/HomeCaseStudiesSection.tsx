@@ -5,6 +5,7 @@ import { getArticles } from '@/lib/articles';
 import { resolveArticleTitle } from '@/lib/article-locale';
 import { formatArticleDate } from '@/lib/format-article-date';
 import { imageSrcOrFallback } from '@/lib/article-utils';
+import { articleDetailHref } from '@/lib/article-paths';
 import HomeSectionTitle from './HomeSectionTitle';
 
 type CaseCard = {
@@ -33,7 +34,7 @@ export default async function HomeCaseStudiesSection({
     });
 
     cards = articles.map((item) => ({
-      href: `/case-studies/${item.slug}`,
+      href: articleDetailHref('case-study', item.slug),
       title: resolveArticleTitle(item, locale),
       category: item.tags[0] ?? t('section'),
       date: formatArticleDate(item.publishedAt, locale),
@@ -41,16 +42,6 @@ export default async function HomeCaseStudiesSection({
     }));
   } catch {
     cards = [];
-  }
-
-  if (cards.length === 0) {
-    const keys = ['case1', 'case2', 'case3'] as const;
-    cards = keys.map((key) => ({
-      href: '/case-studies',
-      title: t(`fallback.${key}.title`),
-      category: t(`fallback.${key}.category`),
-      date: t(`fallback.${key}.date`),
-    }));
   }
 
   return (
@@ -68,45 +59,49 @@ export default async function HomeCaseStudiesSection({
           {t('description')}
         </p>
 
-        <p className="mt-6 text-xs text-textTertiary md:hidden">
-          {t('scrollHint')}
-        </p>
+        {cards.length > 0 && (
+          <>
+            <p className="mt-6 text-xs text-textTertiary md:hidden">
+              {t('scrollHint')}
+            </p>
 
-        <div className="-mx-4 mt-8 flex gap-4 overflow-x-auto px-4 pb-4 snap-x snap-mandatory sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0">
-          {cards.map((card) => (
-            <Link
-              key={`${card.href}-${card.title}`}
-              href={card.href}
-              className="group w-[min(85vw,320px)] flex-shrink-0 snap-start lg:w-auto"
-            >
-              <article className="flex h-full flex-col overflow-hidden rounded-lg border border-primaryColor/15 bg-white shadow-md transition-shadow hover:shadow-xl">
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={imageSrcOrFallback(
-                      card.image,
-                      '/useful-column/article-01.png'
-                    )}
-                    alt={card.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="320px"
-                  />
-                  <span className="absolute left-3 top-3 rounded bg-primaryColor/90 px-3 py-1 text-xs font-semibold text-white">
-                    {card.category}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-4">
-                  <h4 className="line-clamp-3 text-sm font-bold leading-snug text-textHeading group-hover:text-primaryColor">
-                    {card.title}
-                  </h4>
-                  <p className="mt-auto pt-4 text-xs text-textTertiary">
-                    {card.date}
-                  </p>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
+            <div className="-mx-4 mt-8 flex gap-4 overflow-x-auto px-4 pb-4 snap-x snap-mandatory sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0">
+              {cards.map((card) => (
+                <Link
+                  key={`${card.href}-${card.title}`}
+                  href={card.href}
+                  className="group w-[min(85vw,320px)] flex-shrink-0 snap-start lg:w-auto"
+                >
+                  <article className="flex h-full flex-col overflow-hidden rounded-lg border border-primaryColor/15 bg-white shadow-md transition-shadow hover:shadow-xl">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <Image
+                        src={imageSrcOrFallback(
+                          card.image,
+                          '/useful-column/article-01.png'
+                        )}
+                        alt={card.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="320px"
+                      />
+                      <span className="absolute left-3 top-3 rounded bg-primaryColor/90 px-3 py-1 text-xs font-semibold text-white">
+                        {card.category}
+                      </span>
+                    </div>
+                    <div className="flex flex-1 flex-col p-4">
+                      <h4 className="line-clamp-3 text-sm font-bold leading-snug text-textHeading group-hover:text-primaryColor">
+                        {card.title}
+                      </h4>
+                      <p className="mt-auto pt-4 text-xs text-textTertiary">
+                        {card.date}
+                      </p>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
 
         <div className="mt-10 text-center">
           <Link

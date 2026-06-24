@@ -17,6 +17,7 @@ interface ArticleGridProps {
   columns?: '2' | '3';
   fallbackImage?: string;
   page?: number;
+  tag?: string;
 }
 
 function formatDate(iso: string | null, locale: string): string {
@@ -38,14 +39,15 @@ async function ArticleGridInner(props: ArticleGridProps) {
     columns = '3',
     fallbackImage,
     page = 1,
+    tag,
   } = props;
 
   let items: Awaited<ReturnType<typeof getArticles>> = [];
   let total = 0;
   try {
     [items, total] = await Promise.all([
-      getArticles({ category, page, pageSize: PAGE_SIZE }),
-      countArticles({ category }),
+      getArticles({ category, page, pageSize: PAGE_SIZE, tag }),
+      countArticles({ category, tag }),
     ]);
   } catch (e) {
     console.error(`[ArticleGrid] Failed to fetch "${category}":`, e);

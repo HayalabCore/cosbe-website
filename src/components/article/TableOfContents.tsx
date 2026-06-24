@@ -60,7 +60,7 @@ export default function TableOfContents({
   if (items.length === 0) return null;
 
   return (
-    <nav className="sticky top-28 w-full">
+    <nav className="w-full">
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         {/* Header */}
         <div className="bg-gray-50 px-5 py-4 border-b border-gray-100">

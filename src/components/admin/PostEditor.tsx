@@ -16,7 +16,10 @@ import {
   resolveArticleTitle,
   resolveBlocksForLocale,
 } from '@/lib/article-locale';
-import { stripHtmlForMetrics } from '@/lib/sanitize-article-html';
+import {
+  normalizeBlocksForEditor,
+  stripHtmlForMetrics,
+} from '@/lib/sanitize-article-html';
 import {
   createArticleAction,
   getArticleByIdAction,
@@ -210,7 +213,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     setCaseStudy(row.caseStudy ?? emptyCaseStudyMeta);
     setBlocks(
       row.blocks.length
-        ? row.blocks
+        ? normalizeBlocksForEditor(row.blocks)
         : [createEmptyBlock('heading'), createEmptyBlock('paragraph')]
     );
     setPersistedId(row.id);
@@ -431,150 +434,156 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const previewBlocks = resolveBlocksForLocale(blocks, previewLocaleStr);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Sticky top bar */}
-      <div className="sticky top-0 z-20 flex items-center gap-3 px-4 h-14 bg-white border-b border-slate-200 shadow-sm lg:top-0">
-        <Link
-          href="/admin/dashboard"
-          className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors flex-shrink-0"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
+    <div className="flex flex-col min-h-screen min-w-0 w-full overflow-x-clip">
+      {/* Sticky top bar — title truncates; actions stay pinned on the right */}
+      <div className="sticky top-0 z-30 w-full min-w-0 bg-white border-b border-slate-200 shadow-sm">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 h-14 w-full min-w-0">
+          <div className="flex items-center gap-3 min-w-0 overflow-hidden">
+            <Link
+              href="/admin/dashboard"
+              className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors flex-shrink-0"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              <span className="hidden sm:inline">{t('allPosts')}</span>
+            </Link>
+
+            <div className="w-px h-5 bg-slate-200 flex-shrink-0" />
+
+            <p className="min-w-0 truncate text-sm font-medium text-slate-700 hidden sm:block">
+              {title || (articleId ? t('editPost') : t('newPost'))}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span
+              className={`hidden xl:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium flex-shrink-0 ${
+                isPublished
+                  ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
+                  : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${isPublished ? 'bg-emerald-500' : 'bg-amber-400'}`}
+              />
+              {isPublished
+                ? t('statusPublished')
+                : status === 'archived'
+                  ? t('statusArchived')
+                  : t('statusDraft')}
+            </span>
+
+            <div className="flex rounded-lg border border-slate-200 p-0.5 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setTab('edit')}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                  tab === 'edit'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                {t('tabEdit')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setTab('preview')}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                  tab === 'preview'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                {t('tabPreview')}
+              </button>
+            </div>
+
+            {tab === 'preview' && (
+              <div className="hidden lg:flex rounded-lg border border-slate-200 p-0.5 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setPreviewLocale('ja')}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
+                    previewLocale === 'ja'
+                      ? 'bg-slate-900 text-white shadow-sm'
+                      : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  {t('previewOriginal')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPreviewLocale('en')}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
+                    previewLocale === 'en'
+                      ? 'bg-slate-900 text-white shadow-sm'
+                      : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  {t('previewEnglish')}
+                </button>
+              </div>
+            )}
+
+            <SaveIndicator
+              saving={saving || autoSavingUi}
+              label={t('saving')}
             />
-          </svg>
-          <span className="hidden sm:inline">{t('allPosts')}</span>
-        </Link>
 
-        <div className="w-px h-5 bg-slate-200 flex-shrink-0" />
+            {saveNotice && !saving && !autoSavingUi && (
+              <span className="hidden xl:flex items-center gap-1.5 text-xs text-emerald-600 flex-shrink-0">
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {saveNotice === 'auto' ? t('autoSaved') : t('saved')}
+              </span>
+            )}
 
-        {/* Title preview (truncated) */}
-        <p className="flex-1 min-w-0 text-sm font-medium text-slate-700 truncate hidden sm:block">
-          {title || (articleId ? t('editPost') : t('newPost'))}
-        </p>
-
-        {/* Status badge */}
-        <span
-          className={`hidden md:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium flex-shrink-0 ${
-            isPublished
-              ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
-              : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
-          }`}
-        >
-          <span
-            className={`w-1.5 h-1.5 rounded-full ${isPublished ? 'bg-emerald-500' : 'bg-amber-400'}`}
-          />
-          {isPublished
-            ? t('statusPublished')
-            : status === 'archived'
-              ? t('statusArchived')
-              : t('statusDraft')}
-        </span>
-
-        {/* Edit / Preview toggle */}
-        <div className="flex rounded-lg border border-slate-200 p-0.5 flex-shrink-0">
-          <button
-            type="button"
-            onClick={() => setTab('edit')}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-              tab === 'edit'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            {t('tabEdit')}
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab('preview')}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-              tab === 'preview'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            {t('tabPreview')}
-          </button>
-        </div>
-
-        {tab === 'preview' && (
-          <div className="hidden sm:flex rounded-lg border border-slate-200 p-0.5 flex-shrink-0">
             <button
               type="button"
-              onClick={() => setPreviewLocale('ja')}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
-                previewLocale === 'ja'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
+              disabled={saving || autoSavingUi}
+              onClick={() => void save(false)}
+              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
             >
-              {t('previewOriginal')}
+              {t('saveDraft')}
             </button>
+
             <button
               type="button"
-              onClick={() => setPreviewLocale('en')}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
-                previewLocale === 'en'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
+              disabled={saving || autoSavingUi}
+              onClick={() => void save(true)}
+              className="rounded-lg bg-primaryColor px-3 py-1.5 text-xs font-semibold text-white hover:bg-primaryHover disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
             >
-              {t('previewEnglish')}
+              {isPublished ? t('update') : t('publish')}
             </button>
           </div>
-        )}
-
-        <SaveIndicator saving={saving || autoSavingUi} label={t('saving')} />
-
-        {saveNotice && !saving && !autoSavingUi && (
-          <span className="hidden sm:flex items-center gap-1.5 text-xs text-emerald-600">
-            <svg
-              className="w-3.5 h-3.5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {saveNotice === 'auto' ? t('autoSaved') : t('saved')}
-          </span>
-        )}
-
-        <button
-          type="button"
-          disabled={saving || autoSavingUi}
-          onClick={() => void save(false)}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
-        >
-          {t('saveDraft')}
-        </button>
-
-        <button
-          type="button"
-          disabled={saving || autoSavingUi}
-          onClick={() => void save(true)}
-          className="rounded-lg bg-primaryColor px-3 py-1.5 text-xs font-semibold text-white hover:bg-primaryHover disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
-        >
-          {isPublished ? t('update') : t('publish')}
-        </button>
+        </div>
       </div>
 
       {/* Body */}
       {tab === 'preview' ? (
-        <div className="w-full min-w-0 px-4 md:px-8 lg:px-10 py-10">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 md:p-10 lg:p-12">
-            <h1 className="text-3xl font-bold text-slate-900 mb-6">
+        <div className="w-full min-w-0 px-4 md:px-6 py-6">
+          <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 md:p-8 min-w-0 overflow-x-clip">
+            <h1 className="text-3xl font-bold text-slate-900 mb-6 break-words">
               {previewTitle}
             </h1>
             {previewExcerptResolved ? (

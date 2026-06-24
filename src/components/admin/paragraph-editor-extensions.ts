@@ -7,17 +7,16 @@ import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import TextAlign from '@tiptap/extension-text-align';
 import type { Extensions } from '@tiptap/core';
-import { escapeHtml } from '@/lib/sanitize-article-html';
+import { normalizeStoredParagraphHtml } from '@/lib/sanitize-article-html';
 
 /**
  * TipTap document HTML for paragraph blocks. Plain text is wrapped in `<p>`;
- * existing HTML is passed through for editor hydration.
+ * inline HTML fragments (e.g. legacy imports) are normalized for editor hydration.
  */
 export function toEditorHtmlForParagraph(stored: string): string {
   const raw = stored.trim();
   if (!raw) return '<p></p>';
-  if (/^<[a-z]/i.test(raw)) return stored;
-  return `<p>${escapeHtml(raw)}</p>`;
+  return normalizeStoredParagraphHtml(raw) || '<p></p>';
 }
 
 /** Shared stack for Original and English paragraph panes (single Link + Underline). */
