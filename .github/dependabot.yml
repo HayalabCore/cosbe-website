@@ -1,0 +1,25 @@
+# Dependabot keeps dependencies current via CI-gated PRs.
+# Strategy: batch low-risk minor/patch bumps into a single weekly PR; surface
+# majors individually so they get a deliberate review. The framework "spine"
+# (next/react/prisma) is pinned exact in package.json and upgraded by hand.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      # One PR for all backward-compatible updates across the tree.
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # Keep GitHub Actions pinned/current too (no-op until workflows are added).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
