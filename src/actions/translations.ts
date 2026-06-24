@@ -1,22 +1,13 @@
 'use server';
 
 import { revalidateTag } from 'next/cache';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/require-user';
 import { prisma } from '@/lib/prisma';
 import { translateToEnglish } from '@/lib/openai-translate';
 import { namespaceFromKeyPath } from '@/lib/translations/flatten';
 
 const LOCALES = ['ja', 'en'] as const;
 export type TranslationLocale = (typeof LOCALES)[number];
-
-async function requireUser() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-  return user;
-}
 
 function assertValidKeyPath(keyPath: string) {
   if (!keyPath || keyPath.length > 512) {
@@ -155,7 +146,7 @@ export async function saveTranslation(input: {
   value: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
-    const user = await requireUser();
+    const { user } = await requireUser();
     assertValidKeyPath(input.keyPath);
     assertLocale(input.locale);
     const value = input.value;

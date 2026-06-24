@@ -11,16 +11,7 @@ import {
   type ImportPreviewPayload,
 } from '@/lib/legacy-import/types';
 import { generateTOC } from '@/lib/article-utils';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
-
-async function requireUser() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-  return { supabase, user };
-}
+import { requireUser } from '@/lib/require-user';
 
 export async function previewImportAction(
   url: string

@@ -1,19 +1,11 @@
 'use server';
 
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/require-user';
 import {
   translateStringsToEnglish,
   translateToEnglish,
 } from '@/lib/openai-translate';
 import { stripHtmlForMetrics } from '@/lib/sanitize-article-html';
-async function requireUser() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-  return user;
-}
 
 export type TranslateBlockPayload =
   | { type: 'heading'; content: string }

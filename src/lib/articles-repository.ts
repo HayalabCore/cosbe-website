@@ -270,6 +270,41 @@ export async function countArticles(
   return prisma.article.count({ where });
 }
 
+export interface ArticleStatusCounts {
+  total: number;
+  published: number;
+  draft: number;
+  archived: number;
+}
+
+/**
+ * Per-status article counts in a single `groupBy` query (replaces four separate
+ * `count` calls). Always operates over all statuses, so it is admin-only.
+ */
+export async function getArticleStatusCounts(): Promise<ArticleStatusCounts> {
+  const grouped = await prisma.article.groupBy({
+    by: ['status'],
+    _count: { _all: true },
+  });
+
+  const counts: ArticleStatusCounts = {
+    total: 0,
+    published: 0,
+    draft: 0,
+    archived: 0,
+  };
+
+  for (const g of grouped) {
+    const n = g._count._all;
+    counts.total += n;
+    if (g.status in counts) {
+      counts[g.status as keyof Omit<ArticleStatusCounts, 'total'>] = n;
+    }
+  }
+
+  return counts;
+}
+
 export async function getRelatedArticles(
   articleId: string,
   relatedIds: string[]

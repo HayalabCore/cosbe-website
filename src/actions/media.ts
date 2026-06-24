@@ -6,18 +6,9 @@ import {
   deleteMediaRecord,
   getMediaById,
 } from '@/lib/media-repository';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/require-user';
 import { deleteFromGallery } from '@/lib/storage';
 import type { CreateMediaInput } from '@/lib/media-repository';
-
-async function requireUser() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-  return { supabase, user };
-}
 
 export async function recordMediaAction(data: CreateMediaInput) {
   await requireUser();

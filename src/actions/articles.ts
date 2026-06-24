@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/require-user';
 import {
   archiveArticleRecord,
   countArticles,
@@ -10,6 +10,7 @@ import {
   deleteArticleRecord,
   getArticleByIdAdmin,
   getArticleSlugCategoryById,
+  getArticleStatusCounts,
   getArticles,
   publishArticleRecord,
   unpublishArticleRecord,
@@ -21,15 +22,6 @@ import type {
   ArticleStatus,
   ContentCategory,
 } from '@/types';
-
-async function requireUser() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-  return user;
-}
 
 export async function getArticleByIdAction(
   id: string
@@ -73,26 +65,13 @@ export async function listArticlesAdminAction(options: {
     search,
   };
 
-  const [items, total, statsTotal, statsPublished, statsDraft, statsArchived] =
-    await Promise.all([
-      getArticles({ ...listFilters, page, pageSize }, true),
-      countArticles(listFilters, true),
-      countArticles({}, true),
-      countArticles({ status: 'published' }, true),
-      countArticles({ status: 'draft' }, true),
-      countArticles({ status: 'archived' }, true),
-    ]);
+  const [items, total, stats] = await Promise.all([
+    getArticles({ ...listFilters, page, pageSize }, true),
+    countArticles(listFilters, true),
+    getArticleStatusCounts(),
+  ]);
 
-  return {
-    items,
-    total,
-    stats: {
-      total: statsTotal,
-      published: statsPublished,
-      draft: statsDraft,
-      archived: statsArchived,
-    },
-  };
+  return { items, total, stats };
 }
 
 export async function createArticleAction(
