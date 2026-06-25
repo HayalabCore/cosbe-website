@@ -11,8 +11,7 @@ export default async function proxy(request: NextRequest) {
     return updateSession(request, res);
   }
 
-  const intlResponse = intlMiddleware(request);
-  return updateSession(request, intlResponse);
+  return intlMiddleware(request);
 }
 
 export const config = {

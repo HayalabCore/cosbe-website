@@ -1,6 +1,7 @@
 import 'server-only';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { ARTICLES_CACHE_TAG, articleSlugCacheTag } from '@/lib/articles-cache';
 import { articleDetailBasePath } from '@/lib/article-paths';
 import { routing } from '@/i18n/routing';
 import type { ContentCategory } from '@/types';
@@ -17,11 +18,18 @@ export function revalidateArticlePaths(
   slug?: string,
   category?: ContentCategory
 ) {
+  revalidateTag(ARTICLES_CACHE_TAG, 'default');
+  if (slug) {
+    revalidateTag(articleSlugCacheTag(slug), 'default');
+  }
+
   const listingPaths = category
     ? [CATEGORY_LISTING_PATH[category]]
     : Object.values(CATEGORY_LISTING_PATH);
 
   for (const locale of routing.locales) {
+    revalidatePath(`/${locale}`, 'page');
+
     for (const path of listingPaths) {
       revalidatePath(`/${locale}${path}`, 'layout');
     }

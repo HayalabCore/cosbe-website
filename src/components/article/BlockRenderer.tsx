@@ -1,4 +1,5 @@
 import type { ElementType } from 'react';
+import Image from 'next/image';
 import { imageSrcOrFallback } from '@/lib/article-utils';
 import {
   paragraphContentToHtml,
@@ -133,13 +134,14 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
       return (
         <figure className="my-8">
           <div className="rounded-xl bg-neutral-100 shadow-md overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={src}
               alt={image.alt}
+              width={1200}
+              height={800}
               className="w-full h-auto max-h-[min(92vh,1400px)] object-contain mx-auto block"
+              sizes="(max-width: 1024px) 100vw, 768px"
               loading="lazy"
-              decoding="async"
             />
           </div>
           {image.caption && (

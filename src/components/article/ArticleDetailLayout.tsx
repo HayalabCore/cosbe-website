@@ -130,12 +130,14 @@ export default function ArticleDetailLayout({
             {featuredSrc ? (
               <div className="mb-10">
                 <div className="rounded-xl overflow-hidden shadow-sm bg-neutral-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={featuredSrc}
                     alt={displayTitle}
+                    width={1200}
+                    height={800}
                     className="w-full h-auto max-h-[min(88vh,1200px)] object-contain mx-auto block"
-                    fetchPriority="high"
+                    sizes="(max-width: 1024px) 100vw, 896px"
+                    priority
                   />
                 </div>
               </div>

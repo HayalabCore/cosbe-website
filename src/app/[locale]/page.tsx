@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
@@ -5,7 +6,9 @@ import HomeNavCards from '@/components/home/HomeNavCards';
 import HomeAboutSection from '@/components/home/HomeAboutSection';
 import HomeServiceSection from '@/components/home/HomeServiceSection';
 import HomeCaseStudiesSection from '@/components/home/HomeCaseStudiesSection';
+import HomeCaseStudiesSectionSkeleton from '@/components/home/HomeCaseStudiesSectionSkeleton';
 import HomeNewsSection from '@/components/home/HomeNewsSection';
+import HomeNewsSectionSkeleton from '@/components/home/HomeNewsSectionSkeleton';
 import CtaSection from '@/components/shared/CtaSection';
 import type { Metadata } from 'next';
 
@@ -99,8 +102,12 @@ export default async function Home({ params }: PageProps) {
 
       <HomeAboutSection />
       <HomeServiceSection />
-      <HomeCaseStudiesSection locale={locale} />
-      <HomeNewsSection locale={locale} />
+      <Suspense fallback={<HomeCaseStudiesSectionSkeleton />}>
+        <HomeCaseStudiesSection locale={locale} />
+      </Suspense>
+      <Suspense fallback={<HomeNewsSectionSkeleton />}>
+        <HomeNewsSection locale={locale} />
+      </Suspense>
 
       <CtaSection
         title={tCta('title')}
