@@ -36,6 +36,7 @@ import type {
 } from '@/types';
 import { useAdminViewArticleLink } from '@/components/admin/AdminViewArticleContext';
 import { articleDetailHref } from '@/lib/article-paths';
+import ArticleMetaLocaleFields from './ArticleMetaLocaleFields';
 import PostMetaForm, { type PostMetaPatch } from './PostMetaForm';
 
 const BlockEditor = dynamic(() => import('./BlockEditor'), { ssr: false });
@@ -157,7 +158,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const isDirtyRef = useRef(false);
   const autoSavingRef = useRef(false);
   const savingRef = useRef(false);
-  const titleRef = useRef<HTMLTextAreaElement>(null);
 
   const [tab, setTab] = useState<Tab>('edit');
   const [saving, setSaving] = useState(false);
@@ -240,22 +240,11 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     return () => setViewArticleHref(null);
   }, [status, slug, title, category, locale, setViewArticleHref]);
 
-  // Auto-resize title textarea
-  useEffect(() => {
-    const el = titleRef.current;
-    if (el) {
-      el.style.height = 'auto';
-      el.style.height = `${el.scrollHeight}px`;
-    }
-  }, [title]);
-
   function applyMeta(patch: PostMetaPatch) {
     isDirtyRef.current = true;
     if (patch.title !== undefined) setTitle(patch.title);
-    if (patch.titleEn !== undefined) setTitleEn(patch.titleEn);
     if (patch.slug !== undefined) setSlug(normalizeSlugInput(patch.slug));
     if (patch.excerpt !== undefined) setExcerpt(patch.excerpt);
-    if (patch.excerptEn !== undefined) setExcerptEn(patch.excerptEn);
     if (patch.featuredImage !== undefined)
       setFeaturedImage(patch.featuredImage);
     if (patch.category !== undefined) setCategory(patch.category);
@@ -600,41 +589,43 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
         <div className="flex flex-1 items-start min-w-0">
           {/* Content area — uses full width between nav and settings sidebar */}
           <div className="flex-1 min-w-0 w-full px-4 md:px-8 lg:px-10 py-8">
-            {/* Title */}
-            <textarea
-              ref={titleRef}
-              value={title}
-              onChange={(e) => {
+            <ArticleMetaLocaleFields
+              title={title}
+              titleEn={titleEn}
+              excerpt={excerpt}
+              excerptEn={excerptEn}
+              onTitleChange={(value) => {
                 isDirtyRef.current = true;
-                setTitle(e.target.value);
+                setTitle(value);
               }}
-              placeholder={t('postTitlePlaceholder')}
-              rows={1}
-              className="w-full resize-none text-3xl md:text-4xl font-bold text-slate-900 placeholder:text-slate-300 bg-transparent border-none outline-none leading-tight mb-4 overflow-hidden"
-            />
-
-            {/* Excerpt */}
-            <textarea
-              value={excerpt}
-              onChange={(e) => {
+              onTitleEnChange={(value) => {
                 isDirtyRef.current = true;
-                setExcerpt(e.target.value);
+                setTitleEn(value);
               }}
-              placeholder={t('excerptPlaceholder')}
-              rows={2}
-              className="w-full resize-none text-base text-slate-500 placeholder:text-slate-300 bg-transparent border-none outline-none leading-relaxed mb-6"
+              onExcerptChange={(value) => {
+                isDirtyRef.current = true;
+                setExcerpt(value);
+              }}
+              onExcerptEnChange={(value) => {
+                isDirtyRef.current = true;
+                setExcerptEn(value);
+              }}
             />
 
             {/* Word count */}
-            <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-100">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-6 pb-6 border-b border-slate-100">
               <span className="text-[11px] font-medium text-slate-400">
                 {t('words', { count: words })}
               </span>
-              <span className="text-slate-200">·</span>
+              <span className="text-slate-200" aria-hidden>
+                ·
+              </span>
               <span className="text-[11px] font-medium text-slate-400">
                 {t('minRead', { count: readingMins })}
               </span>
-              <span className="text-slate-200">·</span>
+              <span className="text-slate-200" aria-hidden>
+                ·
+              </span>
               <span className="text-[11px] font-medium text-slate-400">
                 {t('blocksLabel', { count: blocks.length })}
               </span>
@@ -658,10 +649,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               </p>
               <PostMetaForm
                 title={title}
-                titleEn={titleEn}
                 slug={slug}
-                excerpt={excerpt}
-                excerptEn={excerptEn}
                 featuredImage={featuredImage}
                 category={category}
                 tags={tags}
@@ -684,10 +672,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
               <PostMetaForm
                 title={title}
-                titleEn={titleEn}
                 slug={slug}
-                excerpt={excerpt}
-                excerptEn={excerptEn}
                 featuredImage={featuredImage}
                 category={category}
                 tags={tags}

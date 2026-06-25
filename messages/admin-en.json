@@ -152,9 +152,7 @@
     "titleEn": "Title (English)",
     "titleEnPlaceholder": "Optional English title for /en pages",
     "excerptEn": "Excerpt (English)",
-    "excerptEnPlaceholder": "Optional English excerpt",
-    "generateEnglishMeta": "Generate English from title & excerpt",
-    "generatingEnglish": "Generating…"
+    "excerptEnPlaceholder": "Optional English excerpt"
   },
   "blocks": {
     "insertBlock": "Insert block",

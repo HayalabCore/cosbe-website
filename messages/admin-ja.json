@@ -152,9 +152,7 @@
     "titleEn": "タイトル（英語）",
     "titleEnPlaceholder": "/en ページ用の英語タイトル（任意）",
     "excerptEn": "抜粋（英語）",
-    "excerptEnPlaceholder": "/en ページ用の英語抜粋（任意）",
-    "generateEnglishMeta": "タイトル・抜粋から英語を生成",
-    "generatingEnglish": "生成中…"
+    "excerptEnPlaceholder": "/en ページ用の英語抜粋（任意）"
   },
   "blocks": {
     "insertBlock": "ブロックを挿入",
