@@ -102,7 +102,13 @@
     "postSettings": "記事設定",
     "previewAs": "プレビュー表示",
     "previewOriginal": "日本語",
-    "previewEnglish": "英語"
+    "previewEnglish": "英語",
+    "translateArticleTitle": "ページ全体を英語に翻訳",
+    "translateArticleHint": "タイトル、要約、すべてのブロックを翻訳します",
+    "translateArticleProgress": "翻訳中…",
+    "translateArticlePartialError": "一部の翻訳に失敗しました",
+    "translateArticleConfirm": "既存の英語テキスト（タイトル、要約、すべてのブロック）が上書きされます。続行しますか？",
+    "articleContentLocale": "編集表示"
   },
   "blockLocale": {
     "original": "日本語",

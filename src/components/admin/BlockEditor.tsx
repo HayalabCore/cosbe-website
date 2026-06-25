@@ -29,6 +29,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import type { ContentBlock } from '@/types';
 import { createEmptyBlock } from '@/lib/article-utils';
+import { hasTranslatablePrimaryContent } from '@/lib/block-translation-utils';
 import HeadingBlockEditor from './blocks/HeadingBlockEditor';
 import ParagraphBlockEditor from './blocks/ParagraphBlockEditor';
 import ListBlockEditor from './blocks/ListBlockEditor';
@@ -45,6 +46,9 @@ type Props = {
   onChange: (blocks: ContentBlock[]) => void;
   /** Fired when a TipTap paragraph editor loses focus (e.g. user leaves the field). */
   onParagraphBlur?: () => void;
+  localeViewKey?: number;
+  bulkTranslating?: boolean;
+  localeViewTab?: 'original' | 'english';
 };
 
 type BlockMeta = {
@@ -452,6 +456,9 @@ function SortableBlockRow({
   insertBelowLabel,
   insertBlockTitle,
   onParagraphBlur,
+  localeViewKey,
+  bulkTranslating,
+  localeViewTab = 'original',
 }: {
   block: ContentBlock;
   index: number;
@@ -470,6 +477,9 @@ function SortableBlockRow({
   insertBelowLabel: string;
   insertBlockTitle: string;
   onParagraphBlur?: () => void;
+  localeViewKey?: number;
+  bulkTranslating?: boolean;
+  localeViewTab?: 'original' | 'english';
 }) {
   const insertBtnRef = useRef<HTMLButtonElement>(null);
   const {
@@ -492,6 +502,8 @@ function SortableBlockRow({
   };
 
   const i = index;
+  const blockBulkTranslating =
+    Boolean(bulkTranslating) && hasTranslatablePrimaryContent(block);
 
   return (
     <div ref={setNodeRef} style={style} className="group/block relative">
@@ -579,40 +591,79 @@ function SortableBlockRow({
           {block.type === 'heading' && (
             <HeadingBlockEditor
               block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
               onChange={(b) => updateAt(i, b)}
             />
           )}
           {block.type === 'paragraph' && (
             <ParagraphBlockEditor
               block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
               onChange={(b) => updateAt(i, b)}
               onBlur={onParagraphBlur}
             />
           )}
           {block.type === 'list' && (
-            <ListBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
+            <ListBlockEditor
+              block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
+              onChange={(b) => updateAt(i, b)}
+            />
           )}
           {block.type === 'quote' && (
-            <QuoteBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
+            <QuoteBlockEditor
+              block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
+              onChange={(b) => updateAt(i, b)}
+            />
           )}
           {block.type === 'callout' && (
             <CalloutBlockEditor
               block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
               onChange={(b) => updateAt(i, b)}
             />
           )}
           {block.type === 'image' && (
-            <ImageBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
+            <ImageBlockEditor
+              block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
+              onChange={(b) => updateAt(i, b)}
+            />
           )}
           {block.type === 'code' && (
             <CodeBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
           )}
           {block.type === 'divider' && <DividerBlockEditor />}
           {block.type === 'embed' && (
-            <EmbedBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
+            <EmbedBlockEditor
+              block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
+              onChange={(b) => updateAt(i, b)}
+            />
           )}
           {block.type === 'table' && (
-            <TableBlockEditor block={block} onChange={(b) => updateAt(i, b)} />
+            <TableBlockEditor
+              block={block}
+              localeViewKey={localeViewKey}
+              localeViewTab={localeViewTab}
+              bulkTranslating={blockBulkTranslating}
+              onChange={(b) => updateAt(i, b)}
+            />
           )}
         </div>
       </div>
@@ -661,6 +712,9 @@ export default function BlockEditor({
   blocks,
   onChange,
   onParagraphBlur,
+  localeViewKey,
+  bulkTranslating,
+  localeViewTab = 'original',
 }: Props) {
   const t = useTranslations('admin.blocks');
   const blockMeta = useBlockMeta();
@@ -801,6 +855,9 @@ export default function BlockEditor({
                 insertBelowLabel={t('insertBelow')}
                 insertBlockTitle={t('insertBlock')}
                 onParagraphBlur={onParagraphBlur}
+                localeViewKey={localeViewKey}
+                bulkTranslating={bulkTranslating}
+                localeViewTab={localeViewTab}
               />
             ))}
           </SortableContext>

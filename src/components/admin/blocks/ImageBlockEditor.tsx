@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { translateBlockEnAction } from '@/actions/block-translation';
@@ -15,14 +15,26 @@ const INPUT_CLS =
 export default function ImageBlockEditor({
   block,
   onChange,
+  localeViewKey,
+  localeViewTab = 'original',
+  bulkTranslating = false,
 }: {
   block: ImageBlock;
   onChange: (b: ImageBlock) => void;
+  localeViewKey?: number;
+  localeViewTab?: 'original' | 'english';
+  bulkTranslating?: boolean;
 }) {
   const t = useTranslations('admin.image');
   const [tab, setTab] = useState<'original' | 'english'>('original');
   const [generating, setGenerating] = useState(false);
   const preview = imageSrcOrFallback(block.url, '');
+
+  useEffect(() => {
+    if (localeViewKey && localeViewKey > 0) {
+      setTab(localeViewTab);
+    }
+  }, [localeViewKey, localeViewTab]);
 
   async function handleGenerate() {
     setGenerating(true);
@@ -117,7 +129,7 @@ export default function ImageBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating}
+        generating={generating || bulkTranslating}
         generateDisabled={!canGenerate}
       />
       {tab === 'original' ? (

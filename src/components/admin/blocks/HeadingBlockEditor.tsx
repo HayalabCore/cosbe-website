@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { translateBlockEnAction } from '@/actions/block-translation';
 import type { HeadingBlock } from '@/types';
@@ -14,14 +14,26 @@ const SELECT_CLS =
 export default function HeadingBlockEditor({
   block,
   onChange,
+  localeViewKey,
+  localeViewTab = 'original',
+  bulkTranslating = false,
 }: {
   block: HeadingBlock;
   onChange: (b: HeadingBlock) => void;
+  localeViewKey?: number;
+  localeViewTab?: 'original' | 'english';
+  bulkTranslating?: boolean;
 }) {
   const t = useTranslations('admin.heading');
   const te = useTranslations('admin.blockLocale');
   const [tab, setTab] = useState<'original' | 'english'>('original');
   const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    if (localeViewKey && localeViewKey > 0) {
+      setTab(localeViewTab);
+    }
+  }, [localeViewKey, localeViewTab]);
 
   async function handleGenerate() {
     setGenerating(true);
@@ -48,7 +60,7 @@ export default function HeadingBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating}
+        generating={generating || bulkTranslating}
         generateDisabled={!block.content.trim()}
       />
       <div className="flex gap-2">

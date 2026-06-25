@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { translateBlockEnAction } from '@/actions/block-translation';
 import type { CalloutBlock } from '@/types';
@@ -39,14 +39,26 @@ const INPUT_CLS =
 export default function CalloutBlockEditor({
   block,
   onChange,
+  localeViewKey,
+  localeViewTab = 'original',
+  bulkTranslating = false,
 }: {
   block: CalloutBlock;
   onChange: (b: CalloutBlock) => void;
+  localeViewKey?: number;
+  localeViewTab?: 'original' | 'english';
+  bulkTranslating?: boolean;
 }) {
   const t = useTranslations('admin.callout.variants');
   const tc = useTranslations('admin.callout');
   const [tab, setTab] = useState<'original' | 'english'>('original');
   const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    if (localeViewKey && localeViewKey > 0) {
+      setTab(localeViewTab);
+    }
+  }, [localeViewKey, localeViewTab]);
 
   async function handleGenerate() {
     setGenerating(true);
@@ -78,7 +90,7 @@ export default function CalloutBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating}
+        generating={generating || bulkTranslating}
         generateDisabled={!block.content.trim()}
       />
       <div className="flex flex-wrap gap-1.5">

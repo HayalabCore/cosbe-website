@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { translateArticleMetaEnAction } from '@/actions/block-translation';
 import BlockLocaleTabs, { type LocaleEditTab } from './BlockLocaleTabs';
@@ -17,6 +17,9 @@ type Props = {
   onTitleEnChange: (value: string) => void;
   onExcerptChange: (value: string) => void;
   onExcerptEnChange: (value: string) => void;
+  localeViewKey?: number;
+  localeViewTab?: 'original' | 'english';
+  bulkTranslating?: boolean;
 };
 
 export default function ArticleMetaLocaleFields({
@@ -28,11 +31,20 @@ export default function ArticleMetaLocaleFields({
   onTitleEnChange,
   onExcerptChange,
   onExcerptEnChange,
+  localeViewKey,
+  localeViewTab = 'original',
+  bulkTranslating = false,
 }: Props) {
   const t = useTranslations('admin.editor');
   const tMeta = useTranslations('admin.meta');
   const [tab, setTab] = useState<LocaleEditTab>('original');
   const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    if (localeViewKey && localeViewKey > 0) {
+      setTab(localeViewTab);
+    }
+  }, [localeViewKey, localeViewTab]);
 
   const isOriginal = tab === 'original';
 
@@ -61,7 +73,7 @@ export default function ArticleMetaLocaleFields({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating}
+        generating={generating || (bulkTranslating && Boolean(title.trim()))}
         generateDisabled={!title.trim()}
         className="mb-4"
       />

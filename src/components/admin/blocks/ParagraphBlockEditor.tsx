@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import type { Editor } from '@tiptap/core';
 import { useTranslations } from 'next-intl';
@@ -401,16 +401,31 @@ export default function ParagraphBlockEditor({
   block,
   onChange,
   onBlur,
+  localeViewKey,
+  localeViewTab = 'original',
+  bulkTranslating = false,
 }: {
   block: ParagraphBlock;
   onChange: (b: ParagraphBlock) => void;
   onBlur?: () => void;
+  localeViewKey?: number;
+  localeViewTab?: 'original' | 'english';
+  bulkTranslating?: boolean;
 }) {
   const t = useTranslations('admin.paragraph');
   const te = useTranslations('admin.blockLocale');
   const [tab, setTab] = useState<'original' | 'english'>('original');
   const [generating, setGenerating] = useState(false);
   const [englishEditorTick, setEnglishEditorTick] = useState(0);
+
+  useEffect(() => {
+    if (localeViewKey && localeViewKey > 0) {
+      if (localeViewTab === 'english') {
+        setEnglishEditorTick((x) => x + 1);
+      }
+      setTab(localeViewTab);
+    }
+  }, [localeViewKey, localeViewTab]);
 
   async function handleGenerate() {
     setGenerating(true);
@@ -450,7 +465,7 @@ export default function ParagraphBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating}
+        generating={generating || bulkTranslating}
         generateDisabled={!hasPrimary}
       />
       {tab === 'original' && (

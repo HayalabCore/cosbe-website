@@ -102,7 +102,13 @@
     "postSettings": "Post settings",
     "previewAs": "Preview as",
     "previewOriginal": "Japanese",
-    "previewEnglish": "English"
+    "previewEnglish": "English",
+    "translateArticleTitle": "Translate Entire Page to English",
+    "translateArticleHint": "Translates title, excerpt, and all blocks",
+    "translateArticleProgress": "Translating…",
+    "translateArticlePartialError": "Some parts failed to translate",
+    "translateArticleConfirm": "This will replace all existing English text (title, excerpt, and every block). Continue?",
+    "articleContentLocale": "Edit in"
   },
   "blockLocale": {
     "original": "Japanese",

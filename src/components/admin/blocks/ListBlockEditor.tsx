@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { translateBlockEnAction } from '@/actions/block-translation';
 import type { ListBlock } from '@/types';
@@ -16,14 +16,26 @@ function resizeItemsEn(items: string[], prev?: string[]): string[] {
 export default function ListBlockEditor({
   block,
   onChange,
+  localeViewKey,
+  localeViewTab = 'original',
+  bulkTranslating = false,
 }: {
   block: ListBlock;
   onChange: (b: ListBlock) => void;
+  localeViewKey?: number;
+  localeViewTab?: 'original' | 'english';
+  bulkTranslating?: boolean;
 }) {
   const t = useTranslations('admin.list');
   const te = useTranslations('admin.blockLocale');
   const [tab, setTab] = useState<'original' | 'english'>('original');
   const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    if (localeViewKey && localeViewKey > 0) {
+      setTab(localeViewTab);
+    }
+  }, [localeViewKey, localeViewTab]);
 
   const itemsEn = resizeItemsEn(block.items, block.itemsEn);
 
@@ -54,7 +66,7 @@ export default function ListBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating}
+        generating={generating || bulkTranslating}
         generateDisabled={!hasPrimary}
       />
 

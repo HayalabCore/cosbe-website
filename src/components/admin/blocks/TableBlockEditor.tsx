@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { translateBlockEnAction } from '@/actions/block-translation';
 import type { TableBlock } from '@/types';
@@ -27,14 +27,26 @@ function clampRows(rows: string[][], colCount: number): string[][] {
 export default function TableBlockEditor({
   block,
   onChange,
+  localeViewKey,
+  localeViewTab = 'original',
+  bulkTranslating = false,
 }: {
   block: TableBlock;
   onChange: (b: TableBlock) => void;
+  localeViewKey?: number;
+  localeViewTab?: 'original' | 'english';
+  bulkTranslating?: boolean;
 }) {
   const t = useTranslations('admin.table');
   const te = useTranslations('admin.blockLocale');
   const [tab, setTab] = useState<'original' | 'english'>('original');
   const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    if (localeViewKey && localeViewKey > 0) {
+      setTab(localeViewTab);
+    }
+  }, [localeViewKey, localeViewTab]);
 
   const colCount = block.headers.length;
   const headersEn: string[] = (block.headersEn ?? []).concat(
@@ -155,7 +167,7 @@ export default function TableBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating}
+        generating={generating || bulkTranslating}
         generateDisabled={!hasPrimary}
       />
 

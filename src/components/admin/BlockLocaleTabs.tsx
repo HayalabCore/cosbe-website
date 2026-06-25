@@ -53,9 +53,35 @@ export default function BlockLocaleTabs({
         type="button"
         disabled={generating || generateDisabled}
         onClick={() => void onGenerateEnglish()}
-        className="text-[11px] font-semibold text-primaryColor hover:text-primaryHover disabled:opacity-40 disabled:cursor-not-allowed px-2 py-1 rounded-md border border-primaryColor/30 hover:bg-primaryColor/5 transition-colors"
+        className="inline-flex items-center gap-1 text-[11px] font-semibold text-primaryColor hover:text-primaryHover disabled:opacity-40 disabled:cursor-not-allowed px-2 py-1 rounded-md border border-primaryColor/30 hover:bg-primaryColor/5 transition-colors"
       >
-        {generating ? t('generating') : t('generateEnglish')}
+        {generating ? (
+          <>
+            <svg
+              className="h-3 w-3 animate-spin flex-shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              />
+            </svg>
+            {t('generating')}
+          </>
+        ) : (
+          t('generateEnglish')
+        )}
       </button>
     </div>
   );

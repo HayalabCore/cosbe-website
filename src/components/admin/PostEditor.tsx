@@ -25,6 +25,8 @@ import {
   getArticleByIdAction,
   updateArticleAction,
 } from '@/actions/articles';
+import { translateArticleEnAction } from '@/actions/block-translation';
+import { articleHasTranslatableContent } from '@/lib/block-translation-utils';
 import type {
   Article,
   ArticleSEO,
@@ -188,6 +190,16 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   ]);
   const [persistedId, setPersistedId] = useState<string | undefined>(articleId);
   const [previewLocale, setPreviewLocale] = useState<'ja' | 'en'>('ja');
+  const [articleLocaleViewTab, setArticleLocaleViewTab] = useState<
+    'original' | 'english'
+  >('original');
+  const [localeViewKey, setLocaleViewKey] = useState(0);
+  const [translatingArticle, setTranslatingArticle] = useState(false);
+
+  const applyArticleLocaleView = useCallback((tab: 'original' | 'english') => {
+    setArticleLocaleViewTab(tab);
+    setLocaleViewKey((k) => k + 1);
+  }, []);
 
   const load = useCallback(async () => {
     if (!articleId) return;
@@ -259,6 +271,39 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
       setCaseStudy((prev) => ({ ...prev, ...patch.caseStudy }));
     }
   }
+
+  async function handleTranslateArticle() {
+    if (translatingArticle) return;
+    if (!window.confirm(t('translateArticleConfirm'))) return;
+    setTranslatingArticle(true);
+    try {
+      const result = await translateArticleEnAction({
+        title,
+        excerpt: excerpt || undefined,
+        blocks,
+      });
+
+      if (title.trim()) {
+        setTitleEn(result.titleEn);
+        setExcerptEn(result.excerptEn ?? '');
+      }
+      setBlocks(result.blocks);
+      isDirtyRef.current = true;
+      applyArticleLocaleView('english');
+
+      if (result.errors.length > 0) {
+        const detail = result.errors.map((e) => e.message).join('\n');
+        alert(`${t('translateArticlePartialError')}\n\n${detail}`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert(e instanceof Error ? e.message : 'Translation failed');
+    } finally {
+      setTranslatingArticle(false);
+    }
+  }
+
+  const canTranslateArticle = articleHasTranslatableContent(title, blocks);
 
   const runAutoSave = useCallback(async () => {
     const id = persistedId;
@@ -594,6 +639,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               titleEn={titleEn}
               excerpt={excerpt}
               excerptEn={excerptEn}
+              localeViewKey={localeViewKey}
+              localeViewTab={articleLocaleViewTab}
+              bulkTranslating={translatingArticle}
               onTitleChange={(value) => {
                 isDirtyRef.current = true;
                 setTitle(value);
@@ -633,6 +681,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
             <BlockEditor
               blocks={blocks}
+              localeViewKey={localeViewKey}
+              localeViewTab={articleLocaleViewTab}
+              bulkTranslating={translatingArticle}
               onChange={(next) => {
                 isDirtyRef.current = true;
                 setBlocks(next);
@@ -643,32 +694,29 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
 
           {/* Settings sidebar */}
           <aside className="hidden xl:block w-72 flex-shrink-0 border-l border-slate-200 bg-white sticky top-14 h-[calc(100vh-56px)] overflow-y-auto">
-            <div className="py-2">
-              <p className="px-4 py-2 text-[10px] font-semibold uppercase tracking-widest text-slate-400">
-                {t('postSettings')}
-              </p>
-              <PostMetaForm
-                title={title}
-                slug={slug}
-                featuredImage={featuredImage}
-                category={category}
-                tags={tags}
-                status={status}
-                publishedAt={publishedAt}
-                authorName={authorName}
-                authorDesignation={authorDesignation}
-                seo={seo}
-                caseStudy={caseStudy}
-                onChange={applyMeta}
-              />
-            </div>
+            <PostMetaForm
+              title={title}
+              slug={slug}
+              featuredImage={featuredImage}
+              category={category}
+              tags={tags}
+              status={status}
+              publishedAt={publishedAt}
+              authorName={authorName}
+              authorDesignation={authorDesignation}
+              seo={seo}
+              caseStudy={caseStudy}
+              onChange={applyMeta}
+              onTranslateArticle={() => void handleTranslateArticle()}
+              translatingArticle={translatingArticle}
+              canTranslateArticle={canTranslateArticle}
+              articleLocaleTab={articleLocaleViewTab}
+              onArticleLocaleTabChange={applyArticleLocaleView}
+            />
           </aside>
 
           {/* Mobile: settings below blocks */}
           <div className="xl:hidden w-full px-4 pb-8 mt-4 border-t border-slate-100 pt-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
-              {t('postSettings')}
-            </p>
             <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
               <PostMetaForm
                 title={title}
@@ -683,6 +731,11 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 seo={seo}
                 caseStudy={caseStudy}
                 onChange={applyMeta}
+                onTranslateArticle={() => void handleTranslateArticle()}
+                translatingArticle={translatingArticle}
+                canTranslateArticle={canTranslateArticle}
+                articleLocaleTab={articleLocaleViewTab}
+                onArticleLocaleTabChange={applyArticleLocaleView}
               />
             </div>
           </div>
