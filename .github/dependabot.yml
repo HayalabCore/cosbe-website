@@ -11,6 +11,10 @@ updates:
       day: monday
     open-pull-requests-limit: 10
     versioning-strategy: increase
+    ignore:
+      # Prisma 7 requires prisma.config.ts + schema migration; upgrade manually.
+      - dependency-name: prisma
+      - dependency-name: '@prisma/client'
     groups:
       # One PR for all backward-compatible updates across the tree.
       minor-and-patch:
