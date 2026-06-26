@@ -1,10 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import {
   checkImportSlugAction,
   commitImportAction,
@@ -12,17 +12,9 @@ import {
 } from '@/actions/legacy-import';
 import { LEGACY_HOST, PATH_SEGMENT_TO_CATEGORY } from '@/lib/legacy-import';
 import type { ImportPreviewPayload } from '@/lib/legacy-import/types';
-import CaseStudyMetaFields from '@/components/admin/CaseStudyMetaFields';
-import type { CaseStudyMeta } from '@/types';
-
-const BlockRenderer = dynamic(
-  () => import('@/components/article/BlockRenderer'),
-  { ssr: false }
-);
+import ImportPreviewFields from '@/components/admin/ImportPreviewFields';
 
 type Step = 'idle' | 'fetching' | 'previewing' | 'committing' | 'error';
-
-const emptyCaseStudy: CaseStudyMeta = { aiModels: [] };
 
 function detectCategory(url: string): string | null {
   try {
@@ -35,24 +27,9 @@ function detectCategory(url: string): string | null {
   }
 }
 
-function isoToDatetimeLocal(iso: string): string {
-  const d = new Date(iso);
-  const tzOffset = d.getTimezoneOffset() * 60000;
-  return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
-}
-
-function blockSummary(blocks: ImportPreviewPayload['blocks']) {
-  const counts = {
-    blocks: blocks.length,
-    images: blocks.filter((b) => b.type === 'image').length,
-    tables: blocks.filter((b) => b.type === 'table').length,
-    callouts: blocks.filter((b) => b.type === 'callout').length,
-  };
-  return counts;
-}
-
 export default function ImportClient() {
   const t = useTranslations('admin.import');
+  const tb = useTranslations('admin.bulkImport');
   const router = useRouter();
   const [step, setStep] = useState<Step>('idle');
   const [url, setUrl] = useState('');
@@ -106,8 +83,6 @@ export default function ImportClient() {
 
   if (step === 'previewing' || step === 'committing') {
     if (!payload) return null;
-    const summary = blockSummary(payload.blocks);
-    const tagsStr = payload.tags.join(', ');
 
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -133,167 +108,11 @@ export default function ImportClient() {
           </div>
         )}
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div>
-              <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                {payload.category}
-              </span>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-                {t('fieldTitle')}
-              </label>
-              <input
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                value={payload.title}
-                onChange={(e) => updatePayload({ title: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-                {t('fieldSlug')}
-              </label>
-              <input
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-mono"
-                value={payload.slug}
-                onChange={(e) => updatePayload({ slug: e.target.value })}
-                onBlur={(e) => void validateSlug(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-                {t('fieldExcerpt')}
-              </label>
-              <textarea
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm min-h-[80px]"
-                value={payload.excerpt}
-                onChange={(e) => updatePayload({ excerpt: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-                {t('fieldPublishedAt')}
-              </label>
-              <input
-                type="datetime-local"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                value={isoToDatetimeLocal(payload.publishedAt)}
-                onChange={(e) =>
-                  updatePayload({
-                    publishedAt: e.target.value
-                      ? new Date(e.target.value).toISOString()
-                      : payload.publishedAt,
-                  })
-                }
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-                {t('fieldTags')}
-              </label>
-              <input
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                value={tagsStr}
-                onChange={(e) =>
-                  updatePayload({
-                    tags: e.target.value
-                      .split(',')
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                  })
-                }
-              />
-            </div>
-
-            {payload.featuredImageRemoteUrl && (
-              <div>
-                <p className="text-xs font-semibold uppercase text-slate-500 mb-2">
-                  {t('featuredImage')}
-                </p>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={payload.featuredImageRemoteUrl}
-                  alt=""
-                  className="max-h-40 rounded-lg border border-slate-200 object-contain"
-                />
-                <p className="mt-1 text-xs text-slate-400">
-                  {t('featuredImageNote')}
-                </p>
-              </div>
-            )}
-
-            {payload.category === 'case-study' && (
-              <div className="rounded-xl border border-slate-200 bg-white p-4">
-                <CaseStudyMetaFields
-                  value={payload.caseStudyMeta ?? emptyCaseStudy}
-                  onChange={(patch) =>
-                    updatePayload({
-                      caseStudyMeta: {
-                        ...(payload.caseStudyMeta ?? emptyCaseStudy),
-                        ...patch,
-                      },
-                    })
-                  }
-                />
-              </div>
-            )}
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold uppercase text-slate-500 mb-2">
-              {t('listingPreview')}
-            </p>
-            <div className="rounded-xl border border-slate-200 bg-white p-6 mb-4">
-              <h2 className="text-lg font-bold text-slate-900 mb-2">
-                {payload.title}
-              </h2>
-              {payload.excerpt ? (
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {payload.excerpt}
-                </p>
-              ) : (
-                <p className="text-sm text-slate-400 italic">
-                  {t('noExcerpt')}
-                </p>
-              )}
-              {payload.tags.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {payload.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <p className="text-xs font-semibold uppercase text-slate-500 mb-2">
-              {t('bodyPreview')}
-            </p>
-            <p className="text-sm text-slate-600 mb-3">
-              {t('blockSummary', {
-                blocks: summary.blocks,
-                images: summary.images,
-                tables: summary.tables,
-                callouts: summary.callouts,
-              })}
-            </p>
-            <div className="rounded-xl border border-slate-200 bg-white p-6 max-h-[70vh] overflow-y-auto">
-              {payload.blocks.map((block) => (
-                <BlockRenderer key={block.id} block={block} />
-              ))}
-            </div>
-          </div>
-        </div>
+        <ImportPreviewFields
+          value={payload}
+          onChange={updatePayload}
+          onValidateSlug={(slug) => void validateSlug(slug)}
+        />
 
         <div className="mt-8 flex flex-wrap gap-3">
           <button
@@ -343,7 +162,15 @@ export default function ImportClient() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold text-slate-900 mb-2">{t('title')}</h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
+        <Link
+          href="/admin/import/bulk"
+          className="text-sm font-semibold text-primaryColor hover:text-primaryHover"
+        >
+          {tb('multipleLink')}
+        </Link>
+      </div>
       <p className="text-sm text-slate-500 mb-8">{t('description')}</p>
 
       <label className="block text-xs font-semibold uppercase text-slate-500 mb-2">
