@@ -6,6 +6,7 @@ export const PATH_SEGMENT_TO_CATEGORY: Record<string, ContentCategory> = {
   'case-studies': 'case-study',
   'useful-info': 'useful-info',
   'useful-movie': 'video',
+  news: 'notice',
   notice: 'notice',
 };
 

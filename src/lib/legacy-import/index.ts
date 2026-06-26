@@ -43,22 +43,20 @@ export async function isImportSlugAvailable(slug: string): Promise<boolean> {
   return !existing;
 }
 
-export async function previewImport(
+export function extractFromHtml(
+  html: string,
   url: string
-): Promise<ImportPreviewPayload> {
+): Omit<ImportPreviewPayload, 'slugCollision'> {
   const { category } = parseLegacyUrl(url);
-  const html = await fetchLegacyHtml(url);
   const $ = loadLegacyHtml(html);
   const warnings: string[] = [];
 
   if (category === 'case-study') {
     const cs = extractCaseStudy($, url, warnings);
-    const slugCollision = !(await isImportSlugAvailable(cs.slug));
     return {
       sourceUrl: url.trim(),
       category,
       slug: cs.slug,
-      slugCollision,
       title: cs.title,
       excerpt: cs.excerpt,
       featuredImageRemoteUrl: cs.featuredImageRemoteUrl,
@@ -77,13 +75,10 @@ export async function previewImport(
         ? extractVideo($, url, warnings)
         : extractNotice($, url, warnings);
 
-  const slugCollision = !(await isImportSlugAvailable(extracted.slug));
-
   return {
     sourceUrl: url.trim(),
     category,
     slug: extracted.slug,
-    slugCollision,
     title: extracted.title,
     excerpt: extracted.excerpt,
     featuredImageRemoteUrl: extracted.featuredImageRemoteUrl,
@@ -92,6 +87,16 @@ export async function previewImport(
     blocks: extracted.blocks,
     warnings,
   };
+}
+
+export async function previewImport(
+  url: string
+): Promise<ImportPreviewPayload> {
+  parseLegacyUrl(url); // validate host + category early
+  const html = await fetchLegacyHtml(url);
+  const base = extractFromHtml(html, url);
+  const slugCollision = !(await isImportSlugAvailable(base.slug));
+  return { ...base, slugCollision };
 }
 
 export { parseLegacyUrl, PATH_SEGMENT_TO_CATEGORY, LEGACY_HOST };

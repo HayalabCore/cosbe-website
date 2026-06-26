@@ -1,0 +1,1681 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`extractFromHtml on real fixtures > extracts case-study/2month-ai-mvp.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "alt": "新規事業を2カ月で具体化",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://jp.cosbe.inc/wp-content/uploads/2025/02/ff8e41d143ba90920061b495b7264f21.jpg",
+    },
+    {
+      "content": "はじめに：AI導入の課題と解決の方向性",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>「新規事業でAIを活用したいけれど、開発に時間がかかりすぎる…」 「要件が固まらず、プロジェクトがなかなか前に進まない…」<br /><br />そんな悩みを抱える企業は少なくありません。今回ご紹介するS社も、まさにこのような課題を抱えていました。<br /><br />しかし、<strong>「まず動くものを作る」スモールスタートのアプローチ</strong>によって、わずか2カ月でAIサービスのプロトタイプを完成。スピード感を持って市場投入を進めました。<br /><br />どのようにして実現したのか、詳しく見ていきましょう。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "全体の概要：プロジェクトの成功要因",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>本事例の最大の特長は「<strong>新規ビジネスのアイデアを、約2カ月という短期間でAIサービスとして具現化した</strong>」点にあります。<br /><br />通常、AI導入には数カ月～1年以上かかることも珍しくありません。しかし、S社は以下の3つのポイントを徹底することで、短期間でのプロトタイプ開発に成功しました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "初動の速さ：ビジネス検証が早期に行え、社内外からのフィードバックを素早く収集",
+        "柔軟な要件変更：「とりあえず動くもの」を作りながらアイデアをブラッシュアップ",
+        "AI技術（RAG×LLM）を活用：最小限の入力で高精度なコンテンツを自動生成",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "<p><strong>MVP（Minimum Viable Product）とは？</strong><br /><br />必要最小限の機能だけを実装した試作品のこと。検証や改善を繰り返す新規事業の初期段階で重宝されます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "課題と背景：AI導入の現状と課題",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "スピードが勝負の新ビジネス",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>昨今、AIを活用した新サービスは次々と誕生しており、後から参入を試みる企業・組織にとっては「どれだけ早くプロトタイプをリリースできるか」が大きなカギとなります。<br /><br />しかし、以下のような課題もありがちです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "要件定義の遅れ：新しいアイデアほど確定事項が少なく、検討だけで時間が過ぎてしまう",
+        "社内外の調整コスト：プロジェクト関係者が多いほど、承認やコミュニケーションに手間がかかりがち",
+        "技術的な未知数：AI分野は進化が速いため、開発途中で仕様変更が起こりやすい",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">本事例のクライアントは、まさに「早く形にしてユーザーの反応を得たい」という強い思いを持ちつつも、要件の不確定さや調整プロセスに悩んでいました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "解決策：開発アプローチと施策",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "短期間で開発を成功させるアプローチ",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>新規事業では「ビジネスがどこまで通用するか」自体が未知数です。従来のように要件を全部固めてから開発に着手する手法では、<strong>仕様策定の段階で手が止まってしまう</strong>危険があります。<br /><br />そこで本プロジェクトでは以下の方針を採用しました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "最小限の機能（MVP）を2カ月でリリース",
+        "完璧な仕様を目指さず、まずは動く試作品を最優先で完成",
+        "プロトタイプを試しながらリアルタイムで改良",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "RAG×LLMの活用とその効果",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>本事例で開発したAIサービスのコア技術として、<strong>RAG (Retrieval Augmented Generation)</strong>と <strong>LLM (Large Language Model)</strong> を組み合わせたテキスト自動生成機能が挙げられます。<br /><br />主な流れは以下のとおりです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "ユーザーが必要最小限の情報を入力",
+        "RAGが関連するデータソースを探して抽出",
+        "LLMが抽出された情報を元に文章を生成し、コンテンツに統合",
+      ],
+      "listType": "numbered",
+      "type": "list",
+    },
+    {
+      "content": "<p>高精度な言語モデルと検索技術を組み合わせることで、<strong>ユーザーにとって価値のあるテキストやコンテンツを短時間でアウトプット</strong>できる設計を目指しました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "RAG（Retrieval Augmented Generation）とは？
+指定されたデータベースから関連情報を取り出し、文章生成と組み合わせる仕組み。",
+        "LLM（Large Language Model）とは？
+大量のテキストを学習して高精度の自然言語処理を行うAIモデル。",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "導入の成果：プロジェクトの影響と結果",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "2カ月で動くプロトタイプを完成",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>要件が揃わなくても「少なくとも最低限動くもの」を優先する手法により、わずか2カ月でAIサービスの試作品を形にすることに成功。新規ビジネスで最も重要な「<strong>スピード感</strong>」を損なわずにリリースできた点が最大の成果です。<br /><br />従来なら<strong>要件定義だけで数カ月</strong>を要するケースもあるなか、大幅に短縮できたことがポイントとなっています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "スモールスタートでリスクを低減",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>大規模な開発を一度に進めると、完成後に「想定とズレていた」場合のリスクが大きくなります。スモールスタートでMVPをまず市場や社内でテストすることで、<strong>不要な機能に投資しすぎるリスク</strong>を大幅に減らしました。<br /><br />また、MVP段階でユーザーからリアルな反応を集められるため、今後の方向性が明確になりやすいという利点もあります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "柔軟な改善サイクル",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>想定していなかった新しいアイデアや、不具合への対処が、開発中盤からでもスムーズに行われました。<strong>開発プロセスに余白を持たせる</strong>ことで、途中で生まれるイノベーティブな発想を取りこぼさない仕組みが機能しています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "まとめ：アイディアを短期間で実用化",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p><strong>「作りながら考える」スモールスタート</strong>は、新規事業やAIプロジェクトなど、不確定要素の多い領域にこそ適したアプローチです。以下のポイントを押さえることで、より効果的にスピードを出せるでしょう。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "最初から完成度100％は求めない
+早期リリースで実地テストを重ねる",
+        "短期のフィードバックループを回す
+仕様変更や追加要望があっても素早く対応できる体制づくり",
+        "AI技術を積極的に取り入れる
+RAG×LLMの活用など、少ないインプットで成果を生む仕組みづくり",
+      ],
+      "listType": "numbered",
+      "type": "list",
+    },
+    {
+      "content": "<p>本事例では、お客様のアイデアを短期間で形にし、実際に市場で試せるプロトタイプを作るプロセスを紹介しました。<br /><br />不確定要素の多いプロジェクトでも、<strong>「まず2カ月でMVPを作る」という大胆な方針が功を奏し、結果的にリスクを抑えつつ高い完成度の試作品をリリースすることに成功しました。</strong><br /><br /><strong>こうした事例を通じて、これからAIサービスを開発する企業・組織がスピードと柔軟性</strong>を両立させるヒントになれば幸いです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p><strong>＼AIで業務効率化を実現しませんか？／</strong></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "caseStudyMeta": {
+    "aiModels": [
+      "LLM（大規模言語モデル）",
+      "RAG（検索拡張生成）",
+    ],
+    "clientLocation": "非公開",
+    "clientName": "S社",
+    "clientUrl": "非公開",
+    "mainChallenges": "要件の不確定性、社内外の調整コスト、技術的未知数",
+  },
+  "category": "case-study",
+  "excerpt": "わずか2カ月でAIベースの新サービスを形にしたスモールスタート事例をご紹介。要件定義に縛られず「作りながら考える」手法で開発を加速し、柔軟かつスピーディにMVPを完成させたポイントをまとめます。",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2025/02/ff8e41d143ba90920061b495b7264f21.jpg",
+  "publishedAt": "2025-02-26T00:00:00.000Z",
+  "slug": "2month-ai-mvp",
+  "sourceUrl": "https://www.jp.cosbe.inc/case-studies/2month-ai-mvp/",
+  "tags": [
+    "導入事例",
+    "新規事業・イノベーション",
+  ],
+  "title": "【導入事例】AIサービスを2カ月で実現！スピードとスモールスタートが生む新規事業の可能性",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts case-study/cosbe.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "content": "課題の背景",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "海外採用における多様なレジュメ形式がもたらす課題",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>当社（CosBE）では、自社内のグローバルマネジメント事業部において外国人材を採用しています。しかし、海外では履歴書のフォーマットが統一されておらず、<strong>応募書類が100～200枚に及ぶ</strong>ことも日常茶飯事でした。<br /><br />このため、当社の採用担当は毎回膨大な時間をかけて書類を確認しなければならず、<strong>作業性の低下</strong>や<strong>誤った選考リスク</strong>が問題となっていました。<br /><br />さらに、言語面でも日本語への翻訳や情報整理に多くの手間がかかり、<strong>採用担当が本来行うべき業務</strong>が圧迫されている状況でした。そこで当社は、<strong><a href="https://jp.cosbe.inc/ailabo/">「速AIラボ」</a></strong>を自社内で開発・導入し、この課題解決に乗り出すことにしました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "ソリューションの概要",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "外国語レジュメを自動的に日本語の定型様式へ変換",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>当社が提供する「速AIラボ」では、以下のようなフローで<strong>採用業務の効率化</strong>を実現しています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "多様な様式の外国語レジュメを解析し、必要情報（氏名、学歴、職歴、スキルなど）を自動抽出",
+        "抽出した情報を日本語に翻訳した上で定型フォーマットに変換し、即時に出力",
+        "抽出した情報を日本語の定型フォーマットに変換し、即時に出力",
+      ],
+      "listType": "numbered",
+      "type": "list",
+    },
+    {
+      "content": "<p>この結果、採用担当は<strong>どのレジュメを見ても同じスタイル</strong>で内容を確認できるようになります。<br /><br />また、担当者が英語に自信がなくても、日本語で要点を把握できるため、<strong>書類選考を短時間で的確に行う</strong>ことが可能となりました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://jp.cosbe.inc/wp-content/uploads/2024/08/e2fca36569b4cc148a64242157bc1933.jpg",
+    },
+    {
+      "content": "導入効果",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "採用担当の書類確認時間が数日→約1時間に短縮",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>従来は100人規模の応募者のレジュメ確認に数日単位を要していましたが、導入後はAIによる一括処理により、<strong>約1時間で完了</strong>するようになりました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "担当者の負担が軽減され、採用業務の質が向上",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>英語が苦手な担当者でも重要情報を容易に把握できるため、<strong>ストレスが大幅に減少</strong>。空いた時間を面接や研修など、より付加価値の高い業務に充てることができるようになりました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "自社のノウハウを外部にも展開し、リード獲得",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>当社ではこのソリューションを<strong>外部にも無料提供</strong>しています。これにより、同様の課題を持つ他社のニーズを取り込み、新たなビジネスチャンスを創出する見込みです。<br /><br />弊社が無料で提供している<strong>英文履歴書を日本語履歴書に変換</strong>するAIエージェントとです。この機会にぜひお試しください。<br /></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "まとめ",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>今回開発・導入した「速LAB」は、自社内のグローバルマネジメント事業部における<strong>外国人採用の書類選考</strong>という大きな課題を解決し、<strong>数日かかっていた選考プロセスを1時間</strong>にまで短縮しました。これにより、採用担当はより戦略的な業務に注力できるようになり、当社全体のグローバル展開にも貢献しています。<br /><br />本機能は、レジュメに限らず、さまざまな形式の書類を統一フォーマットに変換できる可能性を秘めています。たとえば、取引先ごとに異なる様式の注文書を、1つの統一された形式に変換することも可能です。<br /><br />顧客のニーズに応じた柔軟なAIソリューションを提供しておりますので、お困りの際はぜひお気軽にご相談ください。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p><strong>＼AIで業務効率化を実現しませんか？／</strong></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "caseStudyMeta": {
+    "aiModels": [
+      "LLM（大規模言語モデル）",
+      "自動翻訳",
+    ],
+    "clientLocation": "3 East Third AveSan Mateo, CA, U.S.A",
+    "clientName": "CosBE incorporated",
+    "clientUrl": "https://jp.cosbe.inc/",
+    "mainChallenges": "職書類選考の非効率、レジュメのバラつき、言語の壁",
+  },
+  "category": "case-study",
+  "excerpt": "課題の背景 海外採用における多様なレジュメ形式がもたらす課題 当社（CosBE）では、自社内のグローバルマネジメント事業部において外国人材を採用しています。しかし、海外では履歴書のフォーマットが統一されておらず、応募書類が100～200枚に",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2024/08/CosBE.png",
+  "publishedAt": "2024-08-31T00:00:00.000Z",
+  "slug": "cosbe",
+  "sourceUrl": "https://www.jp.cosbe.inc/case-studies/cosbe/",
+  "tags": [
+    "導入事例",
+    "人材・組織改善",
+  ],
+  "title": "【導入事例】外国レジュメの書類選考課題を解決！",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts case-study/kando.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "content": "課題の背景",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "プロフェッショナル講師の確保が難しく、企業成長に制約",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>KANDO様は、<strong>プロフェッショナルな講師の確保が難しい</strong>という課題を抱えていました。<br /><br />具体的には、講師の人数が足りず、<strong>複数回の面談が必要な研修</strong>をスケールさせることができないため、<strong>作業時間の増大</strong>や<strong>企業の売上キャパシティの制約</strong>が発生していました。<br /><br />結果として、<strong>企業成長が人に大きく依存しすぎてしまう</strong>ことが経営上の大きなボトルネックとなっていたのです。<br /><br />この状況を打破するため、当社の<strong><a href="https://jp.cosbe.inc/ailabo/ai-agent/">「速AIラボ」</a></strong>をご提案し、導入に至りました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "ソリューションの概要",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "AIエージェントによる講師の生産性向上",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>「速AIラボ」では、<strong>対話型のAIエージェント</strong>を活用して、研修受講者が講師に相談する前の「事前準備」段階を効率化し、<strong>講師の負荷を大幅に軽減</strong>するシステムです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "AI技術
+
+大規模言語モデル（LLM）をベースにしたAIエージェントを導入し、ユーザーと対話を繰り返すことで要望や課題をブラッシュアップ。",
+        "具体的な機能・アプローチ
+
+ユーザーの考えをAIとの対話を通じて整理
+
+AIエージェントが複数の選択肢や提案を提示
+
+研修のテーマや目的を事前に明確化することで、講師とのミーティング回数を最適化",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://jp.cosbe.inc/wp-content/uploads/2024/08/ffd88b3b63b3dddd7049a571525938a3.jpg",
+    },
+    {
+      "content": "<p>当初は「社長と同じことができるAI」を目指して開発がスタートしましたが、試行錯誤を重ねる中で、「講師の強みを最大限に引き立てるためのエージェント」へと役割を進化させました。<strong>柔軟な開発体制</strong>により、プロジェクトの途中でも変更を歓迎し、実際のユーザー体験を通じて価値を高めていきました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "導入効果",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "研修の生産性が約2倍に向上",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>これまで複数回のやり取りが必要だった研修の事前面談プロセスが、<strong>2回程度のやり取り</strong>で完結。講師の稼働時間が削減され、より高度なコンサルティングや指導に集中できるようになりました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "講師の専門性を最大限に活用",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>事前にAIエージェントと対話をしておくことで、受講者自身の思考が整理され、<strong>講師が高度な専門知識を提供する時間をより多く確保</strong>できます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "新たなビジネスチャンスの創出",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>当初想定していた機能から大きく発展し、<strong>AIエージェント自体を別サービスとして販売</strong>するモデルが見えてきました。柔軟なプロジェクト推進により、<strong>顧客にとっても当社にとっても新たな事業機会</strong>が生まれています。<br /><br />KANDO様では、企業研修の事前準備に「速AIラボ」を導入した結果、以下のような効果を得ました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "受講者も遠慮なくAIに相談できることで、事前準備が十分に整う",
+        "従来、講師1名が複数回対応していた事前面談が1～2回に短縮",
+        "講師は専門性の高い部分に注力できるようになり、研修自体の質が向上",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "まとめ",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>「速AIラボ」は、KANDO様の<strong>プロフェッショナル講師不足</strong>という課題を解決し、<strong>研修生産性が2倍</strong>になるという大きな成果をもたらしました。<br /><br />今後も、当社ではお客様のニーズや事業アイデアの変化に合わせて<strong>柔軟なAIソリューション</strong>を提供し、企業成長と新たな価値創造のサポートを続けてまいります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p><strong>＼AIで業務効率化を実現しませんか？／</strong></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "caseStudyMeta": {
+    "aiModels": [
+      "AIエージェント",
+      "LLM（大規模言語モデル）",
+    ],
+    "clientLocation": "〒101-0063​東京都千代田区神田淡路町2-101 ワテラスタワー内",
+    "clientName": "KANDO（カンド）株式会社",
+    "clientUrl": "https://www.kando-inc.com/",
+    "mainChallenges": "作業時間増大、売上キャパシティの限界、講師不足、人に依存した研修運営",
+  },
+  "category": "case-study",
+  "excerpt": "課題の背景 見出プロフェッショナル講師の確保が難しく、企業成長に制約 KANDO様は、プロフェッショナルな講師の確保が難しいという課題を抱えていました。 具体的には、講師の人数が足りず、複数回の面談が必要な研修をスケールさせることができない",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2024/08/KANDO.png",
+  "publishedAt": "2024-08-31T00:00:00.000Z",
+  "slug": "kando",
+  "sourceUrl": "https://www.jp.cosbe.inc/case-studies/kando/",
+  "tags": [
+    "導入事例",
+    "人材・組織改善",
+  ],
+  "title": "【導入事例】プロフェッショナル講師不足の課題を解決！",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts notice/2025-02-26-webinar-cosbe.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://jp.cosbe.inc/wp-content/uploads/2025/02/Webinar-Week-2025banner.jpg",
+    },
+    {
+      "content": "<p>平素よりCosBE Inc.をご愛顧いただき、誠にありがとうございます。<br /><br />この度、<strong>2025年2月26日(水)〜2月28日(金)</strong>に開催される<strong>「新素材・先端素材／次世代金型技術／次世代パッケージ技術 Webinar Week 2025」</strong>に、当社が登壇いたしますのでご案内申し上げます。<br /><br />本イベントは、<strong>招待制</strong>のオンラインセミナーとなっており、ご招待させていただいた方のみ視聴可能な<strong>「特別な機会」</strong>です。<br /><br />新素材・先端素材、次世代金型技術、次世代パッケージ技術に関する最新のトレンドや実践的な事例が紹介される、内容充実のセミナーです。ぜひご参加いただき、新たな情報やヒントをお持ち帰りいただければ幸いです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "イベント概要",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "caption": undefined,
+      "headers": [
+        "イベント名",
+        "「新素材・先端素材／次世代金型技術／次世代パッケージ技術 Webinar Week 2025」",
+      ],
+      "id": "<id>",
+      "rows": [
+        [
+          "日時",
+          "2025年2月26日(水)〜2月28日(金)",
+        ],
+        [
+          "開催方法",
+          "オンライン（事前登録制）",
+        ],
+        [
+          "主催",
+          "株式会社松井製作所（Andon Webinar Week 事業部）",
+        ],
+        [
+          "公式サイト",
+          "https://webinarweek.net/ww/202502NextG/",
+        ],
+      ],
+      "type": "table",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "「視聴方法」の案内がありますのでご参照ください。",
+        "プログラム・登壇企業は予告なく変更となる場合があります。",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "CosBE Inc. 登壇情報",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://jp.cosbe.inc/wp-content/uploads/2024/11/4495bed8051fcc9fd4ac4bababda36e3.png",
+    },
+    {
+      "caption": undefined,
+      "headers": [
+        "日時",
+        "2025年2月26日(水) 16:00～16:25（25分間）",
+      ],
+      "id": "<id>",
+      "rows": [
+        [
+          "テーマ",
+          "「AIと人の共創による生産トランスフォーメーション」",
+        ],
+        [
+          "詳細ページ",
+          "https://webinarweek.net/ww/202502NextG/webinar/WN_JPLANhJt",
+        ],
+      ],
+      "type": "table",
+    },
+    {
+      "content": "<p><strong>ＡＩ最前線</strong>のシリコンバレーから、モノづくり企業、特に金型製造、金型活用の製造現場において、<strong>「ＡＩエージェント」</strong>がどのように活躍していくのか<br /><br />LLM（大規模言語モデル）の進化から、RAG（拡張検索技術）、そしてAIエージェント（自立型業務遂行AI）へと、AI分野の先端ホットトピックスは移り変わってきています。<br /><br />ＡＩ技術の最前線を追う<strong>シリコンバレーのＡＩソフトウェア開発企業の創業者</strong>として、また大手総合ファームのパートナーとして<strong>18年間企業経営者に向き合い続けた元コンサルタント</strong>として、金型製造関連の経営者のみなさまにいかにAIの先端技術を活用して中小企業がビジネス変革を成し遂げるかの具体的な方法を、類似事例を交えながらご説明いたします。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "お申し込み方法",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>本ウェビナーは招待制です。下記の無料招待コードを、<a href="https://webinarweek.net/registration/?from=entry&amp;thema_pid=TH_z86K2JaE" rel="noopener noreferrer">申し込みサイト</a>でご入力ください。<br /><br />※視聴方法の詳細は<a href="https://webinarweek.net/ww/202502NextG/" rel="noopener noreferrer">公式サイト</a>をご覧ください。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "招待コード:D6581763",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "お問い合わせ",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">本イベントや当社講演内容に関するご質問がございましたら、CosBE Inc.のお問い合わせフォームよりお気軽にお問い合わせください。皆さまのご参加を心よりお待ちしております。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "notice",
+  "excerpt": "平素よりCosBE Inc.をご愛顧いただき、誠にありがとうございます。 この度、2025年2月26日(水)〜2月28日(金)に開催される「新素材・先端素材／次世代金型技術／次世代パッケージ技術 Webinar Week 2025」に、当社",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2025/02/Webinar-Week-2025banner.jpg",
+  "publishedAt": "2025-02-10T00:00:00.000Z",
+  "slug": "2025-02-26-webinar-cosbe",
+  "sourceUrl": "https://www.jp.cosbe.inc/news/2025-02-26-webinar-cosbe/",
+  "tags": [
+    "お知らせ",
+  ],
+  "title": "【イベント情報】CosBE Inc.、「新素材・先端素材／次世代金型技術／次世代パッケージ技術 Webinar Week 2025」に登壇いたします",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts notice/ai-transformation.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "content": "<p>日頃よりCosBE Inc.の発信をご覧いただき、ありがとうございます。<br /><br />このたび、YouTubeでお話ししてきた「AI徹底解説」に関する内容をもとに、経営者の視点で整理した<a href="https://jp.cosbe.inc/news/useful-info/business-ai-paradigm-shift/">記事</a>を公開しました。<br /><br />生成AIの基本的な理解から、導入のステップ、業務への具体的な活かし方まで。<br />実際に現場を支援してきた立場から、経営にどう役立てていくかをわかりやすくまとめています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "「AIを使って何が変わるのか」",
+        "「うちの会社にどう活かせるのか」",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">そんな問いに対するヒントを得たい方に、ぜひ読んでいただきたい内容です。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">＼　AIに関する情報を発信しております　／</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "notice",
+  "excerpt": "AI導入の基本から業務活用まで、経営者視点で整理した解説記事を公開しました。生成AIやAIエージェントをどう活かすか、実践事例をもとにわかりやすく紹介します。",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2025/07/513f3a0811e53a7de868b7f72fa4eb1d.jpg",
+  "publishedAt": "2025-07-18T00:00:00.000Z",
+  "slug": "ai-transformation",
+  "sourceUrl": "https://www.jp.cosbe.inc/news/ai-transformation/",
+  "tags": [
+    "お知らせ",
+  ],
+  "title": "経営者のためのAI徹底解説を公開しました",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts notice/media-1.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://www.jp.cosbe.inc/wp-content/uploads/2025/11/e2bf0c7924c3de5c4fd208be249511b1-1024x576.png",
+    },
+    {
+      "content": "<p><a href="https://freeconsul.co.jp/" rel="noopener noreferrer"><strong>フリーコンサル株式会社</strong></a>が運営するコンサルタント・ハイクラス人材のキャリア、企業の課題解決に役立つ情報メディア 「<a href="https://freeconsul.co.jp/cs/" rel="noopener noreferrer"><strong>コンサルGO</strong></a>」にて、CosBEが「<a href="https://freeconsul.co.jp/cs/ai-consulting/" rel="noopener noreferrer"><strong>おすすめのAIコンサルタント会社</strong></a>」として紹介されました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "notice",
+  "excerpt": "フリーコンサル株式会社が運営するコンサルタント・ハイクラス人材のキャリア、企業の課題解決に役立つ情報メディア 「コンサルGO」にて、CosBEが「おすすめのAIコンサルタント会社」として紹介されました。",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2025/11/e2bf0c7924c3de5c4fd208be249511b1.png",
+  "publishedAt": "2025-11-20T00:00:00.000Z",
+  "slug": "media-1",
+  "sourceUrl": "https://www.jp.cosbe.inc/news/media-1/",
+  "tags": [
+    "お知らせ",
+  ],
+  "title": "「フリーコンサル株式会社が運営するメディア 「コンサルGO」にて、CosBEが「おすすめのAIコンサルタント会社」として紹介されました。",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts notice/news-260115-01.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://www.jp.cosbe.inc/wp-content/uploads/2026/01/file-1024x576.png",
+    },
+    {
+      "content": "<p>現在、世界中で「AI格差」が企業の競争力を左右する大きな要因となっています。<br /><br />CosBE Incorporatedは、AIを単なるツール導入で終わらせず、経営そのものを再構築するための実践的ガイド「未来を創造する経営者のためのAIトランスフォーメーション」を制作し、無料公開いたしました。<br /><br />中小企業がAI時代に持続的な成長を遂げるための「羅針盤」として、ぜひご活用ください。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "なぜ今、「AIトランスフォーメーション」が必要なのか？",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>生成AIの普及により、AIへの関心はかつてないほど高まっています。しかし、当社の調査では**84%の経営者が「AIツールを個人で使うだけでは、経営全体の改善にはつながらない」**と強い課題意識を抱えていることが明らかになりました。<br /><br />大企業がAIによる抜本的なビジネス変革を進める一方で、経営資源の限られた中小企業には、まだ本質的な変革のための情報が十分に行き届いていないのが現状です。<br /><br />当社はこの「AI格差」を解消し、中小企業の皆様が本来の力を発揮できるよう、経営者の視点に立った変革手法を公開することにいたしました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "ホワイトペーパーの主な内容",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">全5章にわたり、AI時代の生存戦略から具体的な実装ステップまでを網羅しています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "第1章：AI革命時代の生存戦略
+
+なぜ、今「AI格差」が中小企業の経営を左右するのか",
+        "第2章：実践的理解 AIの基本と最先端活用
+
+経営者が最低限知っておくべきAIの仕組み",
+        "第3章：AI変革を阻む壁と成功へのカギ
+
+95%が陥る「AI導入の失敗パターン」と成功への「4つの原則」",
+        "第4章：実践ロードマップ AI変革に導くステップ
+
+小さく始めて大きく育てる「MVP戦略」の具体的な進め方",
+        "第5章：業界別 AIトランスフォーメーション成功事例
+
+【製造・建設・小売業】人手不足や生産性課題を解決する成功事例",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://www.jp.cosbe.inc/wp-content/uploads/2026/01/file-1-1024x576.png",
+    },
+    {
+      "content": "ダウンロード方法",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>本ホワイトペーパーは、皆様にすぐにお読みいただけるよう、<strong>面倒なフォーム入力なし</strong>でダウンロードいただけます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">下記リンク（公式サイトトップページ）のダウンロードボタンより、今すぐご覧ください。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p><strong>【公式サイトURL】</strong><a href="https://www.jp.cosbe.inc/"> https://www.jp.cosbe.inc/</a></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "CosBE Incorporatedについて",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">私たちは「最先端のAI技術で企業の事業変革を加速させること」をミッションに掲げるグローバルAIスタートアップです。 経営課題の特定から戦略立案、実装、そして組織への定着までを一気通貫で伴走し、企業の持続的成長を支援します。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "事業内容： AIトランスフォーメーション支援（AI開発・導入、経営コンサルティング）",
+        "代表者： CEO 茂見 憲治郎",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "<p><strong>【本件に関するお問い合わせ】</strong> Email： marketing@cosbe.inc</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "notice",
+  "excerpt": "現在、世界中で「AI格差」が企業の競争力を左右する大きな要因となっています。 CosBE Incorporatedは、AIを単なるツール導入で終わらせず、経営そのものを再構築するための実践的ガイド「未来を創造する経営者のためのAIトランスフ",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2026/01/file.png",
+  "publishedAt": "2026-01-15T00:00:00.000Z",
+  "slug": "news-260115-01",
+  "sourceUrl": "https://www.jp.cosbe.inc/news/news-260115-01/",
+  "tags": [
+    "お知らせ",
+  ],
+  "title": "【無料公開】経営者のための「AIトランスフォーメーション」実践ホワイトペーパーをリリースいたしました",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts useful-info/ai-business-transformation.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "content": "<p>こんにちは、CosBEの代表取締役、茂見です。<br /><br />今回は、NEWPHASEの小渕さんとの対談を通じて、AI技術がどのようにビジネスを進化させるのか、その可能性について掘り下げてお話しました。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AI技術が生み出す「パラダイムシフト」",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>AI導入により、私たちのビジネス環境は大きく変わりつつあります。<br /><br />最近参加したサンフランシスコのTechイベントでは、「パラダイムシフト」というキーワードを頻繁に耳にしました。<br /><br />この変化は、従来の当たり前が通用しなくなるだけでなく、全く新しい基準に移行していくことを意味しています。<br /><br />例えば、Googleでの検索が主流だった時代から、今ではAIを使った情報収集が主流になりつつあるのです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "中小企業におけるAI活用の実例",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">CosBEでは、中小企業の経営者の皆さまに向けて、AIを活用した具体的なソリューションを提供しています。以下に2つの事例をご紹介します。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "1. AI研修エージェント",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">研修講師の業務をサポートするAIを開発しました。このシステムにより、講師1人が対応できる受講生の数を大幅に増やすことが可能となりました。また、受講生も気軽に質問ができるようになり、新しい学習体験を提供しています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "2. クリエイターの効率化支援",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">クリエイターが過去のプロジェクトを活用して新しい案件を迅速に進められるAIを開発しました。これにより、作業時間を大幅に短縮し、クリエイターはより高度な作業に集中できる環境を実現しています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AI導入を検討する経営者の皆さまへ",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">AIを活用することで、以下のような変革を実現できます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "業務の効率化
+
+顧客管理やデータ分析をAIに任せることで、人材リソースをより戦略的な業務に集中できます。",
+        "初期投資の低コスト化
+
+CosBEでは、100万円単位の低コストでAIソリューションを提供し、無理のないスタートをサポートしています。",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "AI導入の課題を乗り越えるために",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>AI導入において最大のハードルは、「何を解決したいのか」を明確にすることです。<br /><br />私たちは、経営者の皆さまと一緒に課題を洗い出し、それに最適なAIソリューションを提案します。<br /><br />特に、初めてAI導入を検討する方にとっては、「無料相談」を提供しています。これまでに100件以上の相談を受けてきた実績がありますので、安心してご連絡ください。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "CosBEのビジョン: AIで新たな可能性を切り開く",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>私たちCosBEの目標は、AI技術を通じて「AIディバイド（AI格差）」を解消することです。地方の企業や中小企業の経営者が最新の技術を取り入れ、AIパラダイムシフトを味方につけられるよう、全力でサポートします。<br /><br />「世界はひとつ」という理念のもと、AIを使ったビジネス変革をグローバル規模で推進していきます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AI導入のご相談はこちらから",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">AI技術に興味をお持ちの方、具体的な導入を検討している方は、ぜひお問い合わせください。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">私たちCosBEが、貴社の可能性を最大限に引き出すお手伝いをさせていただきます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "useful-info",
+  "excerpt": "AIの活用でビジネスはどう進化するのか？CosBE代表・茂見氏が、NEWPHASE小渕氏との対談を通じて、中小企業のAI導入事例やAIの未来について語ります。",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2024/12/maxresdefault.jpg",
+  "publishedAt": "2024-12-11T00:00:00.000Z",
+  "slug": "ai-business-transformation",
+  "sourceUrl": "https://www.jp.cosbe.inc/useful-info/ai-business-transformation/",
+  "tags": [
+    "お役立ち情報",
+  ],
+  "title": "【超有料級】AIの力でビジネスが大きく変わる！？",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts useful-info/ai-transformation-blog1.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://jp.cosbe.inc/wp-content/uploads/2025/09/1-1-1024x576.png",
+    },
+    {
+      "content": "はじめに：AI時代を生き抜く中小企業の「生存戦略」",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>現在、ビジネス環境はAI技術の急速な進化によって、これまで当たり前だった常識が根本から覆される「<strong>AIパラダイムシフト</strong>」の時代に突入しています。これは、かつての産業革命やインターネット革命と同等の社会変革をもたらすとされています。<br /><br />中小企業の経営者の皆様の中には、「AI導入の必要性は感じるが、何から手をつければ良いか分からない」「限られたリソースで最大限の効果を得たい」「導入コストや効果測定の難しさに不安がある」といったお悩みを抱えている方も多いのではないでしょうか。<br /><br />AIはもはや単なる便利なツールではなく、企業の存続を左右する「<strong>生存戦略</strong>」と化しています。本記事では、このAI時代に生じる「AI格差」の正体を解説します。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AI格差とは何か？なぜ今、中小企業にとって喫緊の課題なのか",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "AI格差の定義とその現状",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p><strong>AI格差</strong>とは、AIを導入する企業と導入しない企業の間で生じる、決定的な競争力格差を指します。この格差はすでに現実のものとなっており、企業がAI技術をどの程度活用しているかによって、市場における競争力が大きく左右される時代に突入しています。<br /><br />例えば、米国小売業界では、AI活用によって競争力を飛躍的に高めた大手企業やAI駆動型Eコマースの台頭により、従来の店舗が閉店に追い込まれる「小売崩壊」が報じられています。これは、AI技術の活用度合いが企業の競争力に直結している明確な証拠です。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "日本企業が直面するAI活用の現実",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>総務省の「<a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/pdf/index.html" rel="noopener noreferrer">令和7年版情報通信白書</a>」によると、2024年度の個人の生成AIサービス利用率は26.7%と前年の約3倍に増加しました。しかし、アメリカの68.8%や中国の81.2%と比較すると、日本は依然として低い水準にあります。<br />国内企業においても「積極的に活用する方針」の企業は約23.7%に留まり、「活用する領域を限定して利用する方針」を合わせても約半数程度の企業しかAI活用に踏み出せていないのが現状です。<br /><br />多くの経営者様がAI導入に関心を持ちながらも、「どこから手をつければ良いか分からない」「自社に合った活用法が見えない」といった悩みを抱え、「様子見」の姿勢を取っています。しかし、AI格差は日々拡大しており、この「様子見」こそが、3年後・5年後の企業存続を左右する決定的な差となる可能性があります</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "「AI導入」と「AIトランスフォーメーション」の違い",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">多くの経営者が「AIを導入したい」と考えていますが、その意味合いには大きな誤解があります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "「AI導入」 は、ChatGPTのような汎用AIツールを個人の業務効率化に利用するような、部分的なツール活用に留まるケースを指します。CosBEの調査では、84%の経営者が「ツールだけでは経営改善にはつながらない」と感じています。これは、汎用ツールは誰もが使える便利さであり、競争優位を築く差別化には繋がらないためです。",
+        "対して 「AIトランスフォーメーション」 は、AI技術を前提に会社経営のあり方そのものを再構築し、事業構造自体を変革していくことを意味します。例えば、チャットボットを導入してコール件数を減らすだけでなく、浮いた人材を顧客接点の強化に再配置し、顧客価値創造や組織設計そのものまで踏み込むことが本質です。",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "AI格差が放置された場合のリスク",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>AI活用に「様子見」を続けていると、AIによる生産性向上や短納期・高品質なサービス提供を実現する競合他社に大きく遅れをとり、事業が取り残されるリスクがあります。<br />AI格差は日々拡大し、先行企業との差は開く一方であるため、「今すぐ始める」という決断が企業の将来を左右します。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AIトランスフォーメーション実践への第一歩",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p>AI時代における競争激化は避けられません。しかし、中小企業には、意思決定の速さと実行の柔軟性という大きな強みがあります。この強みを活かせば、大手企業が対応できない小規模案件や、SIerが提案できない短期導入も可能になります。<br /><br />そこで、「AI活用を始めたいが、何から手をつければいいか分からない」という経営者の皆様は、まず自社のAI導入に関する現在地を把握することから始めましょう。そして経営者様が自身のリーダーシップでAIを経営戦略に統合し、「<strong>経営課題ファースト</strong>」の視点を持って取り組むことが、AIトランスフォーメーションの出発点です。<br /><br />CosBEでは、AIに特化したMVP開発サービス「<strong>速AIラボ</strong>」を通じて、新規事業に深い知見を持つAIコンサルタントと世界トップレベルのAIエンジニアがタッグを組み、アジャイルでスピーディなMVP開発を支援しています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://jp.cosbe.inc/wp-content/uploads/2025/09/19dc7b9fc75139b9c8d0e0b26fde9824-1024x494.png",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">これにより、要件定義書作成の手間を省きながら、最短2ヶ月でアイデアを形にし、必要最低限のコストで開発とコンサルティングを両面からサポートします。CosBEは中小企業に特化したAIトランスフォーメーションの「伴走型」サポートで、大手コンサルが対応できない小規模案件やSIerが提案できない短期導入も可能にしています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "まとめ：AI格差を乗り越え、未来を創造する経営者へ",
+      "id": "<id>",
+      "level": 2,
+      "type": "heading",
+    },
+    {
+      "content": "<p><strong>AIトランスフォーメーション</strong>は、これからの企業経営において避けて通れないテーマです。「AIを導入すること」自体を目的とせず、「<strong>経営課題を解決し、事業構造を変革する</strong>」という視点を持つことが成功の鍵となります。完璧を待つのではなく、「小さく始める勇気」を持ち、AIと共に自社の未来を創造していくリーダーシップが今、求められています。<br /><br />私たちCosBEでは<a href="https://jp.cosbe.inc/ailabo/">「速AIラボ」</a>を通じて、AI導入の検討から実装・改善まで一貫してご支援しています。興味のある方は、ぜひ<a href="https://jp.cosbe.inc/lp/contact/">無料相談</a>をご利用ください。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p><strong>＼AIで業務効率化を実現しませんか？／</strong></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "useful-info",
+  "excerpt": "はじめに：AI時代を生き抜く中小企業の「生存戦略」 現在、ビジネス環境はAI技術の急速な進化によって、これまで当たり前だった常識が根本から覆される「AIパラダイムシフト」の時代に突入しています。これは、かつての産業革命やインターネット革命と",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2025/09/1-2.png",
+  "publishedAt": "2025-09-16T00:00:00.000Z",
+  "slug": "ai-transformation-blog1",
+  "sourceUrl": "https://www.jp.cosbe.inc/useful-info/ai-transformation-blog1/",
+  "tags": [
+    "お役立ち情報",
+  ],
+  "title": "AI導入の成否を分ける「AI格差」とは？ 中小企業がAIに今すぐ取り組むべき理由",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts useful-info/llmo-01.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://www.jp.cosbe.inc/wp-content/uploads/2026/01/b4378920a5bdff12a1e82589ca792115-1024x576.png",
+    },
+    {
+      "content": "<p><strong>ビジネスの世界がAIで塗り替わりつつある今、中小企業の経営者にとって避けて通れないテーマがあります。それが「AIトランスフォーメーション」です。本記事では、AIトランスフォーメーションの正体を明らかにしたうえで、中小企業が手にできる4つの具体的な成果をまとめました。</strong></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AI時代の到来と、中小企業が直面している現実",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p>「AIが大事なのはわかる。でもウチみたいな規模の会社で、本当に意味があるのか？」<br /><br />経営者からこうした声をいただくことは珍しくありません。しかし現実には、中小企業のAI活用はすでに「やるかやらないか」の段階を過ぎつつあります。<br /><br /><br />中小企業庁が公表した2023年版の「中小企業白書」では、AIを含むデジタル技術で業務効率化やデータ分析に取り組む企業の割合が、4年前と比べて約3倍に増えたことが報告されました。<br />生成AIの登場とクラウド型サービスの普及によって、「高額なシステム投資をしなければAIは使えない」という前提が崩れたのが大きな要因です。<br /><br /><br />月額数千円から使い始められるサービスが当たり前になり、AIの敷居は確実に下がっています。<br /><br /><br />一方で、早期にAI活用へ舵を切った企業と、まだ様子見を続けている企業の間には、生産性の面で見過ごせない開きが生まれ始めています。経済産業省が試算した「中小企業のAI導入による経済効果11兆円」という数字は、この動きが一過性のブームではないことを端的に示しています。<br /><br /><br />こうした環境変化の中で、単にAIツールを業務の一部に取り入れる「AI導入」にとどまらず、会社の仕組みそのものをAI前提で組み替える「AIトランスフォーメーション」こそが、中小企業の経営者が今向き合うべきテーマだと私たちは考えています。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AIトランスフォーメーションとは何か──「AI導入」とは根本的に違う",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p>この話を進めるうえで、まず「AI導入」と「AIトランスフォーメーション」の違いをはっきりさせておく必要があります。混同されがちですが、両者はまったく別物です。<br /><br />AI導入は、ある業務にAIツールを入れて効率を上げること。問い合わせ窓口にチャットボットを置く、経理のペーパーワークをAI-OCRでデジタル化する、といった取り組みがこれにあたります。<br /><br /><br />AIトランスフォーメーションは、その先にあるものです。チャットボットで浮いた人員を、どの顧客接点に再配置するか。OCRでデータ化した情報を、経営判断にどうつなげるか。AIトランスフォーメーションが問うているのは、「このツールで何分短縮できるか」ではなく、「AIがある前提で、会社の形をどう設計し直すか」です。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "caption": undefined,
+      "headers": [
+        "",
+        "AI導入",
+        "AIトランスフォーメーション",
+      ],
+      "id": "<id>",
+      "rows": [
+        [
+          "狙い",
+          "個別業務の効率化",
+          "経営・事業の構造を変える",
+        ],
+        [
+          "対象",
+          "特定の業務や部門",
+          "会社全体、ビジネスモデルまで",
+        ],
+        [
+          "人の動かし方",
+          "基本的に変えない",
+          "浮いた人材を戦略的に配置し直す",
+        ],
+        [
+          "成果のイメージ",
+          "コスト削減、時間短縮",
+          "新しい価値の創出、競争力の確立",
+        ],
+      ],
+      "type": "table",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">わかりやすく言えば、AIを「点」で使うか、「線」や「面」で生かすかの違いです。この差が、これからの数年間で企業間の競争力格差を大きく左右することになります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "AIトランスフォーメーションが生み出す4つの価値",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p>では、AIトランスフォーメーションに踏み込んだ中小企業には、実際にどんな変化が起きているのか。大きく4つに分けて見ていきます。<br /><br />AIトランスフォーメーションの効果として最もイメージしやすいのが、業務プロセスの圧縮です。ただし、ここでいう生産性の向上は、個人レベルの「ちょっとした時短」とは次元が異なります。仕事の流れ全体を見直すことで、工程そのものが根本から変わるのが特徴です。<br /><br />たとえば、ある製造業の企業では、見積もり作成が長年ベテラン社員の経験と勘に依存していました。この会社がAIに図面データを読み込ませ、加工難易度の判断と金額算出を自動化したところ、見積もり作成にかかる時間が大幅に短縮。<br />ベテランが不在の日でも業務が止まらない体制が整いました。属人化していた業務がAIで「誰でも回せる仕組み」に変わった好例です。<br /><br />また、ある印刷会社では、過去の生産データと作業時間をAIに学習させ、工程予測の精度を改善。稼働率が上がり、生産現場の回り方が目に見えて変わったといいます。<br /><br />クリエイティブ分野でも同様の動きが起きています。AIがデザインやライティングの「たたき台」を高速で仕上げ、人間は最終判断と品質の仕上げに集中するワークフローが一般化しつつあります。<br />仕事の依頼から納品までの流れにおいて、AIが土台をつくり、人は人にしかできない「最後の一手」に注力する。この構造が生まれたことで、業種によっては数倍から10倍以上の生産性向上につながるケースも出てきています。<br /><br />2つ目の価値は、顧客に提供できる体験の質が根本から変わることです。<br />たとえば、AIチャットボットを導入することで、顧客は365日24時間いつでも待たずに回答を得られるようになります。ある企業では、チャットボット導入後に顧客数が増えたにもかかわらず、有人での問い合わせ対応件数はむしろ減少した、というケースもあります。<br />顧客が「待たされない」という体験をまるごと設計し直すことで、少ないリソースでもサービス品質を維持・向上できるわけです。<br /><br />AIによる需要予測の高度化も、顧客価値に直結します。販売実績に季節や天候のデータを掛け合わせて発注精度を上げれば、過剰在庫と欠品を同時に減らせる。取引先にとっては「欲しいときに欲しい量がちゃんと届く」ことそのものが価値であり、この改善は商談の信頼にも直結します。<br /><br />さらに、AIによるパーソナライズも見逃せません。顧客ごとの購買履歴や行動パターンを分析し、一人ひとりのペインポイントに合わせた提案ができるようになる。個々のお客様によりフィットしたサービスを届けられるようになることは、中小企業にとっての大きな武器です。<br /><br />3つ目は、経営判断そのものの進化です。<br /><br />中小企業では、重要な意思決定が社長やベテランの経験と直感に依存しているケースが少なくありません。これ自体が悪いわけではありませんが、市場の変化が速い時代に「勘だけ」で走り続けるのはリスクが高い。AIトランスフォーメーションは、この「勘」をデータで裏付ける仕組みをつくることにつながります。<br /><br />具体的には、製品ごとの発注予告数と実績データをAIに学習させることで、受注数量の予測精度を引き上げるといった取り組みが挙げられます。<br />予測誤差が小さくなれば、余剰在庫の圧縮と欠品リスクの低減を同時に実現できる。これだけでも、キャッシュフローと顧客満足の両面に効果が出ます。<br /><br />さらに踏み込んだ形になると、社内の各部門の活動報告や業績データに、社外の市場動向や競合の動きを加えてAIが統合分析し、「今週、経営者が議論すべきテーマは何か」「次に取るべきアクションは何か」までサジェスチョンを出してくれる仕組みも現れています。<br />こうした環境が手元にあれば、経営者はデータに基づいた判断を、これまでとは比べものにならないスピードで下せるようになります。<br /><br />4つ目の価値は、新規事業の可能性です。<br /><br />ただし、ここで注意したいのは、ChatGPTにアイデアを出させる「壁打ち」と、AIトランスフォーメーションによる新規事業創造はまったく性質が違うということです。<br /><br /><br />AIトランスフォーメーションにおける新規事業とは、「誰の、どんな困りごとを解決したいか」という課題設定に対して、AI技術があるからこそ実現できる価値を設計する行為です。<br />たとえば、長年蓄えてきた専門知識をAIに学習させ、対面でしか提供できなかった相談サービスをオンラインで24時間提供可能にする。あるいは、生産データの解析ノウハウを生かして同業他社向けのAI品質管理サービスを立ち上げる。こうした「自社が持つ強みをAIの力で再定義する」という発想が、中小企業ならではの新規事業につながります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "導入にあたって知っておきたい現実的な壁と、その越え方",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p>AI活用を進める際、中小企業が直面しやすいハードルも正直に挙げておきます。<br /><br />コストの問題<br />「AIは高い」というイメージが先行しがちですが、クラウド型のSaaSモデルであれば月額数千円〜数万円で始められるものが増えています。加えて、IT導入補助金（最大450万円）や中小企業省力化投資補助金、事業再構築補助金など、国や自治体の支援制度も整備が進んでいます。<br />※補助金の対象範囲や条件は年度ごとに変わるため、最新情報は中小企業庁の公式サイトで確認してください。<br /><br />人材の問題<br />社内にAIの専門人材がいないケースがほとんどでしょう。ただ、今はプログラミング不要のノーコードツールが充実しており、専門知識がなくても導入・運用できる環境が揃っています。必要に応じて外部パートナーの力を借りるのも現実的な選択肢です。<br /><br />「何に使えるのかわからない」という問題。 AIで何ができるかを先に調べるよりも、自社の困りごとを先に整理するほうが、結果的に近道です。「何に時間がかかっているか」「どこでミスが起きやすいか」を棚卸しするだけで、AIの活用先は自然と見えてきます。<br /><br />データが整っていないという問題<br />完璧なデータがなくてもスモールスタートは可能です。まずは紙のデータをデジタル化するところから始め、使いながらデータの精度を上げていくアプローチが現実的です。<br /><br />社内の心理的な抵抗<br />「AIに仕事を奪われるのでは」という不安の声は自然なものです。大事なのは、「AIは仕事を奪うのではなく、人がやらなくていい作業から解放してくれるもの」であることを丁寧に伝え、実際に現場の負担が減る体験を早い段階でつくることです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "まとめ──4つの成果を羅針盤に、最初の一歩を",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p>ここまで見てきたように、AIトランスフォーメーションが中小企業にもたらす価値は次の4つに集約されます。<br /></p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "生産性の向上 ── AIが業務の土台を担い、人は人にしかできない仕事に集中する",
+        "顧客価値の創出 ── 365日対応、需要予測、パーソナライズで顧客との結びつきを強める",
+        "経営判断の高度化 ── 勘と経験をデータで裏付け、精度とスピードを同時に上げる",
+        "新規事業の創出 ── 自社の強みをAIで再定義し、新しい収益の柱を育てる",
+      ],
+      "listType": "numbered",
+      "type": "list",
+    },
+    {
+      "content": "<p><br />AIトランスフォーメーションは、単なるコスト削減や効率化ではなく、企業が持続的に成長するための経営戦略です。この4つの成果を羅針盤として、まずは貴社にとって最もインパクトの大きい課題を見極め、最初の一歩を踏み出す。その行動こそが、AI時代を勝ち抜く鍵になるはずです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "useful-info",
+  "excerpt": "ビジネスの世界がAIで塗り替わりつつある今、中小企業の経営者にとって避けて通れないテーマがあります。それが「AIトランスフォーメーション」です。本記事では、AIトランスフォーメーションの正体を明らかにしたうえで、中小企業が手にできる4つの具",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2026/01/b4378920a5bdff12a1e82589ca792115.png",
+  "publishedAt": "2026-01-19T00:00:00.000Z",
+  "slug": "llmo-01",
+  "sourceUrl": "https://www.jp.cosbe.inc/useful-info/llmo-01/",
+  "tags": [
+    "お役立ち情報",
+  ],
+  "title": "AIトランスフォーメーションが中小企業にもたらす「4つの革新的な価値」：AI時代の勝ち筋を可視化する",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts useful-info/llmo-10.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "alt": "",
+      "id": "<id>",
+      "type": "image",
+      "url": "https://www.jp.cosbe.inc/wp-content/uploads/2026/03/10-1024x576.png",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">RAGとファインチューニングの違いを、仕組み・コスト・用途の面からわかりやすく解説。中小企業が自社の独自データを活かしてAIを導入・活用するための具体的なステップと、選び方の判断基準をご紹介します。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "はじめに：ChatGPTをそのまま使っていませんか？",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>「AIを導入したものの、期待したほど成果が出ない」「ChatGPTの回答が一般論ばかりで、自社の業務にフィットしない」——そんな悩みを抱えている経営者や担当者の方は、少なくないのではないでしょうか。<br /><br />ChatGPTをはじめとする汎用の生成AIは、確かに便利なツールです。文章の作成やアイデア出し、情報の要約など、さまざまな場面で業務を効率化してくれます。しかし、こうした汎用AIの回答には、ある本質的な限界があります。<br /><br />それは、膨大な公開データから「最も一般的で、ありふれた答え」を返すという仕組み上の特性です。つまり、貴社が長年かけて蓄積してきた独自のノウハウや顧客対応のナレッジ、製品に関する専門的な判断基準といった「自社だけが持つ知識」は、汎用AIの回答には一切反映されません。<br /><br />ここで注目したいのが、AIトランスフォーメーション（AIT）という考え方です。AIトランスフォーメーションとは、単にAIツールを業務に取り入れるだけでなく、AI技術を前提として会社の経営や事業の仕組みそのものを再構築していく取り組みを指します。そしてAIトランスフォーメーションの核となるのが、自社独自のデータや知見をAIに学習させ、他社には生み出せない価値を創出することです。<br /><br />では、自社のデータをAIに組み込むには、具体的にどうすればよいのか。その答えとなる二つの主要な技術アプローチが、「RAG（検索拡張生成）」と「ファインチューニング」です。<br /><br />本記事では、この二つの技術の違いを仕組みからわかりやすく解説した上で、中小企業が実際にどちらをどう活用すべきか、具体的な導入ステップまでお伝えします。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "RAGとファインチューニングとは？基本の仕組みをわかりやすく解説",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">まず、RAGとファインチューニングの基本的な仕組みを押さえておきましょう。どちらも、既存の大規模言語モデル（LLM）にゼロから大規模な再トレーニングを行うことなく、自社独自の情報を活用させるためのアプローチです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "RAG（Retrieval-Augmented Generation）とは",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p>RAGは、日本語では「検索拡張生成」と訳されます。名前の通り、「検索」と「生成」を組み合わせた技術です。<br /><br />ポイントは、AIの基盤モデル（LLM）自体には手を加えないという点にあります。LLMに社内の文書やマニュアル、データベースなどを「参考資料」として渡し、それを踏まえた上で回答を生成させる仕組みです。<br /><br />具体的な動作の流れ：</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "ユーザーが質問を入力する",
+        "AIがまず社内の資料群から、質問に関連する情報を検索・取得する",
+        "取得した情報を「根拠」として、LLMが回答文を生成する",
+      ],
+      "listType": "numbered",
+      "type": "list",
+    },
+    {
+      "content": "<p><br />例えるなら、非常に優秀な新人社員が、自社の業務マニュアルや過去の議事録を手元に置きながら質問に答えてくれるようなイメージです。マニュアルの中身が更新されれば、回答も自動的に最新の内容になります。<br /><br />RAGの主なメリット：</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "導入が早い： モデルの再学習が不要なため、比較的短期間で導入できます",
+        "情報の鮮度を保てる： 参照する資料を更新するだけで、最新情報に対応できます",
+        "ハルシネーション（もっともらしい誤回答）を抑制しやすい： 根拠となる文書を参照するため、AIが「でっちあげ」をするリスクを減らせます",
+        "非構造化データに強い： マニュアル、議事録、PDF、メールなど、形式がバラバラな社内文書をそのまま活かせます",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "ファインチューニング（Fine-Tuning）とは",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p>ファインチューニングは、既存のLLMに対して自社独自のデータセットを使って追加学習を行い、モデルそのものの振る舞いや回答の傾向を調整する方法です。<br /><br />RAGが「参考資料を渡す」アプローチだとすれば、ファインチューニングは「知識や判断基準をAIの頭の中に直接書き込む」アプローチです。<br /><br />具体的な動作の流れ：</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "自社の業務データ（質問と回答のペア、専門的な文書など）を学習データとして準備する",
+        "既存のLLMに対して追加学習を行い、モデルのパラメータを微調整する",
+        "調整後のモデルが、自社の専門性を反映した回答を生成するようになる",
+      ],
+      "listType": "numbered",
+      "type": "list",
+    },
+    {
+      "content": "<p><br />料理に例えるなら、RAGが「レシピブックを見ながら料理する」のに対し、ファインチューニングは「そのレシピの作り方を体に覚え込ませる」ようなものです。一度染み込ませた知識に基づいて、素早く安定した回答を返せるようになります。<br /><br />ファインチューニングの主なメリット：</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "特定業務の精度が向上する： 自社特有の判断基準や専門用語を正しく扱えるようになります",
+        "応答速度が速い： 外部検索が不要なため、リアルタイムでの応答に向いています",
+        "暗黙知を形式化できる： ベテラン社員だけが持っていた「感覚的な判断」をAIに体現させられる可能性があります",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "RAGとファインチューニングの違い：比較表で整理",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">二つの技術の違いを、実務で判断する際に重要なポイントごとに整理します。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "caption": undefined,
+      "headers": [
+        "比較項目",
+        "RAG（検索拡張生成）",
+        "ファインチューニング",
+      ],
+      "id": "<id>",
+      "rows": [
+        [
+          "基本的なアプローチ",
+          "外部の資料を検索・参照して回答",
+          "モデルのパラメータを追加学習で調整",
+        ],
+        [
+          "LLMへの変更",
+          "モデル自体は変更しない",
+          "モデルの内部パラメータを変更する",
+        ],
+        [
+          "情報の鮮度",
+          "参照資料の更新で常に最新化可能",
+          "再学習しない限り学習時点の情報のまま",
+        ],
+        [
+          "導入の手軽さ",
+          "比較的容易（数週間〜）",
+          "やや高難度（データ整備＋学習に時間が必要）",
+        ],
+        [
+          "コスト",
+          "初期コスト低め。データ基盤の整備が必要",
+          "学習用の計算リソースとデータ準備にコスト",
+        ],
+        [
+          "得意な用途",
+          "社内Q&A、ナレッジ検索、マニュアル参照",
+          "専門用語対応、回答スタイル統一、暗黙知の再現",
+        ],
+        [
+          "向いているデータ",
+          "マニュアル、議事録、FAQなどの文書群",
+          "質問と回答のペア、専門的な教師データ",
+        ],
+      ],
+      "type": "table",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">ここで重要なのは、RAGとファインチューニングは二者択一ではないということです。 実際のAI活用では、両方を組み合わせて使うことも珍しくありません。たとえば、ファインチューニングで自社の専門用語や回答トーンを学習させたモデルに、RAGで社内の最新情報を参照させるという使い方も考えられます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "中小企業はどちらから始めるべきか？",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>結論からお伝えすると、まずはRAGから始めるのが現実的です。<br /><br />その理由は三つあります。<br /><br /><br />1. データが完璧に揃っていなくてもスタートできる<br /><br />ファインチューニングには、一定量の整備された学習データが必要です。一方、RAGなら既存の社内マニュアルや議事録、PDFファイルをそのまま参照データとして使えます。「まだデータ整備ができていない」という企業でも、手元にある資料からすぐに着手できます。<br /><br /><br />2. 導入コストとリスクを抑えられる<br /><br />RAGはモデルの再学習が不要です。クラウドサービスを活用すれば、大がかりな設備投資なしで始められます。小さく始めて、効果を検証しながら規模を広げていく「リーン＆アジャイル」なアプローチに適しています。<br /><br /><br />3. AI活用の経験値が貯まる<br /><br />RAGの導入・運用を通じて、「どんなデータが必要か」「どう整備すればAIの回答精度が上がるか」といった実践的な知見が社内に蓄積されます。この経験は、将来ファインチューニングに進む際に大きなアドバンテージになります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "自社データでAIを活かす：3ステップの導入ロードマップ",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">中小企業が独自AIを導入する際に、段階的に進めるための実践的なロードマップをご紹介します。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "ステップ1：解決すべき課題を具体的に絞り込む",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p><br />最初に取り組むべきは、AIが貢献できる課題を具体化することです。<br /><br />「人手不足」「業務効率化」といった抽象的なテーマのままでは、AIの導入は漠然としたものになりがちです。たとえば以下のように、具体的な業務の「困りごと」に落とし込みます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "「特定の製品に関する問い合わせ対応に、一件あたり平均15分かかっている」",
+        "「ベテラン社員が不在の日は、見積もりの判断が止まってしまう」",
+        "「新入社員が業務マニュアルを探すのに毎日30分以上かけている」",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">このように、AIが情報検索や判断支援で直接貢献できる粒度まで課題を具体化することが、導入成功の第一歩です。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "ステップ2：RAGで「知識ベースAI」を小さく・素早く作る",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p><br />課題が明確になったら、それを解決するための最小限の仕組み（MVP：Minimum Viable Product）を、RAGを使って構築します。<br /><br />たとえば、「問い合わせ対応に時間がかかりすぎている」という課題であれば、まずは関連するマニュアルやFAQ文書をRAGの参照データとして設定し、社内向けのチャットボットとして試験運用を始めます。<br /><br />ここで大切なのは、最初から完璧を目指さないことです。小さな範囲で試し、使いながら改善を重ねる「リーン＆アジャイル」の考え方で進めることで、失敗のリスクを抑えながらスピーディにAI導入の効果を実感できます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "ステップ3：現場のフィードバックでAIを「育てる」",
+      "id": "<id>",
+      "level": 4,
+      "type": "heading",
+    },
+    {
+      "content": "<p><br />導入後に最も重要なのは、現場の社員がAIの出力を検証し、フィードバックを加えるプロセスです。<br /><br />AIの回答が不正確だったり、自社のやり方にそぐわなかったりした場合に、担当者が修正を加えます。この修正の積み重ねこそが、RAGの参照データの質を高め、やがてファインチューニングに進む際の貴重な学習データにもなります。<br /><br />「人がAIに教え、AIが人の仕事を支える」—この循環を回し続けることで、AIは汎用ツールから自社専用のナレッジパートナーへと進化していきます。この「育成」のプロセスを経たAIは、他社から容易に真似ることのできない、自社独自の競争力の源泉になります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "RAGとファインチューニングの組み合わせ：次のステージへ",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p>RAGで十分な運用実績とデータが蓄積されたら、次のステップとしてファインチューニングの導入を検討します。<br /><br />たとえば以下のような状況は、ファインチューニングの導入を検討するサインです。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "RAGの参照データだけでは再現が難しい微妙な判断基準がある（例：特定条件下での設計の可否判断）",
+        "特定の業務における回答のトーンや形式を統一したい",
+        "ベテラン社員だけが持っている暗黙知をAIに移植したい",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">ファインチューニングで専門性を内在化させたモデルに、RAGで最新の社内情報を参照させる—この組み合わせにより、精度と鮮度を両立した「自社だけのAI」を実現できます。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "まとめ：自社のノウハウを、AIで「唯一無二の武器」に変える",
+      "id": "<id>",
+      "level": 3,
+      "type": "heading",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">本記事のポイントを振り返ります。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "id": "<id>",
+      "items": [
+        "汎用AIには限界がある： ChatGPTなどの汎用ツールは「一般的な答え」を返すのが得意であり、自社固有の知識は反映されません",
+        "RAGとファインチューニングは目的が違う： RAGは「外部の資料を参照させる」、ファインチューニングは「モデル自体を調整する」技術です",
+        "中小企業はRAGから始めるのが現実的： データ整備が不十分でも着手でき、コストとリスクを抑えながらAI活用の経験値を積めます",
+        "段階的に進める： 課題の絞り込み → RAGでMVP開発 → 現場フィードバックでAIを育成、が推奨ステップです",
+        "最終的には両方の組み合わせへ： RAGとファインチューニングを組み合わせることで、精度と鮮度を兼ね備えた独自AIが実現します",
+      ],
+      "listType": "bullet",
+      "type": "list",
+    },
+    {
+      "content": "<p>AIトランスフォーメーション（AIT）の本質は、単なる効率化にとどまりません。自社が長年かけて培ってきた「匠の技」や「埋もれた知識」をAIに反映させ、他社には真似できない競争優位を築くこと—ここにこそ、中小企業がAI時代を勝ち抜くための鍵があります。<br /><br />まずは、自社の中にある「紙の資料」や「ベテランの頭の中にしかない知識」に目を向けるところから、始めてみてはいかがでしょうか。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "useful-info",
+  "excerpt": "RAGとファインチューニングの違いを、仕組み・コスト・用途の面からわかりやすく解説。中小企業が自社の独自データを活かしてAIを導入・活用するための具体的なステップと、選び方の判断基準をご紹介します。 https://www.jp.cosbe",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2026/03/10.png",
+  "publishedAt": "2026-03-20T00:00:00.000Z",
+  "slug": "llmo-10",
+  "sourceUrl": "https://www.jp.cosbe.inc/useful-info/llmo-10/",
+  "tags": [
+    "お役立ち情報",
+  ],
+  "title": "RAGとファインチューニングの違いとは？中小企業が自社データでAIを強化する実践ガイド",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts video/useful-movie-001.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "embedType": "youtube",
+      "id": "<id>",
+      "type": "embed",
+      "url": "https://www.youtube.com/watch?v=ImDEjBA96HE",
+    },
+    {
+      "content": "<p>日頃よりCosBE Inc.の発信をご覧いただき、ありがとうございます。<br /><br />このたび、公式YouTubeチャンネルにて「<a href="https://youtu.be/ImDEjBA96HE?si=udBySTfIwzq6s8iE" rel="noopener noreferrer"><strong>製造業×AIで成功するためのカギ｜失敗を防ぐCosBE流アプローチ</strong></a>」 に関する新たな動画を公開いたしました。<br /><br />ご関心のある方は、ぜひ下記よりご視聴ください。<br /><br />今後も引き続き、有益な情報を発信してまいります。<br />どうぞよろしくお願いいたします。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">＼　AIに関する情報を発信しております　／</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "video",
+  "excerpt": "https://youtu.be/ImDEjBA96HE?si=z3aZ1YPnDJMz2p2I 日頃よりCosBE Inc.の発信をご覧いただき、ありがとうございます。 このたび、公式YouTubeチャンネルにて「製造業×AIで成功するた",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2026/01/hqdefault.avif",
+  "publishedAt": "2026-01-28T00:00:00.000Z",
+  "slug": "useful-movie-001",
+  "sourceUrl": "https://www.jp.cosbe.inc/useful-movie/useful-movie-001/",
+  "tags": [
+    "お役立ち動画",
+  ],
+  "title": "製造業×AIで成功するためのカギ｜失敗を防ぐCosBE流アプローチについてYoutube動画を公開しました",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts video/useful-movie-010.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "embedType": "youtube",
+      "id": "<id>",
+      "type": "embed",
+      "url": "https://www.youtube.com/watch?v=D1SSbpUlsWc",
+    },
+    {
+      "content": "<p>日頃よりCosBE Inc.の発信をご覧いただき、ありがとうございます。<br /><br />このたび、公式YouTubeチャンネルにて「<a href="https://www.youtube.com/watch?v=D1SSbpUlsWc" rel="noopener noreferrer"><strong>AI Transformation in Practice – From Small Wins to Full-Scale Change</strong></a>」 に関する新たな動画を公開いたしました。<br /><br />ご関心のある方は、ぜひ下記よりご視聴ください。<br /><br />今後も引き続き、有益な情報を発信してまいります。<br />どうぞよろしくお願いいたします。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">＼　AIに関する情報を発信しております　／</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "video",
+  "excerpt": "日頃よりCosBE Inc.の発信をご覧いただき、ありがとうございます。 このたび、公式YouTubeチャンネルにて「AI Transformation",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2026/02/maxresdefault-8.jpg",
+  "publishedAt": "2026-02-09T00:00:00.000Z",
+  "slug": "useful-movie-010",
+  "sourceUrl": "https://www.jp.cosbe.inc/useful-movie/useful-movie-010/",
+  "tags": [
+    "お役立ち動画",
+  ],
+  "title": "AI Transformation in Practice – From Small Wins to Full-Scale ChangeのYoutube動画を公開しました",
+  "warnings": [],
+}
+`;
+
+exports[`extractFromHtml on real fixtures > extracts video/useful-movie-020.html without falling back 1`] = `
+{
+  "blocks": [
+    {
+      "embedType": "youtube",
+      "id": "<id>",
+      "type": "embed",
+      "url": "https://www.youtube.com/watch?v=xTiTYqguabc",
+    },
+    {
+      "content": "<p>日頃よりCosBE Inc.の発信をご覧いただき、ありがとうございます。<br /><br />このたび、公式YouTubeチャンネルにて「<a href="https://www.youtube.com/watch?v=xTiTYqguabc" rel="noopener noreferrer"><strong>Four Principles Every Leader Needs to Drive AI Transformation</strong></a>」 に関する新たな動画を公開いたしました。<br /><br />ご関心のある方は、ぜひ下記よりご視聴ください。<br /><br />今後も引き続き、有益な情報を発信してまいります。<br />どうぞよろしくお願いいたします。</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+    {
+      "content": "<p class="whitespace-pre-wrap">＼　AIに関する情報を発信しております　／</p>",
+      "id": "<id>",
+      "type": "paragraph",
+    },
+  ],
+  "category": "video",
+  "excerpt": "日頃よりCosBE Inc.の発信をご覧いただき、ありがとうございます。 このたび、公式YouTubeチャンネルにて「Four Principles E",
+  "featuredImageRemoteUrl": "https://www.jp.cosbe.inc/wp-content/uploads/2026/02/maxresdefault-18.jpg",
+  "publishedAt": "2026-02-23T00:00:00.000Z",
+  "slug": "useful-movie-020",
+  "sourceUrl": "https://www.jp.cosbe.inc/useful-movie/useful-movie-020/",
+  "tags": [
+    "お役立ち動画",
+  ],
+  "title": "Four Principles Every Leader Needs to Drive AI TransformationについてのYoutube動画を公開しました",
+  "warnings": [],
+}
+`;

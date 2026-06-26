@@ -129,7 +129,7 @@ export function findYoutubeUrlInRoot(
   return null;
 }
 
-function extractTable($: CheerioAPI, el: Element): ContentBlock | null {
+export function extractTable($: CheerioAPI, el: Element): ContentBlock | null {
   const $table = $(el);
   const caption = $table.find('caption').first().text().trim() || undefined;
   const headers: string[] = [];
@@ -146,9 +146,12 @@ function extractTable($: CheerioAPI, el: Element): ContentBlock | null {
       });
   }
   const rows: string[][] = [];
+  const hasExplicitThead = $table.find('thead').length > 0;
   const bodyRows = $table.find('tbody tr');
   const rowEls = bodyRows.length
-    ? bodyRows
+    ? hasExplicitThead
+      ? bodyRows
+      : bodyRows.slice(1)
     : $table.find('tr').slice(headers.length ? 1 : 0);
   rowEls.each((_, tr) => {
     const cells = $(tr)
@@ -227,7 +230,11 @@ export function walkBlocks(
     }
 
     if (tag === 'img') {
-      const src = $el.attr('src') || $el.attr('data-src');
+      let src = $el.attr('src') || $el.attr('data-src');
+      if (!src) {
+        const srcset = $el.attr('srcset') || $el.attr('data-srcset');
+        if (srcset) src = srcset.split(',')[0]?.trim().split(/\s+/)[0];
+      }
       if (!src) return;
       blocks.push({
         id: generateId(),

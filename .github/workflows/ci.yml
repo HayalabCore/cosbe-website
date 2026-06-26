@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    name: Lint, type-check & test
+    runs-on: ubuntu-latest
+
+    env:
+      # Prisma's client is constructed at module import time (pulled in via the
+      # legacy-import pipeline). These tests never hit the database, but the
+      # client still needs the datasource env vars to instantiate. Dummy values
+      # are sufficient — no connection is ever opened.
+      DATABASE_URL: postgresql://user:password@localhost:5432/db?schema=public
+      DIRECT_URL: postgresql://user:password@localhost:5432/db?schema=public
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      # `yarn install` runs the postinstall hook (`prisma generate`), which
+      # produces the @prisma/client types the build and tests rely on.
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Type-check
+        run: yarn type-check
+
+      - name: Test
+        run: yarn test

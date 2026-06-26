@@ -14,6 +14,7 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "import-article": "tsx scripts/import-article.ts",
+    "capture-fixture": "tsx scripts/capture-fixture.ts",
     "db:seed-translations": "tsx scripts/seed-translations.ts",
     "db:pull-translations": "tsx scripts/pull-translations.ts",
     "db:push-translations": "tsx scripts/push-translations.ts",
