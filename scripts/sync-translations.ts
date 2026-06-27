@@ -142,14 +142,15 @@ async function syncLocale(locale: Locale): Promise<SyncStats> {
     toUnorphan.forEach((r) => console.log(`        ↺ ${r.keyPath}`));
     if (!DRY_RUN) {
       for (let i = 0; i < toUnorphan.length; i += BATCH) {
-        await Promise.all(
-          toUnorphan.slice(i, i + BATCH).map((r) =>
-            prisma.translation.updateMany({
-              where: { keyPath: r.keyPath, locale },
-              data: { isOrphaned: false },
-            })
-          )
-        );
+        await prisma.translation.updateMany({
+          where: {
+            keyPath: {
+              in: toUnorphan.slice(i, i + BATCH).map((r) => r.keyPath),
+            },
+            locale,
+          },
+          data: { isOrphaned: false },
+        });
       }
     }
     stats.unorphaned = toUnorphan.length;
@@ -176,14 +177,15 @@ async function syncLocale(locale: Locale): Promise<SyncStats> {
     }
     if (!DRY_RUN) {
       for (let i = 0; i < nowOrphaned.length; i += BATCH) {
-        await Promise.all(
-          nowOrphaned.slice(i, i + BATCH).map((r) =>
-            prisma.translation.updateMany({
-              where: { keyPath: r.keyPath, locale },
-              data: { isOrphaned: true },
-            })
-          )
-        );
+        await prisma.translation.updateMany({
+          where: {
+            keyPath: {
+              in: nowOrphaned.slice(i, i + BATCH).map((r) => r.keyPath),
+            },
+            locale,
+          },
+          data: { isOrphaned: true },
+        });
       }
     }
   }

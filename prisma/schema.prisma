@@ -61,6 +61,7 @@ model Article {
   views             ArticleView[]
 
   @@index([status, category, publishedAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)], map: "articles_created_at_idx")
   @@index([tags], type: Gin, map: "articles_tags_gin_idx")
   @@map("articles")
 }

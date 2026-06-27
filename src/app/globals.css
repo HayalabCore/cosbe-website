@@ -215,3 +215,16 @@ h6 {
   color: #059669 !important;
   font-weight: 600 !important;
 }
+
+/* Indeterminate top progress bar (admin dashboard keep-previous loading) */
+@keyframes indeterminate-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(500%);
+  }
+}
+.animate-indeterminate {
+  animation: indeterminate-progress 1.1s ease-in-out infinite;
+}

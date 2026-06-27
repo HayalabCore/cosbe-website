@@ -211,6 +211,7 @@ export interface ArticleListItem {
   tags: string[];
   author: AuthorReference;
   publishedAt: string | null;
+  createdAt: string;
   status?: ArticleStatus;
   /** Only set for case-study category; used on the listing card to show the client. */
   clientName?: string;

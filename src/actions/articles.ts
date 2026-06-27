@@ -44,7 +44,7 @@ export type AdminArticleListStats = {
 };
 
 export async function listArticlesAdminAction(options: {
-  status?: ArticleStatus | 'all';
+  statuses?: ArticleStatus[];
   category?: ContentCategory | 'all';
   page: number;
   pageSize: number;
@@ -55,8 +55,10 @@ export async function listArticlesAdminAction(options: {
   stats: AdminArticleListStats;
 }> {
   await requireUser();
-  const statusFilter =
-    options.status === 'all' || !options.status ? undefined : options.status;
+  const statuses =
+    options.statuses && options.statuses.length > 0
+      ? options.statuses
+      : undefined;
   const categoryFilter =
     options.category === 'all' || !options.category
       ? undefined
@@ -66,7 +68,7 @@ export async function listArticlesAdminAction(options: {
   const pageSize = Math.min(100, Math.max(1, options.pageSize));
 
   const listFilters = {
-    status: statusFilter,
+    statuses,
     category: categoryFilter,
     search,
   };

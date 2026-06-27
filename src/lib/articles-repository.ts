@@ -86,6 +86,7 @@ const listItemSelect = {
   tags: true,
   author: true,
   publishedAt: true,
+  createdAt: true,
   status: true,
   clientName: true,
 } as const satisfies Prisma.ArticleSelect;
@@ -134,6 +135,7 @@ function toListItem(row: ArticleListRow): ArticleListItem {
     tags: row.tags ?? [],
     author: authorToRef(row.author),
     publishedAt: row.publishedAt?.toISOString() ?? null,
+    createdAt: row.createdAt.toISOString(),
     status: row.status as ArticleStatus,
     clientName: row.clientName ?? undefined,
   };
@@ -187,6 +189,8 @@ export async function getArticleBySlug(
 export interface GetArticlesOptions {
   category?: ContentCategory;
   status?: ArticleStatus;
+  /** Admin lists: match any of these statuses (status IN). Takes precedence over `status`. */
+  statuses?: ArticleStatus[];
   tag?: string;
   limitCount?: number;
   excludeId?: string;
@@ -199,7 +203,7 @@ export interface GetArticlesOptions {
 function buildArticleWhere(
   options: Pick<
     GetArticlesOptions,
-    'category' | 'status' | 'tag' | 'excludeId' | 'search'
+    'category' | 'status' | 'statuses' | 'tag' | 'excludeId' | 'search'
   >,
   admin: boolean
 ): Prisma.ArticleWhereInput {
@@ -211,6 +215,8 @@ function buildArticleWhere(
 
   if (!admin) {
     conditions.push({ status: 'published' });
+  } else if (options.statuses?.length) {
+    conditions.push({ status: { in: options.statuses } });
   } else if (options.status) {
     conditions.push({ status: options.status });
   }
@@ -229,6 +235,7 @@ function buildArticleWhere(
       OR: [
         { title: { contains: q, mode: 'insensitive' } },
         { titleEn: { contains: q, mode: 'insensitive' } },
+        { slug: { contains: q, mode: 'insensitive' } },
       ],
     });
   }
@@ -251,7 +258,9 @@ export async function getArticles(
   const rows = await prisma.article.findMany({
     where,
     select: listItemSelect,
-    orderBy: { publishedAt: 'desc' },
+    // Admin lists are ordered by creation (drafts have a null publishedAt and
+    // would otherwise sort unpredictably); public lists by publish date.
+    orderBy: admin ? { createdAt: 'desc' } : { publishedAt: 'desc' },
     take: pageSize,
     skip,
   });
@@ -262,7 +271,7 @@ export async function getArticles(
 export async function countArticles(
   options: Pick<
     GetArticlesOptions,
-    'category' | 'status' | 'tag' | 'search'
+    'category' | 'status' | 'statuses' | 'tag' | 'search'
   > = {},
   admin = false
 ): Promise<number> {
