@@ -184,6 +184,8 @@ export interface Article {
   excerpt?: string;
   excerptEn?: string;
   featuredImage?: string;
+  /** Legacy URL this article was imported from (null when authored directly). */
+  sourceUrl?: string;
   status: ArticleStatus;
   category: ContentCategory;
   tags: string[];
@@ -213,6 +215,8 @@ export interface ArticleListItem {
   publishedAt: string | null;
   createdAt: string;
   status?: ArticleStatus;
+  /** Legacy URL this article was imported from (admin list only). */
+  sourceUrl?: string;
   /** Only set for case-study category; used on the listing card to show the client. */
   clientName?: string;
 }

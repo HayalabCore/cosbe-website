@@ -39,6 +39,7 @@ model Article {
   excerpt           String?
   excerptEn         String?       @map("excerpt_en")
   featuredImage     String?       @map("featured_image")
+  sourceUrl         String?       @map("source_url")
   status            ArticleStatus @default(draft)
   category          String
   tags              String[]      @default([])

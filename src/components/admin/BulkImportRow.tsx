@@ -3,26 +3,52 @@
 import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { blockSummary } from '@/components/admin/ImportPreviewFields';
-import type { BulkRow } from '@/lib/legacy-import/bulk-state';
+import AdminCheckbox from '@/components/admin/AdminCheckbox';
+import type { BulkRow, BulkRowStatus } from '@/lib/legacy-import/bulk-state';
 
-const STATUS_BADGE: Record<string, string> = {
-  queued: 'bg-slate-100 text-slate-600',
-  extracting: 'bg-blue-50 text-blue-700',
-  ready: 'bg-emerald-100 text-emerald-700',
-  error: 'bg-red-100 text-red-700',
-  committing: 'bg-blue-50 text-blue-700',
-  committed: 'bg-emerald-100 text-emerald-700',
-  commitError: 'bg-red-100 text-red-700',
+const CATEGORY_CLS: Record<string, string> = {
+  'useful-info': 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+  'case-study': 'bg-purple-50 text-purple-700 ring-1 ring-purple-200',
+  video: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
+  notice: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
 };
 
-const STATUS_KEY: Record<string, string> = {
-  queued: 'statusQueued',
-  extracting: 'statusExtracting',
-  ready: 'statusReady',
-  error: 'statusError',
-  committing: 'statusCommitting',
-  committed: 'statusCommitted',
-  commitError: 'statusCommitError',
+const STATUS_META: Record<
+  BulkRowStatus,
+  { dot: string; cls: string; key: string; spin?: boolean }
+> = {
+  queued: {
+    dot: 'bg-slate-300',
+    cls: 'bg-slate-100 text-slate-500 ring-1 ring-slate-200',
+    key: 'statusQueued',
+  },
+  extracting: {
+    dot: 'bg-blue-400',
+    cls: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+    key: 'statusExtracting',
+    spin: true,
+  },
+  ready: {
+    dot: 'bg-emerald-500',
+    cls: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+    key: 'statusReady',
+  },
+  error: {
+    dot: 'bg-red-500',
+    cls: 'bg-red-50 text-red-700 ring-1 ring-red-200',
+    key: 'statusError',
+  },
+  committing: {
+    dot: 'bg-blue-400',
+    cls: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+    key: 'statusCommitting',
+    spin: true,
+  },
+  commitError: {
+    dot: 'bg-red-500',
+    cls: 'bg-red-50 text-red-700 ring-1 ring-red-200',
+    key: 'statusCommitError',
+  },
 };
 
 type BulkImportRowProps = {
@@ -50,80 +76,109 @@ export default function BulkImportRow({
 }: BulkImportRowProps) {
   const t = useTranslations('admin.bulkImport');
   const p = row.payload;
-  const inProgress = row.status === 'extracting' || row.status === 'committing';
+  const st = STATUS_META[row.status];
   const collision = Boolean(p?.slugCollision) || duplicate;
   const summary = p ? blockSummary(p.blocks) : null;
+  const previewable = row.status === 'ready';
+  const retryable = row.status === 'error' || row.status === 'commitError';
 
   return (
-    <tr className="border-b border-slate-100 hover:bg-slate-50/60">
-      <td className="px-3 py-3">
-        <input
-          type="checkbox"
-          className="h-4 w-4 accent-primaryColor"
+    <tr className="group border-b border-slate-100 last:border-0 hover:bg-slate-50/70 transition-colors">
+      <td className="px-4 py-3.5 align-top">
+        <AdminCheckbox
+          aria-label="Include in import"
+          className="mt-0.5"
           checked={row.included}
           disabled={row.status !== 'ready'}
           onChange={onToggleInclude}
         />
       </td>
-      <td className="px-3 py-3">
+
+      <td className="px-3 py-3.5 align-top">
         <span
-          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_BADGE[row.status]}`}
+          className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium whitespace-nowrap ${st.cls}`}
         >
-          {inProgress && (
+          {st.spin ? (
             <Loader2 className="h-3 w-3 animate-spin" aria-hidden />
+          ) : (
+            <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
           )}
-          {t(STATUS_KEY[row.status] as Parameters<typeof t>[0])}
+          {t(st.key as Parameters<typeof t>[0])}
         </span>
       </td>
-      <td className="px-3 py-3 min-w-0">
-        <div className="font-semibold text-slate-900 truncate max-w-md">
-          {p?.title || (row.status === 'error' ? (row.error ?? '—') : '…')}
-        </div>
-        <div className="font-mono text-[11px] text-slate-400 truncate max-w-md">
+
+      <td className="px-3 py-3.5 align-top min-w-0">
+        {previewable ? (
+          <button
+            type="button"
+            onClick={onOpenPreview}
+            className="block max-w-md truncate text-left font-semibold text-slate-900 hover:text-primaryColor transition-colors"
+          >
+            {p?.title || '—'}
+          </button>
+        ) : (
+          <div
+            className={`max-w-md truncate font-semibold ${
+              row.status === 'error' ? 'text-red-700' : 'text-slate-400'
+            }`}
+          >
+            {p?.title || (row.status === 'error' ? (row.error ?? '—') : '…')}
+          </div>
+        )}
+        <div className="mt-0.5 max-w-md truncate font-mono text-[11px] text-slate-400">
           {shortUrl(row.url)}
         </div>
         {row.status === 'commitError' && row.error && (
-          <div className="text-[11px] text-red-600 mt-0.5">{row.error}</div>
+          <div className="mt-0.5 text-[11px] text-red-600">{row.error}</div>
         )}
       </td>
-      <td className="px-3 py-3">
+
+      <td className="px-3 py-3.5 align-top">
         {p && (
-          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
+          <span
+            className={`inline-flex items-center rounded-md px-2 py-1 text-[11px] font-medium whitespace-nowrap ${
+              CATEGORY_CLS[p.category] ?? 'bg-slate-100 text-slate-600'
+            }`}
+          >
             {p.category}
           </span>
         )}
       </td>
-      <td className="px-3 py-3">
+
+      <td className="px-3 py-3.5 align-top">
         {p && (
-          <span
-            className={`font-mono text-xs ${collision ? 'text-amber-700 font-semibold' : 'text-slate-600'}`}
-          >
-            {p.slug}
-            {p.slugCollision && ` ⚠ ${t('collisionFlag')}`}
-            {!p.slugCollision && duplicate && ` ⚠ ${t('duplicateFlag')}`}
-          </span>
+          <div className="flex flex-col gap-1">
+            <span className="font-mono text-xs text-slate-600">{p.slug}</span>
+            {collision && (
+              <span className="inline-flex w-fit items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 ring-1 ring-amber-200">
+                {p.slugCollision ? t('collisionFlag') : t('duplicateFlag')}
+              </span>
+            )}
+          </div>
         )}
       </td>
-      <td className="px-3 py-3 text-xs text-slate-500 whitespace-nowrap">
+
+      <td className="px-3 py-3.5 align-top text-xs text-slate-500 whitespace-nowrap">
         {summary &&
           t('contentSummary', {
             blocks: summary.blocks,
             images: summary.images,
           })}
       </td>
-      <td className="px-3 py-3 text-right whitespace-nowrap">
-        {row.status === 'ready' || row.status === 'committed' ? (
+
+      <td className="px-4 py-3.5 align-top text-right whitespace-nowrap">
+        {previewable ? (
           <button
             type="button"
-            className="text-xs font-semibold text-primaryColor hover:text-primaryHover"
+            className="rounded-md px-2 py-1 text-xs font-semibold text-primaryColor hover:bg-primaryColor/8 transition-colors"
             onClick={onOpenPreview}
           >
             {t('preview')}
           </button>
-        ) : row.status === 'error' || row.status === 'commitError' ? (
+        ) : retryable ? (
           <button
             type="button"
-            className="text-xs font-semibold text-primaryColor hover:text-primaryHover"
+            className="rounded-md px-2 py-1 text-xs font-semibold text-primaryColor hover:bg-primaryColor/8 transition-colors"
             onClick={onRetry}
           >
             {t('retry')}

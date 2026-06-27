@@ -74,7 +74,18 @@
     "publishTitle": "公開する",
     "archiveTitle": "アーカイブ",
     "restoreTitle": "下書きに戻す",
-    "hardDeleteTitle": "完全に削除"
+    "hardDeleteTitle": "完全に削除",
+    "importedFrom": "インポート元",
+    "tableCreated": "作成日",
+    "selectedCount": "{count}件選択中",
+    "bulkPublish": "公開",
+    "bulkUnpublish": "非公開",
+    "bulkArchive": "アーカイブ",
+    "bulkDelete": "削除",
+    "bulkArchiveConfirm": "{count}件の記事をアーカイブしますか？サイトから非表示になりますが復元できます。",
+    "bulkDeleteConfirm": "{count}件の記事を完全に削除しますか？この操作は取り消せません。",
+    "clearSelection": "選択を解除",
+    "rowsPerPage": "{count}件 / ページ"
   },
   "editor": {
     "loadingPost": "記事を読み込み中…",
@@ -108,7 +119,8 @@
     "translateArticleProgress": "翻訳中…",
     "translateArticlePartialError": "一部の翻訳に失敗しました",
     "translateArticleConfirm": "既存の英語テキスト（タイトル、要約、すべてのブロック）が上書きされます。続行しますか？",
-    "articleContentLocale": "編集表示"
+    "articleContentLocale": "編集表示",
+    "importedFrom": "インポート元"
   },
   "blockLocale": {
     "original": "日本語",
@@ -430,7 +442,14 @@
     "tooLargeToSave": "バッチが大きすぎて自動保存できません。更新しないでください。",
     "noValidUrls": "有効なレガシーURLが見つかりません。",
     "close": "閉じる",
-    "includeInImport": "インポートに含める"
+    "includeInImport": "インポートに含める",
+    "supportedLabel": "対応ページ",
+    "recentTitle": "最近のインポート",
+    "viewAll": "すべて表示",
+    "recentEmpty": "まだインポートはありません。インポートした記事がここに表示されます。",
+    "importedResult": "{count}件の記事を下書きとしてインポートしました。",
+    "addToQueue": "{count}件をキューに追加",
+    "clearQueue": "キューをクリア"
   },
   "translationsEditor": {
     "title": "翻訳",

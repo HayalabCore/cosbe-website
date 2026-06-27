@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import ImportPreviewFields from '@/components/admin/ImportPreviewFields';
+import AdminCheckbox from '@/components/admin/AdminCheckbox';
 import type { BulkRow } from '@/lib/legacy-import/bulk-state';
 import type { ImportPreviewPayload } from '@/lib/legacy-import/types';
 
@@ -87,22 +88,19 @@ export default function BulkPreviewOverlay({
         </div>
 
         <div className="flex items-center justify-between gap-3 px-5 py-3 border-t border-slate-100 bg-slate-50/80">
-          <label
+          <div
             className={`inline-flex items-center gap-2 text-sm font-medium ${
-              row.status === 'ready'
-                ? 'text-slate-700 cursor-pointer'
-                : 'text-slate-400 cursor-not-allowed'
+              row.status === 'ready' ? 'text-slate-700' : 'text-slate-400'
             }`}
           >
-            <input
-              type="checkbox"
-              className="h-4 w-4 accent-primaryColor"
+            <AdminCheckbox
+              aria-label={t('includeInImport')}
               checked={row.included}
               disabled={row.status !== 'ready'}
               onChange={onToggleInclude}
             />
             {t('includeInImport')}
-          </label>
+          </div>
           <button
             type="button"
             onClick={onClose}

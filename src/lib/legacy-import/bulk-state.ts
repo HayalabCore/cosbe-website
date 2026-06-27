@@ -6,7 +6,6 @@ export type BulkRowStatus =
   | 'ready'
   | 'error'
   | 'committing'
-  | 'committed'
   | 'commitError';
 
 export type BulkRow = {
@@ -15,43 +14,44 @@ export type BulkRow = {
   payload?: ImportPreviewPayload;
   error?: string;
   included: boolean;
-  draftId?: string;
 };
 
-export type BulkPhase = 'input' | 'review' | 'summary';
-
-export type BulkState = { phase: BulkPhase; rows: BulkRow[] };
+export type BulkState = { rows: BulkRow[] };
 
 export type BulkAction =
+  | { type: 'addUrls'; urls: string[] }
+  | { type: 'removeUrls'; urls: string[] }
   | { type: 'setStatus'; url: string; status: BulkRowStatus; error?: string }
   | { type: 'setPayload'; url: string; payload: ImportPreviewPayload }
   | { type: 'patchPayload'; url: string; patch: Partial<ImportPreviewPayload> }
   | { type: 'toggleInclude'; url: string }
   | { type: 'setBatchInclude'; included: boolean }
-  | { type: 'setCommitted'; url: string; draftId: string }
-  | { type: 'setPhase'; phase: BulkPhase }
   | { type: 'hydrate'; state: BulkState }
   | { type: 'reset' };
 
-export const initialBulkState: BulkState = { phase: 'input', rows: [] };
-
-export function bulkInit(urls: string[]): BulkState {
-  return {
-    phase: 'review',
-    rows: urls.map((url) => ({ url, status: 'queued', included: true })),
-  };
-}
+export const initialBulkState: BulkState = { rows: [] };
 
 function mapRow(
   state: BulkState,
   url: string,
   fn: (row: BulkRow) => BulkRow
 ): BulkState {
-  return { ...state, rows: state.rows.map((r) => (r.url === url ? fn(r) : r)) };
+  return { rows: state.rows.map((r) => (r.url === url ? fn(r) : r)) };
 }
 
 export function bulkReducer(state: BulkState, action: BulkAction): BulkState {
   switch (action.type) {
+    case 'addUrls': {
+      const existing = new Set(state.rows.map((r) => r.url));
+      const additions: BulkRow[] = action.urls
+        .filter((u) => !existing.has(u))
+        .map((url) => ({ url, status: 'queued', included: true }));
+      return { rows: [...state.rows, ...additions] };
+    }
+    case 'removeUrls': {
+      const drop = new Set(action.urls);
+      return { rows: state.rows.filter((r) => !drop.has(r.url)) };
+    }
     case 'setStatus':
       return mapRow(state, action.url, (r) => ({
         ...r,
@@ -76,24 +76,14 @@ export function bulkReducer(state: BulkState, action: BulkAction): BulkState {
       }));
     case 'setBatchInclude':
       return {
-        ...state,
         rows: state.rows.map((r) =>
           r.status === 'ready' ? { ...r, included: action.included } : r
         ),
       };
-    case 'setCommitted':
-      return mapRow(state, action.url, (r) => ({
-        ...r,
-        status: 'committed',
-        draftId: action.draftId,
-        error: undefined,
-      }));
-    case 'setPhase':
-      return { ...state, phase: action.phase };
     case 'hydrate':
       return action.state;
     case 'reset':
-      return { phase: 'input', rows: [] };
+      return { rows: [] };
     default:
       return state;
   }

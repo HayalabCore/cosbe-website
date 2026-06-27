@@ -174,6 +174,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const [excerpt, setExcerpt] = useState('');
   const [excerptEn, setExcerptEn] = useState('');
   const [featuredImage, setFeaturedImage] = useState('');
+  const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [category, setCategory] = useState<ContentCategory>('useful-info');
   const [tags, setTags] = useState('');
   const [status, setStatus] = useState<ArticleStatus>('draft');
@@ -215,6 +216,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     setExcerpt(row.excerpt ?? '');
     setExcerptEn(row.excerptEn ?? '');
     setFeaturedImage(row.featuredImage ?? '');
+    setSourceUrl(row.sourceUrl ?? null);
     setCategory(row.category);
     setTags(row.tags.join(', '));
     setStatus(row.status);
@@ -706,6 +708,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               authorDesignation={authorDesignation}
               seo={seo}
               caseStudy={caseStudy}
+              sourceUrl={sourceUrl}
               onChange={applyMeta}
               onTranslateArticle={() => void handleTranslateArticle()}
               translatingArticle={translatingArticle}
@@ -730,6 +733,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
                 authorDesignation={authorDesignation}
                 seo={seo}
                 caseStudy={caseStudy}
+                sourceUrl={sourceUrl}
                 onChange={applyMeta}
                 onTranslateArticle={() => void handleTranslateArticle()}
                 translatingArticle={translatingArticle}

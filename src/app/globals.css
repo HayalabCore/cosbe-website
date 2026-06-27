@@ -228,3 +228,19 @@ h6 {
 .animate-indeterminate {
   animation: indeterminate-progress 1.1s ease-in-out infinite;
 }
+
+/* Floating bulk action bar entrance (admin dashboard) — vertical only, so it
+   never conflicts with the flex centering of its wrapper. */
+@keyframes bulkbar-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-bulkbar {
+  animation: bulkbar-in 0.18s ease-out;
+}

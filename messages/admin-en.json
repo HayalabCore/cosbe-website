@@ -74,7 +74,18 @@
     "publishTitle": "Publish",
     "archiveTitle": "Archive",
     "restoreTitle": "Restore to draft",
-    "hardDeleteTitle": "Permanently delete"
+    "hardDeleteTitle": "Permanently delete",
+    "importedFrom": "Imported from",
+    "tableCreated": "Created",
+    "selectedCount": "{count} selected",
+    "bulkPublish": "Publish",
+    "bulkUnpublish": "Unpublish",
+    "bulkArchive": "Archive",
+    "bulkDelete": "Delete",
+    "bulkArchiveConfirm": "Archive {count} post(s)? They'll be hidden from the site but can be restored.",
+    "bulkDeleteConfirm": "Permanently delete {count} post(s)? This cannot be undone.",
+    "clearSelection": "Clear",
+    "rowsPerPage": "{count} / page"
   },
   "editor": {
     "loadingPost": "Loading post…",
@@ -108,7 +119,8 @@
     "translateArticleProgress": "Translating…",
     "translateArticlePartialError": "Some parts failed to translate",
     "translateArticleConfirm": "This will replace all existing English text (title, excerpt, and every block). Continue?",
-    "articleContentLocale": "Edit in"
+    "articleContentLocale": "Edit in",
+    "importedFrom": "Imported from"
   },
   "blockLocale": {
     "original": "Japanese",
@@ -171,15 +183,30 @@
     "noBlocksHint": "Add your first content block below",
     "addBlock": "Add block",
     "types": {
-      "heading": { "label": "Heading", "description": "Section title (H2–H4)" },
-      "paragraph": { "label": "Paragraph", "description": "Rich text block" },
-      "list": { "label": "List", "description": "Bullet or numbered list" },
-      "quote": { "label": "Quote", "description": "Pull quote with citation" },
+      "heading": {
+        "label": "Heading",
+        "description": "Section title (H2–H4)"
+      },
+      "paragraph": {
+        "label": "Paragraph",
+        "description": "Rich text block"
+      },
+      "list": {
+        "label": "List",
+        "description": "Bullet or numbered list"
+      },
+      "quote": {
+        "label": "Quote",
+        "description": "Pull quote with citation"
+      },
       "callout": {
         "label": "Callout",
         "description": "Info, warning, or tip box"
       },
-      "image": { "label": "Image", "description": "Upload or link an image" },
+      "image": {
+        "label": "Image",
+        "description": "Upload or link an image"
+      },
       "code": {
         "label": "Code",
         "description": "Syntax-highlighted code block"
@@ -188,8 +215,14 @@
         "label": "Divider",
         "description": "Horizontal separator rule"
       },
-      "embed": { "label": "Embed", "description": "YouTube, Twitter, or URL" },
-      "table": { "label": "Table", "description": "Rows and columns of data" }
+      "embed": {
+        "label": "Embed",
+        "description": "YouTube, Twitter, or URL"
+      },
+      "table": {
+        "label": "Table",
+        "description": "Rows and columns of data"
+      }
     }
   },
   "paragraph": {
@@ -409,7 +442,14 @@
     "tooLargeToSave": "Batch too large to auto-save; don't refresh.",
     "noValidUrls": "No valid legacy URLs found.",
     "close": "Close",
-    "includeInImport": "Include in import"
+    "includeInImport": "Include in import",
+    "supportedLabel": "Supported pages",
+    "recentTitle": "Recently imported",
+    "viewAll": "View all",
+    "recentEmpty": "No imports yet. Imported articles will appear here.",
+    "importedResult": "Imported {count} article(s) as drafts.",
+    "addToQueue": "Add {count} to queue",
+    "clearQueue": "Clear queue"
   },
   "translationsEditor": {
     "title": "Translations",

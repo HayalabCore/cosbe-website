@@ -59,6 +59,7 @@ export async function commitImportAction(
     title: payload.title.trim() || 'Untitled',
     excerpt: payload.excerpt.trim() || undefined,
     featuredImage: featuredImageUrl || undefined,
+    sourceUrl: payload.sourceUrl,
     status: 'draft',
     category: payload.category,
     tags: payload.tags,

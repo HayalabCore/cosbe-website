@@ -82,6 +82,7 @@ const listItemSelect = {
   excerpt: true,
   excerptEn: true,
   featuredImage: true,
+  sourceUrl: true,
   category: true,
   tags: true,
   author: true,
@@ -104,6 +105,7 @@ function mapRow(row: ArticleWithAuthor): Article {
     excerpt: row.excerpt ?? undefined,
     excerptEn: row.excerptEn ?? undefined,
     featuredImage: row.featuredImage ?? undefined,
+    sourceUrl: row.sourceUrl ?? undefined,
     status: row.status as ArticleStatus,
     category: row.category as ContentCategory,
     tags: row.tags ?? [],
@@ -131,6 +133,7 @@ function toListItem(row: ArticleListRow): ArticleListItem {
     excerpt: row.excerpt ?? undefined,
     excerptEn: row.excerptEn ?? undefined,
     featuredImage: row.featuredImage ?? undefined,
+    sourceUrl: row.sourceUrl ?? undefined,
     category: row.category as ContentCategory,
     tags: row.tags ?? [],
     author: authorToRef(row.author),
@@ -139,6 +142,19 @@ function toListItem(row: ArticleListRow): ArticleListItem {
     status: row.status as ArticleStatus,
     clientName: row.clientName ?? undefined,
   };
+}
+
+/** Newest articles that were imported from the legacy site (have a sourceUrl). */
+export async function getRecentlyImported(
+  limit = 10
+): Promise<ArticleListItem[]> {
+  const rows = await prisma.article.findMany({
+    where: { sourceUrl: { not: null } },
+    select: listItemSelect,
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+  });
+  return rows.map(toListItem);
 }
 
 export async function getArticleById(
@@ -372,6 +388,7 @@ export async function createArticleRecord(
       excerpt: data.excerpt ?? null,
       excerptEn: data.excerptEn ?? null,
       featuredImage: data.featuredImage?.trim() || null,
+      sourceUrl: data.sourceUrl?.trim() || null,
       status: data.status,
       category: data.category,
       tags: data.tags ?? [],
@@ -464,6 +481,40 @@ export async function unpublishArticleRecord(id: string): Promise<void> {
     status: 'draft',
     publishedAt: null,
   });
+}
+
+/** Batch publish: stamp publishedAt only where it's not already set, then mark published. */
+export async function publishArticlesRecord(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  await prisma.article.updateMany({
+    where: { id: { in: ids }, publishedAt: null },
+    data: { publishedAt: new Date() },
+  });
+  await prisma.article.updateMany({
+    where: { id: { in: ids } },
+    data: { status: 'published' },
+  });
+}
+
+export async function unpublishArticlesRecord(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  await prisma.article.updateMany({
+    where: { id: { in: ids } },
+    data: { status: 'draft', publishedAt: null },
+  });
+}
+
+export async function archiveArticlesRecord(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  await prisma.article.updateMany({
+    where: { id: { in: ids } },
+    data: { status: 'archived' },
+  });
+}
+
+export async function deleteArticlesRecord(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  await prisma.article.deleteMany({ where: { id: { in: ids } } });
 }
 
 export async function logArticleView(id: string): Promise<void> {

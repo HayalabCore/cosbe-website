@@ -11,15 +11,19 @@ import {
 } from '@/lib/validation/article';
 import {
   archiveArticleRecord,
+  archiveArticlesRecord,
   countArticles,
   createArticleRecord,
   deleteArticleRecord,
+  deleteArticlesRecord,
   getArticleByIdAdmin,
   getArticleSlugCategoryById,
   getArticleStatusCounts,
   getArticles,
   publishArticleRecord,
+  publishArticlesRecord,
   unpublishArticleRecord,
+  unpublishArticlesRecord,
   updateArticleRecord,
 } from '@/lib/articles';
 import type {
@@ -145,6 +149,43 @@ export async function hardDeleteArticleAction(
   await requireUser();
   await deleteArticleRecord(id);
   revalidateArticlePaths(slug, category);
+}
+
+/**
+ * Batch actions for the dashboard's multi-select. Each runs a single
+ * updateMany/deleteMany then revalidates broadly (the selection can span
+ * multiple categories).
+ */
+export async function publishArticlesAction(ids: string[]): Promise<void> {
+  await requireUser();
+  if (ids.length === 0) return;
+  await publishArticlesRecord(ids);
+  revalidatePath('/admin/dashboard');
+  revalidateArticlePaths();
+}
+
+export async function unpublishArticlesAction(ids: string[]): Promise<void> {
+  await requireUser();
+  if (ids.length === 0) return;
+  await unpublishArticlesRecord(ids);
+  revalidatePath('/admin/dashboard');
+  revalidateArticlePaths();
+}
+
+export async function archiveArticlesAction(ids: string[]): Promise<void> {
+  await requireUser();
+  if (ids.length === 0) return;
+  await archiveArticlesRecord(ids);
+  revalidatePath('/admin/dashboard');
+  revalidateArticlePaths();
+}
+
+export async function deleteArticlesAction(ids: string[]): Promise<void> {
+  await requireUser();
+  if (ids.length === 0) return;
+  await deleteArticlesRecord(ids);
+  revalidatePath('/admin/dashboard');
+  revalidateArticlePaths();
 }
 
 export async function publishArticleAction(id: string): Promise<void> {

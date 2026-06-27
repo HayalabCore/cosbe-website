@@ -32,6 +32,10 @@ export {
   archiveArticleRecord,
   publishArticleRecord,
   unpublishArticleRecord,
+  publishArticlesRecord,
+  unpublishArticlesRecord,
+  archiveArticlesRecord,
+  deleteArticlesRecord,
   logArticleView,
 } from './articles-repository';
 
