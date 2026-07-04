@@ -79,7 +79,7 @@ export default function RecentImports({ items }: { items: ArticleListItem[] }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       title={a.sourceUrl}
-                      className="mt-0.5 inline-flex max-w-full items-center gap-1 text-[11px] text-slate-400 hover:text-primaryColor transition-colors"
+                      className="mt-0.5 flex min-w-0 max-w-full items-center gap-1 text-[11px] text-slate-400 hover:text-primaryColor transition-colors"
                     >
                       <svg
                         className="w-3 h-3 flex-shrink-0"
@@ -94,7 +94,7 @@ export default function RecentImports({ items }: { items: ArticleListItem[] }) {
                           d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                         />
                       </svg>
-                      <span className="truncate font-mono">
+                      <span className="min-w-0 truncate font-mono">
                         {sourcePath(a.sourceUrl)}
                       </span>
                     </a>

@@ -213,7 +213,7 @@ export default function DashboardClient({ items }: Props) {
                   target="_blank"
                   rel="noopener noreferrer"
                   title={a.sourceUrl}
-                  className="mt-1 inline-flex max-w-full items-center gap-1 text-[11px] text-slate-400 hover:text-primaryColor transition-colors"
+                  className="mt-1 flex max-w-md min-w-0 items-center gap-1 text-[11px] text-slate-400 hover:text-primaryColor transition-colors"
                 >
                   <svg
                     className="w-3 h-3 flex-shrink-0"
@@ -228,7 +228,7 @@ export default function DashboardClient({ items }: Props) {
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
-                  <span className="truncate font-mono">
+                  <span className="min-w-0 truncate font-mono">
                     {t('importedFrom')}: {sourcePath(a.sourceUrl)}
                   </span>
                 </a>
@@ -795,7 +795,9 @@ export default function DashboardClient({ items }: Props) {
                       return (
                         <td
                           key={cell.id}
-                          className={`px-4 py-3.5 align-top ${hideCls}`}
+                          className={`px-4 py-3.5 align-top ${
+                            cell.column.id === 'title' ? 'min-w-0' : ''
+                          } ${hideCls}`}
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
