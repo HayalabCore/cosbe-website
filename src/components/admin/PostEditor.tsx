@@ -12,7 +12,6 @@ import {
   normalizeSlugInput,
 } from '@/lib/article-utils';
 import {
-  resolveArticleExcerpt,
   resolveArticleTitle,
   resolveBlocksForLocale,
 } from '@/lib/article-locale';
@@ -20,11 +19,7 @@ import {
   normalizeBlocksForEditor,
   stripHtmlForMetrics,
 } from '@/lib/sanitize-article-html';
-import {
-  createArticleAction,
-  getArticleByIdAction,
-  updateArticleAction,
-} from '@/actions/articles';
+import { createArticleAction, updateArticleAction } from '@/actions/articles';
 import { translateArticleEnAction } from '@/actions/block-translation';
 import { articleHasTranslatableContent } from '@/lib/block-translation-utils';
 import type {
@@ -152,7 +147,11 @@ function SaveIndicator({ saving, label }: { saving: boolean; label: string }) {
   );
 }
 
-export default function PostEditor({ articleId }: { articleId?: string }) {
+export default function PostEditor({
+  initialArticle,
+}: {
+  initialArticle?: Article;
+}) {
   const t = useTranslations('admin.editor');
   const locale = useLocale();
   const { setViewArticleHref } = useAdminViewArticleLink();
@@ -160,36 +159,51 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const isDirtyRef = useRef(false);
   const autoSavingRef = useRef(false);
   const savingRef = useRef(false);
+  const isEditing = Boolean(initialArticle);
 
   const [tab, setTab] = useState<Tab>('edit');
   const [saving, setSaving] = useState(false);
   const [autoSavingUi, setAutoSavingUi] = useState(false);
-  const [loaded, setLoaded] = useState(!articleId);
   const [saveNotice, setSaveNotice] = useState<'manual' | 'auto' | null>(null);
-  savingRef.current = saving;
 
-  const [title, setTitle] = useState('');
-  const [titleEn, setTitleEn] = useState('');
-  const [slug, setSlug] = useState('');
-  const [excerpt, setExcerpt] = useState('');
-  const [excerptEn, setExcerptEn] = useState('');
-  const [featuredImage, setFeaturedImage] = useState('');
-  const [sourceUrl, setSourceUrl] = useState<string | null>(null);
-  const [category, setCategory] = useState<ContentCategory>('useful-info');
-  const [tags, setTags] = useState('');
-  const [status, setStatus] = useState<ArticleStatus>('draft');
-  const [publishedAt, setPublishedAt] = useState<string | null>(null);
-  const [authorName, setAuthorName] = useState(defaultAuthor.name);
-  const [authorDesignation, setAuthorDesignation] = useState(
-    defaultAuthor.designation
+  const [title, setTitle] = useState(initialArticle?.title ?? '');
+  const [titleEn, setTitleEn] = useState(initialArticle?.titleEn ?? '');
+  const [slug, setSlug] = useState(initialArticle?.slug ?? '');
+  const [excerpt, setExcerpt] = useState(initialArticle?.excerpt ?? '');
+  const [excerptEn, setExcerptEn] = useState(initialArticle?.excerptEn ?? '');
+  const [featuredImage, setFeaturedImage] = useState(
+    initialArticle?.featuredImage ?? ''
   );
-  const [seo, setSeo] = useState<ArticleSEO>({});
-  const [caseStudy, setCaseStudy] = useState<CaseStudyMeta>(emptyCaseStudyMeta);
-  const [blocks, setBlocks] = useState<ContentBlock[]>([
-    createEmptyBlock('heading'),
-    createEmptyBlock('paragraph'),
-  ]);
-  const [persistedId, setPersistedId] = useState<string | undefined>(articleId);
+  const sourceUrl = initialArticle?.sourceUrl ?? null;
+  const [category, setCategory] = useState<ContentCategory>(
+    initialArticle?.category ?? 'useful-info'
+  );
+  const [tags, setTags] = useState(initialArticle?.tags.join(', ') ?? '');
+  const [status, setStatus] = useState<ArticleStatus>(
+    initialArticle?.status ?? 'draft'
+  );
+  const [publishedAt, setPublishedAt] = useState<string | null>(
+    initialArticle?.publishedAt ?? null
+  );
+  const [authorName, setAuthorName] = useState(
+    initialArticle?.author.name ?? defaultAuthor.name
+  );
+  const [authorDesignation, setAuthorDesignation] = useState(
+    initialArticle?.author.designation ?? defaultAuthor.designation
+  );
+  const [seo, setSeo] = useState<ArticleSEO>(initialArticle?.seo ?? {});
+  const [caseStudy, setCaseStudy] = useState<CaseStudyMeta>(
+    initialArticle?.caseStudy ?? emptyCaseStudyMeta
+  );
+  const [blocks, setBlocks] = useState<ContentBlock[]>(() => {
+    if (!initialArticle?.blocks.length) {
+      return [createEmptyBlock('heading'), createEmptyBlock('paragraph')];
+    }
+    return normalizeBlocksForEditor(initialArticle.blocks);
+  });
+  const [persistedId, setPersistedId] = useState<string | undefined>(
+    initialArticle?.id
+  );
   const [previewLocale, setPreviewLocale] = useState<'ja' | 'en'>('ja');
   const [articleLocaleViewTab, setArticleLocaleViewTab] = useState<
     'original' | 'english'
@@ -201,42 +215,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
     setArticleLocaleViewTab(tab);
     setLocaleViewKey((k) => k + 1);
   }, []);
-
-  const load = useCallback(async () => {
-    if (!articleId) return;
-    isDirtyRef.current = false;
-    const row = await getArticleByIdAction(articleId);
-    if (!row) {
-      router.replace('/admin/dashboard');
-      return;
-    }
-    setTitle(row.title);
-    setTitleEn(row.titleEn ?? '');
-    setSlug(row.slug);
-    setExcerpt(row.excerpt ?? '');
-    setExcerptEn(row.excerptEn ?? '');
-    setFeaturedImage(row.featuredImage ?? '');
-    setSourceUrl(row.sourceUrl ?? null);
-    setCategory(row.category);
-    setTags(row.tags.join(', '));
-    setStatus(row.status);
-    setPublishedAt(row.publishedAt);
-    setAuthorName(row.author.name);
-    setAuthorDesignation(row.author.designation);
-    setSeo(row.seo ?? {});
-    setCaseStudy(row.caseStudy ?? emptyCaseStudyMeta);
-    setBlocks(
-      row.blocks.length
-        ? normalizeBlocksForEditor(row.blocks)
-        : [createEmptyBlock('heading'), createEmptyBlock('paragraph')]
-    );
-    setPersistedId(row.id);
-    setLoaded(true);
-  }, [articleId, router]);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
 
   // Sidebar "View site": deep-link to this article on the public site when published.
   useEffect(() => {
@@ -370,15 +348,16 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   ]);
 
   useEffect(() => {
-    if (!loaded || !persistedId) return;
+    if (!persistedId) return;
     const timer = window.setInterval(
       () => void runAutoSave(),
       AUTOSAVE_INTERVAL_MS
     );
     return () => window.clearInterval(timer);
-  }, [loaded, persistedId, runAutoSave]);
+  }, [persistedId, runAutoSave]);
 
   async function save(publish: boolean) {
+    savingRef.current = true;
     setSaving(true);
     setSaveNotice(null);
     try {
@@ -427,33 +406,9 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
       console.error(e);
       alert(e instanceof Error ? e.message : t('saveFailed'));
     } finally {
+      savingRef.current = false;
       setSaving(false);
     }
-  }
-
-  if (!loaded) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-2.5 text-slate-400">
-          <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
-          </svg>
-          <span className="text-sm">{t('loadingPost')}</span>
-        </div>
-      </div>
-    );
   }
 
   const words = wordCount(blocks);
@@ -463,10 +418,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
   const previewLocaleStr = previewLocale;
   const previewTitle =
     resolveArticleTitle({ title, titleEn }, previewLocaleStr) || t('untitled');
-  const previewExcerptResolved = resolveArticleExcerpt(
-    { excerpt, excerptEn },
-    previewLocaleStr
-  );
   const previewBlocks = resolveBlocksForLocale(blocks, previewLocaleStr);
 
   return (
@@ -498,7 +449,7 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             <div className="w-px h-5 bg-slate-200 flex-shrink-0" />
 
             <p className="min-w-0 truncate text-sm font-medium text-slate-700 hidden sm:block">
-              {title || (articleId ? t('editPost') : t('newPost'))}
+              {title || (isEditing ? t('editPost') : t('newPost'))}
             </p>
           </div>
 
@@ -622,11 +573,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
             <h1 className="text-3xl font-bold text-slate-900 mb-6 break-words">
               {previewTitle}
             </h1>
-            {previewExcerptResolved ? (
-              <p className="text-base text-slate-500 mb-8 leading-relaxed border-l-4 border-primaryColor pl-4">
-                {previewExcerptResolved}
-              </p>
-            ) : null}
             {previewBlocks.map((b) => (
               <BlockRenderer key={b.id} block={b} />
             ))}
@@ -640,7 +586,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               title={title}
               titleEn={titleEn}
               excerpt={excerpt}
-              excerptEn={excerptEn}
               localeViewKey={localeViewKey}
               localeViewTab={articleLocaleViewTab}
               bulkTranslating={translatingArticle}
@@ -651,10 +596,6 @@ export default function PostEditor({ articleId }: { articleId?: string }) {
               onTitleEnChange={(value) => {
                 isDirtyRef.current = true;
                 setTitleEn(value);
-              }}
-              onExcerptChange={(value) => {
-                isDirtyRef.current = true;
-                setExcerpt(value);
               }}
               onExcerptEnChange={(value) => {
                 isDirtyRef.current = true;

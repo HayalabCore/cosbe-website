@@ -1,4 +1,6 @@
+import { redirect } from 'next/navigation';
 import PostEditor from '@/components/admin/PostEditor';
+import { getArticleByIdAdmin } from '@/lib/articles';
 
 export default async function EditPostPage({
   params,
@@ -6,5 +8,9 @@ export default async function EditPostPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <PostEditor articleId={id} />;
+  const article = await getArticleByIdAdmin(id);
+  if (!article) {
+    redirect('/admin/dashboard');
+  }
+  return <PostEditor initialArticle={article} />;
 }

@@ -11,11 +11,10 @@ const META_TEXTAREA_CLS =
 type Props = {
   title: string;
   titleEn: string;
+  /** Kept for EN meta translation; not shown in the editor UI. */
   excerpt: string;
-  excerptEn: string;
   onTitleChange: (value: string) => void;
   onTitleEnChange: (value: string) => void;
-  onExcerptChange: (value: string) => void;
   onExcerptEnChange: (value: string) => void;
   localeViewKey?: number;
   localeViewTab?: 'original' | 'english';
@@ -26,10 +25,8 @@ export default function ArticleMetaLocaleFields({
   title,
   titleEn,
   excerpt,
-  excerptEn,
   onTitleChange,
   onTitleEnChange,
-  onExcerptChange,
   onExcerptEnChange,
   localeViewKey,
   localeViewTab = 'original',
@@ -89,21 +86,7 @@ export default function ArticleMetaLocaleFields({
         }
         aria-label={isOriginal ? t('postTitlePlaceholder') : tMeta('titleEn')}
         rows={1}
-        className={`${META_TEXTAREA_CLS} text-3xl md:text-4xl font-bold text-slate-900 placeholder:text-slate-300 bg-transparent border-none outline-none leading-tight mb-4`}
-      />
-
-      <textarea
-        value={isOriginal ? excerpt : excerptEn}
-        onChange={(e) => {
-          if (isOriginal) onExcerptChange(e.target.value);
-          else onExcerptEnChange(e.target.value);
-        }}
-        placeholder={
-          isOriginal ? t('excerptPlaceholder') : tMeta('excerptEnPlaceholder')
-        }
-        aria-label={isOriginal ? t('excerptPlaceholder') : tMeta('excerptEn')}
-        rows={1}
-        className={`${META_TEXTAREA_CLS} text-base text-slate-500 placeholder:text-slate-300 bg-transparent border-none outline-none leading-relaxed`}
+        className={`${META_TEXTAREA_CLS} text-3xl md:text-4xl font-bold text-slate-900 placeholder:text-slate-300 bg-transparent border-none outline-none leading-tight`}
       />
     </div>
   );
