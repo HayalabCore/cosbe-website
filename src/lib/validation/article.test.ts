@@ -277,3 +277,61 @@ describe('toCreateArticlePayload', () => {
     expect(payload.slug).toBe('my-article');
   });
 });
+
+describe('showFeaturedImage', () => {
+  it('is optional on create and omitted from the payload when absent', () => {
+    const parsed = createArticleSchema.parse(validBody());
+    expect(parsed.showFeaturedImage).toBeUndefined();
+    expect(toCreateArticlePayload(parsed).showFeaturedImage).toBeUndefined();
+  });
+
+  it('passes an explicit false through to the create payload', () => {
+    const parsed = createArticleSchema.parse({
+      ...validBody(),
+      showFeaturedImage: false,
+    });
+    expect(toCreateArticlePayload(parsed).showFeaturedImage).toBe(false);
+  });
+
+  it('is patchable on update', () => {
+    const result = updateArticleSchema.safeParse({ showFeaturedImage: false });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a non-boolean', () => {
+    const result = createArticleSchema.safeParse({
+      ...validBody(),
+      showFeaturedImage: 'yes',
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe('author avatarUrl', () => {
+  it('is optional and passes through when provided', () => {
+    const parsed = createArticleSchema.parse({
+      ...validBody(),
+      author: {
+        name: 'Author',
+        designation: 'Role',
+        avatarUrl: 'https://cdn.example/a.png',
+      },
+    });
+    expect(toCreateArticlePayload(parsed).author.avatarUrl).toBe(
+      'https://cdn.example/a.png'
+    );
+  });
+
+  it('normalizes a blank avatar to an empty string (explicit removal)', () => {
+    const parsed = createArticleSchema.parse({
+      ...validBody(),
+      author: { name: 'Author', designation: 'Role', avatarUrl: '  ' },
+    });
+    expect(toCreateArticlePayload(parsed).author.avatarUrl).toBe('');
+  });
+
+  it('leaves avatarUrl undefined when the client omits it', () => {
+    const parsed = createArticleSchema.parse(validBody());
+    expect(toCreateArticlePayload(parsed).author.avatarUrl).toBeUndefined();
+  });
+});

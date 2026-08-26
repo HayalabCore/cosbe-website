@@ -37,6 +37,8 @@ const authorSchema = z.object({
   id: z.string().optional(),
   name: z.string().trim().min(1),
   designation: z.string().trim().min(1),
+  /** Omitted = leave the stored avatar alone; empty string = clear it. */
+  avatarUrl: z.string().optional(),
 });
 
 const caseStudySchema = z.looseObject({
@@ -62,6 +64,7 @@ const articleEnvelope = {
   excerpt: z.string().optional(),
   excerptEn: z.string().optional(),
   featuredImage: z.string().optional(),
+  showFeaturedImage: z.boolean().optional(),
   category: z.enum(ARTICLE_CREATE_CATEGORIES),
   tags: z.array(z.string()),
   author: authorSchema,
@@ -118,6 +121,7 @@ export function toCreateArticlePayload(
     excerpt: input.excerpt?.trim() || undefined,
     excerptEn: input.excerptEn?.trim() || undefined,
     featuredImage: input.featuredImage?.trim() || undefined,
+    showFeaturedImage: input.showFeaturedImage,
     status: input.status,
     category: input.category,
     tags: input.tags,
@@ -125,6 +129,12 @@ export function toCreateArticlePayload(
       id: '',
       name: input.author.name.trim(),
       designation: input.author.designation.trim(),
+      // Preserve the distinction between "not supplied" (undefined) and
+      // "cleared" (empty string) — upsertAuthor treats them differently.
+      avatarUrl:
+        input.author.avatarUrl === undefined
+          ? undefined
+          : input.author.avatarUrl.trim(),
     },
     blocks: input.blocks as ContentBlock[],
     toc: [],

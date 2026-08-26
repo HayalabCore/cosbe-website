@@ -39,6 +39,9 @@ model Article {
   excerpt           String?
   excerptEn         String?       @map("excerpt_en")
   featuredImage     String?       @map("featured_image")
+  /// When false, the featured image is hidden on the article page but still
+  /// used as the thumbnail on listing pages.
+  showFeaturedImage Boolean       @default(true) @map("show_featured_image")
   sourceUrl         String?       @map("source_url")
   status            ArticleStatus @default(draft)
   category          String

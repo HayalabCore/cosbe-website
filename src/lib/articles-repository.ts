@@ -105,6 +105,7 @@ function mapRow(row: ArticleWithAuthor): Article {
     excerpt: row.excerpt ?? undefined,
     excerptEn: row.excerptEn ?? undefined,
     featuredImage: row.featuredImage ?? undefined,
+    showFeaturedImage: row.showFeaturedImage,
     sourceUrl: row.sourceUrl ?? undefined,
     status: row.status as ArticleStatus,
     category: row.category as ContentCategory,
@@ -356,16 +357,28 @@ export async function getAuthors(): Promise<DbAuthor[]> {
   return prisma.author.findMany({ orderBy: { name: 'asc' } });
 }
 
+/**
+ * Find-or-create an author by name + designation.
+ *
+ * `avatarUrl` is tri-state on purpose: `undefined` leaves the stored avatar
+ * untouched (so bulk imports and saves from clients that don't know about the
+ * field can't wipe it), an empty string clears it, and any other value sets it.
+ * The avatar lives on the shared Author row, so a change here applies to every
+ * article by that author.
+ */
 export async function upsertAuthor(
   name: string,
-  designation: string
+  designation: string,
+  avatarUrl?: string
 ): Promise<string> {
+  const avatarPatch =
+    avatarUrl === undefined ? {} : { avatarUrl: avatarUrl.trim() || null };
   const row = await prisma.author.upsert({
     where: {
       name_designation: { name, designation },
     },
-    create: { name, designation },
-    update: {},
+    create: { name, designation, ...avatarPatch },
+    update: avatarPatch,
   });
   return row.id;
 }
@@ -377,7 +390,8 @@ export async function createArticleRecord(
   // Upsert the author so inline name/designation changes persist
   const authorId = await upsertAuthor(
     data.author.name,
-    data.author.designation
+    data.author.designation,
+    data.author.avatarUrl
   );
 
   const row = await prisma.article.create({
@@ -388,6 +402,7 @@ export async function createArticleRecord(
       excerpt: data.excerpt ?? null,
       excerptEn: data.excerptEn ?? null,
       featuredImage: data.featuredImage?.trim() || null,
+      showFeaturedImage: data.showFeaturedImage ?? true,
       sourceUrl: data.sourceUrl?.trim() || null,
       status: data.status,
       category: data.category,
@@ -422,6 +437,8 @@ export async function updateArticleRecord(
   if (data.excerptEn !== undefined) patch.excerptEn = data.excerptEn ?? null;
   if (data.featuredImage !== undefined)
     patch.featuredImage = data.featuredImage?.trim() || null;
+  if (data.showFeaturedImage !== undefined)
+    patch.showFeaturedImage = data.showFeaturedImage;
   if (data.status !== undefined) patch.status = data.status;
   if (data.category !== undefined) patch.category = data.category;
   if (data.tags !== undefined) patch.tags = data.tags;
@@ -429,7 +446,8 @@ export async function updateArticleRecord(
     // Upsert the author and update the FK relation
     const authorId = await upsertAuthor(
       data.author.name,
-      data.author.designation
+      data.author.designation,
+      data.author.avatarUrl
     );
     patch.author = { connect: { id: authorId } };
   }

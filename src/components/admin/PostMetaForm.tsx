@@ -14,6 +14,7 @@ import {
   imageSrcOrFallback,
   normalizeSlugInput,
 } from '@/lib/article-utils';
+import AdminCheckbox from './AdminCheckbox';
 import ImageUpload from './ImageUpload';
 import CaseStudyMetaFields from './CaseStudyMetaFields';
 import ArticleTranslatePanel from './ArticleTranslatePanel';
@@ -36,12 +37,14 @@ export type PostMetaPatch = {
   slug?: string;
   excerpt?: string;
   featuredImage?: string;
+  showFeaturedImage?: boolean;
   category?: ContentCategory;
   tags?: string;
   status?: ArticleStatus;
   publishedAt?: string | null;
   authorName?: string;
   authorDesignation?: string;
+  authorAvatarUrl?: string;
   seo?: ArticleSEO;
   caseStudy?: Partial<CaseStudyMeta>;
 };
@@ -50,12 +53,14 @@ type Props = {
   title: string;
   slug: string;
   featuredImage: string;
+  showFeaturedImage: boolean;
   category: ContentCategory;
   tags: string;
   status: ArticleStatus;
   publishedAt: string | null;
   authorName: string;
   authorDesignation: string;
+  authorAvatarUrl: string;
   seo: ArticleSEO;
   caseStudy: CaseStudyMeta;
   sourceUrl?: string | null;
@@ -135,12 +140,14 @@ export default function PostMetaForm({
   title,
   slug,
   featuredImage,
+  showFeaturedImage,
   category,
   tags,
   status,
   publishedAt,
   authorName,
   authorDesignation,
+  authorAvatarUrl,
   seo,
   caseStudy,
   sourceUrl,
@@ -191,6 +198,7 @@ export default function PostMetaForm({
   }
 
   const previewSrc = imageSrcOrFallback(featuredImage, '');
+  const avatarSrc = imageSrcOrFallback(authorAvatarUrl, '');
 
   const previewPath = useMemo(() => {
     const resolved = createFallbackSlug(slug || title);
@@ -422,6 +430,31 @@ export default function PostMetaForm({
                 value={featuredImage}
                 onChange={(e) => onChange({ featuredImage: e.target.value })}
               />
+              <label
+                className={`flex items-start gap-2 pt-1 ${
+                  featuredImage.trim()
+                    ? 'cursor-pointer'
+                    : 'cursor-not-allowed opacity-50'
+                }`}
+              >
+                <AdminCheckbox
+                  checked={showFeaturedImage}
+                  disabled={!featuredImage.trim()}
+                  onChange={(e) =>
+                    onChange({ showFeaturedImage: e.target.checked })
+                  }
+                  aria-label={t('showFeaturedImage')}
+                  className="mt-0.5 flex-shrink-0"
+                />
+                <span className="min-w-0">
+                  <span className="block text-xs font-medium text-slate-700">
+                    {t('showFeaturedImage')}
+                  </span>
+                  <span className="mt-0.5 block text-[11px] leading-snug text-slate-400">
+                    {t('showFeaturedImageHint')}
+                  </span>
+                </span>
+              </label>
             </div>
           )}
         </div>
@@ -563,6 +596,62 @@ export default function PostMetaForm({
                     onChange({ authorDesignation: e.target.value })
                   }
                 />
+              </div>
+              <div>
+                <label className={LABEL_CLS}>{t('authorAvatar')}</label>
+                <div className="flex items-center gap-3">
+                  <span className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100">
+                    {avatarSrc ? (
+                      <Image
+                        src={avatarSrc}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                      />
+                    ) : (
+                      <svg
+                        className="absolute inset-0 m-auto h-6 w-6 text-slate-300"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.75}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <div className="flex min-w-0 flex-col items-start gap-1.5">
+                    <ImageUpload
+                      label={t('uploadAuthorAvatar')}
+                      onUploaded={(url) => onChange({ authorAvatarUrl: url })}
+                    />
+                    {avatarSrc ? (
+                      <button
+                        type="button"
+                        onClick={() => onChange({ authorAvatarUrl: '' })}
+                        className="text-[11px] font-semibold text-red-600 hover:underline"
+                      >
+                        {t('remove')}
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+                <input
+                  className={`${INPUT_CLS} mt-2 text-xs`}
+                  placeholder={t('pasteImageUrl')}
+                  value={authorAvatarUrl}
+                  onChange={(e) =>
+                    onChange({ authorAvatarUrl: e.target.value })
+                  }
+                />
+                <p className="mt-1.5 text-[11px] leading-snug text-slate-400">
+                  {t('authorAvatarHint')}
+                </p>
               </div>
             </div>
           )}

@@ -53,24 +53,55 @@ const emptyCaseStudyMeta: CaseStudyMeta = {
 /** Autosave interval when the article has unsaved edits (idle saves are no-ops). */
 const AUTOSAVE_INTERVAL_MS = 10_000;
 
-function buildArticlePayload(
-  title: string,
-  titleEn: string,
-  slug: string,
-  excerpt: string,
-  excerptEn: string,
-  featuredImage: string,
-  category: ContentCategory,
-  tagsStr: string,
-  status: ArticleStatus,
-  authorName: string,
-  authorDesignation: string,
-  seo: ArticleSEO,
-  blocks: ContentBlock[],
-  untitledFallback: string,
-  currentPublishedAt: string | null,
-  caseStudy: CaseStudyMeta
-): Omit<Article, 'id' | 'createdAt' | 'updatedAt'> {
+type BuildPayloadArgs = {
+  title: string;
+  titleEn: string;
+  slug: string;
+  excerpt: string;
+  excerptEn: string;
+  featuredImage: string;
+  showFeaturedImage: boolean;
+  category: ContentCategory;
+  tagsStr: string;
+  status: ArticleStatus;
+  authorName: string;
+  authorDesignation: string;
+  authorAvatarUrl: string;
+  /**
+   * Only send the avatar when the editor actually touched it. Authors are shared
+   * rows, so unconditionally sending the (initially empty) field would wipe the
+   * avatar of an existing author the moment a new article is saved under their
+   * name. See `upsertAuthor` for the undefined/empty distinction.
+   */
+  authorAvatarDirty: boolean;
+  seo: ArticleSEO;
+  blocks: ContentBlock[];
+  untitledFallback: string;
+  currentPublishedAt: string | null;
+  caseStudy: CaseStudyMeta;
+};
+
+function buildArticlePayload({
+  title,
+  titleEn,
+  slug,
+  excerpt,
+  excerptEn,
+  featuredImage,
+  showFeaturedImage,
+  category,
+  tagsStr,
+  status,
+  authorName,
+  authorDesignation,
+  authorAvatarUrl,
+  authorAvatarDirty,
+  seo,
+  blocks,
+  untitledFallback,
+  currentPublishedAt,
+  caseStudy,
+}: BuildPayloadArgs): Omit<Article, 'id' | 'createdAt' | 'updatedAt'> {
   const tags = tagsStr
     .split(',')
     .map((s) => s.trim())
@@ -89,6 +120,7 @@ function buildArticlePayload(
     excerpt: excerpt || undefined,
     excerptEn: excerptEn.trim() || undefined,
     featuredImage: featuredImage.trim(),
+    showFeaturedImage,
     status,
     category,
     tags,
@@ -96,6 +128,7 @@ function buildArticlePayload(
       id: defaultAuthor.id,
       name: authorName || defaultAuthor.name,
       designation: authorDesignation || defaultAuthor.designation,
+      avatarUrl: authorAvatarDirty ? authorAvatarUrl.trim() : undefined,
     },
     blocks,
     toc,
@@ -174,6 +207,9 @@ export default function PostEditor({
   const [featuredImage, setFeaturedImage] = useState(
     initialArticle?.featuredImage ?? ''
   );
+  const [showFeaturedImage, setShowFeaturedImage] = useState(
+    initialArticle?.showFeaturedImage ?? true
+  );
   const sourceUrl = initialArticle?.sourceUrl ?? null;
   const [category, setCategory] = useState<ContentCategory>(
     initialArticle?.category ?? 'useful-info'
@@ -191,6 +227,10 @@ export default function PostEditor({
   const [authorDesignation, setAuthorDesignation] = useState(
     initialArticle?.author.designation ?? defaultAuthor.designation
   );
+  const [authorAvatarUrl, setAuthorAvatarUrl] = useState(
+    initialArticle?.author.avatarUrl ?? ''
+  );
+  const authorAvatarDirtyRef = useRef(false);
   const [seo, setSeo] = useState<ArticleSEO>(initialArticle?.seo ?? {});
   const [caseStudy, setCaseStudy] = useState<CaseStudyMeta>(
     initialArticle?.caseStudy ?? emptyCaseStudyMeta
@@ -239,12 +279,18 @@ export default function PostEditor({
     if (patch.excerpt !== undefined) setExcerpt(patch.excerpt);
     if (patch.featuredImage !== undefined)
       setFeaturedImage(patch.featuredImage);
+    if (patch.showFeaturedImage !== undefined)
+      setShowFeaturedImage(patch.showFeaturedImage);
     if (patch.category !== undefined) setCategory(patch.category);
     if (patch.tags !== undefined) setTags(patch.tags);
     if (patch.status !== undefined) setStatus(patch.status);
     if (patch.authorName !== undefined) setAuthorName(patch.authorName);
     if (patch.authorDesignation !== undefined)
       setAuthorDesignation(patch.authorDesignation);
+    if (patch.authorAvatarUrl !== undefined) {
+      authorAvatarDirtyRef.current = true;
+      setAuthorAvatarUrl(patch.authorAvatarUrl);
+    }
     if (patch.seo !== undefined) setSeo(patch.seo);
     if ('publishedAt' in patch) setPublishedAt(patch.publishedAt ?? null);
     if (patch.caseStudy !== undefined) {
@@ -299,24 +345,27 @@ export default function PostEditor({
     setSaveNotice(null);
     setAutoSavingUi(true);
     try {
-      const payload = buildArticlePayload(
+      const payload = buildArticlePayload({
         title,
         titleEn,
         slug,
         excerpt,
         excerptEn,
         featuredImage,
+        showFeaturedImage,
         category,
-        tags,
-        status,
+        tagsStr: tags,
+        status: status,
         authorName,
         authorDesignation,
+        authorAvatarUrl,
+        authorAvatarDirty: authorAvatarDirtyRef.current,
         seo,
         blocks,
-        t('untitled'),
-        publishedAt,
-        caseStudy
-      );
+        untitledFallback: t('untitled'),
+        currentPublishedAt: publishedAt,
+        caseStudy,
+      });
       await updateArticleAction(id, payload);
       isDirtyRef.current = false;
       setSaveNotice('auto');
@@ -335,12 +384,14 @@ export default function PostEditor({
     excerpt,
     excerptEn,
     featuredImage,
+    showFeaturedImage,
     category,
     tags,
     status,
     publishedAt,
     authorName,
     authorDesignation,
+    authorAvatarUrl,
     seo,
     blocks,
     caseStudy,
@@ -366,24 +417,27 @@ export default function PostEditor({
         : status === 'published'
           ? 'draft'
           : status;
-      const payload = buildArticlePayload(
+      const payload = buildArticlePayload({
         title,
         titleEn,
         slug,
         excerpt,
         excerptEn,
         featuredImage,
+        showFeaturedImage,
         category,
-        tags,
-        st,
+        tagsStr: tags,
+        status: st,
         authorName,
         authorDesignation,
+        authorAvatarUrl,
+        authorAvatarDirty: authorAvatarDirtyRef.current,
         seo,
         blocks,
-        t('untitled'),
-        publishedAt,
-        caseStudy
-      );
+        untitledFallback: t('untitled'),
+        currentPublishedAt: publishedAt,
+        caseStudy,
+      });
       if (persistedId) {
         await updateArticleAction(persistedId, payload);
       } else {
@@ -641,12 +695,14 @@ export default function PostEditor({
               title={title}
               slug={slug}
               featuredImage={featuredImage}
+              showFeaturedImage={showFeaturedImage}
               category={category}
               tags={tags}
               status={status}
               publishedAt={publishedAt}
               authorName={authorName}
               authorDesignation={authorDesignation}
+              authorAvatarUrl={authorAvatarUrl}
               seo={seo}
               caseStudy={caseStudy}
               sourceUrl={sourceUrl}
@@ -666,12 +722,14 @@ export default function PostEditor({
                 title={title}
                 slug={slug}
                 featuredImage={featuredImage}
+                showFeaturedImage={showFeaturedImage}
                 category={category}
                 tags={tags}
                 status={status}
                 publishedAt={publishedAt}
                 authorName={authorName}
                 authorDesignation={authorDesignation}
+                authorAvatarUrl={authorAvatarUrl}
                 seo={seo}
                 caseStudy={caseStudy}
                 sourceUrl={sourceUrl}

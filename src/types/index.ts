@@ -184,6 +184,12 @@ export interface Article {
   excerpt?: string;
   excerptEn?: string;
   featuredImage?: string;
+  /**
+   * Whether the featured image is rendered at the top of the article page.
+   * Listing thumbnails ignore this and always use `featuredImage`.
+   * Undefined is treated as `true` (the DB default).
+   */
+  showFeaturedImage?: boolean;
   /** Legacy URL this article was imported from (null when authored directly). */
   sourceUrl?: string;
   status: ArticleStatus;

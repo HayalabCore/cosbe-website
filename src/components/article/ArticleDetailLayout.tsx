@@ -55,7 +55,12 @@ export default function ArticleDetailLayout({
   cta,
 }: ArticleDetailLayoutProps) {
   const displayTitle = resolveArticleTitle(article, locale);
-  const featuredSrc = imageSrcOrFallback(article.featuredImage, '');
+  // `showFeaturedImage === false` hides the hero only; listing thumbnails keep
+  // using `featuredImage` so the card image survives.
+  const featuredSrc =
+    article.showFeaturedImage === false
+      ? ''
+      : imageSrcOrFallback(article.featuredImage, '');
   const publishedLabel = formatDateIso(article.publishedAt, locale);
 
   return (
