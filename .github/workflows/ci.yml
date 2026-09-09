@@ -18,6 +18,10 @@ jobs:
       # are sufficient — no connection is ever opened.
       DATABASE_URL: postgresql://user:password@localhost:5432/db?schema=public
       DIRECT_URL: postgresql://user:password@localhost:5432/db?schema=public
+      # MediaGalleryModal constructs a browser client on mount. Dummy values
+      # are enough — tests mock storage/actions and never open a session.
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
 
     services:
       postgres:
