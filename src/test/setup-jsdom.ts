@@ -5,6 +5,9 @@ import { cleanup } from '@testing-library/react';
 process.env.NEXT_PUBLIC_SUPABASE_URL ??= 'https://example.supabase.co';
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??= 'test-anon-key';
 
+// Admin catch paths log the error; tests that reject actions should not dump stacks.
+vi.spyOn(console, 'error').mockImplementation(() => {});
+
 afterEach(() => {
   cleanup();
 });
