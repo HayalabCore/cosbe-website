@@ -16,6 +16,13 @@ const eslintConfig = defineConfig([
       'react-hooks/refs': 'warn',
     },
   },
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx'],
+    rules: {
+      // next/image is stubbed as <img> in jsdom; LCP does not apply to tests.
+      '@next/next/no-img-element': 'off',
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
