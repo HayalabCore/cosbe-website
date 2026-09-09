@@ -148,4 +148,46 @@ describe('translation actions', () => {
       }
     );
   });
+
+  it('listTranslationNamespaces returns distinct namespaces', async () => {
+    vi.mocked(prisma.translation.findMany).mockResolvedValue([
+      { namespace: 'nav' },
+      { namespace: 'footer' },
+    ] as never);
+    await expect(listTranslationNamespaces()).resolves.toEqual([
+      'nav',
+      'footer',
+    ]);
+  });
+
+  it('getTranslationHistory maps rows to ISO dates', async () => {
+    vi.mocked(prisma.translationHistory.findMany).mockResolvedValue([
+      {
+        id: 'h1',
+        previousValue: 'old',
+        changedBy: 'admin@test.local',
+        changedAt: new Date('2026-01-01T00:00:00.000Z'),
+      },
+    ] as never);
+    await expect(
+      getTranslationHistory({ keyPath: 'nav.home', locale: 'en' })
+    ).resolves.toEqual([
+      {
+        id: 'h1',
+        previousValue: 'old',
+        changedBy: 'admin@test.local',
+        changedAt: '2026-01-01T00:00:00.000Z',
+      },
+    ]);
+  });
+
+  it('deleteTranslationHistoryItem deletes the row', async () => {
+    vi.mocked(prisma.translationHistory.delete).mockResolvedValue({} as never);
+    await expect(
+      deleteTranslationHistoryItem({ historyId: 'h1' })
+    ).resolves.toEqual({ ok: true });
+    expect(prisma.translationHistory.delete).toHaveBeenCalledWith({
+      where: { id: 'h1' },
+    });
+  });
 });

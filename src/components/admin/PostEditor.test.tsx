@@ -137,6 +137,33 @@ describe('PostEditor', () => {
     vi.useRealTimers();
   });
 
+  it('does not autosave when the post is not dirty', async () => {
+    vi.useFakeTimers();
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'T' })} />
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_INTERVAL_MS + 50);
+    });
+    expect(updateArticleAction).not.toHaveBeenCalled();
+  });
+
+  it('does not autosave while a manual save is in flight', async () => {
+    vi.useFakeTimers();
+    updateArticleAction.mockImplementation(() => new Promise(() => {}));
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'T' })} />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
+    fireEvent.change(screen.getByDisplayValue('T'), {
+      target: { value: 'Tx' },
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_INTERVAL_MS + 50);
+    });
+    expect(updateArticleAction).toHaveBeenCalledTimes(1);
+  });
+
   it('swallows autosave failures (no alert)', async () => {
     vi.useFakeTimers();
     updateArticleAction.mockRejectedValue(new Error('autosave-fail'));
@@ -198,5 +225,21 @@ describe('PostEditor', () => {
   it('disables translate when there is nothing to translate', () => {
     renderAdmin(<PostEditor />);
     expect(translateButtons()[0]).toBeDisabled();
+  });
+
+  it('does not start a second translate while one is in flight', async () => {
+    const user = userEvent.setup();
+    translateArticleEnAction.mockImplementation(() => new Promise(() => {}));
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'T' })} />
+    );
+    await user.click(translateButtons()[0]);
+    const inFlight = await screen.findAllByRole('button', {
+      name: 'Translating…',
+    });
+    expect(translateArticleEnAction).toHaveBeenCalledTimes(1);
+    expect(inFlight[0]).toBeDisabled();
+    await user.click(inFlight[0]);
+    expect(translateArticleEnAction).toHaveBeenCalledTimes(1);
   });
 });

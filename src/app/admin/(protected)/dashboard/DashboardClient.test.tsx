@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderAdmin } from '@/test/render-admin';
 import { listItem } from '@/test/fixtures/articles';
@@ -132,6 +132,18 @@ describe('DashboardClient', () => {
     expect(archiveArticlesAction).not.toHaveBeenCalled();
   });
 
+  it('bulk delete confirm cancel does not call the action', async () => {
+    const user = userEvent.setup();
+    vi.mocked(window.confirm).mockReturnValue(false);
+    renderAdmin(<DashboardClient items={[draft]} />);
+    await user.click(screen.getByLabelText('Select row'));
+    const bulkDelete = screen
+      .getAllByRole('button', { name: 'Delete' })
+      .find((el) => el.textContent?.trim() === 'Delete');
+    await user.click(bulkDelete!);
+    expect(deleteArticlesAction).not.toHaveBeenCalled();
+  });
+
   it('hides the bulk bar when nothing is selected', () => {
     renderAdmin(<DashboardClient items={[draft]} />);
     expect(screen.queryByText(/selected/i)).not.toBeInTheDocument();
@@ -160,5 +172,40 @@ describe('DashboardClient', () => {
     renderAdmin(<DashboardClient items={items} />);
     expect(screen.getByRole('button', { name: 'Previous' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Next' })).toBeEnabled();
+  });
+
+  it('disables next on the last of multiple pages', async () => {
+    const user = userEvent.setup();
+    const items: ArticleListItem[] = Array.from({ length: 21 }, (_, i) =>
+      listItem({
+        id: `n${i}`,
+        slug: `n-${i}`,
+        title: `Post ${i}`,
+      })
+    );
+    renderAdmin(<DashboardClient items={items} />);
+    await user.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByRole('button', { name: 'Previous' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled();
+  });
+
+  it('disables row actions while a row action is in flight', async () => {
+    const user = userEvent.setup();
+    const draft2 = listItem({
+      id: 'd2',
+      title: 'Draft Two',
+      slug: 'draft-two',
+      status: 'draft',
+    });
+    publishArticleAction.mockImplementation(() => new Promise(() => {}));
+    renderAdmin(<DashboardClient items={[draft, draft2]} />);
+    const busyRow = screen.getByText('Draft Post').closest('tr');
+    await user.click(within(busyRow!).getByTitle('Publish'));
+    await waitFor(() =>
+      expect(within(busyRow!).getByTitle('Publish')).toBeDisabled()
+    );
+    expect(within(busyRow!).getByTitle('Archive')).toBeDisabled();
+    const idleRow = screen.getByText('Draft Two').closest('tr');
+    expect(within(idleRow!).getByTitle('Publish')).toBeEnabled();
   });
 });

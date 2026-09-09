@@ -39,4 +39,41 @@ describe('GET /api/admin/media', () => {
       expect.objectContaining({ page: 1, pageSize: 100 })
     );
   });
+
+  it('returns the list payload when authed', async () => {
+    vi.mocked(createServerSupabaseClient).mockResolvedValue({
+      auth: { getUser: async () => ({ data: { user: { id: 'u' } } }) },
+    } as never);
+    vi.mocked(listMedia).mockResolvedValue([
+      {
+        id: 'm1',
+        filename: 'pic.png',
+        url: 'https://cdn.example/pic.png',
+        size: 10,
+        mimeType: 'image/png',
+        alt: '',
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      },
+    ] as never);
+    vi.mocked(countMedia).mockResolvedValue(1);
+    const res = await GET(new Request('http://localhost/api/admin/media'));
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toEqual({
+      items: [
+        {
+          id: 'm1',
+          filename: 'pic.png',
+          url: 'https://cdn.example/pic.png',
+          size: 10,
+          mimeType: 'image/png',
+          alt: '',
+          createdAt: '2026-01-01T00:00:00.000Z',
+        },
+      ],
+      total: 1,
+      page: 1,
+      pageSize: 24,
+      totalPages: 1,
+    });
+  });
 });

@@ -46,6 +46,10 @@ describe('AdminProtectedShell', () => {
     expect(
       screen.getAllByRole('link', { name: 'Translations' }).length
     ).toBeGreaterThan(0);
+    const dashboard = screen.getAllByRole('link', { name: 'All Posts' })[0];
+    const newPost = screen.getAllByRole('link', { name: 'New Post' })[0];
+    expect(dashboard.className).toMatch(/bg-white\/10/);
+    expect(newPost.className).not.toMatch(/bg-white\/10/);
   });
 
   it('signs out and replaces to /admin', async () => {
@@ -65,6 +69,17 @@ describe('AdminProtectedShell', () => {
     );
     await user.click(screen.getAllByRole('button', { name: 'JP' })[0]);
     expect(document.cookie).toMatch(/admin_locale=ja/);
+    expect(refresh).toHaveBeenCalled();
+  });
+
+  it('renders Japanese sidebar copy when the locale is ja', () => {
+    renderAdmin(
+      <AdminProtectedShell userEmail="a@b.c">child</AdminProtectedShell>,
+      { locale: 'ja' }
+    );
+    expect(
+      screen.getAllByRole('link', { name: 'すべての記事' }).length
+    ).toBeGreaterThan(0);
   });
 
   it('opens and closes the mobile drawer', async () => {
