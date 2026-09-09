@@ -7,7 +7,14 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    log:
+      // Unique-constraint tests expect P2002; Prisma still prints prisma:error
+      // to stdout unless logging is off.
+      process.env.ADMIN_TEST_DB === '1'
+        ? []
+        : process.env.NODE_ENV === 'development'
+          ? ['error', 'warn']
+          : ['error'],
   });
 
 if (process.env.NODE_ENV !== 'production') {
