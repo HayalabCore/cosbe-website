@@ -1,20 +1,54 @@
 import { fileURLToPath } from 'node:url';
-import { configDefaults, defineConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 
-export default defineConfig({
+const src = fileURLToPath(new URL('./src', import.meta.url));
+const serverOnlyStub = fileURLToPath(
+  new URL('./src/test/server-only-stub.ts', import.meta.url)
+);
+
+const shared = {
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': src,
+      'server-only': serverOnlyStub,
     },
   },
+};
+
+export default defineConfig({
+  ...shared,
   test: {
-    environment: 'node',
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
-    // Standalone tsx round-trip script (run via `yarn test:translations-flatten`),
-    // not a Vitest suite — exclude so it isn't collected here.
-    exclude: [
-      ...configDefaults.exclude,
-      'src/lib/translations/flatten.roundtrip.test.ts',
+    projects: [
+      {
+        ...shared,
+        test: {
+          name: 'unit',
+          environment: 'node',
+          include: ['src/**/*.test.ts'],
+          exclude: [
+            'src/**/*.db.test.ts',
+            'src/lib/translations/flatten.roundtrip.test.ts',
+          ],
+        },
+      },
+      {
+        ...shared,
+        test: {
+          name: 'component',
+          environment: 'jsdom',
+          include: ['src/**/*.test.tsx'],
+          setupFiles: ['src/test/setup-jsdom.ts'],
+        },
+      },
+      {
+        ...shared,
+        test: {
+          name: 'db',
+          environment: 'node',
+          include: ['src/**/*.db.test.ts'],
+          setupFiles: ['src/test/setup-db.ts'],
+        },
+      },
     ],
   },
 });

@@ -19,6 +19,21 @@ jobs:
       DATABASE_URL: postgresql://user:password@localhost:5432/db?schema=public
       DIRECT_URL: postgresql://user:password@localhost:5432/db?schema=public
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cosbe_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -42,3 +57,10 @@ jobs:
 
       - name: Test
         run: yarn test
+
+      - name: Test (db slice)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/cosbe_test?schema=public
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/cosbe_test?schema=public
+          ADMIN_TEST_DB: '1'
+        run: yarn prisma migrate deploy && yarn test:db

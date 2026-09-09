@@ -8,7 +8,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import {
   createEmptyBlock,
   createFallbackSlug,
-  generateTOC,
   normalizeSlugInput,
 } from '@/lib/article-utils';
 import {
@@ -33,6 +32,10 @@ import type {
 } from '@/types';
 import { useAdminViewArticleLink } from '@/components/admin/AdminViewArticleContext';
 import { articleDetailHref } from '@/lib/article-paths';
+import {
+  buildArticlePayload,
+  DEFAULT_EDITOR_AUTHOR,
+} from '@/lib/admin/build-article-payload';
 import ArticleMetaLocaleFields from './ArticleMetaLocaleFields';
 import PostMetaForm, { type PostMetaPatch } from './PostMetaForm';
 
@@ -44,101 +47,12 @@ const BlockRenderer = dynamic(
 
 type Tab = 'edit' | 'preview';
 
-const defaultAuthor = { id: 'author-1', name: 'Editor', designation: 'CosBE' };
-
 const emptyCaseStudyMeta: CaseStudyMeta = {
   aiModels: [],
 };
 
 /** Autosave interval when the article has unsaved edits (idle saves are no-ops). */
-const AUTOSAVE_INTERVAL_MS = 10_000;
-
-type BuildPayloadArgs = {
-  title: string;
-  titleEn: string;
-  slug: string;
-  excerpt: string;
-  excerptEn: string;
-  featuredImage: string;
-  showFeaturedImage: boolean;
-  category: ContentCategory;
-  tagsStr: string;
-  status: ArticleStatus;
-  authorName: string;
-  authorDesignation: string;
-  authorAvatarUrl: string;
-  /**
-   * Only send the avatar when the editor actually touched it. Authors are shared
-   * rows, so unconditionally sending the (initially empty) field would wipe the
-   * avatar of an existing author the moment a new article is saved under their
-   * name. See `upsertAuthor` for the undefined/empty distinction.
-   */
-  authorAvatarDirty: boolean;
-  seo: ArticleSEO;
-  blocks: ContentBlock[];
-  untitledFallback: string;
-  currentPublishedAt: string | null;
-  caseStudy: CaseStudyMeta;
-};
-
-function buildArticlePayload({
-  title,
-  titleEn,
-  slug,
-  excerpt,
-  excerptEn,
-  featuredImage,
-  showFeaturedImage,
-  category,
-  tagsStr,
-  status,
-  authorName,
-  authorDesignation,
-  authorAvatarUrl,
-  authorAvatarDirty,
-  seo,
-  blocks,
-  untitledFallback,
-  currentPublishedAt,
-  caseStudy,
-}: BuildPayloadArgs): Omit<Article, 'id' | 'createdAt' | 'updatedAt'> {
-  const tags = tagsStr
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean);
-  const toc = generateTOC(blocks);
-  // Preserve an existing publishedAt; only stamp "now" on first publish.
-  const publishedAt =
-    status === 'published'
-      ? (currentPublishedAt ?? new Date().toISOString())
-      : null;
-  const safeSlug = createFallbackSlug(slug || title);
-  return {
-    slug: safeSlug,
-    title: title || untitledFallback,
-    titleEn: titleEn.trim() || undefined,
-    excerpt: excerpt || undefined,
-    excerptEn: excerptEn.trim() || undefined,
-    featuredImage: featuredImage.trim(),
-    showFeaturedImage,
-    status,
-    category,
-    tags,
-    author: {
-      id: defaultAuthor.id,
-      name: authorName || defaultAuthor.name,
-      designation: authorDesignation || defaultAuthor.designation,
-      avatarUrl: authorAvatarDirty ? authorAvatarUrl.trim() : undefined,
-    },
-    blocks,
-    toc,
-    seo: Object.keys(seo).length ? seo : undefined,
-    relatedArticleIds: [],
-    publishedAt,
-    viewCount: 0,
-    caseStudy: category === 'case-study' ? caseStudy : undefined,
-  };
-}
+export const AUTOSAVE_INTERVAL_MS = 10_000;
 
 function wordCount(blocks: ContentBlock[]): number {
   return blocks.reduce((acc, b) => {
@@ -222,10 +136,10 @@ export default function PostEditor({
     initialArticle?.publishedAt ?? null
   );
   const [authorName, setAuthorName] = useState(
-    initialArticle?.author.name ?? defaultAuthor.name
+    initialArticle?.author.name ?? DEFAULT_EDITOR_AUTHOR.name
   );
   const [authorDesignation, setAuthorDesignation] = useState(
-    initialArticle?.author.designation ?? defaultAuthor.designation
+    initialArticle?.author.designation ?? DEFAULT_EDITOR_AUTHOR.designation
   );
   const [authorAvatarUrl, setAuthorAvatarUrl] = useState(
     initialArticle?.author.avatarUrl ?? ''
