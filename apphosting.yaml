@@ -1,0 +1,28 @@
+# Firebase App Hosting configuration.
+# Docs: https://firebase.google.com/docs/app-hosting/configure
+#
+# Environment variables are NOT listed here on purpose. They are set in the
+# Firebase console (App Hosting > backend > Settings), which is where the values
+# for this backend live. Console values always take precedence over this file,
+# and they are available at both build time and runtime — which Next.js needs,
+# since NEXT_PUBLIC_* are inlined during `next build` and the build prerenders
+# pages and the sitemap from the database.
+#
+# If you ever move a value out of the console and into Secret Manager, add it
+# back here as `secret: <NAME>` and create it with:
+#   firebase apphosting:secrets:set <NAME> --project cosbe-website-ed97c
+#   firebase apphosting:secrets:grantaccess <NAME> --backend cosbe-website --project cosbe-website-ed97c
+# Referencing a secret that does not exist fails the build, so create it first.
+
+runConfig:
+  # Scale to zero when idle so an unvisited site costs nothing. The trade-off is
+  # a ~1-3s cold start on the first request; set minInstances: 1 to remove it
+  # (that instance runs 24/7 and is billed, roughly $5-10/month).
+  minInstances: 0
+  # Cost guard: caps how many containers can run at once. 3 x 80 concurrent
+  # requests is far more than this site needs; raise it if real traffic saturates it.
+  maxInstances: 3
+  concurrency: 80
+  cpu: 1
+  # Next.js 16 SSR plus the Prisma client needs more than the 512 MiB default.
+  memoryMiB: 1024
