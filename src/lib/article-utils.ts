@@ -74,10 +74,52 @@ export function generateSlug(title: string): string {
   return sanitizeSlug(title);
 }
 
+/** Latin remnants like "ai" from a Japanese title are too collision-prone. */
+const MIN_DERIVED_SLUG_LENGTH = 3;
+
+function seedHasJapanese(seed: string): boolean {
+  return /\p{Script=Han}|\p{Script=Hiragana}|\p{Script=Katakana}/u.test(seed);
+}
+
 export function createFallbackSlug(seed?: string): string {
-  const candidate = sanitizeSlug(seed ?? '');
-  if (candidate) return candidate;
+  const raw = seed ?? '';
+  if (seedHasJapanese(raw)) {
+    return `article-${generateId().slice(0, 8)}`;
+  }
+  const candidate = sanitizeSlug(raw);
+  if (candidate.length >= MIN_DERIVED_SLUG_LENGTH) return candidate;
   return `article-${generateId().slice(0, 8)}`;
+}
+
+/** First free slug: `base`, then `base-2` … `base-50`, then a random article-* . */
+export function pickUniqueSlug(
+  desired: string,
+  taken: ReadonlySet<string>
+): string {
+  const base = sanitizeSlug(desired) || createFallbackSlug(desired);
+  if (!taken.has(base)) return base;
+  for (let n = 2; n <= 50; n++) {
+    const candidate = `${base}-${n}`;
+    if (!taken.has(candidate)) return candidate;
+  }
+  return createFallbackSlug();
+}
+
+/**
+ * Save-time slug: typed value wins, then the already-persisted slug, then a
+ * title-derived fallback. Clearing the slug field on an existing post must not
+ * rewrite the URL to a short remnant such as `ai`.
+ */
+export function resolveArticleSlug(
+  slug: string,
+  title: string,
+  currentSlug?: string
+): string {
+  const typed = sanitizeSlug(slug);
+  if (typed) return typed;
+  const existing = sanitizeSlug(currentSlug ?? '');
+  if (existing) return existing;
+  return createFallbackSlug(title);
 }
 
 export function generateExcerpt(

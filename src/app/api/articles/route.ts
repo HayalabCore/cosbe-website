@@ -1,7 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
 
-import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
+import { isSlugUniqueConflict } from '@/lib/prisma-errors';
 
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
 import { createArticleRecord } from '@/lib/articles';
@@ -71,10 +71,7 @@ export async function POST(request: Request) {
     revalidateArticlePaths(data.slug, data.category);
     return NextResponse.json({ id }, { status: 201 });
   } catch (e) {
-    if (
-      e instanceof Prisma.PrismaClientKnownRequestError &&
-      e.code === 'P2002'
-    ) {
+    if (isSlugUniqueConflict(e)) {
       return NextResponse.json(
         {
           error: 'Conflict',

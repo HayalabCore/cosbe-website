@@ -6,9 +6,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import {
+  SLUG_CONFLICT_ERROR,
+  isArticleMutationFailure,
+} from '@/lib/article-mutation-result';
+import {
   createEmptyBlock,
-  createFallbackSlug,
   normalizeSlugInput,
+  sanitizeSlug,
 } from '@/lib/article-utils';
 import {
   resolveArticleTitle,
@@ -111,7 +115,9 @@ export default function PostEditor({
   const [tab, setTab] = useState<Tab>('edit');
   const [saving, setSaving] = useState(false);
   const [autoSavingUi, setAutoSavingUi] = useState(false);
-  const [saveNotice, setSaveNotice] = useState<'manual' | 'auto' | null>(null);
+  const [saveNotice, setSaveNotice] = useState<
+    'manual' | 'auto' | 'auto-error' | 'auto-error-slug' | null
+  >(null);
 
   const [title, setTitle] = useState(initialArticle?.title ?? '');
   const [titleEn, setTitleEn] = useState(initialArticle?.titleEn ?? '');
@@ -158,6 +164,7 @@ export default function PostEditor({
   const [persistedId, setPersistedId] = useState<string | undefined>(
     initialArticle?.id
   );
+  const persistedSlugRef = useRef(initialArticle?.slug ?? '');
   const [previewLocale, setPreviewLocale] = useState<'ja' | 'en'>('ja');
   const [articleLocaleViewTab, setArticleLocaleViewTab] = useState<
     'original' | 'english'
@@ -176,7 +183,8 @@ export default function PostEditor({
       setViewArticleHref(null);
       return;
     }
-    const safeSlug = createFallbackSlug(slug || title);
+    const safeSlug =
+      sanitizeSlug(slug) || persistedSlugRef.current || sanitizeSlug(title);
     if (!safeSlug) {
       setViewArticleHref(null);
       return;
@@ -245,6 +253,28 @@ export default function PostEditor({
 
   const canTranslateArticle = articleHasTranslatableContent(title, blocks);
 
+  function alertSaveFailure(resultOrError: unknown) {
+    if (isArticleMutationFailure(resultOrError)) {
+      if (resultOrError.error === SLUG_CONFLICT_ERROR) {
+        alert(t('slugConflict'));
+        return;
+      }
+      if (resultOrError.error.startsWith('Invalid article data')) {
+        alert(resultOrError.error);
+        return;
+      }
+      alert(t('saveFailed'));
+      return;
+    }
+    console.error(resultOrError);
+    alert(t('saveFailed'));
+  }
+
+  function applySavedSlug(sentSlug: string, savedSlug: string) {
+    persistedSlugRef.current = savedSlug;
+    setSlug((cur) => (cur === sentSlug ? savedSlug : cur));
+  }
+
   const runAutoSave = useCallback(async () => {
     const id = persistedId;
     if (
@@ -258,6 +288,7 @@ export default function PostEditor({
     autoSavingRef.current = true;
     setSaveNotice(null);
     setAutoSavingUi(true);
+    const sentSlug = slug;
     try {
       const payload = buildArticlePayload({
         title,
@@ -278,14 +309,26 @@ export default function PostEditor({
         blocks,
         untitledFallback: t('untitled'),
         currentPublishedAt: publishedAt,
+        currentSlug: persistedSlugRef.current,
         caseStudy,
       });
-      await updateArticleAction(id, payload);
+      const result = await updateArticleAction(id, payload);
+      if (!result.ok) {
+        console.error('Autosave failed', result.error);
+        setSaveNotice(
+          result.error === SLUG_CONFLICT_ERROR
+            ? 'auto-error-slug'
+            : 'auto-error'
+        );
+        return;
+      }
+      applySavedSlug(sentSlug, result.slug);
       isDirtyRef.current = false;
       setSaveNotice('auto');
       setTimeout(() => setSaveNotice(null), 2000);
     } catch (e) {
       console.error('Autosave failed', e);
+      setSaveNotice('auto-error');
     } finally {
       autoSavingRef.current = false;
       setAutoSavingUi(false);
@@ -350,14 +393,28 @@ export default function PostEditor({
         blocks,
         untitledFallback: t('untitled'),
         currentPublishedAt: publishedAt,
+        currentSlug: persistedSlugRef.current,
         caseStudy,
       });
+      const sentSlug = slug;
       if (persistedId) {
-        await updateArticleAction(persistedId, payload);
+        const result = await updateArticleAction(persistedId, payload);
+        if (!result.ok) {
+          alertSaveFailure(result);
+          return;
+        }
+        applySavedSlug(sentSlug, result.slug);
       } else {
-        const id = await createArticleAction(payload);
-        setPersistedId(id);
-        router.replace(`/admin/posts/${id}`);
+        const result = await createArticleAction(payload, {
+          autoSuffixSlug: !slug.trim(),
+        });
+        if (!result.ok) {
+          alertSaveFailure(result);
+          return;
+        }
+        setPersistedId(result.id);
+        applySavedSlug(sentSlug, result.slug);
+        router.replace(`/admin/posts/${result.id}`);
       }
       if (publish) {
         setStatus('published');
@@ -371,8 +428,7 @@ export default function PostEditor({
       setTimeout(() => setSaveNotice(null), 2000);
       router.refresh();
     } catch (e) {
-      console.error(e);
-      alert(e instanceof Error ? e.message : t('saveFailed'));
+      alertSaveFailure(e);
     } finally {
       savingRef.current = false;
       setSaving(false);
@@ -382,6 +438,8 @@ export default function PostEditor({
   const words = wordCount(blocks);
   const readingMins = Math.max(1, Math.ceil(words / 200));
   const isPublished = status === 'published';
+  const isSaveError =
+    saveNotice === 'auto-error' || saveNotice === 'auto-error-slug';
 
   const previewLocaleStr = previewLocale;
   const previewTitle =
@@ -497,19 +555,16 @@ export default function PostEditor({
             />
 
             {saveNotice && !saving && !autoSavingUi && (
-              <span className="hidden xl:flex items-center gap-1.5 text-xs text-emerald-600 flex-shrink-0">
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {saveNotice === 'auto' ? t('autoSaved') : t('saved')}
+              <span
+                className={`${
+                  isSaveError ? 'flex text-amber-600' : 'hidden xl:flex text-emerald-600'
+                } items-center gap-1.5 text-xs flex-shrink-0`}
+              >
+                {saveNotice === 'auto-error-slug'
+                  ? t('autosaveFailedSlug')
+                  : saveNotice === 'auto-error'
+                    ? t('autosaveFailed')
+                    : t(saveNotice === 'auto' ? 'autoSaved' : 'saved')}
               </span>
             )}
 

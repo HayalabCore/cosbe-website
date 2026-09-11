@@ -13,14 +13,20 @@ const CATEGORY_LISTING_PATH: Record<ContentCategory, string> = {
   notice: '/notice',
 };
 
+function slugList(slug?: string | readonly string[]): string[] {
+  if (!slug) return [];
+  return (typeof slug === 'string' ? [slug] : [...slug]).filter(Boolean);
+}
+
 /** Revalidates listing layouts and optional article detail page (same as admin article actions). */
 export function revalidateArticlePaths(
-  slug?: string,
+  slug?: string | readonly string[],
   category?: ContentCategory
 ) {
+  const slugs = slugList(slug);
   revalidateTag(ARTICLES_CACHE_TAG, 'default');
-  if (slug) {
-    revalidateTag(articleSlugCacheTag(slug), 'default');
+  for (const s of slugs) {
+    revalidateTag(articleSlugCacheTag(s), 'default');
   }
 
   const listingPaths = category
@@ -33,9 +39,11 @@ export function revalidateArticlePaths(
     for (const path of listingPaths) {
       revalidatePath(`/${locale}${path}`, 'layout');
     }
-    if (slug && category) {
+    if (category) {
       const base = articleDetailBasePath(category);
-      revalidatePath(`/${locale}${base}/${slug}`, 'page');
+      for (const s of slugs) {
+        revalidatePath(`/${locale}${base}/${s}`, 'page');
+      }
     }
   }
 }

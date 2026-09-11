@@ -4,6 +4,7 @@ import { articleCreateApiMetadata } from '@/lib/api/article-create-metadata';
 import {
   createArticleSchema,
   toCreateArticlePayload,
+  toUpdateArticlePayload,
   updateArticleSchema,
   zodErrorDetails,
 } from '@/lib/validation/article';
@@ -232,6 +233,22 @@ describe('updateArticleSchema', () => {
     expect(updateArticleSchema.safeParse({ status: 'bogus' }).success).toBe(
       false
     );
+  });
+});
+
+describe('toUpdateArticlePayload', () => {
+  it('defaults a missing author id and keeps a title-only patch lean', () => {
+    expect(toUpdateArticlePayload({ title: 'Ok' })).toEqual({ title: 'Ok' });
+    expect(
+      toUpdateArticlePayload({
+        author: { name: 'Ada', designation: 'Editor' },
+      }).author
+    ).toEqual({
+      id: '',
+      name: 'Ada',
+      designation: 'Editor',
+      avatarUrl: undefined,
+    });
   });
 });
 

@@ -10,9 +10,9 @@ import type {
   ContentCategory,
 } from '@/types';
 import {
-  createFallbackSlug,
   imageSrcOrFallback,
   normalizeSlugInput,
+  sanitizeSlug,
 } from '@/lib/article-utils';
 import AdminCheckbox from './AdminCheckbox';
 import ImageUpload from './ImageUpload';
@@ -201,11 +201,11 @@ export default function PostMetaForm({
   const avatarSrc = imageSrcOrFallback(authorAvatarUrl, '');
 
   const previewPath = useMemo(() => {
-    const resolved = createFallbackSlug(slug || title);
-    return `/${resolved}`;
+    const resolved = sanitizeSlug(slug || title);
+    return resolved ? `/${resolved}` : '/';
   }, [slug, title]);
 
-  const slugSummary = slug.trim() || createFallbackSlug(title).slice(0, 20);
+  const slugSummary = slug.trim() || sanitizeSlug(title).slice(0, 20);
 
   return (
     <div>

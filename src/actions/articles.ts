@@ -4,12 +4,20 @@ import { revalidatePath } from 'next/cache';
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
 import { requireUser } from '@/lib/require-user';
 import {
+  SAVE_FAILED_ERROR,
+  SLUG_CONFLICT_ERROR,
+  type ArticleMutationResult,
+} from '@/lib/article-mutation-result';
+import { isSlugUniqueConflict } from '@/lib/prisma-errors';
+import {
   createArticleSchema,
   toCreateArticlePayload,
+  toUpdateArticlePayload,
   updateArticleSchema,
   zodErrorDetails,
 } from '@/lib/validation/article';
 import {
+  allocateUniqueSlug,
   archiveArticleRecord,
   archiveArticlesRecord,
   countArticles,
@@ -86,37 +94,79 @@ export async function listArticlesAdminAction(options: {
   return { items, total, stats };
 }
 
+export type CreateArticleOptions = {
+  /** When true the slug was derived, so a taken value may be suffixed. */
+  autoSuffixSlug?: boolean;
+};
+
 export async function createArticleAction(
-  data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>
-): Promise<string> {
+  data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>,
+  options: CreateArticleOptions = {}
+): Promise<ArticleMutationResult> {
   await requireUser();
   const parsed = createArticleSchema.safeParse(data);
   if (!parsed.success) {
-    throw new Error(
-      `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`
-    );
+    return {
+      ok: false,
+      error: `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`,
+    };
   }
   // Persist the validated + normalized payload (unknown keys stripped, fields
   // trimmed) rather than the raw client object — defense in depth.
   const payload = toCreateArticlePayload(parsed.data);
-  const id = await createArticleRecord(payload);
-  revalidateArticlePaths(payload.slug, payload.category);
-  return id;
+  try {
+    const slug = options.autoSuffixSlug
+      ? await allocateUniqueSlug(payload.slug)
+      : payload.slug;
+    const id = await createArticleRecord({ ...payload, slug });
+    revalidateArticlePaths(slug, payload.category);
+    return { ok: true, id, slug };
+  } catch (error) {
+    if (isSlugUniqueConflict(error)) {
+      return { ok: false, error: SLUG_CONFLICT_ERROR };
+    }
+    console.error('[createArticleAction]', error);
+    return { ok: false, error: SAVE_FAILED_ERROR };
+  }
 }
 
 export async function updateArticleAction(
   id: string,
   data: Partial<Omit<Article, 'id' | 'createdAt'>>
-): Promise<void> {
+): Promise<ArticleMutationResult> {
   await requireUser();
   const parsed = updateArticleSchema.safeParse(data);
   if (!parsed.success) {
-    throw new Error(
-      `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`
-    );
+    return {
+      ok: false,
+      error: `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`,
+    };
   }
-  await updateArticleRecord(id, data);
-  revalidateArticlePaths(data.slug, data.category);
+  try {
+    const previous = await getArticleSlugCategoryById(id);
+    if (!previous) {
+      return { ok: false, error: SAVE_FAILED_ERROR };
+    }
+    await updateArticleRecord(id, toUpdateArticlePayload(parsed.data));
+    const nextSlug = parsed.data.slug ?? previous.slug;
+    const nextCategory = parsed.data.category ?? previous.category;
+    if (parsed.data.category && parsed.data.category !== previous.category) {
+      revalidateArticlePaths(previous.slug, previous.category);
+      revalidateArticlePaths(nextSlug, nextCategory);
+    } else {
+      revalidateArticlePaths(
+        [...new Set([nextSlug, previous.slug])],
+        nextCategory
+      );
+    }
+    return { ok: true, id, slug: nextSlug };
+  } catch (error) {
+    if (isSlugUniqueConflict(error)) {
+      return { ok: false, error: SLUG_CONFLICT_ERROR };
+    }
+    console.error('[updateArticleAction]', error);
+    return { ok: false, error: SAVE_FAILED_ERROR };
+  }
 }
 
 /** Moves an article to 'archived' status (soft delete). */

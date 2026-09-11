@@ -97,6 +97,7 @@ export const updateArticleSchema = z
   .partial();
 
 export type CreateArticleInput = z.infer<typeof createArticleSchema>;
+export type UpdateArticleInput = z.infer<typeof updateArticleSchema>;
 
 /** Flattens a ZodError into the `details: string[]` shape the API returns. */
 export function zodErrorDetails(error: z.ZodError): string[] {
@@ -144,4 +145,24 @@ export function toCreateArticlePayload(
     viewCount: input.viewCount,
     caseStudy: input.caseStudy as CaseStudyMeta | undefined,
   };
+}
+
+/** Maps a validated update patch onto the repository type (author.id required). */
+export function toUpdateArticlePayload(
+  input: UpdateArticleInput
+): Partial<Omit<import('@/types').Article, 'id' | 'createdAt'>> {
+  const { author, ...rest } = input;
+  return {
+    ...rest,
+    ...(author
+      ? {
+          author: {
+            id: author.id ?? '',
+            name: author.name,
+            designation: author.designation,
+            avatarUrl: author.avatarUrl,
+          },
+        }
+      : {}),
+  } as Partial<Omit<import('@/types').Article, 'id' | 'createdAt'>>;
 }

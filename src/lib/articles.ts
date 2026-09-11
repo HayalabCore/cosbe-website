@@ -26,6 +26,7 @@ export {
   getArticleStatusCounts,
   getAuthors,
   upsertAuthor,
+  allocateUniqueSlug,
   createArticleRecord,
   updateArticleRecord,
   deleteArticleRecord,

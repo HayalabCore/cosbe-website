@@ -46,6 +46,28 @@ describe('buildArticlePayload', () => {
     expect(p.slug).toBe('hello-world');
   });
 
+  it('keeps the persisted slug when the slug field is cleared', () => {
+    const p = buildArticlePayload(
+      args({
+        slug: '',
+        title: 'AIコンサル会社の選び方｜経営理解の深さをどう見るか',
+        currentSlug: 'something',
+      })
+    );
+    expect(p.slug).toBe('something');
+  });
+
+  it('does not derive colliding slug "ai" from a Japanese AI title', () => {
+    const p = buildArticlePayload(
+      args({
+        slug: '',
+        title: 'AIコンサル会社の選び方｜経営理解の深さをどう見るか',
+      })
+    );
+    expect(p.slug).not.toBe('ai');
+    expect(p.slug).toMatch(/^article-[0-9a-f]{8}$/);
+  });
+
   it('splits and trims tags, dropping empties', () => {
     expect(buildArticlePayload(args()).tags).toEqual(['a', 'b', 'c']);
   });

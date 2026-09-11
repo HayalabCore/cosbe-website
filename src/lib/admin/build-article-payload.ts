@@ -1,4 +1,4 @@
-import { createFallbackSlug, generateTOC } from '@/lib/article-utils';
+import { generateTOC, resolveArticleSlug } from '@/lib/article-utils';
 import type {
   Article,
   ArticleSEO,
@@ -39,6 +39,8 @@ export type BuildArticlePayloadArgs = {
   blocks: ContentBlock[];
   untitledFallback: string;
   currentPublishedAt: string | null;
+  /** Already-persisted slug; used when the editor field is left blank. */
+  currentSlug?: string;
   caseStudy: CaseStudyMeta;
 };
 
@@ -61,6 +63,7 @@ export function buildArticlePayload({
   blocks,
   untitledFallback,
   currentPublishedAt,
+  currentSlug,
   caseStudy,
 }: BuildArticlePayloadArgs): Omit<Article, 'id' | 'createdAt' | 'updatedAt'> {
   const tags = tagsStr
@@ -73,7 +76,7 @@ export function buildArticlePayload({
     status === 'published'
       ? (currentPublishedAt ?? new Date().toISOString())
       : null;
-  const safeSlug = createFallbackSlug(slug || title);
+  const safeSlug = resolveArticleSlug(slug, title, currentSlug);
   return {
     slug: safeSlug,
     title: title || untitledFallback,

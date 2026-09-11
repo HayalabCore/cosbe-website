@@ -4,7 +4,7 @@ import {
   type Author as DbAuthor,
 } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { generateTOC } from '@/lib/article-utils';
+import { generateTOC, pickUniqueSlug, sanitizeSlug } from '@/lib/article-utils';
 import type {
   Article,
   ArticleListItem,
@@ -188,6 +188,27 @@ export async function getArticleSlugCategoryById(
   });
   if (!row) return null;
   return { slug: row.slug, category: row.category as ContentCategory };
+}
+
+export async function allocateUniqueSlug(
+  desired: string,
+  excludeId?: string
+): Promise<string> {
+  const base = sanitizeSlug(desired);
+  const candidates = base
+    ? [base, ...Array.from({ length: 49 }, (_, i) => `${base}-${i + 2}`)]
+    : [];
+  const rows =
+    candidates.length === 0
+      ? []
+      : await prisma.article.findMany({
+          where: { slug: { in: candidates } },
+          select: { id: true, slug: true },
+        });
+  const taken = new Set(
+    rows.filter((row) => row.id !== excludeId).map((row) => row.slug)
+  );
+  return pickUniqueSlug(desired, taken);
 }
 
 export async function getArticleBySlug(
