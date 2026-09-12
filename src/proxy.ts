@@ -8,9 +8,20 @@ const intlMiddleware = createMiddleware(routing);
 // Firebase App Hosting serves every backend on a *.hosted.app URL (and Cloud Run
 // on *.run.app). Those are duplicates of the production domain, so keep search
 // engines out of them — otherwise they compete with cosbe.inc in the index.
-function isPreviewHost(host: string | null): boolean {
+//
+// App Hosting is a reverse proxy: `host` is always the internal backend name
+// (*.hosted.app), even for requests to the custom domain. The hostname the
+// visitor actually typed arrives in `x-forwarded-host`, so that has to win —
+// reading `host` alone would noindex the production domain too.
+//
+// Deliberately a blocklist, not an allowlist: if these headers are ever missing
+// or renamed, the fallback is "indexable", which is the safe direction to fail.
+function isPreviewHost(request: NextRequest): boolean {
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
   if (!host) return false;
-  return host.endsWith('.hosted.app') || host.endsWith('.run.app');
+  // Strip any port, and take the first entry if a proxy chain appended several.
+  const hostname = host.split(',')[0].trim().split(':')[0].toLowerCase();
+  return hostname.endsWith('.hosted.app') || hostname.endsWith('.run.app');
 }
 
 export default async function proxy(request: NextRequest) {
@@ -20,7 +31,7 @@ export default async function proxy(request: NextRequest) {
 
   const res = await response;
 
-  if (isPreviewHost(request.headers.get('host'))) {
+  if (isPreviewHost(request)) {
     res.headers.set('X-Robots-Tag', 'noindex, nofollow');
   }
 
