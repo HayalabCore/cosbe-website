@@ -20,6 +20,8 @@ yarn postinstall  # Re-run prisma generate (needed after schema changes to refre
 
 # Utilities
 yarn import-article <url>        # Scrape and import legacy articles
+yarn db:bootstrap-admins             # One-off: import Supabase Auth users into admin_users (Admin role; super-admin by email)
+yarn db:bootstrap-admins --dry-run   # Preview without writing
 
 # Translations
 yarn db:pull-translations            # Snapshot DB values into JSON files (DB → JSON)
@@ -101,6 +103,16 @@ Admin dashboard buttons are conditional on current status.
 
 `revalidateArticlePaths(slug, category)` in `src/actions/articles.ts` only revalidates the affected category's listing page using `CATEGORY_LISTING_PATH`. Categories: `useful-info` → `/useful-column`, `case-study` → `/case-studies`, `video` → `/useful-video`, `notice` → `/notice`.
 
+### Users & permissions
+
+- **Permissions** are code-defined in `src/lib/permissions.ts`. **Roles** (UI-managed at `/admin/roles`) bundle permissions; users (`/admin/users`) can hold several roles and get the union. `super-admin` is a locked system role with every permission.
+- **Enforcement:** every server action calls `requirePermission(...)` / `requireAnyPermission(...)` from `src/lib/authz.ts` (never just a session check). Pages call `hasPermission` and render `<PermissionNeeded />`. Client components use `usePermissions()` only to hide controls.
+- **Guardrails** (`src/lib/authz-rules.ts`): no self-modification, only super-admins touch super-admins, nobody grants or takes over permissions they don't hold (`canModifyUser` requires `holdsAll` of the target's permissions).
+- **Adding a permission:** add the key to `PERMISSIONS`, add `admin.access.permissions.<key_with_underscores>` label/description to `messages/admin-{en,ja}.json`, add the `requirePermission` check where it applies, and decide whether default roles should get it (new migration inserting `role_permissions` rows + `DEFAULT_ROLE_PERMISSIONS`).
+- **Auth accounts** are created/banned/deleted through `src/lib/supabase/admin.ts` (service-role key, server-only). Password reset and disable revoke sessions by deleting `auth.sessions` (refresh tokens cascade). The `DATABASE_URL` role needs `DELETE` on that table; the default Supabase `postgres` user has it. If revoke fails after the password/ban already applied, the action returns `SESSIONS_NOT_REVOKED`. Confirm with `DELETE FROM auth.sessions WHERE user_id = '00000000-0000-0000-0000-000000000000';` (0 rows is success).
+- **Storage policies** in `supabase/schema.sql` call `public.admin_has_any_permission`; re-run that SQL when changing which permissions allow uploads/deletes.
+- **Deploy order for this feature:** disable public sign-ups in the Supabase dashboard (Authentication → Providers → Email) → set `SUPABASE_SERVICE_ROLE_KEY` in local `.env` and App Hosting env (same place as `DATABASE_URL`; never `NEXT_PUBLIC_`) → `yarn db:deploy` → `yarn db:bootstrap-admins` → run `supabase/schema.sql` storage section → deploy code. Bootstrap grants Admin to every existing Auth user without roles; unexpected accounts become admins.
+
 ### Pagination
 
 Public listing pages (`notice`, `useful-column`, `useful-video`, `case-studies`) accept `?page=N` query params. `ArticleGrid` calls `getArticles` and `countArticles` in parallel, then renders `ArticlePagination` when `totalPages > 1`. Page size is `PAGE_SIZE = 12` in `ArticleGrid`.
@@ -144,3 +156,4 @@ Required vars are documented in `.env.example`. Key ones:
 - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `OPENAI_API_KEY` / `OPENAI_MODEL` (optional, defaults to `gpt-4o-mini`)
 - `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` and per-form IDs
+- `SUPABASE_SERVICE_ROLE_KEY` — server-only; the Supabase **secret key** (`sb_secret_...`). Admin user management and bootstrap script. Never `NEXT_PUBLIC_`.

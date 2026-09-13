@@ -3,12 +3,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
+import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { AdminMediaGridSkeleton } from '@/components/admin/AdminSkeletons';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { uploadToGallery } from '@/lib/storage';
 import { recordMediaAction } from '@/actions/media';
 import { imageSrcOrFallback } from '@/lib/article-utils';
 import AdminImageLightbox from '@/components/admin/AdminImageLightbox';
+import { usePermissions } from '@/components/admin/PermissionsContext';
 
 export type MediaApiItem = {
   id: string;
@@ -36,13 +39,14 @@ type Props = {
 
 export default function MediaGalleryModal({ open, onClose, onSelect }: Props) {
   const t = useTranslations('admin.media');
+  const { can } = usePermissions();
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [items, setItems] = useState<MediaApiItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [lightboxItem, setLightboxItem] = useState<MediaApiItem | null>(null);
@@ -164,26 +168,35 @@ export default function MediaGalleryModal({ open, onClose, onSelect }: Props) {
               placeholder={t('searchPlaceholder')}
               className="w-full sm:max-w-xs rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15"
             />
-            <label
-              className={`inline-flex items-center justify-center gap-2 rounded-lg border border-dashed px-3 py-2 text-sm font-medium cursor-pointer transition-colors ${
-                uploading
-                  ? 'border-slate-200 text-slate-400 cursor-not-allowed'
-                  : 'border-slate-300 text-slate-600 hover:border-primaryColor hover:text-primaryColor hover:bg-primaryColor/5'
-              }`}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                disabled={uploading}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) void handleUpload(file);
-                  e.target.value = '';
-                }}
-              />
-              {uploading ? t('uploading') : t('uploadNew')}
-            </label>
+            {can('media.upload') && (
+              <label
+                className={`inline-flex items-center justify-center gap-2 rounded-lg border border-dashed px-3 py-2 text-sm font-medium cursor-pointer transition-colors ${
+                  uploading
+                    ? 'border-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'border-slate-300 text-slate-600 hover:border-primaryColor hover:text-primaryColor hover:bg-primaryColor/5'
+                }`}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) void handleUpload(file);
+                    e.target.value = '';
+                  }}
+                />
+                {uploading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    {t('uploading')}
+                  </>
+                ) : (
+                  t('uploadNew')
+                )}
+              </label>
+            )}
             <button
               type="button"
               onClick={onClose}
@@ -196,9 +209,7 @@ export default function MediaGalleryModal({ open, onClose, onSelect }: Props) {
 
         <div className="flex-1 overflow-y-auto p-4">
           {loading && items.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-12">
-              {t('loading')}
-            </p>
+            <AdminMediaGridSkeleton aria-label={t('loading')} />
           ) : items.length === 0 ? (
             <p className="text-sm text-slate-500 text-center py-12">
               {t('empty')}

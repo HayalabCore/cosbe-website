@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState, useTransition } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -27,6 +27,9 @@ import {
   unpublishArticlesAction,
 } from '@/actions/articles';
 import AdminCheckbox from '@/components/admin/AdminCheckbox';
+import { usePermissions } from '@/components/admin/PermissionsContext';
+import { useSyncedList } from '@/hooks';
+import { articleListPatch } from '@/lib/article-optimistic';
 import type { ArticleListItem, ArticleStatus } from '@/types';
 
 const STATUSES: ArticleStatus[] = ['draft', 'published', 'archived'];
@@ -86,10 +89,11 @@ type Props = { items: ArticleListItem[] };
 
 export default function DashboardClient({ items }: Props) {
   const t = useTranslations('admin.dashboard');
+  const { can } = usePermissions();
   const locale = useLocale();
   const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { items: rows, patch, patchMany, removeMany } = useSyncedList(items);
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'createdAt', desc: true },
@@ -102,14 +106,14 @@ export default function DashboardClient({ items }: Props) {
   const [bulkPending, setBulkPending] = useState(false);
 
   const counts = useMemo(() => {
-    const c = { total: items.length, published: 0, draft: 0, archived: 0 };
-    for (const it of items) {
+    const c = { total: rows.length, published: 0, draft: 0, archived: 0 };
+    for (const it of rows) {
       if (it.status === 'published') c.published++;
       else if (it.status === 'draft') c.draft++;
       else if (it.status === 'archived') c.archived++;
     }
     return c;
-  }, [items]);
+  }, [rows]);
 
   function fmtDate(iso: string | null) {
     if (!iso) return null;
@@ -144,12 +148,13 @@ export default function DashboardClient({ items }: Props) {
   }
 
   const runRowAction = useCallback(
-    async (id: string, fn: () => Promise<void>) => {
+    async (id: string, fn: () => Promise<void>, apply: () => void) => {
       setActionError(null);
       setPendingRowId(id);
       try {
         await fn();
-        startTransition(() => router.refresh());
+        apply();
+        router.refresh();
       } catch (e) {
         console.error(e);
         setActionError(t('actionFailed'));
@@ -348,121 +353,138 @@ export default function DashboardClient({ items }: Props) {
                   />
                 </svg>
               </Link>
-              {a.status === 'published' ? (
-                <button
-                  type="button"
-                  title={t('unpublishTitle')}
-                  disabled={rowBusy}
-                  onClick={() =>
-                    void runRowAction(a.id, () => unpublishArticleAction(a.id))
-                  }
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.75}
-                    viewBox="0 0 24 24"
+              {can('articles.publish') &&
+                (a.status !== 'archived' || can('articles.archive')) &&
+                (a.status === 'published' ? (
+                  <button
+                    type="button"
+                    title={t('unpublishTitle')}
+                    disabled={rowBusy}
+                    onClick={() =>
+                      void runRowAction(
+                        a.id,
+                        () => unpublishArticleAction(a.id),
+                        () => patch(a.id, articleListPatch('unpublish'))
+                      )
+                    }
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                    />
-                  </svg>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  title={t('publishTitle')}
-                  disabled={rowBusy}
-                  onClick={() =>
-                    void runRowAction(a.id, () => publishArticleAction(a.id))
-                  }
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.75}
-                    viewBox="0 0 24 24"
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.75}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    title={t('publishTitle')}
+                    disabled={rowBusy}
+                    onClick={() =>
+                      void runRowAction(
+                        a.id,
+                        () => publishArticleAction(a.id),
+                        () => patch(a.id, articleListPatch('publish'))
+                      )
+                    }
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </button>
-              )}
-              {a.status === 'archived' ? (
-                <button
-                  type="button"
-                  title={t('restoreTitle')}
-                  disabled={rowBusy}
-                  onClick={() =>
-                    void runRowAction(a.id, () => restoreArticleAction(a.id))
-                  }
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.75}
-                    viewBox="0 0 24 24"
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.75}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+                ))}
+              {can('articles.archive') &&
+                (a.status === 'archived' ? (
+                  <button
+                    type="button"
+                    title={t('restoreTitle')}
+                    disabled={rowBusy}
+                    onClick={() =>
+                      void runRowAction(
+                        a.id,
+                        () => restoreArticleAction(a.id),
+                        () => patch(a.id, articleListPatch('restore'))
+                      )
+                    }
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  title={t('archiveTitle')}
-                  disabled={rowBusy}
-                  onClick={() => {
-                    if (!confirm(t('archiveConfirm', { title: a.title })))
-                      return;
-                    void runRowAction(a.id, () =>
-                      archiveArticleAction(a.id, a.slug, a.category)
-                    );
-                  }}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.75}
-                    viewBox="0 0 24 24"
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.75}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    title={t('archiveTitle')}
+                    disabled={rowBusy}
+                    onClick={() => {
+                      if (!confirm(t('archiveConfirm', { title: a.title })))
+                        return;
+                      void runRowAction(
+                        a.id,
+                        () => archiveArticleAction(a.id, a.slug, a.category),
+                        () => patch(a.id, articleListPatch('archive'))
+                      );
+                    }}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-                    />
-                  </svg>
-                </button>
-              )}
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.75}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                      />
+                    </svg>
+                  </button>
+                ))}
             </div>
           );
         },
       },
     ],
-    [t, pendingRowId, runRowAction, dateLocale] // eslint-disable-line react-hooks/exhaustive-deps
+    [t, pendingRowId, runRowAction, dateLocale, can, patch] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // react-hooks/incompatible-library: useReactTable returns non-memoizable
   // functions — expected for TanStack Table, safe to ignore here.
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: items,
+    data: rows,
     columns,
     state: { sorting, columnFilters, globalFilter, rowSelection },
     getRowId: (r) => r.id,
@@ -505,19 +527,29 @@ export default function DashboardClient({ items }: Props) {
     table.resetPageIndex();
   }
 
-  const selectedIds = table
-    .getSelectedRowModel()
-    .rows.map((r) => r.original.id);
+  const selectedRows = table.getSelectedRowModel().rows;
+  const selectedIds = selectedRows.map((r) => r.original.id);
   const selectedCount = selectedIds.length;
+  const selectedHasArchived = selectedRows.some(
+    (r) => r.original.status === 'archived'
+  );
+  const canBulkPublish =
+    can('articles.publish') &&
+    (!selectedHasArchived || can('articles.archive'));
 
-  async function runBulk(fn: (ids: string[]) => Promise<void>) {
+  async function runBulk(
+    fn: (ids: string[]) => Promise<void>,
+    apply: (ids: string[]) => void
+  ) {
     if (selectedIds.length === 0) return;
+    const ids = selectedIds;
     setActionError(null);
     setBulkPending(true);
     try {
-      await fn(selectedIds);
+      await fn(ids);
+      apply(ids);
       table.resetRowSelection();
-      startTransition(() => router.refresh());
+      router.refresh();
     } catch (e) {
       console.error(e);
       setActionError(t('actionFailed'));
@@ -558,12 +590,6 @@ export default function DashboardClient({ items }: Props) {
           {t('newPost')}
         </Link>
       </div>
-
-      {isPending && (
-        <div className="fixed top-0 left-0 right-0 z-50 h-1 overflow-hidden bg-primaryColor/15">
-          <div className="animate-indeterminate h-full w-1/4 rounded-full bg-primaryColor" />
-        </div>
-      )}
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-5">
@@ -671,46 +697,70 @@ export default function DashboardClient({ items }: Props) {
               {t('selectedCount', { count: selectedCount })}
             </span>
             <span className="mx-1 h-5 w-px bg-white/15" />
-            <button
-              type="button"
-              disabled={bulkPending}
-              onClick={() => void runBulk(publishArticlesAction)}
-              className="rounded-lg px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
-            >
-              {t('bulkPublish')}
-            </button>
-            <button
-              type="button"
-              disabled={bulkPending}
-              onClick={() => void runBulk(unpublishArticlesAction)}
-              className="rounded-lg px-3 py-1.5 text-xs font-semibold text-amber-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
-            >
-              {t('bulkUnpublish')}
-            </button>
-            <button
-              type="button"
-              disabled={bulkPending}
-              onClick={() => {
-                if (!confirm(t('bulkArchiveConfirm', { count: selectedCount })))
-                  return;
-                void runBulk(archiveArticlesAction);
-              }}
-              className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10 disabled:opacity-50 transition-colors"
-            >
-              {t('bulkArchive')}
-            </button>
-            <button
-              type="button"
-              disabled={bulkPending}
-              onClick={() => {
-                if (!confirm(t('bulkDeleteConfirm', { count: selectedCount })))
-                  return;
-                void runBulk(deleteArticlesAction);
-              }}
-              className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
-            >
-              {t('bulkDelete')}
-            </button>
+            {can('articles.publish') && (
+              <>
+                {canBulkPublish && (
+                  <button
+                    type="button"
+                    disabled={bulkPending}
+                    onClick={() =>
+                      void runBulk(publishArticlesAction, (ids) =>
+                        patchMany(ids, articleListPatch('publish'))
+                      )
+                    }
+                    className="rounded-lg px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
+                  >
+                    {t('bulkPublish')}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  disabled={bulkPending}
+                  onClick={() =>
+                    void runBulk(unpublishArticlesAction, (ids) =>
+                      patchMany(ids, articleListPatch('unpublish'))
+                    )
+                  }
+                  className="rounded-lg px-3 py-1.5 text-xs font-semibold text-amber-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
+                >
+                  {t('bulkUnpublish')}
+                </button>
+              </>
+            )}
+            {can('articles.archive') && (
+              <button
+                type="button"
+                disabled={bulkPending}
+                onClick={() => {
+                  if (
+                    !confirm(t('bulkArchiveConfirm', { count: selectedCount }))
+                  )
+                    return;
+                  void runBulk(archiveArticlesAction, (ids) =>
+                    patchMany(ids, articleListPatch('archive'))
+                  );
+                }}
+                className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10 disabled:opacity-50 transition-colors"
+              >
+                {t('bulkArchive')}
+              </button>
+            )}
+            {can('articles.delete') && (
+              <button
+                type="button"
+                disabled={bulkPending}
+                onClick={() => {
+                  if (
+                    !confirm(t('bulkDeleteConfirm', { count: selectedCount }))
+                  )
+                    return;
+                  void runBulk(deleteArticlesAction, (ids) => removeMany(ids));
+                }}
+                className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
+              >
+                {t('bulkDelete')}
+              </button>
+            )}
             <span className="mx-1 h-5 w-px bg-white/15" />
             <button
               type="button"
@@ -726,7 +776,7 @@ export default function DashboardClient({ items }: Props) {
       {/* Table */}
       <div
         className={`rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-opacity ${
-          isPending || bulkPending ? 'opacity-60' : ''
+          bulkPending ? 'opacity-60' : ''
         }`}
       >
         {filteredCount === 0 ? (
@@ -735,7 +785,7 @@ export default function DashboardClient({ items }: Props) {
               {t('noPostsTitle')}
             </p>
             <p className="text-sm text-slate-400">
-              {items.length === 0 ? t('noPostsEmpty') : t('noPostsFiltered')}
+              {rows.length === 0 ? t('noPostsEmpty') : t('noPostsFiltered')}
             </p>
           </div>
         ) : (

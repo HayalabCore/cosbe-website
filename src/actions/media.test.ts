@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { authedUser, unauth } from '@/test/require-user';
+import { authed, unauth } from '@/test/authz';
 
-vi.mock('@/lib/require-user', () => ({
-  requireUser: vi.fn(),
+vi.mock('@/lib/authz', () => ({
+  requirePermission: vi.fn(),
+  requireAnyPermission: vi.fn(),
+  requireActiveSession: vi.fn(),
 }));
 
 vi.mock('next/cache', () => ({
@@ -27,7 +29,7 @@ import { deleteFromGallery } from '@/lib/storage';
 describe('media actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    authedUser();
+    authed();
   });
 
   it('recordMediaAction throws Unauthorized when logged out', async () => {
@@ -70,5 +72,11 @@ describe('media actions', () => {
     vi.mocked(deleteFromGallery).mockRejectedValue(new Error('storage'));
     await expect(deleteMediaAction('m1')).resolves.toBeUndefined();
     expect(mediaRepo.deleteMediaRecord).toHaveBeenCalledWith('m1');
+  });
+
+  it('deleteMediaAction is Forbidden without media.delete', async () => {
+    authed(['media.upload']);
+    await expect(deleteMediaAction('m1')).rejects.toThrow('Forbidden');
+    expect(mediaRepo.deleteMediaRecord).not.toHaveBeenCalled();
   });
 });

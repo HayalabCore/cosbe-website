@@ -18,6 +18,8 @@ import {
   type BulkRow,
 } from '@/lib/legacy-import/bulk-state';
 import { PATH_SEGMENT_TO_CATEGORY } from '@/lib/legacy-import';
+import { importedListItem } from '@/lib/article-optimistic';
+import { useSyncedList } from '@/hooks';
 import BulkImportRow from '@/components/admin/BulkImportRow';
 import BulkPreviewOverlay from '@/components/admin/BulkPreviewOverlay';
 import RecentImports from '@/components/admin/RecentImports';
@@ -46,6 +48,7 @@ type Props = { recentImports: ArticleListItem[] };
 export default function BulkImportClient({ recentImports }: Props) {
   const t = useTranslations('admin.bulkImport');
   const router = useRouter();
+  const { items: recent, prependMany } = useSyncedList(recentImports);
   const [text, setText] = useState('');
   const [state, dispatch] = useReducer(bulkReducer, initialBulkState);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -92,8 +95,8 @@ export default function BulkImportClient({ recentImports }: Props) {
   const parsed = useMemo(() => parseBulkUrls(text), [text]);
 
   const recentSourceUrls = useMemo(
-    () => new Set(recentImports.map((a) => a.sourceUrl).filter(Boolean)),
-    [recentImports]
+    () => new Set(recent.map((a) => a.sourceUrl).filter(Boolean)),
+    [recent]
   );
 
   const counts = useMemo(() => {
@@ -154,13 +157,15 @@ export default function BulkImportClient({ recentImports }: Props) {
     await mapWithConcurrency(fresh, CONCURRENCY, (url) => extractUrl(url));
   }
 
-  async function commitRow(url: string): Promise<string | null> {
+  async function commitRow(
+    url: string
+  ): Promise<{ url: string; item: ArticleListItem } | null> {
     const row = state.rows.find((r) => r.url === url);
     if (!row?.payload) return null;
     dispatch({ type: 'setStatus', url, status: 'committing' });
     try {
-      await commitImportAction(row.payload);
-      return url;
+      const { id } = await commitImportAction(row.payload);
+      return { url, item: importedListItem(id, row.payload) };
     } catch (e) {
       dispatch({
         type: 'setStatus',
@@ -184,9 +189,10 @@ export default function BulkImportClient({ recentImports }: Props) {
       r.status === 'fulfilled' && r.value ? [r.value] : []
     );
     if (ok.length > 0) {
-      dispatch({ type: 'removeUrls', urls: ok });
+      dispatch({ type: 'removeUrls', urls: ok.map((r) => r.url) });
+      prependMany(ok.map((r) => r.item));
       setResult(ok.length);
-      router.refresh(); // refresh the "Recently imported" list
+      router.refresh();
     }
   }
 
@@ -449,7 +455,7 @@ export default function BulkImportClient({ recentImports }: Props) {
         />
       )}
 
-      <RecentImports items={recentImports} />
+      <RecentImports items={recent} />
     </div>
   );
 }

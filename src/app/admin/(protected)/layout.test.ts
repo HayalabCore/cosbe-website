@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/lib/supabase/server', () => ({
-  createServerSupabaseClient: vi.fn(),
+vi.mock('@/lib/authz', () => ({
+  getCurrentAdmin: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -11,34 +11,65 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('./AdminProtectedShell', () => ({
-  default: ({ children }: { children: unknown }) => children,
+  default: (props: { children: unknown; permissions: string[] }) => props,
 }));
 
 import AdminProtectedLayout from './layout';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { getCurrentAdmin } from '@/lib/authz';
 import { redirect } from 'next/navigation';
 
-describe('AdminProtectedLayout', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+const user = { id: 'u', email: 'u@test.local' };
 
-  it('redirects to /admin when there is no user', async () => {
-    vi.mocked(createServerSupabaseClient).mockResolvedValue({
-      auth: { getUser: async () => ({ data: { user: null } }) },
-    } as never);
+describe('AdminProtectedLayout', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it('redirects to /admin when unauthenticated', async () => {
+    vi.mocked(getCurrentAdmin).mockResolvedValue({
+      status: 'unauthenticated',
+    });
     await expect(AdminProtectedLayout({ children: null })).rejects.toThrow(
       'NEXT_REDIRECT'
     );
     expect(redirect).toHaveBeenCalledWith('/admin');
   });
 
-  it('renders children when authed', async () => {
-    vi.mocked(createServerSupabaseClient).mockResolvedValue({
-      auth: { getUser: async () => ({ data: { user: { id: 'u' } } }) },
+  it('redirects disabled users to the login page with an error', async () => {
+    vi.mocked(getCurrentAdmin).mockResolvedValue({
+      status: 'disabled',
+      user,
     } as never);
-    const el = await AdminProtectedLayout({ children: 'ok' });
+    await expect(AdminProtectedLayout({ children: null })).rejects.toThrow(
+      'NEXT_REDIRECT'
+    );
+    expect(redirect).toHaveBeenCalledWith('/admin?error=disabled');
+  });
+
+  it('redirects to change-password when required', async () => {
+    vi.mocked(getCurrentAdmin).mockResolvedValue({
+      status: 'must-change-password',
+      user,
+    } as never);
+    await expect(AdminProtectedLayout({ children: null })).rejects.toThrow(
+      'NEXT_REDIRECT'
+    );
+    expect(redirect).toHaveBeenCalledWith('/admin/change-password');
+  });
+
+  it('renders the shell with the permission list when active', async () => {
+    vi.mocked(getCurrentAdmin).mockResolvedValue({
+      status: 'active',
+      user,
+      actor: {
+        userId: 'u',
+        permissions: new Set(['dashboard.view']),
+        isSuperAdmin: false,
+      },
+    } as never);
+    const el = (await AdminProtectedLayout({ children: 'ok' })) as {
+      props: { permissions: string[]; userEmail: string };
+    };
     expect(redirect).not.toHaveBeenCalled();
-    expect(el).toBeTruthy();
+    expect(el.props.permissions).toEqual(['dashboard.view']);
+    expect(el.props.userEmail).toBe('u@test.local');
   });
 });

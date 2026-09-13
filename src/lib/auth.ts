@@ -5,9 +5,12 @@ export async function signIn(
   supabase: SupabaseClient,
   email: string,
   password: string
-): Promise<{ error: Error | null }> {
+): Promise<{ error: Error | null; code: string | null }> {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  return { error: error ? new Error(error.message) : null };
+  return {
+    error: error ? new Error(error.message) : null,
+    code: error?.code ?? null,
+  };
 }
 
 export async function signOut(supabase: SupabaseClient): Promise<void> {

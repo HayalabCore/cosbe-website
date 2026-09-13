@@ -1,5 +1,6 @@
 'use client';
 
+import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { ADMIN_LOCALE_COOKIE, type AdminLocale } from '@/lib/admin-locale';
@@ -40,11 +41,14 @@ export default function AdminLocaleSwitcher({
   const locale = useLocale() as AdminLocale;
   const t = useTranslations('admin.common');
   const s = STYLES[variant];
+  const [isPending, startTransition] = useTransition();
 
   function switchTo(next: AdminLocale) {
-    if (next === locale) return;
+    if (next === locale || isPending) return;
     setCookie(ADMIN_LOCALE_COOKIE, next);
-    router.refresh();
+    startTransition(() => {
+      router.refresh();
+    });
   }
 
   return (
@@ -52,18 +56,21 @@ export default function AdminLocaleSwitcher({
       className={`inline-flex rounded-lg border p-0.5 text-[11px] font-semibold ${s.wrapper} ${className}`}
       role="group"
       aria-label={t('language')}
+      aria-busy={isPending}
     >
       <button
         type="button"
         onClick={() => switchTo('en')}
-        className={`rounded-md px-2 py-1 transition-colors ${locale === 'en' ? s.active : s.inactive}`}
+        disabled={isPending}
+        className={`rounded-md px-2 py-1 transition-colors disabled:opacity-50 ${locale === 'en' ? s.active : s.inactive}`}
       >
         EN
       </button>
       <button
         type="button"
         onClick={() => switchTo('ja')}
-        className={`rounded-md px-2 py-1 transition-colors ${locale === 'ja' ? s.active : s.inactive}`}
+        disabled={isPending}
+        className={`rounded-md px-2 py-1 transition-colors disabled:opacity-50 ${locale === 'ja' ? s.active : s.inactive}`}
       >
         JP
       </button>

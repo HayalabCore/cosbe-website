@@ -1,14 +1,24 @@
 import { NextResponse } from 'next/server';
 import { countMedia, listMedia } from '@/lib/media-repository';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import {
+  FORBIDDEN_ERROR,
+  requireAnyPermission,
+  UNAUTHORIZED_ERROR,
+} from '@/lib/authz';
 
 export async function GET(request: Request) {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  try {
+    // Media page (media.upload) and the editor's gallery picker (articles.edit).
+    await requireAnyPermission('media.upload', 'articles.edit');
+  } catch (error) {
+    if (error instanceof Error && error.message === UNAUTHORIZED_ERROR) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (error instanceof Error && error.message === FORBIDDEN_ERROR) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+    console.error('[GET /api/admin/media]', error);
+    return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 
   const { searchParams } = new URL(request.url);

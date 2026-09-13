@@ -5,9 +5,10 @@ import { renderAdmin } from '@/test/render-admin';
 import type { ImportPreviewPayload } from '@/lib/legacy-import/types';
 
 const previewImportAction = vi.fn();
+const commitImportAction = vi.fn();
 vi.mock('@/actions/legacy-import', () => ({
   previewImportAction: (...a: unknown[]) => previewImportAction(...a),
-  commitImportAction: vi.fn(),
+  commitImportAction: (...a: unknown[]) => commitImportAction(...a),
   checkImportSlugAction: vi.fn(),
 }));
 
@@ -55,5 +56,39 @@ describe('BulkImportClient', () => {
       expect(screen.getByText('extract-boom')).toBeInTheDocument()
     );
     expect(screen.getByText('OK title')).toBeInTheDocument();
+  });
+
+  it('shows the imported article in Recently imported as soon as commit succeeds', async () => {
+    const user = userEvent.setup();
+    previewImportAction.mockResolvedValue(okPayload);
+    commitImportAction.mockResolvedValue({ id: 'imp-1', warnings: [] });
+    renderAdmin(<BulkImportClient recentImports={[]} />);
+    expect(
+      screen.getByText('No imports yet. Imported articles will appear here.')
+    ).toBeInTheDocument();
+    await user.type(
+      screen.getByPlaceholderText(/www.jp.cosbe.inc/),
+      'https://www.jp.cosbe.inc/useful-info/ok/'
+    );
+    await user.click(screen.getByRole('button', { name: 'Extract 1 article' }));
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Import 1 selected as drafts →' })
+      ).toBeEnabled()
+    );
+    await user.click(
+      screen.getByRole('button', { name: 'Import 1 selected as drafts →' })
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByText(
+          'No imports yet. Imported articles will appear here.'
+        )
+      ).not.toBeInTheDocument()
+    );
+    const recent = screen.getByRole('heading', {
+      name: 'Recently imported',
+    }).parentElement?.parentElement;
+    expect(recent).toHaveTextContent('OK title');
   });
 });

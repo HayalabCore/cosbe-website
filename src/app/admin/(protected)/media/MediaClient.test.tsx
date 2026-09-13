@@ -23,7 +23,7 @@ vi.mock('next/image', () => ({
   default: (props: { alt?: string }) => <img alt={props.alt ?? ''} />,
 }));
 
-import AdminMediaPage from './page';
+import AdminMediaPage from './MediaClient';
 
 describe('AdminMediaPage', () => {
   afterEach(() => {
@@ -142,5 +142,11 @@ describe('AdminMediaPage', () => {
       await vi.advanceTimersByTimeAsync(300);
     });
     expect(fetchMock).toHaveBeenCalled();
+  });
+
+  it('hides delete without media.delete', async () => {
+    renderAdmin(<AdminMediaPage />, { permissions: ['media.upload'] });
+    await screen.findByText('pic.png');
+    expect(screen.queryByTitle('Delete')).toBeNull();
   });
 });

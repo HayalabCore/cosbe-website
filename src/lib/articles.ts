@@ -23,6 +23,7 @@ export {
   getArticleById,
   getArticleByIdAdmin,
   getArticleSlugCategoryById,
+  getArticleMetasByIds,
   getArticleStatusCounts,
   getAuthors,
   upsertAuthor,

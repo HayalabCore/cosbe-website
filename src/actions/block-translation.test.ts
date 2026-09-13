@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { authedUser, unauth } from '@/test/require-user';
+import { authed, unauth } from '@/test/authz';
 
-vi.mock('@/lib/require-user', () => ({
-  requireUser: vi.fn(),
+vi.mock('@/lib/authz', () => ({
+  requirePermission: vi.fn(),
+  requireAnyPermission: vi.fn(),
+  requireActiveSession: vi.fn(),
 }));
 
 const translateArticleMetaParts = vi.fn();
@@ -26,7 +28,7 @@ import {
 describe('block-translation actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    authedUser();
+    authed();
   });
 
   it('throws Unauthorized when logged out', async () => {
@@ -55,5 +57,12 @@ describe('block-translation actions', () => {
     expect(result.errors).toEqual([
       { blockId: '__meta__', message: 'meta-fail' },
     ]);
+  });
+
+  it('translation actions are Forbidden without articles.edit', async () => {
+    authed(['dashboard.view']);
+    await expect(
+      translateArticleMetaEnAction({ title: 'タイトル' })
+    ).rejects.toThrow('Forbidden');
   });
 });

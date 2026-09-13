@@ -1,9 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { listMedia, countMedia } from '@/lib/media-repository';
+import { authed, unauth } from '@/test/authz';
 
-vi.mock('@/lib/supabase/server', () => ({
-  createServerSupabaseClient: vi.fn(),
+vi.mock('@/lib/authz', () => ({
+  requirePermission: vi.fn(),
+  requireAnyPermission: vi.fn(),
+  requireActiveSession: vi.fn(),
+  UNAUTHORIZED_ERROR: 'Unauthorized',
+  FORBIDDEN_ERROR: 'Forbidden',
 }));
 
 vi.mock('@/lib/media-repository', () => ({
@@ -12,24 +16,33 @@ vi.mock('@/lib/media-repository', () => ({
 }));
 
 import { GET } from './route';
+import { requireAnyPermission } from '@/lib/authz';
 
 describe('GET /api/admin/media', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    authed();
   });
 
   it('returns 401 when logged out', async () => {
-    vi.mocked(createServerSupabaseClient).mockResolvedValue({
-      auth: { getUser: async () => ({ data: { user: null } }) },
-    } as never);
+    unauth();
     const res = await GET(new Request('http://localhost/api/admin/media'));
     expect(res.status).toBe(401);
   });
 
+  it('returns 500 when authorization throws an unexpected error', async () => {
+    vi.mocked(requireAnyPermission).mockRejectedValue(new Error('db down'));
+    const res = await GET(new Request('http://localhost/api/admin/media'));
+    expect(res.status).toBe(500);
+  });
+
+  it('returns 403 without media.upload or articles.edit', async () => {
+    authed(['dashboard.view']);
+    const res = await GET(new Request('http://localhost/api/admin/media'));
+    expect(res.status).toBe(403);
+  });
+
   it('clamps pageSize and page', async () => {
-    vi.mocked(createServerSupabaseClient).mockResolvedValue({
-      auth: { getUser: async () => ({ data: { user: { id: 'u' } } }) },
-    } as never);
     vi.mocked(listMedia).mockResolvedValue([]);
     vi.mocked(countMedia).mockResolvedValue(0);
     await GET(
@@ -41,9 +54,6 @@ describe('GET /api/admin/media', () => {
   });
 
   it('returns the list payload when authed', async () => {
-    vi.mocked(createServerSupabaseClient).mockResolvedValue({
-      auth: { getUser: async () => ({ data: { user: { id: 'u' } } }) },
-    } as never);
     vi.mocked(listMedia).mockResolvedValue([
       {
         id: 'm1',

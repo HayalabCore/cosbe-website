@@ -3,7 +3,10 @@
     "loading": "読み込み中…",
     "english": "English",
     "japanese": "日本語",
-    "language": "言語"
+    "language": "言語",
+    "showPassword": "パスワードを表示",
+    "hidePassword": "パスワードを隠す",
+    "signingOut": "ログアウト中…"
   },
   "login": {
     "badge": "コンテンツ管理",
@@ -15,7 +18,8 @@
     "email": "メールアドレス",
     "password": "パスワード",
     "signingIn": "ログイン中…",
-    "signInCta": "ログイン →"
+    "signInCta": "ログイン →",
+    "disabled": "アクセスが無効化されています。管理者にお問い合わせください。"
   },
   "sidebar": {
     "brand": "CosBE 管理",
@@ -26,7 +30,10 @@
     "media": "メディア",
     "translations": "翻訳",
     "viewSite": "サイトを見る",
-    "signOut": "ログアウト"
+    "signOut": "ログアウト",
+    "accessSection": "アクセス管理",
+    "users": "ユーザー",
+    "roles": "ロール"
   },
   "dashboard": {
     "title": "すべての記事",
@@ -485,5 +492,188 @@
     "deleteHistoryConfirm": "この履歴エントリを削除しますか？この操作は取り消せません。",
     "deleteHistoryConfirmYes": "削除する",
     "deleteHistoryConfirmNo": "キャンセル"
+  },
+  "access": {
+    "permissionNeeded": {
+      "title": "権限が必要です",
+      "body": "このページにアクセスする権限がありません。スーパー管理者または管理者に「{permission}」の付与を依頼してください。"
+    },
+    "groups": {
+      "content": "コンテンツ",
+      "media": "メディア",
+      "translations": "翻訳",
+      "access": "ユーザーとロール"
+    },
+    "permissions": {
+      "dashboard_view": {
+        "label": "ダッシュボードの閲覧",
+        "description": "記事一覧と閲覧数を表示します。"
+      },
+      "articles_edit": {
+        "label": "記事の編集",
+        "description": "下書きの作成・編集（AI翻訳を含む）。"
+      },
+      "articles_publish": {
+        "label": "記事の公開",
+        "description": "記事の公開・非公開を切り替えます。"
+      },
+      "articles_archive": {
+        "label": "記事のアーカイブ",
+        "description": "記事のアーカイブと復元。"
+      },
+      "articles_delete": {
+        "label": "記事の削除",
+        "description": "記事を完全に削除します。"
+      },
+      "import_run": {
+        "label": "記事のインポート",
+        "description": "旧サイトの記事をプレビュー・インポートします。"
+      },
+      "media_upload": {
+        "label": "メディアのアップロード",
+        "description": "メディアライブラリの閲覧と画像のアップロード。"
+      },
+      "media_delete": {
+        "label": "メディアの削除",
+        "description": "メディアライブラリから画像を削除します。"
+      },
+      "translations_edit": {
+        "label": "翻訳の編集",
+        "description": "UI文言の編集・復元・AI翻訳。"
+      },
+      "translations_history_delete": {
+        "label": "翻訳履歴の削除",
+        "description": "翻訳履歴のエントリを削除します。"
+      },
+      "users_view": {
+        "label": "ユーザーの閲覧",
+        "description": "管理ユーザーの一覧を表示します。"
+      },
+      "users_create": {
+        "label": "ユーザーの作成",
+        "description": "ユーザーを作成し、仮パスワードを設定します。"
+      },
+      "users_assign-roles": {
+        "label": "ロールの割り当て",
+        "description": "ユーザーのロールを変更します（自分の権限の範囲内のみ）。"
+      },
+      "users_disable": {
+        "label": "ユーザーの無効化",
+        "description": "ユーザーのアクセスを無効化・再有効化します。"
+      },
+      "users_delete": {
+        "label": "ユーザーの削除",
+        "description": "無効化されたユーザーを完全に削除します。"
+      },
+      "roles_manage": {
+        "label": "ロールの管理",
+        "description": "ロールの作成・編集・削除。"
+      }
+    },
+    "errors": {
+      "FORBIDDEN": "この操作を行う権限がありません。",
+      "INVALID_INPUT": "入力内容に誤りがあります。確認してもう一度お試しください。",
+      "EMAIL_EXISTS": "このメールアドレスのユーザーは既に存在します。",
+      "WEAK_PASSWORD": "パスワードが弱すぎます。12文字以上にしてください。",
+      "SAME_PASSWORD": "現在のパスワードとは別のパスワードを設定してください。",
+      "WRONG_PASSWORD": "現在のパスワードが正しくありません。",
+      "NOT_FOUND": "対象が見つかりません。ページを再読み込みしてください。",
+      "MUST_DISABLE_FIRST": "削除する前にユーザーを無効化してください。",
+      "KEY_EXISTS": "このキーのロールは既に存在します。",
+      "BAN_FAILED": "アクセスは無効化されましたが、Supabaseでのサインイン停止に失敗しました。もう一度お試しください。",
+      "SESSIONS_NOT_REVOKED": "変更は保存されましたが、既存のセッションを無効にできませんでした。期限切れまで他の端末でサインインしたままになる可能性があります。",
+      "AUTH_ORPHAN": "Supabase上のアカウントは作成されましたが管理レコードの保存に失敗し、後始末もできませんでした。再試行する前にスーパー管理者に連絡してください。",
+      "FAILED": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "users": {
+    "pageTitle": "ユーザー",
+    "pageSubtitle": "管理画面にサインインできるユーザーと、その権限を管理します。",
+    "addUser": "ユーザーを追加",
+    "you": "あなた",
+    "never": "なし",
+    "noRoles": "ロールなし",
+    "columns": {
+      "user": "ユーザー",
+      "roles": "ロール",
+      "status": "ステータス",
+      "lastSignIn": "最終サインイン",
+      "created": "作成日",
+      "actions": "操作"
+    },
+    "status": {
+      "active": "有効",
+      "disabled": "無効",
+      "mustChangePassword": "パスワード変更待ち"
+    },
+    "actions": {
+      "editRoles": "ロールを編集",
+      "resetPassword": "パスワードをリセット",
+      "disable": "無効化",
+      "enable": "有効化",
+      "delete": "削除"
+    },
+    "dialog": {
+      "addTitle": "ユーザーを追加",
+      "email": "メールアドレス",
+      "displayName": "表示名（任意）",
+      "tempPassword": "仮パスワード",
+      "generate": "生成",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "roles": "ロール",
+      "roleNotAssignable": "自分の権限の範囲内のロールのみ割り当てられます。",
+      "cancel": "キャンセル",
+      "create": "ユーザーを作成",
+      "save": "保存",
+      "saving": "保存中…",
+      "credentialsTitle": "このログイン情報を共有してください",
+      "credentialsHint": "このパスワードは一度だけ表示されます。ユーザーは初回サインイン時に変更が必要です。",
+      "done": "完了",
+      "editRolesTitle": "{email} のロールを編集",
+      "resetTitle": "{email} のパスワードをリセット",
+      "reset": "仮パスワードを設定",
+      "disableConfirm": "{email} を無効化しますか？すぐにアクセスできなくなります。",
+      "deleteTitle": "{email} を完全に削除",
+      "deleteHint": "アカウントを削除します。元に戻せません。確認のためメールアドレスを入力してください。",
+      "deleteCta": "完全に削除"
+    }
+  },
+  "roles": {
+    "pageTitle": "ロール",
+    "pageSubtitle": "ロールは権限のまとまりです。ユーザーはすべてのロールの権限を合わせて持ちます。",
+    "newRole": "新しいロール",
+    "allPermissions": "すべての権限",
+    "locked": "ロック中",
+    "usersCount": "{count}人",
+    "permissionsCount": "{count}件の権限",
+    "edit": "編集",
+    "delete": "削除",
+    "deleteConfirm": "ロール「{name}」を削除しますか？{count}人のユーザーから外されます。",
+    "editor": {
+      "createTitle": "新しいロール",
+      "editTitle": "ロールを編集",
+      "name": "名前",
+      "key": "キー",
+      "keyHint": "英小文字・数字・ハイフンのみ。後から変更できません。",
+      "description": "説明（任意）",
+      "permissions": "権限",
+      "notHeld": "自分が持っている権限のみ付与できます。",
+      "cancel": "キャンセル",
+      "save": "ロールを保存",
+      "saving": "保存中…"
+    }
+  },
+  "changePassword": {
+    "title": "新しいパスワードを設定",
+    "subtitle": "仮パスワードでサインインしました。続行するには自分のパスワードを設定してください。",
+    "currentPassword": "現在のパスワード",
+    "newPassword": "新しいパスワード",
+    "confirmPassword": "新しいパスワード（確認）",
+    "mismatch": "パスワードが一致しません。",
+    "tooShort": "12文字以上にしてください。",
+    "submit": "パスワードを保存",
+    "submitting": "保存中…",
+    "signOut": "サインアウト"
   }
 }

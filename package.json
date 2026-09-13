@@ -19,6 +19,7 @@
     "db:pull-translations": "tsx scripts/pull-translations.ts",
     "db:push-translations": "tsx scripts/push-translations.ts",
     "db:sync-translations": "tsx scripts/sync-translations.ts",
+    "db:bootstrap-admins": "tsx scripts/bootstrap-admin-users.ts",
     "test": "vitest run --project unit --project component",
     "test:watch": "vitest --project unit --project component",
     "test:db": "vitest run --project db",

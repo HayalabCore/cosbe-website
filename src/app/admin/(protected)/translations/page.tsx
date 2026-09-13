@@ -2,9 +2,14 @@ import {
   listTranslationNamespaces,
   listTranslationRowsForNamespace,
 } from '@/actions/translations';
+import PermissionNeeded from '@/components/admin/PermissionNeeded';
 import TranslationsEditor from '@/components/admin/translations/TranslationsEditor';
+import { hasPermission } from '@/lib/authz';
 
 export default async function AdminTranslationsPage() {
+  if (!(await hasPermission('translations.edit'))) {
+    return <PermissionNeeded permission="translations.edit" />;
+  }
   const namespaces = await listTranslationNamespaces();
   const firstNamespace = namespaces[0] ?? null;
   const initialRows = firstNamespace

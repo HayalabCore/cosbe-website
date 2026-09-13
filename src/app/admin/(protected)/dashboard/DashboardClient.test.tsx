@@ -208,4 +208,98 @@ describe('DashboardClient', () => {
     const idleRow = screen.getByText('Draft Two').closest('tr');
     expect(within(idleRow!).getByTitle('Publish')).toBeEnabled();
   });
+
+  it('hides Publish on archived posts without articles.archive', () => {
+    renderAdmin(<DashboardClient items={[archived]} />, {
+      permissions: ['dashboard.view', 'articles.publish'],
+    });
+    expect(screen.queryByTitle('Publish')).toBeNull();
+  });
+
+  it('shows Publish on archived posts when the user can also archive', () => {
+    renderAdmin(<DashboardClient items={[archived]} />, {
+      permissions: ['dashboard.view', 'articles.publish', 'articles.archive'],
+    });
+    expect(screen.getByTitle('Publish')).toBeInTheDocument();
+  });
+
+  it('hides bulk Publish when the selection includes archived posts without articles.archive', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<DashboardClient items={[archived]} />, {
+      permissions: ['dashboard.view', 'articles.publish'],
+    });
+    await user.click(screen.getByLabelText('Select row'));
+    expect(
+      screen.queryByRole('button', { name: 'Publish' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows Published as soon as publish succeeds, before refresh', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<DashboardClient items={[draft]} />);
+    const row = screen.getByText('Draft Post').closest('tr');
+    await user.click(within(row!).getByTitle('Publish'));
+    await waitFor(() =>
+      expect(within(row!).getByText('Published')).toBeInTheDocument()
+    );
+    expect(within(row!).getByTitle('Unpublish')).toBeInTheDocument();
+    expect(refresh).toHaveBeenCalled();
+  });
+
+  it('shows Draft as soon as unpublish succeeds, before refresh', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<DashboardClient items={[published]} />);
+    const row = screen.getByText('Live Post').closest('tr');
+    await user.click(within(row!).getByTitle('Unpublish'));
+    await waitFor(() =>
+      expect(within(row!).getByText('Draft')).toBeInTheDocument()
+    );
+    expect(within(row!).getByTitle('Publish')).toBeInTheDocument();
+  });
+
+  it('shows Archived as soon as archive succeeds, before refresh', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<DashboardClient items={[draft]} />);
+    const row = screen.getByText('Draft Post').closest('tr');
+    await user.click(within(row!).getByTitle('Archive'));
+    await waitFor(() =>
+      expect(within(row!).getByText('Archived')).toBeInTheDocument()
+    );
+    expect(within(row!).getByTitle('Restore to draft')).toBeInTheDocument();
+  });
+
+  it('shows Draft as soon as restore succeeds, before refresh', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<DashboardClient items={[archived]} />);
+    const row = screen.getByText('Old Post').closest('tr');
+    await user.click(within(row!).getByTitle('Restore to draft'));
+    await waitFor(() =>
+      expect(within(row!).getByText('Draft')).toBeInTheDocument()
+    );
+    expect(within(row!).getByTitle('Archive')).toBeInTheDocument();
+  });
+
+  it('removes rows as soon as bulk delete succeeds, before refresh', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<DashboardClient items={[draft]} />);
+    await user.click(screen.getByLabelText('Select row'));
+    const bulkDelete = screen
+      .getAllByRole('button', { name: 'Delete' })
+      .find((el) => el.textContent?.trim() === 'Delete');
+    await user.click(bulkDelete!);
+    await waitFor(() =>
+      expect(screen.queryByText('Draft Post')).not.toBeInTheDocument()
+    );
+    expect(refresh).toHaveBeenCalled();
+  });
+
+  it('hides publish/archive controls without those permissions', () => {
+    renderAdmin(<DashboardClient items={[draft, published]} />, {
+      permissions: ['dashboard.view', 'articles.edit'],
+    });
+    expect(screen.queryByTitle('Publish')).toBeNull();
+    expect(screen.queryByTitle('Unpublish')).toBeNull();
+    expect(screen.queryByTitle('Archive')).toBeNull();
+    expect(screen.getAllByTitle('Edit').length).toBeGreaterThan(0);
+  });
 });

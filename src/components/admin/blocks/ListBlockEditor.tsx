@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { translateBlockEnAction } from '@/actions/block-translation';
 import type { ListBlock } from '@/types';
 import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
+import { useLocaleEditTab } from '@/hooks';
 
 const INPUT_CLS =
   'flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
@@ -28,14 +29,8 @@ export default function ListBlockEditor({
 }) {
   const t = useTranslations('admin.list');
   const te = useTranslations('admin.blockLocale');
-  const [tab, setTab] = useState<'original' | 'english'>('original');
+  const [tab, setTab] = useLocaleEditTab(localeViewKey, localeViewTab);
   const [generating, setGenerating] = useState(false);
-
-  useEffect(() => {
-    if (localeViewKey && localeViewKey > 0) {
-      setTab(localeViewTab);
-    }
-  }, [localeViewKey, localeViewTab]);
 
   const itemsEn = resizeItemsEn(block.items, block.itemsEn);
 
@@ -66,7 +61,8 @@ export default function ListBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating || bulkTranslating}
+        generating={generating}
+        bulkTranslating={bulkTranslating}
         generateDisabled={!hasPrimary}
       />
 

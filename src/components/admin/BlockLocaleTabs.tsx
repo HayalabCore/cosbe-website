@@ -10,6 +10,8 @@ type Props = {
   onGenerateEnglish: () => void | Promise<void>;
   generating: boolean;
   generateDisabled?: boolean;
+  /** Disables Generate English without swapping its label. */
+  bulkTranslating?: boolean;
   className?: string;
 };
 
@@ -19,6 +21,7 @@ export default function BlockLocaleTabs({
   onGenerateEnglish,
   generating,
   generateDisabled,
+  bulkTranslating = false,
   className = '',
 }: Props) {
   const t = useTranslations('admin.blockLocale');
@@ -51,7 +54,7 @@ export default function BlockLocaleTabs({
       </div>
       <button
         type="button"
-        disabled={generating || generateDisabled}
+        disabled={generating || generateDisabled || bulkTranslating}
         onClick={() => void onGenerateEnglish()}
         className="inline-flex items-center gap-1 text-[11px] font-semibold text-primaryColor hover:text-primaryHover disabled:opacity-40 disabled:cursor-not-allowed px-2 py-1 rounded-md border border-primaryColor/30 hover:bg-primaryColor/5 transition-colors"
       >

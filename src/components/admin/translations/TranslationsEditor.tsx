@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { AdminTranslationsSkeleton } from '@/components/admin/AdminSkeletons';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { namespaceFromKeyPath } from '@/lib/translations/flatten';
 import {
@@ -136,10 +136,11 @@ export default function TranslationsEditor({
           )}
 
           {loading ? (
-            <div className="flex items-center gap-2 py-8 text-sm text-slate-400">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('loadingRows')}
-            </div>
+            <AdminTranslationsSkeleton
+              showChrome={false}
+              rows={4}
+              aria-label={t('loadingRows')}
+            />
           ) : rows.length === 0 ? (
             <p className="py-8 text-center text-sm text-slate-400">
               {t('noResults')}

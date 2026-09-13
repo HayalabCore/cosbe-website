@@ -1,11 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
-import { signIn } from '@/lib/auth';
+import { signIn, signOut } from '@/lib/auth';
 import { AdminLocaleSwitcherLight } from '@/components/admin/AdminLocaleSwitcher';
+import AdminBusyButton from '@/components/admin/AdminBusyButton';
+import PasswordField from '@/components/admin/PasswordField';
 
 export default function AdminLoginPage() {
   const t = useTranslations('admin.login');
@@ -16,14 +18,26 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // The protected layout redirects disabled users here; it can't clear cookies
+  // from a server component, so end the browser session now. Read the query
+  // string directly to avoid a Suspense boundary for useSearchParams.
+  useEffect(() => {
+    if (
+      new URLSearchParams(window.location.search).get('error') === 'disabled'
+    ) {
+      setError(t('disabled'));
+      void signOut(supabase);
+    }
+  }, [supabase, t]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const { error: err } = await signIn(supabase, email, password);
-    setLoading(false);
+    const { error: err, code } = await signIn(supabase, email, password);
     if (err) {
-      setError(err.message);
+      setLoading(false);
+      setError(code === 'user_banned' ? t('disabled') : err.message);
       return;
     }
     router.push('/admin/dashboard');
@@ -104,6 +118,7 @@ export default function AdminLoginPage() {
                 type="email"
                 autoComplete="email"
                 required
+                disabled={loading}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@cosbe.inc"
@@ -111,24 +126,16 @@ export default function AdminLoginPage() {
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5"
-              >
-                {t('password')}
-              </label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-primaryColor focus:outline-none focus:ring-3 focus:ring-primaryColor/15 transition-all"
-              />
-            </div>
+            <PasswordField
+              id="password"
+              label={t('password')}
+              autoComplete="current-password"
+              required
+              disabled={loading}
+              value={password}
+              onChange={setPassword}
+              placeholder="••••••••"
+            />
 
             {error && (
               <div className="flex items-start gap-2.5 rounded-xl bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
@@ -147,38 +154,13 @@ export default function AdminLoginPage() {
               </div>
             )}
 
-            <button
+            <AdminBusyButton
               type="submit"
-              disabled={loading}
-              className="w-full rounded-xl bg-primaryColor py-3 text-sm font-semibold text-white shadow-sm hover:bg-primaryHover disabled:opacity-60 transition-colors mt-2"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg
-                    className="animate-spin w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    />
-                  </svg>
-                  {t('signingIn')}
-                </span>
-              ) : (
-                t('signInCta')
-              )}
-            </button>
+              busy={loading}
+              idleLabel={t('signInCta')}
+              busyLabel={t('signingIn')}
+              className="mt-2 w-full rounded-xl bg-primaryColor py-3 text-sm font-semibold text-white shadow-sm hover:bg-primaryHover disabled:opacity-60 transition-colors"
+            />
           </form>
         </div>
       </div>
