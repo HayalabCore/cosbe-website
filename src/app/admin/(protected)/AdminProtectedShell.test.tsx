@@ -118,7 +118,7 @@ describe('AdminProtectedShell', () => {
     expect(document.querySelector('[class*="bg-black/50"]')).toBeNull();
   });
 
-  it('refreshes the server tree after client-side navigation', () => {
+  it('does not refresh the server tree after client-side navigation', () => {
     const { rerender } = renderAdmin(
       <AdminProtectedShell userEmail="a@b.c" permissions={ALL_PERMISSIONS}>
         child
@@ -135,7 +135,29 @@ describe('AdminProtectedShell', () => {
         </PermissionsProvider>
       </NextIntlClientProvider>
     );
-    expect(refresh).toHaveBeenCalled();
+    expect(refresh).not.toHaveBeenCalled();
+  });
+
+  it('shows signing out while sign-out is in flight', async () => {
+    let finish: () => void = () => {};
+    signOut.mockReturnValue(
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      })
+    );
+    const user = userEvent.setup();
+    renderAdmin(
+      <AdminProtectedShell userEmail="a@b.c" permissions={ALL_PERMISSIONS}>
+        child
+      </AdminProtectedShell>
+    );
+    await user.click(screen.getAllByRole('button', { name: 'Sign Out' })[0]);
+    expect(
+      screen.getAllByRole('button', { name: 'Signing out…' }).length
+    ).toBeGreaterThan(0);
+    finish();
+    await screen.findAllByRole('button', { name: 'Signing out…' });
+    expect(replace).toHaveBeenCalledWith('/admin');
   });
 
   it('hides nav items the user has no permission for', () => {

@@ -90,6 +90,20 @@ describe('block editors', () => {
     expect(onChange).toHaveBeenCalled();
   });
 
+  it('quote follows the parent locale view when the view key is set', () => {
+    renderAdmin(
+      <QuoteBlockEditor
+        block={{ id: 'q1', type: 'quote', content: 'hi' }}
+        onChange={vi.fn()}
+        localeViewKey={1}
+        localeViewTab="english"
+      />
+    );
+    expect(screen.getByRole('button', { name: 'English' }).className).toMatch(
+      /bg-white/
+    );
+  });
+
   it('callout emits onChange', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderAdmin } from '@/test/render-admin';
 import { listItem } from '@/test/fixtures/articles';
@@ -82,6 +82,35 @@ describe('PostEditor', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('only the clicked save control shows Saving', async () => {
+    const user = userEvent.setup();
+    createArticleAction.mockImplementation(() => new Promise(() => {}));
+    renderAdmin(<PostEditor />);
+    await user.click(screen.getByRole('button', { name: 'Save draft' }));
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Saving…' })
+      ).toBeInTheDocument()
+    );
+    expect(screen.getAllByRole('button', { name: 'Saving…' })).toHaveLength(1);
+    expect(screen.getAllByText('Saving…')).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'Publish' })).toBeDisabled();
+  });
+
+  it('only Publish shows Saving when publishing', async () => {
+    const user = userEvent.setup();
+    updateArticleAction.mockImplementation(() => new Promise(() => {}));
+    renderAdmin(<PostEditor initialArticle={article({ id: 'art-1' })} />);
+    await user.click(screen.getByRole('button', { name: 'Publish' }));
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Saving…' })
+      ).toBeInTheDocument()
+    );
+    expect(screen.getAllByText('Saving…')).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'Save draft' })).toBeDisabled();
   });
 
   it('creates then replaces URL on first save', async () => {
@@ -344,6 +373,43 @@ describe('PostEditor', () => {
     expect(payload.publishedAt).toBeNull();
   });
 
+  it('sidebar Edit in English shows the English title', async () => {
+    const user = userEvent.setup();
+    renderAdmin(
+      <PostEditor
+        initialArticle={article({
+          id: 'art-1',
+          title: '日本語タイトル',
+          titleEn: 'English title',
+        })}
+      />
+    );
+    expect(screen.getByDisplayValue('日本語タイトル')).toBeInTheDocument();
+    const editIn = screen.getAllByText('Edit in')[0].closest('div');
+    expect(editIn).toBeTruthy();
+    await user.click(within(editIn!).getByRole('button', { name: 'English' }));
+    expect(screen.getByDisplayValue('English title')).toBeInTheDocument();
+  });
+
+  it('translate entire page fills English title and switches the view', async () => {
+    const user = userEvent.setup();
+    translateArticleEnAction.mockResolvedValue({
+      titleEn: 'Hello EN',
+      excerptEn: '',
+      blocks: [
+        { id: 'p1', type: 'paragraph', content: '<p>Hi</p>', contentEn: '<p>Hi EN</p>' },
+      ],
+      errors: [],
+    });
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'こんにちは' })} />
+    );
+    await user.click(translateButtons()[0]);
+    await waitFor(() =>
+      expect(screen.getByDisplayValue('Hello EN')).toBeInTheDocument()
+    );
+  });
+
   it('disables translate when there is nothing to translate', () => {
     renderAdmin(<PostEditor />);
     expect(translateButtons()[0]).toBeDisabled();
@@ -363,6 +429,10 @@ describe('PostEditor', () => {
     expect(inFlight[0]).toBeDisabled();
     await user.click(inFlight[0]);
     expect(translateArticleEnAction).toHaveBeenCalledTimes(1);
+    expect(
+      screen.getByRole('button', { name: 'Generate English' })
+    ).toBeDisabled();
+    expect(screen.queryByRole('button', { name: 'Generating…' })).toBeNull();
   });
 
   it('hides the Publish button without articles.publish', () => {

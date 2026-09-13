@@ -3,7 +3,10 @@
     "loading": "Loading…",
     "english": "English",
     "japanese": "日本語",
-    "language": "Language"
+    "language": "Language",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "signingOut": "Signing out…"
   },
   "login": {
     "badge": "Content Management",

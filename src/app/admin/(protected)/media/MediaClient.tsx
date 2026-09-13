@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { AdminMediaGridSkeleton } from '@/components/admin/AdminSkeletons';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { uploadToGallery } from '@/lib/storage';
 import { deleteMediaAction, recordMediaAction } from '@/actions/media';
@@ -28,8 +30,9 @@ export default function MediaClient() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [lightboxItem, setLightboxItem] = useState<MediaApiItem | null>(null);
 
   useEffect(() => {
@@ -97,6 +100,7 @@ export default function MediaClient() {
 
   async function handleDelete(item: MediaApiItem) {
     if (!confirm(t('deleteConfirm', { name: item.filename }))) return;
+    setDeletingId(item.id);
     try {
       await deleteMediaAction(item.id);
       setItems((prev) => prev.filter((i) => i.id !== item.id));
@@ -104,6 +108,8 @@ export default function MediaClient() {
     } catch (e) {
       console.error(e);
       alert(e instanceof Error ? e.message : t('deleteFailed'));
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -145,15 +151,20 @@ export default function MediaClient() {
                 e.target.value = '';
               }}
             />
-            {uploading ? t('uploading') : t('uploadNew')}
+            {uploading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                {t('uploading')}
+              </>
+            ) : (
+              t('uploadNew')
+            )}
           </label>
         </div>
       </div>
 
       {loading && items.length === 0 ? (
-        <p className="text-sm text-slate-400 text-center py-16">
-          {t('loading')}
-        </p>
+        <AdminMediaGridSkeleton aria-label={t('loading')} />
       ) : items.length === 0 ? (
         <p className="text-sm text-slate-500 text-center py-16">{t('empty')}</p>
       ) : (
@@ -202,26 +213,31 @@ export default function MediaClient() {
                   {can('media.delete') && (
                     <button
                       type="button"
+                      disabled={deletingId === item.id}
                       onClick={(e) => {
                         e.stopPropagation();
                         void handleDelete(item);
                       }}
-                      className="p-1 rounded-md bg-white/95 text-red-600 shadow border border-slate-200/80 hover:bg-red-50"
+                      className="p-1 rounded-md bg-white/95 text-red-600 shadow border border-slate-200/80 hover:bg-red-50 disabled:opacity-50"
                       title={t('delete')}
                     >
-                      <svg
-                        className="w-3.5 h-3.5"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
+                      {deletingId === item.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <svg
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      )}
                     </button>
                   )}
                 </div>

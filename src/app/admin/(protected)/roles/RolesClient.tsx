@@ -1,23 +1,19 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Lock, Plus } from 'lucide-react';
+import AdminBusyButton from '@/components/admin/AdminBusyButton';
 import AdminDialog from '@/components/admin/access/AdminDialog';
 import {
   createRoleAction,
   deleteRoleAction,
   updateRoleAction,
 } from '@/actions/roles';
+import { useAccessAction, useSyncedList } from '@/hooks';
+import { createdRoleRow } from '@/lib/access-optimistic';
 import { canDeleteRole, canEditRole, holdsAll } from '@/lib/authz-rules';
-import {
-  actorFromDTO,
-  type AccessErrorCode,
-  type AccessResult,
-  type ActorDTO,
-  type RoleRow,
-} from '@/lib/access-types';
+import { actorFromDTO, type ActorDTO, type RoleRow } from '@/lib/access-types';
 import {
   ALL_PERMISSIONS,
   PERMISSIONS,
@@ -43,12 +39,11 @@ export default function RolesClient({
 }) {
   const t = useTranslations('admin.roles');
   const tAccess = useTranslations('admin.access');
-  const router = useRouter();
   const actor = useMemo(() => actorFromDTO(actorDTO), [actorDTO]);
 
   const [editor, setEditor] = useState<Editor>(null);
-  const [error, setError] = useState<AccessErrorCode | null>(null);
-  const [busy, setBusy] = useState(false);
+  const { isBusy, error, setError, run } = useAccessAction();
+  const { items: cards, patch, remove, append } = useSyncedList(roles);
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
   const [description, setDescription] = useState('');
@@ -63,27 +58,6 @@ export default function RolesClient({
       next.mode === 'edit' ? next.role.permissions.filter(isPermission) : []
     );
     setEditor(next);
-  }
-
-  async function run(
-    action: () => Promise<AccessResult<unknown>>,
-    onOk: () => void
-  ) {
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await action();
-      if (!res.ok) {
-        setError(res.error);
-        return;
-      }
-      onOk();
-      router.refresh();
-    } catch {
-      setError('FORBIDDEN');
-    } finally {
-      setBusy(false);
-    }
   }
 
   const label = (p: Permission) =>
@@ -120,7 +94,7 @@ export default function RolesClient({
       {editor === null && errorBox}
 
       <ul className="grid gap-3 md:grid-cols-2">
-        {roles.map((role) => {
+        {cards.map((role) => {
           const editable = canEditRole(actor, role, role.permissions);
           const deletable = canDeleteRole(actor, role);
           return (
@@ -150,9 +124,11 @@ export default function RolesClient({
                       </button>
                     )}
                     {deletable && (
-                      <button
-                        type="button"
-                        disabled={busy}
+                      <AdminBusyButton
+                        compact
+                        busy={isBusy(role.id)}
+                        idleLabel={t('delete')}
+                        busyLabel={t('editor.saving')}
                         onClick={() => {
                           if (
                             !confirm(
@@ -165,13 +141,12 @@ export default function RolesClient({
                             return;
                           void run(
                             () => deleteRoleAction({ roleId: role.id }),
-                            () => {}
+                            () => remove(role.id),
+                            role.id
                           );
                         }}
                         className="rounded-md px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50"
-                      >
-                        {t('delete')}
-                      </button>
+                      />
                     )}
                   </div>
                 )}
@@ -210,17 +185,31 @@ export default function RolesClient({
             className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
+              if (editor.mode === 'create') {
+                const draft = { key, name, description, permissions };
+                void run(
+                  () => createRoleAction(draft),
+                  ({ id }) => {
+                    append(createdRoleRow({ id, ...draft }));
+                    setEditor(null);
+                  },
+                  'dialog'
+                );
+                return;
+              }
+              const roleId = editor.role.id;
+              const draft = { name, description, permissions };
               void run(
-                () =>
-                  editor.mode === 'create'
-                    ? createRoleAction({ key, name, description, permissions })
-                    : updateRoleAction({
-                        roleId: editor.role.id,
-                        name,
-                        description,
-                        permissions,
-                      }),
-                () => setEditor(null)
+                () => updateRoleAction({ roleId, ...draft }),
+                () => {
+                  patch(roleId, {
+                    name: draft.name,
+                    description: draft.description.trim() || null,
+                    permissions: draft.permissions,
+                  });
+                  setEditor(null);
+                },
+                'dialog'
               );
             }}
           >
@@ -329,13 +318,13 @@ export default function RolesClient({
               >
                 {t('editor.cancel')}
               </button>
-              <button
+              <AdminBusyButton
                 type="submit"
-                disabled={busy}
+                busy={isBusy('dialog')}
+                idleLabel={t('editor.save')}
+                busyLabel={t('editor.saving')}
                 className="rounded-lg bg-primaryColor px-3.5 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-50"
-              >
-                {busy ? t('editor.saving') : t('editor.save')}
-              </button>
+              />
             </div>
           </form>
         </AdminDialog>

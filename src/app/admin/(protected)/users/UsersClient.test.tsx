@@ -201,6 +201,58 @@ describe('UsersClient', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(password)).toBeInTheDocument();
     expect(refresh).toHaveBeenCalled();
+    const createdRow = screen
+      .getAllByText('new@test.local')
+      .find((el) => el.closest('tr'))
+      ?.closest('tr');
+    expect(createdRow).toBeTruthy();
+    expect(within(createdRow as HTMLElement).getByText('Marketing')).toBeInTheDocument();
+  });
+
+  it('only the user being disabled shows Saving', async () => {
+    actions.disableUserAction.mockImplementation(() => new Promise(() => {}));
+    const other = row({
+      id: 'other',
+      email: 'other@test.local',
+      roleIds: ['r-marketing'],
+      permissions: DEFAULT_ROLE_PERMISSIONS.marketing,
+    });
+    const user = userEvent.setup();
+    renderAdmin(
+      <UsersClient
+        users={[me, writer, other]}
+        roles={roles}
+        actor={superActor}
+      />
+    );
+    await user.click(
+      within(rowFor('writer@test.local')).getByRole('button', {
+        name: 'Disable',
+      })
+    );
+    await waitFor(() =>
+      expect(
+        within(rowFor('writer@test.local')).getByRole('button', {
+          name: 'Saving…',
+        })
+      ).toBeInTheDocument()
+    );
+    expect(
+      within(rowFor('other@test.local')).getByRole('button', {
+        name: 'Disable',
+      })
+    ).toBeInTheDocument();
+    await user.click(
+      within(rowFor('other@test.local')).getByRole('button', {
+        name: 'Edit roles',
+      })
+    );
+    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+    expect(
+      within(screen.getByRole('dialog')).queryByRole('button', {
+        name: 'Saving…',
+      })
+    ).toBeNull();
   });
 
   it('shows translated errors from actions', async () => {
@@ -246,6 +298,38 @@ describe('UsersClient', () => {
     expect(
       within(rowFor('admin@test.local')).queryAllByRole('button')
     ).toHaveLength(0);
+  });
+
+  it('shows the new roles as soon as save succeeds, before refresh', async () => {
+    actions.setUserRolesAction.mockResolvedValue({
+      ok: true,
+      data: undefined,
+    });
+    const user = userEvent.setup();
+    renderAdmin(
+      <UsersClient users={[me, writer]} roles={roles} actor={superActor} />
+    );
+    expect(
+      within(rowFor('writer@test.local')).getByText('Marketing')
+    ).toBeInTheDocument();
+    await user.click(
+      within(rowFor('writer@test.local')).getByRole('button', {
+        name: 'Edit roles',
+      })
+    );
+    const dialog = screen.getByRole('dialog');
+    await user.click(within(dialog).getByLabelText('Admin'));
+    await user.click(within(dialog).getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(actions.setUserRolesAction).toHaveBeenCalledWith({
+        userId: 'writer',
+        roleIds: ['r-marketing', 'r-admin'],
+      })
+    );
+    expect(screen.queryByRole('dialog')).toBeNull();
+    const writerRow = rowFor('writer@test.local');
+    expect(within(writerRow).getByText('Admin')).toBeInTheDocument();
+    expect(within(writerRow).getByText('Marketing')).toBeInTheDocument();
   });
 
   it('delete requires typing the email', async () => {

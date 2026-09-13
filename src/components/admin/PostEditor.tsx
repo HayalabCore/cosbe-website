@@ -34,6 +34,8 @@ import type {
   ContentCategory,
   ParagraphBlock,
 } from '@/types';
+import AdminBusyButton from '@/components/admin/AdminBusyButton';
+import { AdminEditorSkeleton } from '@/components/admin/AdminSkeletons';
 import { useAdminViewArticleLink } from '@/components/admin/AdminViewArticleContext';
 import { usePermissions } from '@/components/admin/PermissionsContext';
 import { articleDetailHref } from '@/lib/article-paths';
@@ -44,10 +46,16 @@ import {
 import ArticleMetaLocaleFields from './ArticleMetaLocaleFields';
 import PostMetaForm, { type PostMetaPatch } from './PostMetaForm';
 
-const BlockEditor = dynamic(() => import('./BlockEditor'), { ssr: false });
+const BlockEditor = dynamic(() => import('./BlockEditor'), {
+  ssr: false,
+  loading: () => <AdminEditorSkeleton aria-label="Loading post…" />,
+});
 const BlockRenderer = dynamic(
   () => import('@/components/article/BlockRenderer'),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <AdminEditorSkeleton aria-label="Loading post…" />,
+  }
 );
 
 type Tab = 'edit' | 'preview';
@@ -115,7 +123,9 @@ export default function PostEditor({
   const isEditing = Boolean(initialArticle);
 
   const [tab, setTab] = useState<Tab>('edit');
-  const [saving, setSaving] = useState(false);
+  const [savingKind, setSavingKind] = useState<'draft' | 'publish' | null>(
+    null
+  );
   const [autoSavingUi, setAutoSavingUi] = useState(false);
   const [saveNotice, setSaveNotice] = useState<
     'manual' | 'auto' | 'auto-error' | 'auto-error-slug' | null
@@ -368,7 +378,7 @@ export default function PostEditor({
 
   async function save(publish: boolean) {
     savingRef.current = true;
-    setSaving(true);
+    setSavingKind(publish ? 'publish' : 'draft');
     setSaveNotice(null);
     try {
       const st: ArticleStatus = publish
@@ -433,13 +443,14 @@ export default function PostEditor({
       alertSaveFailure(e);
     } finally {
       savingRef.current = false;
-      setSaving(false);
+      setSavingKind(null);
     }
   }
 
   const words = wordCount(blocks);
   const readingMins = Math.max(1, Math.ceil(words / 200));
   const isPublished = status === 'published';
+  const saveInFlight = savingKind !== null || autoSavingUi;
   const isSaveError =
     saveNotice === 'auto-error' || saveNotice === 'auto-error-slug';
 
@@ -551,12 +562,9 @@ export default function PostEditor({
               </div>
             )}
 
-            <SaveIndicator
-              saving={saving || autoSavingUi}
-              label={t('saving')}
-            />
+            <SaveIndicator saving={autoSavingUi} label={t('saving')} />
 
-            {saveNotice && !saving && !autoSavingUi && (
+            {saveNotice && !saveInFlight && (
               <span
                 className={`${
                   isSaveError
@@ -573,27 +581,31 @@ export default function PostEditor({
             )}
 
             {(!isPublished || can('articles.publish')) && (
-              <button
+              <AdminBusyButton
+                compact
                 type="button"
-                disabled={saving || autoSavingUi}
+                busy={savingKind === 'draft'}
+                disabled={saveInFlight}
+                idleLabel={t('saveDraft')}
+                busyLabel={t('saving')}
                 onClick={() => void save(false)}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
-              >
-                {t('saveDraft')}
-              </button>
+              />
             )}
 
             {(isPublished ||
               (can('articles.publish') &&
                 (status !== 'archived' || can('articles.archive')))) && (
-              <button
+              <AdminBusyButton
+                compact
                 type="button"
-                disabled={saving || autoSavingUi}
+                busy={savingKind === 'publish'}
+                disabled={saveInFlight}
+                idleLabel={isPublished ? t('update') : t('publish')}
+                busyLabel={t('saving')}
                 onClick={() => void save(true)}
                 className="rounded-lg bg-primaryColor px-3 py-1.5 text-xs font-semibold text-white hover:bg-primaryHover disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
-              >
-                {isPublished ? t('update') : t('publish')}
-              </button>
+              />
             )}
           </div>
         </div>

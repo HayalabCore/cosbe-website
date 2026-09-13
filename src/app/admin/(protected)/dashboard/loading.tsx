@@ -12,7 +12,7 @@ export default function DashboardLoading() {
           />
         ))}
       </div>
-      <AdminArticleTableSkeleton rows={10} />
+      <AdminArticleTableSkeleton rows={10} aria-label="Loading posts…" />
     </div>
   );
 }

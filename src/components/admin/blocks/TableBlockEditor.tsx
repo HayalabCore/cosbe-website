@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { translateBlockEnAction } from '@/actions/block-translation';
 import type { TableBlock } from '@/types';
 import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
+import { useLocaleEditTab } from '@/hooks';
 
 const INPUT_CLS =
   'w-full bg-transparent px-2.5 py-2 text-sm text-slate-800 placeholder:text-slate-300 focus:outline-none transition-colors';
@@ -39,14 +40,8 @@ export default function TableBlockEditor({
 }) {
   const t = useTranslations('admin.table');
   const te = useTranslations('admin.blockLocale');
-  const [tab, setTab] = useState<'original' | 'english'>('original');
+  const [tab, setTab] = useLocaleEditTab(localeViewKey, localeViewTab);
   const [generating, setGenerating] = useState(false);
-
-  useEffect(() => {
-    if (localeViewKey && localeViewKey > 0) {
-      setTab(localeViewTab);
-    }
-  }, [localeViewKey, localeViewTab]);
 
   const colCount = block.headers.length;
   const headersEn: string[] = (block.headersEn ?? []).concat(
@@ -167,7 +162,8 @@ export default function TableBlockEditor({
         tab={tab}
         onTabChange={setTab}
         onGenerateEnglish={handleGenerate}
-        generating={generating || bulkTranslating}
+        generating={generating}
+        bulkTranslating={bulkTranslating}
         generateDisabled={!hasPrimary}
       />
 

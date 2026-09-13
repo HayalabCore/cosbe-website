@@ -56,7 +56,7 @@ describe('ChangePasswordForm', () => {
     expect(screen.getByText('Passwords don’t match.')).toBeInTheDocument();
   });
 
-  it('goes to the dashboard on success', async () => {
+  it('goes to the dashboard on success and keeps submitting', async () => {
     changeOwnPasswordAction.mockResolvedValue({ ok: true, data: undefined });
     await fill('temporary-pass', 'a-long-password-1', 'a-long-password-1');
     await waitFor(() => expect(push).toHaveBeenCalledWith('/admin/dashboard'));
@@ -64,6 +64,16 @@ describe('ChangePasswordForm', () => {
       currentPassword: 'temporary-pass',
       password: 'a-long-password-1',
     });
+    expect(screen.getByRole('button', { name: 'Saving…' })).toBeDisabled();
+  });
+
+  it('toggles password visibility on each field', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<ChangePasswordForm email="u@test.local" />);
+    const current = screen.getByLabelText('Current password');
+    expect(current).toHaveAttribute('type', 'password');
+    await user.click(screen.getAllByRole('button', { name: 'Show password' })[0]);
+    expect(current).toHaveAttribute('type', 'text');
   });
 
   it('shows translated action errors', async () => {
@@ -86,5 +96,8 @@ describe('ChangePasswordForm', () => {
     await user.click(screen.getByRole('button', { name: 'Sign out' }));
     await waitFor(() => expect(signOut).toHaveBeenCalled());
     expect(push).toHaveBeenCalledWith('/admin');
+    expect(
+      screen.getByRole('button', { name: 'Signing out…' })
+    ).toBeDisabled();
   });
 });

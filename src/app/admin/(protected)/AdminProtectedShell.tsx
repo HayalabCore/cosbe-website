@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Languages, ShieldCheck, Users } from 'lucide-react';
+import { Languages, Loader2, ShieldCheck, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { signOut } from '@/lib/auth';
@@ -27,6 +27,7 @@ function NavItem({
   label,
   onClick,
   openInNewTab,
+  disabled,
 }: {
   href?: string;
   active?: boolean;
@@ -35,12 +36,13 @@ function NavItem({
   onClick?: () => void;
   /** When set with `href`, opens in a new tab (e.g. public site from admin). */
   openInNewTab?: boolean;
+  disabled?: boolean;
 }) {
   const cls = `flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
     active
       ? 'bg-white/10 text-white'
       : 'text-slate-400 hover:text-white hover:bg-white/8'
-  }`;
+  } ${disabled ? 'opacity-60 pointer-events-none' : ''}`;
   if (href) {
     return (
       <Link
@@ -56,7 +58,12 @@ function NavItem({
     );
   }
   return (
-    <button type="button" className={cls} onClick={onClick}>
+    <button
+      type="button"
+      className={cls}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {icon}
       {label}
     </button>
@@ -67,12 +74,15 @@ function Sidebar({
   pathname,
   userEmail,
   onSignOut,
+  signingOut,
 }: {
   pathname: string;
   userEmail: string | null;
   onSignOut: () => void;
+  signingOut: boolean;
 }) {
   const t = useTranslations('admin.sidebar');
+  const tCommon = useTranslations('admin.common');
   const { can } = usePermissions();
   const locale = useLocale();
   const { viewArticleHref } = useAdminViewArticleLink();
@@ -267,22 +277,30 @@ function Sidebar({
           }
         />
         <NavItem
-          label={t('signOut')}
+          label={signingOut ? tCommon('signingOut') : t('signOut')}
           onClick={onSignOut}
+          disabled={signingOut}
           icon={
-            <svg
-              className="w-4 h-4 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            signingOut ? (
+              <Loader2
+                className="w-4 h-4 flex-shrink-0 animate-spin"
+                aria-hidden
               />
-            </svg>
+            ) : (
+              <svg
+                className="w-4 h-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+            )
           }
         />
       </div>
@@ -315,22 +333,17 @@ export default function AdminProtectedShell({
   const tSidebar = useTranslations('admin.sidebar');
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const skipRefresh = useRef(true);
-
-  // Layouts persist across client navigations. Refresh the RSC tree so
-  // permissions and disabled / must-change-password redirects stay current.
-  useEffect(() => {
-    if (skipRefresh.current) {
-      skipRefresh.current = false;
-      return;
-    }
-    router.refresh();
-  }, [pathname, router]);
+  const [signingOut, setSigningOut] = useState(false);
 
   async function handleSignOut() {
-    await signOut(supabase);
-    router.replace('/admin');
-    router.refresh();
+    setSigningOut(true);
+    try {
+      await signOut(supabase);
+      router.replace('/admin');
+      router.refresh();
+    } catch {
+      setSigningOut(false);
+    }
   }
 
   return (
@@ -342,6 +355,7 @@ export default function AdminProtectedShell({
               pathname={pathname}
               userEmail={userEmail}
               onSignOut={() => void handleSignOut()}
+              signingOut={signingOut}
             />
           </aside>
 
@@ -361,6 +375,7 @@ export default function AdminProtectedShell({
               pathname={pathname}
               userEmail={userEmail}
               onSignOut={() => void handleSignOut()}
+              signingOut={signingOut}
             />
           </aside>
 

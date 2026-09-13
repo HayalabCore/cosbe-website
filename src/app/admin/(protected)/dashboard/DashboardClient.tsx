@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState, useTransition } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -28,6 +28,8 @@ import {
 } from '@/actions/articles';
 import AdminCheckbox from '@/components/admin/AdminCheckbox';
 import { usePermissions } from '@/components/admin/PermissionsContext';
+import { useSyncedList } from '@/hooks';
+import { articleListPatch } from '@/lib/article-optimistic';
 import type { ArticleListItem, ArticleStatus } from '@/types';
 
 const STATUSES: ArticleStatus[] = ['draft', 'published', 'archived'];
@@ -91,7 +93,7 @@ export default function DashboardClient({ items }: Props) {
   const locale = useLocale();
   const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { items: rows, patch, patchMany, removeMany } = useSyncedList(items);
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'createdAt', desc: true },
@@ -104,14 +106,14 @@ export default function DashboardClient({ items }: Props) {
   const [bulkPending, setBulkPending] = useState(false);
 
   const counts = useMemo(() => {
-    const c = { total: items.length, published: 0, draft: 0, archived: 0 };
-    for (const it of items) {
+    const c = { total: rows.length, published: 0, draft: 0, archived: 0 };
+    for (const it of rows) {
       if (it.status === 'published') c.published++;
       else if (it.status === 'draft') c.draft++;
       else if (it.status === 'archived') c.archived++;
     }
     return c;
-  }, [items]);
+  }, [rows]);
 
   function fmtDate(iso: string | null) {
     if (!iso) return null;
@@ -146,12 +148,13 @@ export default function DashboardClient({ items }: Props) {
   }
 
   const runRowAction = useCallback(
-    async (id: string, fn: () => Promise<void>) => {
+    async (id: string, fn: () => Promise<void>, apply: () => void) => {
       setActionError(null);
       setPendingRowId(id);
       try {
         await fn();
-        startTransition(() => router.refresh());
+        apply();
+        router.refresh();
       } catch (e) {
         console.error(e);
         setActionError(t('actionFailed'));
@@ -358,8 +361,10 @@ export default function DashboardClient({ items }: Props) {
                     title={t('unpublishTitle')}
                     disabled={rowBusy}
                     onClick={() =>
-                      void runRowAction(a.id, () =>
-                        unpublishArticleAction(a.id)
+                      void runRowAction(
+                        a.id,
+                        () => unpublishArticleAction(a.id),
+                        () => patch(a.id, articleListPatch('unpublish'))
                       )
                     }
                     className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
@@ -384,7 +389,11 @@ export default function DashboardClient({ items }: Props) {
                     title={t('publishTitle')}
                     disabled={rowBusy}
                     onClick={() =>
-                      void runRowAction(a.id, () => publishArticleAction(a.id))
+                      void runRowAction(
+                        a.id,
+                        () => publishArticleAction(a.id),
+                        () => patch(a.id, articleListPatch('publish'))
+                      )
                     }
                     className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
                   >
@@ -410,7 +419,11 @@ export default function DashboardClient({ items }: Props) {
                     title={t('restoreTitle')}
                     disabled={rowBusy}
                     onClick={() =>
-                      void runRowAction(a.id, () => restoreArticleAction(a.id))
+                      void runRowAction(
+                        a.id,
+                        () => restoreArticleAction(a.id),
+                        () => patch(a.id, articleListPatch('restore'))
+                      )
                     }
                     className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
                   >
@@ -436,8 +449,10 @@ export default function DashboardClient({ items }: Props) {
                     onClick={() => {
                       if (!confirm(t('archiveConfirm', { title: a.title })))
                         return;
-                      void runRowAction(a.id, () =>
-                        archiveArticleAction(a.id, a.slug, a.category)
+                      void runRowAction(
+                        a.id,
+                        () => archiveArticleAction(a.id, a.slug, a.category),
+                        () => patch(a.id, articleListPatch('archive'))
                       );
                     }}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors disabled:opacity-40"
@@ -462,14 +477,14 @@ export default function DashboardClient({ items }: Props) {
         },
       },
     ],
-    [t, pendingRowId, runRowAction, dateLocale, can] // eslint-disable-line react-hooks/exhaustive-deps
+    [t, pendingRowId, runRowAction, dateLocale, can, patch] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // react-hooks/incompatible-library: useReactTable returns non-memoizable
   // functions — expected for TanStack Table, safe to ignore here.
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: items,
+    data: rows,
     columns,
     state: { sorting, columnFilters, globalFilter, rowSelection },
     getRowId: (r) => r.id,
@@ -522,14 +537,19 @@ export default function DashboardClient({ items }: Props) {
     can('articles.publish') &&
     (!selectedHasArchived || can('articles.archive'));
 
-  async function runBulk(fn: (ids: string[]) => Promise<void>) {
+  async function runBulk(
+    fn: (ids: string[]) => Promise<void>,
+    apply: (ids: string[]) => void
+  ) {
     if (selectedIds.length === 0) return;
+    const ids = selectedIds;
     setActionError(null);
     setBulkPending(true);
     try {
-      await fn(selectedIds);
+      await fn(ids);
+      apply(ids);
       table.resetRowSelection();
-      startTransition(() => router.refresh());
+      router.refresh();
     } catch (e) {
       console.error(e);
       setActionError(t('actionFailed'));
@@ -570,12 +590,6 @@ export default function DashboardClient({ items }: Props) {
           {t('newPost')}
         </Link>
       </div>
-
-      {isPending && (
-        <div className="fixed top-0 left-0 right-0 z-50 h-1 overflow-hidden bg-primaryColor/15">
-          <div className="animate-indeterminate h-full w-1/4 rounded-full bg-primaryColor" />
-        </div>
-      )}
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-5">
@@ -689,7 +703,11 @@ export default function DashboardClient({ items }: Props) {
                   <button
                     type="button"
                     disabled={bulkPending}
-                    onClick={() => void runBulk(publishArticlesAction)}
+                    onClick={() =>
+                      void runBulk(publishArticlesAction, (ids) =>
+                        patchMany(ids, articleListPatch('publish'))
+                      )
+                    }
                     className="rounded-lg px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
                   >
                     {t('bulkPublish')}
@@ -698,7 +716,11 @@ export default function DashboardClient({ items }: Props) {
                 <button
                   type="button"
                   disabled={bulkPending}
-                  onClick={() => void runBulk(unpublishArticlesAction)}
+                  onClick={() =>
+                    void runBulk(unpublishArticlesAction, (ids) =>
+                      patchMany(ids, articleListPatch('unpublish'))
+                    )
+                  }
                   className="rounded-lg px-3 py-1.5 text-xs font-semibold text-amber-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
                 >
                   {t('bulkUnpublish')}
@@ -714,7 +736,9 @@ export default function DashboardClient({ items }: Props) {
                     !confirm(t('bulkArchiveConfirm', { count: selectedCount }))
                   )
                     return;
-                  void runBulk(archiveArticlesAction);
+                  void runBulk(archiveArticlesAction, (ids) =>
+                    patchMany(ids, articleListPatch('archive'))
+                  );
                 }}
                 className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10 disabled:opacity-50 transition-colors"
               >
@@ -730,7 +754,7 @@ export default function DashboardClient({ items }: Props) {
                     !confirm(t('bulkDeleteConfirm', { count: selectedCount }))
                   )
                     return;
-                  void runBulk(deleteArticlesAction);
+                  void runBulk(deleteArticlesAction, (ids) => removeMany(ids));
                 }}
                 className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
               >
@@ -752,7 +776,7 @@ export default function DashboardClient({ items }: Props) {
       {/* Table */}
       <div
         className={`rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-opacity ${
-          isPending || bulkPending ? 'opacity-60' : ''
+          bulkPending ? 'opacity-60' : ''
         }`}
       >
         {filteredCount === 0 ? (
@@ -761,7 +785,7 @@ export default function DashboardClient({ items }: Props) {
               {t('noPostsTitle')}
             </p>
             <p className="text-sm text-slate-400">
-              {items.length === 0 ? t('noPostsEmpty') : t('noPostsFiltered')}
+              {rows.length === 0 ? t('noPostsEmpty') : t('noPostsFiltered')}
             </p>
           </div>
         ) : (

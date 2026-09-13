@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
+import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { AdminMediaGridSkeleton } from '@/components/admin/AdminSkeletons';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { uploadToGallery } from '@/lib/storage';
 import { recordMediaAction } from '@/actions/media';
@@ -44,7 +46,7 @@ export default function MediaGalleryModal({ open, onClose, onSelect }: Props) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [lightboxItem, setLightboxItem] = useState<MediaApiItem | null>(null);
@@ -185,7 +187,14 @@ export default function MediaGalleryModal({ open, onClose, onSelect }: Props) {
                     e.target.value = '';
                   }}
                 />
-                {uploading ? t('uploading') : t('uploadNew')}
+                {uploading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    {t('uploading')}
+                  </>
+                ) : (
+                  t('uploadNew')
+                )}
               </label>
             )}
             <button
@@ -200,9 +209,7 @@ export default function MediaGalleryModal({ open, onClose, onSelect }: Props) {
 
         <div className="flex-1 overflow-y-auto p-4">
           {loading && items.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-12">
-              {t('loading')}
-            </p>
+            <AdminMediaGridSkeleton aria-label={t('loading')} />
           ) : items.length === 0 ? (
             <p className="text-sm text-slate-500 text-center py-12">
               {t('empty')}

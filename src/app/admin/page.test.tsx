@@ -57,4 +57,28 @@ describe('AdminLoginPage', () => {
     );
     expect(push).not.toHaveBeenCalled();
   });
+
+  it('toggles password visibility', async () => {
+    const user = userEvent.setup();
+    renderAdmin(<AdminLoginPage />);
+    const input = screen.getByLabelText('Password');
+    expect(input).toHaveAttribute('type', 'password');
+    await user.click(screen.getByRole('button', { name: 'Show password' }));
+    expect(input).toHaveAttribute('type', 'text');
+  });
+
+  it('keeps signing in after a successful login', async () => {
+    signIn.mockResolvedValue({ error: null });
+    const user = userEvent.setup();
+    renderAdmin(<AdminLoginPage />);
+    await user.type(screen.getByLabelText('Email'), 'a@b.c');
+    await user.type(screen.getByLabelText('Password'), 'secret-password');
+    await user.click(screen.getByRole('button', { name: 'Sign in →' }));
+    await waitFor(() =>
+      expect(push).toHaveBeenCalledWith('/admin/dashboard')
+    );
+    expect(
+      screen.getByRole('button', { name: 'Signing in…' })
+    ).toBeDisabled();
+  });
 });

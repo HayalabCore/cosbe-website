@@ -4,15 +4,15 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { changeOwnPasswordAction } from '@/actions/account';
+import AdminBusyButton from '@/components/admin/AdminBusyButton';
+import PasswordField from '@/components/admin/PasswordField';
 import { signOut } from '@/lib/auth';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { PASSWORD_MIN_LENGTH } from '@/lib/validation/access';
 
-const inputClass =
-  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm focus:border-primaryColor focus:outline-none focus:ring-3 focus:ring-primaryColor/15 transition-all';
-
 export default function ChangePasswordForm({ email }: { email: string }) {
   const t = useTranslations('admin.changePassword');
+  const tCommon = useTranslations('admin.common');
   const tErrors = useTranslations('admin.access.errors');
   const router = useRouter();
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
@@ -21,6 +21,7 @@ export default function ChangePasswordForm({ email }: { email: string }) {
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,21 +39,26 @@ export default function ChangePasswordForm({ email }: { email: string }) {
       const res = await changeOwnPasswordAction({ currentPassword, password });
       if (!res.ok) {
         setError(tErrors(res.error));
+        setSaving(false);
         return;
       }
       router.push('/admin/dashboard');
       router.refresh();
     } catch {
       setError(tErrors('FAILED'));
-    } finally {
       setSaving(false);
     }
   }
 
   async function handleSignOut() {
-    await signOut(supabase);
-    router.push('/admin');
-    router.refresh();
+    setSigningOut(true);
+    try {
+      await signOut(supabase);
+      router.push('/admin');
+      router.refresh();
+    } catch {
+      setSigningOut(false);
+    }
   }
 
   return (
@@ -70,57 +76,33 @@ export default function ChangePasswordForm({ email }: { email: string }) {
             readOnly
             hidden
           />
-          <div>
-            <label
-              htmlFor="current-password"
-              className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500"
-            >
-              {t('currentPassword')}
-            </label>
-            <input
-              id="current-password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="new-password"
-              className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500"
-            >
-              {t('newPassword')}
-            </label>
-            <input
-              id="new-password"
-              type="password"
-              autoComplete="new-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="confirm-password"
-              className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500"
-            >
-              {t('confirmPassword')}
-            </label>
-            <input
-              id="confirm-password"
-              type="password"
-              autoComplete="new-password"
-              required
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className={inputClass}
-            />
-          </div>
+          <PasswordField
+            id="current-password"
+            label={t('currentPassword')}
+            autoComplete="current-password"
+            required
+            disabled={saving}
+            value={currentPassword}
+            onChange={setCurrentPassword}
+          />
+          <PasswordField
+            id="new-password"
+            label={t('newPassword')}
+            autoComplete="new-password"
+            required
+            disabled={saving}
+            value={password}
+            onChange={setPassword}
+          />
+          <PasswordField
+            id="confirm-password"
+            label={t('confirmPassword')}
+            autoComplete="new-password"
+            required
+            disabled={saving}
+            value={confirm}
+            onChange={setConfirm}
+          />
           {error && (
             <div
               role="alert"
@@ -129,21 +111,22 @@ export default function ChangePasswordForm({ email }: { email: string }) {
               {error}
             </div>
           )}
-          <button
+          <AdminBusyButton
             type="submit"
-            disabled={saving}
+            busy={saving}
+            idleLabel={t('submit')}
+            busyLabel={t('submitting')}
             className="mt-2 w-full rounded-xl bg-primaryColor py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primaryHover disabled:opacity-60"
-          >
-            {saving ? t('submitting') : t('submit')}
-          </button>
+          />
         </form>
-        <button
+        <AdminBusyButton
           type="button"
+          busy={signingOut}
+          idleLabel={t('signOut')}
+          busyLabel={tCommon('signingOut')}
           onClick={() => void handleSignOut()}
           className="mt-6 w-full text-center text-sm font-medium text-slate-500 hover:text-slate-800"
-        >
-          {t('signOut')}
-        </button>
+        />
       </div>
     </div>
   );

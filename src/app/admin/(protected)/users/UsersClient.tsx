@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { UserPlus } from 'lucide-react';
+import AdminBusyButton from '@/components/admin/AdminBusyButton';
 import AdminDialog from '@/components/admin/access/AdminDialog';
 import RoleCheckboxes from '@/components/admin/access/RoleCheckboxes';
 import TempPasswordField from '@/components/admin/access/TempPasswordField';
@@ -15,11 +15,11 @@ import {
   resetPasswordAction,
   setUserRolesAction,
 } from '@/actions/users';
+import { useAccessAction, useSyncedList } from '@/hooks';
+import { createdUserRow, userWithRoles } from '@/lib/access-optimistic';
 import { canModifyUser } from '@/lib/authz-rules';
 import {
   actorFromDTO,
-  type AccessErrorCode,
-  type AccessResult,
   type ActorDTO,
   type AdminUserRow,
   type RoleRow,
@@ -58,7 +58,6 @@ export default function UsersClient({
   const t = useTranslations('admin.users');
   const tErrors = useTranslations('admin.access.errors');
   const locale = useLocale();
-  const router = useRouter();
   const actor = useMemo(() => actorFromDTO(actorDTO), [actorDTO]);
   const can = (p: Parameters<typeof actor.permissions.has>[0]) =>
     actor.permissions.has(p);
@@ -68,8 +67,8 @@ export default function UsersClient({
   );
 
   const [dialog, setDialog] = useState<Dialog>(null);
-  const [error, setError] = useState<AccessErrorCode | null>(null);
-  const [busy, setBusy] = useState(false);
+  const { isBusy, error, setError, run } = useAccessAction();
+  const { items: rows, patch, remove, prepend } = useSyncedList(users);
 
   // Form state for dialogs (reset whenever a dialog opens).
   const [email, setEmail] = useState('');
@@ -86,28 +85,6 @@ export default function UsersClient({
     setRoleIds(next.kind === 'roles' ? next.user.roleIds : []);
     setConfirmText('');
     setDialog(next);
-  }
-
-  async function run<T>(
-    action: () => Promise<AccessResult<T>>,
-    onOk: (data: T) => void = () => setDialog(null)
-  ) {
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await action();
-      if (!res.ok) {
-        setError(res.error);
-        return;
-      }
-      onOk(res.data);
-      router.refresh();
-    } catch {
-      // requirePermission throws when permissions changed since page load.
-      setError('FORBIDDEN');
-    } finally {
-      setBusy(false);
-    }
   }
 
   const formatDate = (iso: string | null) =>
@@ -164,7 +141,7 @@ export default function UsersClient({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {users.map((u) => {
+            {rows.map((u) => {
               const isMe = u.id === actor.userId;
               const modifiable = canModifyUser(actor, {
                 id: u.id,
@@ -254,23 +231,27 @@ export default function UsersClient({
                         )}
                         {can('users.disable') &&
                           (u.disabled ? (
-                            <button
-                              type="button"
+                            <AdminBusyButton
+                              compact
+                              busy={isBusy(u.id)}
+                              idleLabel={t('actions.enable')}
+                              busyLabel={t('dialog.saving')}
                               className={rowButton}
-                              disabled={busy}
                               onClick={() =>
-                                void run(() =>
-                                  enableUserAction({ userId: u.id })
+                                void run(
+                                  () => enableUserAction({ userId: u.id }),
+                                  () => patch(u.id, { disabled: false }),
+                                  u.id
                                 )
                               }
-                            >
-                              {t('actions.enable')}
-                            </button>
+                            />
                           ) : (
-                            <button
-                              type="button"
+                            <AdminBusyButton
+                              compact
+                              busy={isBusy(u.id)}
+                              idleLabel={t('actions.disable')}
+                              busyLabel={t('dialog.saving')}
                               className={`${rowButton} text-amber-700`}
-                              disabled={busy}
                               onClick={() => {
                                 if (
                                   !confirm(
@@ -280,13 +261,13 @@ export default function UsersClient({
                                   )
                                 )
                                   return;
-                                void run(() =>
-                                  disableUserAction({ userId: u.id })
+                                void run(
+                                  () => disableUserAction({ userId: u.id }),
+                                  () => patch(u.id, { disabled: true }),
+                                  u.id
                                 );
                               }}
-                            >
-                              {t('actions.disable')}
-                            </button>
+                            />
                           ))}
                         {can('users.delete') && u.disabled && (
                           <button
@@ -329,12 +310,23 @@ export default function UsersClient({
                     password: submitted,
                     roleIds,
                   }),
-                (data) =>
+                (data) => {
+                  prepend(
+                    createdUserRow({
+                      id: data.id,
+                      email: data.email,
+                      displayName,
+                      roleIds,
+                      roles,
+                    })
+                  );
                   setDialog({
                     kind: 'credentials',
                     email: data.email,
                     password: submitted,
-                  })
+                  });
+                },
+                'dialog'
               );
             }}
           >
@@ -378,9 +370,13 @@ export default function UsersClient({
               >
                 {t('dialog.cancel')}
               </button>
-              <button type="submit" className={primaryButton} disabled={busy}>
-                {busy ? t('dialog.saving') : t('dialog.create')}
-              </button>
+              <AdminBusyButton
+                type="submit"
+                busy={isBusy('dialog')}
+                idleLabel={t('dialog.create')}
+                busyLabel={t('dialog.saving')}
+                className={primaryButton}
+              />
             </div>
           </form>
         </AdminDialog>
@@ -406,21 +402,31 @@ export default function UsersClient({
             >
               {t('dialog.cancel')}
             </button>
-            <button
+            <AdminBusyButton
               type="button"
+              busy={isBusy('dialog')}
+              idleLabel={t('dialog.save')}
+              busyLabel={t('dialog.saving')}
               className={primaryButton}
-              disabled={busy}
-              onClick={() =>
-                void run(() =>
-                  setUserRolesAction({
-                    userId: dialog.user.id,
-                    roleIds,
-                  })
-                )
-              }
-            >
-              {busy ? t('dialog.saving') : t('dialog.save')}
-            </button>
+              onClick={() => {
+                const targetId = dialog.user.id;
+                const nextRoleIds = roleIds;
+                void run(
+                  () =>
+                    setUserRolesAction({
+                      userId: targetId,
+                      roleIds: nextRoleIds,
+                    }),
+                  () => {
+                    patch(targetId, (row) =>
+                      userWithRoles(row, nextRoleIds, roles)
+                    );
+                    setDialog(null);
+                  },
+                  'dialog'
+                );
+              }}
+            />
           </div>
         </AdminDialog>
       )}
@@ -440,10 +446,12 @@ export default function UsersClient({
             >
               {t('dialog.cancel')}
             </button>
-            <button
+            <AdminBusyButton
               type="button"
+              busy={isBusy('dialog')}
+              idleLabel={t('dialog.reset')}
+              busyLabel={t('dialog.saving')}
               className={primaryButton}
-              disabled={busy}
               onClick={() => {
                 const submitted = password;
                 if (submitted.length < PASSWORD_MIN_LENGTH) {
@@ -457,17 +465,18 @@ export default function UsersClient({
                       userId: target.id,
                       password: submitted,
                     }),
-                  () =>
+                  () => {
+                    patch(target.id, { mustChangePassword: true });
                     setDialog({
                       kind: 'credentials',
                       email: target.email,
                       password: submitted,
-                    })
+                    });
+                  },
+                  'dialog'
                 );
               }}
-            >
-              {busy ? t('dialog.saving') : t('dialog.reset')}
-            </button>
+            />
           </div>
         </AdminDialog>
       )}
@@ -496,16 +505,25 @@ export default function UsersClient({
             >
               {t('dialog.cancel')}
             </button>
-            <button
+            <AdminBusyButton
               type="button"
+              busy={isBusy('dialog')}
+              idleLabel={t('dialog.deleteCta')}
+              busyLabel={t('dialog.saving')}
               className="rounded-lg bg-red-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
-              disabled={busy || confirmText.trim() !== dialog.user.email}
-              onClick={() =>
-                void run(() => deleteUserAction({ userId: dialog.user.id }))
-              }
-            >
-              {t('dialog.deleteCta')}
-            </button>
+              disabled={confirmText.trim() !== dialog.user.email}
+              onClick={() => {
+                const targetId = dialog.user.id;
+                void run(
+                  () => deleteUserAction({ userId: targetId }),
+                  () => {
+                    remove(targetId);
+                    setDialog(null);
+                  },
+                  'dialog'
+                );
+              }}
+            />
           </div>
         </AdminDialog>
       )}

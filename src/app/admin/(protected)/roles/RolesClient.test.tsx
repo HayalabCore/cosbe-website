@@ -88,6 +88,11 @@ describe('RolesClient', () => {
       })
     );
     expect(refresh).toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(
+      screen.getByRole('heading', { name: 'Editor' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('editor')).toBeInTheDocument();
   });
 
   it('edits a role without a key field', async () => {
@@ -102,12 +107,76 @@ describe('RolesClient', () => {
     expect(
       within(dialog).getByRole('checkbox', { name: /Publish articles/ })
     ).toBeChecked();
+    await user.clear(within(dialog).getByLabelText('Name'));
+    await user.type(within(dialog).getByLabelText('Name'), 'Growth');
     await user.click(within(dialog).getByRole('button', { name: 'Save role' }));
     await waitFor(() =>
       expect(updateRoleAction).toHaveBeenCalledWith(
-        expect.objectContaining({ roleId: 'r-marketing', name: 'Marketing' })
+        expect.objectContaining({ roleId: 'r-marketing', name: 'Growth' })
       )
     );
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(
+      screen.getByRole('heading', { name: 'Growth' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'Marketing' })
+    ).toBeNull();
+  });
+
+  it('only the role being deleted shows Saving', async () => {
+    deleteRoleAction.mockImplementation(() => new Promise(() => {}));
+    const extra: RoleRow = {
+      id: 'r-editor',
+      key: 'editor',
+      name: 'Editor',
+      description: null,
+      isSystem: false,
+      permissions: DEFAULT_ROLE_PERMISSIONS.marketing,
+      userCount: 0,
+    };
+    const user = userEvent.setup();
+    renderAdmin(
+      <RolesClient roles={[...roles, extra]} actor={adminActor} />
+    );
+    await user.click(
+      within(card('Marketing')).getByRole('button', { name: 'Delete' })
+    );
+    await waitFor(() =>
+      expect(
+        within(card('Marketing')).getByRole('button', { name: 'Saving…' })
+      ).toBeInTheDocument()
+    );
+    expect(
+      within(card('Editor')).getByRole('button', { name: 'Delete' })
+    ).toBeInTheDocument();
+    expect(
+      within(card('Editor')).queryByRole('button', { name: 'Saving…' })
+    ).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'New role' }));
+    expect(
+      screen.getByRole('button', { name: 'Save role' })
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByRole('dialog')).queryByRole('button', {
+        name: 'Saving…',
+      })
+    ).toBeNull();
+  });
+
+  it('removes the card as soon as delete succeeds', async () => {
+    deleteRoleAction.mockResolvedValue({ ok: true, data: undefined });
+    const user = userEvent.setup();
+    renderAdmin(<RolesClient roles={roles} actor={adminActor} />);
+    await user.click(
+      within(card('Marketing')).getByRole('button', { name: 'Delete' })
+    );
+    await waitFor(() =>
+      expect(deleteRoleAction).toHaveBeenCalledWith({ roleId: 'r-marketing' })
+    );
+    expect(
+      screen.queryByRole('heading', { name: 'Marketing' })
+    ).toBeNull();
   });
 
   it('confirms before deleting and shows translated errors', async () => {
