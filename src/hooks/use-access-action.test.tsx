@@ -51,6 +51,18 @@ describe('useAccessAction', () => {
     expect(result.current.isBusy('role-a')).toBe(false);
   });
 
+  it('records unexpected throws as FAILED, not FORBIDDEN', async () => {
+    const onOk = vi.fn();
+    const { result } = renderHook(() => useAccessAction());
+    await act(async () => {
+      await result.current.run(async () => {
+        throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
+      }, onOk);
+    });
+    expect(onOk).not.toHaveBeenCalled();
+    expect(result.current.error).toBe('FAILED');
+  });
+
   it('records action errors without refreshing', async () => {
     const onOk = vi.fn();
     const { result } = renderHook(() => useAccessAction());

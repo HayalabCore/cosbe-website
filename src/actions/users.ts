@@ -177,18 +177,23 @@ export async function resetPasswordAction(input: {
   const target = await loadModifiableUser(ctx, parsed.data.userId);
   if (!target.ok) return target;
 
-  const updated = await setAuthUserPassword(
-    target.data.id,
-    parsed.data.password
-  );
-  if (!updated.ok) return updated;
-  await setMustChangePassword(target.data.id, true);
-  if (!(await revokeAuthUserSessions(target.data.id))) {
+  try {
+    const updated = await setAuthUserPassword(
+      target.data.id,
+      parsed.data.password
+    );
+    if (!updated.ok) return updated;
+    await setMustChangePassword(target.data.id, true);
+    if (!(await revokeAuthUserSessions(target.data.id))) {
+      revalidatePath(USERS_PATH);
+      return { ok: false, error: 'SESSIONS_NOT_REVOKED' };
+    }
     revalidatePath(USERS_PATH);
-    return { ok: false, error: 'SESSIONS_NOT_REVOKED' };
+    return { ok: true, data: undefined };
+  } catch (error) {
+    console.error('[resetPasswordAction]', error);
+    return { ok: false, error: 'FAILED' };
   }
-  revalidatePath(USERS_PATH);
-  return { ok: true, data: undefined };
 }
 
 export async function setUserRolesAction(input: {

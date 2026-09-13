@@ -32,8 +32,9 @@ export function useAccessAction() {
         }
         onOk(res.data);
         router.refresh();
-      } catch {
-        setError('FORBIDDEN');
+      } catch (error) {
+        console.error('[useAccessAction]', error);
+        setError('FAILED');
       } finally {
         setBusyKey(null);
       }

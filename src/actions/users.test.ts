@@ -467,6 +467,21 @@ describe('resetPasswordAction', () => {
     expect(authAdmin.revokeAuthUserSessions).toHaveBeenCalledWith(TARGET_ID);
   });
 
+  it('returns FAILED when the Auth admin client throws during reset', async () => {
+    vi.mocked(usersRepo.findAdminUserWithRoles).mockResolvedValue(
+      target() as never
+    );
+    vi.mocked(authAdmin.setAuthUserPassword).mockRejectedValue(
+      new Error('Missing SUPABASE_SERVICE_ROLE_KEY')
+    );
+    expect(
+      await resetPasswordAction({
+        userId: TARGET_ID,
+        password: 'another-long-pass',
+      })
+    ).toEqual({ ok: false, error: 'FAILED' });
+  });
+
   it('returns SESSIONS_NOT_REVOKED when session revoke fails after a reset', async () => {
     vi.mocked(usersRepo.findAdminUserWithRoles).mockResolvedValue(
       target() as never

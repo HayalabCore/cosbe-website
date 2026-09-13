@@ -87,16 +87,21 @@ export async function setAuthUserPassword(
   id: string,
   password: string
 ): Promise<{ ok: true } | { ok: false; error: 'WEAK_PASSWORD' | 'FAILED' }> {
-  const { error } = await getSupabaseAdminClient().auth.admin.updateUserById(
-    id,
-    { password }
-  );
-  if (!error) return { ok: true };
-  if (error.code === 'weak_password') {
-    return { ok: false, error: 'WEAK_PASSWORD' };
+  try {
+    const { error } = await getSupabaseAdminClient().auth.admin.updateUserById(
+      id,
+      { password }
+    );
+    if (!error) return { ok: true };
+    if (error.code === 'weak_password') {
+      return { ok: false, error: 'WEAK_PASSWORD' };
+    }
+    console.error('[setAuthUserPassword]', error);
+    return { ok: false, error: 'FAILED' };
+  } catch (error) {
+    console.error('[setAuthUserPassword]', error);
+    return { ok: false, error: 'FAILED' };
   }
-  console.error('[setAuthUserPassword]', error);
-  return { ok: false, error: 'FAILED' };
 }
 
 export async function setAuthUserBanned(
