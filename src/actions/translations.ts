@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidateTag } from 'next/cache';
-import { requireUser } from '@/lib/require-user';
+import { requirePermission } from '@/lib/authz';
 import { prisma } from '@/lib/prisma';
 import { translateToEnglish } from '@/lib/openai-translate';
 import { namespaceFromKeyPath } from '@/lib/translations/flatten';
@@ -25,7 +25,7 @@ function assertLocale(locale: string): asserts locale is TranslationLocale {
 }
 
 export async function listTranslationNamespaces(): Promise<string[]> {
-  await requireUser();
+  await requirePermission('translations.edit');
   try {
     const rows = await prisma.translation.findMany({
       distinct: ['namespace'],
@@ -86,7 +86,7 @@ function groupLocaleRows(
 export async function listTranslationRowsForNamespace(
   namespace: string
 ): Promise<TranslationPairRow[]> {
-  await requireUser();
+  await requirePermission('translations.edit');
   if (!namespace || namespace.length > 200) {
     throw new Error('Invalid namespace');
   }
@@ -106,7 +106,7 @@ export async function searchTranslationRows(
   query: string,
   limit = 500
 ): Promise<TranslationPairRow[]> {
-  await requireUser();
+  await requirePermission('translations.edit');
   const q = query.trim();
   if (q.length < 1) {
     return [];
@@ -146,7 +146,7 @@ export async function saveTranslation(input: {
   value: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
-    const { user } = await requireUser();
+    const { user } = await requirePermission('translations.edit');
     assertValidKeyPath(input.keyPath);
     assertLocale(input.locale);
     const value = input.value;
@@ -215,7 +215,7 @@ export async function getTranslationHistory(input: {
   locale: string;
   limit?: number;
 }): Promise<TranslationHistoryItem[]> {
-  await requireUser();
+  await requirePermission('translations.edit');
   assertValidKeyPath(input.keyPath);
   assertLocale(input.locale);
   const limit = Math.min(input.limit ?? 10, 50);
@@ -246,7 +246,7 @@ export async function translateKeyToEnglish(input: {
   keyPath: string;
 }): Promise<{ ok: true; en: string } | { ok: false; error: string }> {
   try {
-    await requireUser();
+    await requirePermission('translations.edit');
     assertValidKeyPath(input.keyPath);
 
     const jaRow = await prisma.translation.findUnique({
@@ -276,7 +276,7 @@ export async function deleteTranslationHistoryItem(input: {
   historyId: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
-    await requireUser();
+    await requirePermission('translations.history.delete');
     if (!input.historyId) throw new Error('Invalid history ID');
     await prisma.translationHistory.delete({
       where: { id: input.historyId },
@@ -292,7 +292,7 @@ export async function restoreTranslation(input: {
   historyId: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
-    await requireUser();
+    await requirePermission('translations.edit');
     const row = await prisma.translationHistory.findUnique({
       where: { id: input.historyId },
     });

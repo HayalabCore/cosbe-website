@@ -6,19 +6,19 @@ import {
   deleteMediaRecord,
   getMediaById,
 } from '@/lib/media-repository';
-import { requireUser } from '@/lib/require-user';
+import { requirePermission } from '@/lib/authz';
 import { deleteFromGallery } from '@/lib/storage';
 import type { CreateMediaInput } from '@/lib/media-repository';
 
 export async function recordMediaAction(data: CreateMediaInput) {
-  await requireUser();
+  await requirePermission('media.upload');
   const row = await createMediaRecord(data);
   revalidatePath('/admin/media');
   return row;
 }
 
 export async function deleteMediaAction(id: string) {
-  const { supabase } = await requireUser();
+  const { supabase } = await requirePermission('media.delete');
   const row = await getMediaById(id);
   if (!row) throw new Error('Not found');
   const url = row.url;

@@ -8,7 +8,7 @@ import {
   type TranslateBlockPayload,
   type TranslateBlockResult,
 } from '@/lib/block-translation-server';
-import { requireUser } from '@/lib/require-user';
+import { requirePermission } from '@/lib/authz';
 import type { ContentBlock } from '@/types';
 
 export type {
@@ -19,7 +19,7 @@ export type {
 export async function translateBlockEnAction(
   payload: TranslateBlockPayload
 ): Promise<TranslateBlockResult> {
-  await requireUser();
+  await requirePermission('articles.edit');
   return translateBlockPayload(payload);
 }
 
@@ -27,7 +27,7 @@ export async function translateArticleMetaEnAction(parts: {
   title: string;
   excerpt?: string;
 }): Promise<{ titleEn: string; excerptEn?: string }> {
-  await requireUser();
+  await requirePermission('articles.edit');
   return translateArticleMetaParts(parts);
 }
 
@@ -43,7 +43,7 @@ export async function translateArticleEnAction(parts: {
   excerpt?: string;
   blocks: ContentBlock[];
 }): Promise<TranslateArticleEnResult> {
-  await requireUser();
+  await requirePermission('articles.edit');
 
   const errors: BlockTranslationError[] = [];
 

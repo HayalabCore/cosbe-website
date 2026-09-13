@@ -1,13 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { authedUser, unauth } from '@/test/require-user';
+import { authed, unauth } from '@/test/authz';
 import {
   ImageRehostError,
   SlugCollisionError,
   type ImportCommitPayload,
 } from '@/lib/legacy-import/types';
 
-vi.mock('@/lib/require-user', () => ({
-  requireUser: vi.fn(),
+vi.mock('@/lib/authz', () => ({
+  requirePermission: vi.fn(),
+  requireAnyPermission: vi.fn(),
+  requireActiveSession: vi.fn(),
 }));
 
 vi.mock('@/lib/article-revalidation', () => ({
@@ -53,7 +55,7 @@ const payload: ImportCommitPayload = {
 describe('legacy-import actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    authedUser();
+    authed();
   });
 
   it('preview/check/commit unauthorized', async () => {
@@ -102,5 +104,12 @@ describe('legacy-import actions', () => {
     vi.mocked(previewImport).mockResolvedValue(payload);
     await previewImportAction(payload.sourceUrl);
     expect(previewImport).toHaveBeenCalledWith(payload.sourceUrl);
+  });
+
+  it('import actions are Forbidden without import.run', async () => {
+    authed(['articles.edit']);
+    await expect(previewImportAction('https://example.com/a')).rejects.toThrow(
+      'Forbidden'
+    );
   });
 });

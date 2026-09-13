@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { authedUser, unauth } from '@/test/require-user';
+import { authed, unauth } from '@/test/authz';
 import { createPayload } from '@/test/fixtures/articles';
 import { prismaUniqueConflict } from '@/test/prisma-error';
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
 
-vi.mock('@/lib/require-user', () => ({
-  requireUser: vi.fn(),
+vi.mock('@/lib/authz', () => ({
+  requirePermission: vi.fn(),
+  requireAnyPermission: vi.fn(),
+  requireActiveSession: vi.fn(),
 }));
 
 vi.mock('@/lib/article-revalidation', () => ({
@@ -25,6 +27,7 @@ vi.mock('@/lib/articles', () => ({
   deleteArticleRecord: vi.fn(),
   getArticleByIdAdmin: vi.fn(),
   getArticleSlugCategoryById: vi.fn(),
+  getArticleMetasByIds: vi.fn(),
   getArticles: vi.fn(),
   countArticles: vi.fn(),
   getArticleStatusCounts: vi.fn(),
@@ -52,12 +55,12 @@ import {
   updateArticleAction,
 } from './articles';
 import * as articles from '@/lib/articles';
-import { requireUser } from '@/lib/require-user';
+import { requireAnyPermission, requirePermission } from '@/lib/authz';
 
 describe('article actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    authedUser();
+    authed();
   });
 
   it('createArticleAction throws Unauthorized when logged out', async () => {
@@ -129,13 +132,12 @@ describe('article actions', () => {
     vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
       slug: 'hello',
       category: 'useful-info',
+      status: 'draft',
     });
     vi.mocked(articles.updateArticleRecord).mockRejectedValue(
       prismaUniqueConflict(['slug'])
     );
-    await expect(
-      updateArticleAction('id-1', { slug: 'ai' })
-    ).resolves.toEqual({
+    await expect(updateArticleAction('id-1', { slug: 'ai' })).resolves.toEqual({
       ok: false,
       error: 'SLUG_CONFLICT',
     });
@@ -145,6 +147,7 @@ describe('article actions', () => {
     vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
       slug: 'old-slug',
       category: 'useful-info',
+      status: 'draft',
     });
     vi.mocked(articles.updateArticleRecord).mockResolvedValue(undefined);
     await expect(
@@ -160,6 +163,7 @@ describe('article actions', () => {
     vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
       slug: 'same-slug',
       category: 'useful-info',
+      status: 'draft',
     });
     vi.mocked(articles.updateArticleRecord).mockResolvedValue(undefined);
     await updateArticleAction('id-1', {
@@ -180,6 +184,7 @@ describe('article actions', () => {
     vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
       slug: 'old-slug',
       category: 'useful-info',
+      status: 'draft',
     });
     vi.mocked(articles.updateArticleRecord).mockResolvedValue(undefined);
     await updateArticleAction('id-1', {
@@ -231,6 +236,7 @@ describe('article actions', () => {
     vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
       slug: 'hello',
       category: 'useful-info',
+      status: 'draft',
     });
     vi.mocked(articles.updateArticleRecord).mockResolvedValue(undefined);
     const raw = { title: 'Ok', extra: 'still-passed' };
@@ -289,7 +295,10 @@ describe('article actions', () => {
   it('getArticleByIdAction requires a user then loads the article', async () => {
     vi.mocked(articles.getArticleByIdAdmin).mockResolvedValue(null);
     await getArticleByIdAction('art-1');
-    expect(requireUser).toHaveBeenCalled();
+    expect(requireAnyPermission).toHaveBeenCalledWith(
+      'dashboard.view',
+      'articles.edit'
+    );
     expect(articles.getArticleByIdAdmin).toHaveBeenCalledWith('art-1');
 
     unauth();
@@ -297,9 +306,133 @@ describe('article actions', () => {
   });
 
   it('bulk publish calls the record helper when ids are present', async () => {
+    vi.mocked(articles.getArticleMetasByIds).mockResolvedValue([
+      {
+        id: 'a',
+        slug: 'a',
+        category: 'useful-info',
+        status: 'draft',
+      },
+      {
+        id: 'b',
+        slug: 'b',
+        category: 'useful-info',
+        status: 'draft',
+      },
+    ]);
     vi.mocked(articles.publishArticlesRecord).mockResolvedValue(undefined);
     await publishArticlesAction(['a', 'b']);
     expect(articles.publishArticlesRecord).toHaveBeenCalledWith(['a', 'b']);
-    expect(requireUser).toHaveBeenCalled();
+    expect(requirePermission).toHaveBeenCalledWith('articles.publish');
+  });
+
+  it('cannot publish an archived article without articles.archive', async () => {
+    authed(['articles.publish']);
+    vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
+      slug: 'hello',
+      category: 'useful-info',
+      status: 'archived',
+    });
+    await expect(publishArticleAction('id')).rejects.toThrow('Forbidden');
+    expect(articles.publishArticleRecord).not.toHaveBeenCalled();
+  });
+
+  it('cannot archive a published article without articles.publish', async () => {
+    authed(['articles.archive']);
+    vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
+      slug: 'hello',
+      category: 'useful-info',
+      status: 'published',
+    });
+    await expect(
+      archiveArticleAction('id', 'hello', 'useful-info')
+    ).rejects.toThrow('Forbidden');
+    expect(articles.archiveArticleRecord).not.toHaveBeenCalled();
+  });
+
+  it('cannot delete a published article without articles.archive', async () => {
+    authed(['articles.delete']);
+    vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
+      slug: 'hello',
+      category: 'useful-info',
+      status: 'published',
+    });
+    await expect(
+      hardDeleteArticleAction('id', 'hello', 'useful-info')
+    ).rejects.toThrow('Forbidden');
+    expect(articles.deleteArticleRecord).not.toHaveBeenCalled();
+  });
+
+  it('deleting an already-archived article needs only articles.delete', async () => {
+    authed(['articles.delete']);
+    vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
+      slug: 'hello',
+      category: 'useful-info',
+      status: 'archived',
+    });
+    await hardDeleteArticleAction('id', 'hello', 'useful-info');
+    expect(articles.deleteArticleRecord).toHaveBeenCalledWith('id');
+  });
+
+  it('publish actions are Forbidden without articles.publish', async () => {
+    authed(['dashboard.view', 'articles.edit']);
+    await expect(publishArticleAction('id')).rejects.toThrow('Forbidden');
+    await expect(publishArticlesAction(['a'])).rejects.toThrow('Forbidden');
+    expect(articles.publishArticlesRecord).not.toHaveBeenCalled();
+  });
+
+  it('delete actions are Forbidden without articles.delete', async () => {
+    authed(['dashboard.view', 'articles.archive']);
+    await expect(deleteArticlesAction(['a'])).rejects.toThrow('Forbidden');
+    await expect(
+      hardDeleteArticleAction('id', 'slug', 'useful-info')
+    ).rejects.toThrow('Forbidden');
+  });
+
+  it('createArticleAction with status published needs articles.publish', async () => {
+    authed(['articles.edit']);
+    await expect(
+      createArticleAction(createPayload({ status: 'published' }))
+    ).rejects.toThrow('Forbidden');
+    expect(articles.createArticleRecord).not.toHaveBeenCalled();
+  });
+
+  it('createArticleAction as draft needs only articles.edit', async () => {
+    authed(['articles.edit']);
+    vi.mocked(articles.createArticleRecord).mockResolvedValue('new-id');
+    const result = await createArticleAction(
+      createPayload({ status: 'draft' })
+    );
+    expect(result).toMatchObject({ ok: true });
+  });
+
+  it('updateArticleAction changing draft -> published needs articles.publish', async () => {
+    authed(['articles.edit']);
+    vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
+      slug: 'hello',
+      category: 'useful-info',
+      status: 'draft',
+    });
+    await expect(
+      updateArticleAction('id', { status: 'published' })
+    ).rejects.toThrow('Forbidden');
+    expect(articles.updateArticleRecord).not.toHaveBeenCalled();
+  });
+
+  it('updateArticleAction keeping published status needs only articles.edit', async () => {
+    authed(['articles.edit']);
+    vi.mocked(articles.getArticleSlugCategoryById).mockResolvedValue({
+      slug: 'hello',
+      category: 'useful-info',
+      status: 'published',
+    });
+    vi.mocked(articles.updateArticleRecord).mockResolvedValue(
+      undefined as never
+    );
+    const result = await updateArticleAction('id', {
+      status: 'published',
+      title: 'Changed',
+    });
+    expect(result).toMatchObject({ ok: true });
   });
 });

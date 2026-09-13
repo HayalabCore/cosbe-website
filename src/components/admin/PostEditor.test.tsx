@@ -89,10 +89,9 @@ describe('PostEditor', () => {
     renderAdmin(<PostEditor />);
     await user.click(screen.getByRole('button', { name: 'Save draft' }));
     await waitFor(() => expect(createArticleAction).toHaveBeenCalled());
-    expect(createArticleAction).toHaveBeenCalledWith(
-      expect.anything(),
-      { autoSuffixSlug: true }
-    );
+    expect(createArticleAction).toHaveBeenCalledWith(expect.anything(), {
+      autoSuffixSlug: true,
+    });
     expect(replace).toHaveBeenCalledWith('/admin/posts/new-id');
   });
 
@@ -364,5 +363,54 @@ describe('PostEditor', () => {
     expect(inFlight[0]).toBeDisabled();
     await user.click(inFlight[0]);
     expect(translateArticleEnAction).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides the Publish button without articles.publish', () => {
+    renderAdmin(<PostEditor />, { permissions: ['articles.edit'] });
+    expect(screen.queryByRole('button', { name: 'Publish' })).toBeNull();
+  });
+
+  it('hides Publish on an archived article without articles.archive', () => {
+    renderAdmin(
+      <PostEditor
+        initialArticle={article({
+          id: 'art-1',
+          title: 'T',
+          status: 'archived',
+        })}
+      />,
+      { permissions: ['articles.edit', 'articles.publish'] }
+    );
+    expect(screen.queryByRole('button', { name: 'Publish' })).toBeNull();
+  });
+
+  it('shows Publish on an archived article when the user can also archive', () => {
+    renderAdmin(
+      <PostEditor
+        initialArticle={article({
+          id: 'art-1',
+          title: 'T',
+          status: 'archived',
+        })}
+      />,
+      {
+        permissions: ['articles.edit', 'articles.publish', 'articles.archive'],
+      }
+    );
+    expect(screen.getByRole('button', { name: 'Publish' })).toBeInTheDocument();
+  });
+
+  it('hides Save draft on a published article without articles.publish', () => {
+    renderAdmin(
+      <PostEditor
+        initialArticle={article({
+          id: 'art-1',
+          title: 'T',
+          status: 'published',
+        })}
+      />,
+      { permissions: ['articles.edit'] }
+    );
+    expect(screen.queryByRole('button', { name: 'Save draft' })).toBeNull();
   });
 });

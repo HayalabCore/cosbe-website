@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
-import { signIn } from '@/lib/auth';
+import { signIn, signOut } from '@/lib/auth';
 import { AdminLocaleSwitcherLight } from '@/components/admin/AdminLocaleSwitcher';
 
 export default function AdminLoginPage() {
@@ -16,14 +16,26 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // The protected layout redirects disabled users here; it can't clear cookies
+  // from a server component, so end the browser session now. Read the query
+  // string directly to avoid a Suspense boundary for useSearchParams.
+  useEffect(() => {
+    if (
+      new URLSearchParams(window.location.search).get('error') === 'disabled'
+    ) {
+      setError(t('disabled'));
+      void signOut(supabase);
+    }
+  }, [supabase, t]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const { error: err } = await signIn(supabase, email, password);
+    const { error: err, code } = await signIn(supabase, email, password);
     setLoading(false);
     if (err) {
-      setError(err.message);
+      setError(code === 'user_banned' ? t('disabled') : err.message);
       return;
     }
     router.push('/admin/dashboard');

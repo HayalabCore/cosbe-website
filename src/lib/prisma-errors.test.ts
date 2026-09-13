@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { prismaUniqueConflict } from '@/test/prisma-error';
-import { isSlugUniqueConflict } from './prisma-errors';
+import { isEmailUniqueConflict, isSlugUniqueConflict } from './prisma-errors';
 
 describe('isSlugUniqueConflict', () => {
   it('is true when P2002 target lists slug', () => {
@@ -8,9 +8,9 @@ describe('isSlugUniqueConflict', () => {
   });
 
   it('is true when P2002 target is a constraint name containing slug', () => {
-    expect(isSlugUniqueConflict(prismaUniqueConflict('articles_slug_key'))).toBe(
-      true
-    );
+    expect(
+      isSlugUniqueConflict(prismaUniqueConflict('articles_slug_key'))
+    ).toBe(true);
   });
 
   it('is false for an author unique conflict', () => {
@@ -22,5 +22,15 @@ describe('isSlugUniqueConflict', () => {
   it('is false for a plain object or generic error', () => {
     expect(isSlugUniqueConflict({ code: 'P2002' })).toBe(false);
     expect(isSlugUniqueConflict(new Error('nope'))).toBe(false);
+  });
+});
+
+describe('isEmailUniqueConflict', () => {
+  it('is true when P2002 target lists email', () => {
+    expect(isEmailUniqueConflict(prismaUniqueConflict(['email']))).toBe(true);
+  });
+
+  it('is false for a slug conflict', () => {
+    expect(isEmailUniqueConflict(prismaUniqueConflict(['slug']))).toBe(false);
   });
 });

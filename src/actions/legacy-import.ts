@@ -11,24 +11,24 @@ import {
   type ImportPreviewPayload,
 } from '@/lib/legacy-import/types';
 import { generateTOC } from '@/lib/article-utils';
-import { requireUser } from '@/lib/require-user';
+import { requirePermission } from '@/lib/authz';
 
 export async function previewImportAction(
   url: string
 ): Promise<ImportPreviewPayload> {
-  await requireUser();
+  await requirePermission('import.run');
   return previewImport(url);
 }
 
 export async function checkImportSlugAction(slug: string): Promise<boolean> {
-  await requireUser();
+  await requirePermission('import.run');
   return isImportSlugAvailable(slug);
 }
 
 export async function commitImportAction(
   payload: ImportCommitPayload
 ): Promise<{ id: string; warnings: string[] }> {
-  const { supabase } = await requireUser();
+  const { supabase } = await requirePermission('import.run');
 
   if (!(await isImportSlugAvailable(payload.slug.trim()))) {
     throw new SlugCollisionError(payload.slug);

@@ -179,15 +179,42 @@ export async function getArticleByIdAdmin(id: string): Promise<Article | null> {
   return row ? mapRow(row) : null;
 }
 
-export async function getArticleSlugCategoryById(
-  id: string
-): Promise<{ slug: string; category: ContentCategory } | null> {
+export async function getArticleSlugCategoryById(id: string): Promise<{
+  slug: string;
+  category: ContentCategory;
+  status: ArticleStatus;
+} | null> {
   const row = await prisma.article.findUnique({
     where: { id },
-    select: { slug: true, category: true },
+    select: { slug: true, category: true, status: true },
   });
   if (!row) return null;
-  return { slug: row.slug, category: row.category as ContentCategory };
+  return {
+    slug: row.slug,
+    category: row.category as ContentCategory,
+    status: row.status as ArticleStatus,
+  };
+}
+
+export async function getArticleMetasByIds(ids: string[]): Promise<
+  {
+    id: string;
+    slug: string;
+    category: ContentCategory;
+    status: ArticleStatus;
+  }[]
+> {
+  if (ids.length === 0) return [];
+  const rows = await prisma.article.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, slug: true, category: true, status: true },
+  });
+  return rows.map((row) => ({
+    id: row.id,
+    slug: row.slug,
+    category: row.category as ContentCategory,
+    status: row.status as ArticleStatus,
+  }));
 }
 
 export async function allocateUniqueSlug(

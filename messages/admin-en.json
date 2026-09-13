@@ -15,7 +15,8 @@
     "email": "Email",
     "password": "Password",
     "signingIn": "Signing in…",
-    "signInCta": "Sign in →"
+    "signInCta": "Sign in →",
+    "disabled": "Your access has been disabled. Contact an administrator."
   },
   "sidebar": {
     "brand": "CosBE Admin",
@@ -26,7 +27,10 @@
     "media": "Media",
     "translations": "Translations",
     "viewSite": "View Site",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "accessSection": "Access",
+    "users": "Users",
+    "roles": "Roles"
   },
   "dashboard": {
     "title": "All Posts",
@@ -485,5 +489,188 @@
     "deleteHistoryConfirm": "Remove this history entry? This cannot be undone.",
     "deleteHistoryConfirmYes": "Delete",
     "deleteHistoryConfirmNo": "Cancel"
+  },
+  "access": {
+    "permissionNeeded": {
+      "title": "Permission needed",
+      "body": "You don’t have access to this page. Ask a super-admin or admin to grant you “{permission}”."
+    },
+    "groups": {
+      "content": "Content",
+      "media": "Media",
+      "translations": "Translations",
+      "access": "Users & roles"
+    },
+    "permissions": {
+      "dashboard_view": {
+        "label": "View dashboard",
+        "description": "See the article list and view counts."
+      },
+      "articles_edit": {
+        "label": "Edit articles",
+        "description": "Create and edit drafts, including AI translation."
+      },
+      "articles_publish": {
+        "label": "Publish articles",
+        "description": "Publish and unpublish articles."
+      },
+      "articles_archive": {
+        "label": "Archive articles",
+        "description": "Archive and restore articles."
+      },
+      "articles_delete": {
+        "label": "Delete articles",
+        "description": "Permanently delete articles."
+      },
+      "import_run": {
+        "label": "Import articles",
+        "description": "Preview and import legacy articles."
+      },
+      "media_upload": {
+        "label": "Upload media",
+        "description": "View the media library and upload images."
+      },
+      "media_delete": {
+        "label": "Delete media",
+        "description": "Delete images from the media library."
+      },
+      "translations_edit": {
+        "label": "Edit translations",
+        "description": "Edit, restore and AI-translate UI strings."
+      },
+      "translations_history_delete": {
+        "label": "Delete translation history",
+        "description": "Remove entries from translation history."
+      },
+      "users_view": {
+        "label": "View users",
+        "description": "See the list of admin users."
+      },
+      "users_create": {
+        "label": "Create users",
+        "description": "Create users and set temporary passwords."
+      },
+      "users_assign-roles": {
+        "label": "Assign roles",
+        "description": "Change a user's roles (only roles within your own permissions)."
+      },
+      "users_disable": {
+        "label": "Disable users",
+        "description": "Disable and re-enable user access."
+      },
+      "users_delete": {
+        "label": "Delete users",
+        "description": "Permanently delete disabled users."
+      },
+      "roles_manage": {
+        "label": "Manage roles",
+        "description": "Create, edit and delete roles."
+      }
+    },
+    "errors": {
+      "FORBIDDEN": "You don’t have permission to do that.",
+      "INVALID_INPUT": "Some fields are invalid. Check the form and try again.",
+      "EMAIL_EXISTS": "A user with this email already exists.",
+      "WEAK_PASSWORD": "The password is too weak. Use at least 12 characters.",
+      "SAME_PASSWORD": "Choose a password different from your current one.",
+      "WRONG_PASSWORD": "The current password is incorrect.",
+      "NOT_FOUND": "This item no longer exists. Refresh the page.",
+      "MUST_DISABLE_FIRST": "Disable the user before deleting them.",
+      "KEY_EXISTS": "A role with this key already exists.",
+      "BAN_FAILED": "Access was disabled here, but blocking sign-in in Supabase failed. Try again.",
+      "SESSIONS_NOT_REVOKED": "The change was saved, but existing sessions could not be signed out. The user may remain signed in until those sessions expire.",
+      "AUTH_ORPHAN": "The account was created in Supabase but the admin record could not be saved, and cleanup failed. Contact a super-admin before retrying.",
+      "FAILED": "Something went wrong. Try again."
+    }
+  },
+  "users": {
+    "pageTitle": "Users",
+    "pageSubtitle": "Manage who can sign in to the admin portal and what they can do.",
+    "addUser": "Add user",
+    "you": "You",
+    "never": "Never",
+    "noRoles": "No roles",
+    "columns": {
+      "user": "User",
+      "roles": "Roles",
+      "status": "Status",
+      "lastSignIn": "Last sign-in",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled",
+      "mustChangePassword": "Must change password"
+    },
+    "actions": {
+      "editRoles": "Edit roles",
+      "resetPassword": "Reset password",
+      "disable": "Disable",
+      "enable": "Enable",
+      "delete": "Delete"
+    },
+    "dialog": {
+      "addTitle": "Add user",
+      "email": "Email",
+      "displayName": "Display name (optional)",
+      "tempPassword": "Temporary password",
+      "generate": "Generate",
+      "copy": "Copy",
+      "copied": "Copied",
+      "roles": "Roles",
+      "roleNotAssignable": "You can only assign roles within your own permissions.",
+      "cancel": "Cancel",
+      "create": "Create user",
+      "save": "Save",
+      "saving": "Saving…",
+      "credentialsTitle": "Share these credentials",
+      "credentialsHint": "This password is shown only once. The user must change it when they first sign in.",
+      "done": "Done",
+      "editRolesTitle": "Edit roles for {email}",
+      "resetTitle": "Reset password for {email}",
+      "reset": "Set temporary password",
+      "disableConfirm": "Disable {email}? They lose access immediately.",
+      "deleteTitle": "Permanently delete {email}",
+      "deleteHint": "This deletes the account and cannot be undone. Type the email to confirm.",
+      "deleteCta": "Delete permanently"
+    }
+  },
+  "roles": {
+    "pageTitle": "Roles",
+    "pageSubtitle": "Roles are bundles of permissions. Users get every permission from all of their roles.",
+    "newRole": "New role",
+    "allPermissions": "All permissions",
+    "locked": "Locked",
+    "usersCount": "{count, plural, one {# user} other {# users}}",
+    "permissionsCount": "{count, plural, one {# permission} other {# permissions}}",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete the role “{name}”? It will be removed from {count, plural, one {# user} other {# users}}.",
+    "editor": {
+      "createTitle": "New role",
+      "editTitle": "Edit role",
+      "name": "Name",
+      "key": "Key",
+      "keyHint": "Lowercase letters, numbers and hyphens. Cannot be changed later.",
+      "description": "Description (optional)",
+      "permissions": "Permissions",
+      "notHeld": "You can only grant permissions you have.",
+      "cancel": "Cancel",
+      "save": "Save role",
+      "saving": "Saving…"
+    }
+  },
+  "changePassword": {
+    "title": "Set a new password",
+    "subtitle": "You signed in with a temporary password. Choose your own to continue.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "mismatch": "Passwords don’t match.",
+    "tooShort": "Use at least 12 characters.",
+    "submit": "Save password",
+    "submitting": "Saving…",
+    "signOut": "Sign out"
   }
 }

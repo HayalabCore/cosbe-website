@@ -35,6 +35,7 @@ import type {
   ParagraphBlock,
 } from '@/types';
 import { useAdminViewArticleLink } from '@/components/admin/AdminViewArticleContext';
+import { usePermissions } from '@/components/admin/PermissionsContext';
 import { articleDetailHref } from '@/lib/article-paths';
 import {
   buildArticlePayload,
@@ -104,6 +105,7 @@ export default function PostEditor({
   initialArticle?: Article;
 }) {
   const t = useTranslations('admin.editor');
+  const { can } = usePermissions();
   const locale = useLocale();
   const { setViewArticleHref } = useAdminViewArticleLink();
   const router = useRouter();
@@ -557,7 +559,9 @@ export default function PostEditor({
             {saveNotice && !saving && !autoSavingUi && (
               <span
                 className={`${
-                  isSaveError ? 'flex text-amber-600' : 'hidden xl:flex text-emerald-600'
+                  isSaveError
+                    ? 'flex text-amber-600'
+                    : 'hidden xl:flex text-emerald-600'
                 } items-center gap-1.5 text-xs flex-shrink-0`}
               >
                 {saveNotice === 'auto-error-slug'
@@ -568,23 +572,29 @@ export default function PostEditor({
               </span>
             )}
 
-            <button
-              type="button"
-              disabled={saving || autoSavingUi}
-              onClick={() => void save(false)}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
-            >
-              {t('saveDraft')}
-            </button>
+            {(!isPublished || can('articles.publish')) && (
+              <button
+                type="button"
+                disabled={saving || autoSavingUi}
+                onClick={() => void save(false)}
+                className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
+              >
+                {t('saveDraft')}
+              </button>
+            )}
 
-            <button
-              type="button"
-              disabled={saving || autoSavingUi}
-              onClick={() => void save(true)}
-              className="rounded-lg bg-primaryColor px-3 py-1.5 text-xs font-semibold text-white hover:bg-primaryHover disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
-            >
-              {isPublished ? t('update') : t('publish')}
-            </button>
+            {(isPublished ||
+              (can('articles.publish') &&
+                (status !== 'archived' || can('articles.archive')))) && (
+              <button
+                type="button"
+                disabled={saving || autoSavingUi}
+                onClick={() => void save(true)}
+                className="rounded-lg bg-primaryColor px-3 py-1.5 text-xs font-semibold text-white hover:bg-primaryHover disabled:opacity-50 transition-colors shadow-sm flex-shrink-0"
+              >
+                {isPublished ? t('update') : t('publish')}
+              </button>
+            )}
           </div>
         </div>
       </div>

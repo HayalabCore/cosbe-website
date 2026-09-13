@@ -1,12 +1,17 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Languages } from 'lucide-react';
+import { Languages, ShieldCheck, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { signOut } from '@/lib/auth';
+import {
+  PermissionsProvider,
+  usePermissions,
+} from '@/components/admin/PermissionsContext';
+import type { Permission } from '@/lib/permissions';
 import AdminLocaleSwitcher, {
   AdminLocaleSwitcherLight,
 } from '@/components/admin/AdminLocaleSwitcher';
@@ -68,6 +73,7 @@ function Sidebar({
   onSignOut: () => void;
 }) {
   const t = useTranslations('admin.sidebar');
+  const { can } = usePermissions();
   const locale = useLocale();
   const { viewArticleHref } = useAdminViewArticleLink();
   const viewSiteHref = viewArticleHref ?? `/${locale}`;
@@ -91,101 +97,151 @@ function Sidebar({
 
       <div className="mx-4 border-t border-white/10 mb-4" />
 
-      <div className="px-3 mb-1">
-        <p className="px-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">
-          {t('contentSection')}
-        </p>
-      </div>
+      {(
+        [
+          'dashboard.view',
+          'articles.edit',
+          'import.run',
+          'media.upload',
+          'translations.edit',
+        ] as const
+      ).some(can) && (
+        <div className="px-3 mb-1">
+          <p className="px-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">
+            {t('contentSection')}
+          </p>
+        </div>
+      )}
 
       <div className="flex-1 px-3 space-y-0.5">
-        <NavItem
-          href="/admin/dashboard"
-          active={pathname === '/admin/dashboard'}
-          label={t('allPosts')}
-          icon={
-            <svg
-              className="w-4 h-4 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        {can('dashboard.view') && (
+          <NavItem
+            href="/admin/dashboard"
+            active={pathname === '/admin/dashboard'}
+            label={t('allPosts')}
+            icon={
+              <svg
+                className="w-4 h-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            }
+          />
+        )}
+        {can('articles.edit') && (
+          <NavItem
+            href="/admin/posts/new"
+            active={pathname === '/admin/posts/new'}
+            label={t('newPost')}
+            icon={
+              <svg
+                className="w-4 h-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            }
+          />
+        )}
+        {can('import.run') && (
+          <NavItem
+            href="/admin/import"
+            active={pathname === '/admin/import'}
+            label={t('import')}
+            icon={
+              <svg
+                className="w-4 h-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+            }
+          />
+        )}
+        {can('media.upload') && (
+          <NavItem
+            href="/admin/media"
+            active={pathname === '/admin/media'}
+            label={t('media')}
+            icon={
+              <svg
+                className="w-4 h-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            }
+          />
+        )}
+        {can('translations.edit') && (
+          <NavItem
+            href="/admin/translations"
+            active={pathname === '/admin/translations'}
+            label={t('translations')}
+            icon={
+              <Languages className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
+            }
+          />
+        )}
+        {(can('users.view') || can('roles.manage')) && (
+          <>
+            <p className="px-2 pt-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">
+              {t('accessSection')}
+            </p>
+            {can('users.view') && (
+              <NavItem
+                href="/admin/users"
+                active={pathname === '/admin/users'}
+                label={t('users')}
+                icon={
+                  <Users className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
+                }
               />
-            </svg>
-          }
-        />
-        <NavItem
-          href="/admin/posts/new"
-          active={pathname === '/admin/posts/new'}
-          label={t('newPost')}
-          icon={
-            <svg
-              className="w-4 h-4 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4v16m8-8H4"
+            )}
+            {can('roles.manage') && (
+              <NavItem
+                href="/admin/roles"
+                active={pathname === '/admin/roles'}
+                label={t('roles')}
+                icon={
+                  <ShieldCheck
+                    className="w-4 h-4 flex-shrink-0"
+                    strokeWidth={1.75}
+                  />
+                }
               />
-            </svg>
-          }
-        />
-        <NavItem
-          href="/admin/import"
-          active={pathname === '/admin/import'}
-          label={t('import')}
-          icon={
-            <svg
-              className="w-4 h-4 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-              />
-            </svg>
-          }
-        />
-        <NavItem
-          href="/admin/media"
-          active={pathname === '/admin/media'}
-          label={t('media')}
-          icon={
-            <svg
-              className="w-4 h-4 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-          }
-        />
-        <NavItem
-          href="/admin/translations"
-          active={pathname === '/admin/translations'}
-          label={t('translations')}
-          icon={
-            <Languages className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
-          }
-        />
+            )}
+          </>
+        )}
       </div>
 
       <div className="px-3 mt-4 space-y-0.5 border-t border-white/10 pt-4">
@@ -248,15 +304,28 @@ function Sidebar({
 export default function AdminProtectedShell({
   children,
   userEmail,
+  permissions,
 }: {
   children: React.ReactNode;
   userEmail: string | null;
+  permissions: Permission[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const tSidebar = useTranslations('admin.sidebar');
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const skipRefresh = useRef(true);
+
+  // Layouts persist across client navigations. Refresh the RSC tree so
+  // permissions and disabled / must-change-password redirects stay current.
+  useEffect(() => {
+    if (skipRefresh.current) {
+      skipRefresh.current = false;
+      return;
+    }
+    router.refresh();
+  }, [pathname, router]);
 
   async function handleSignOut() {
     await signOut(supabase);
@@ -265,65 +334,67 @@ export default function AdminProtectedShell({
   }
 
   return (
-    <AdminViewArticleProvider>
-      <div className="flex min-h-screen bg-slate-50">
-        <aside className="hidden lg:block w-56 bg-slate-950 fixed inset-y-0 left-0 z-30 flex-shrink-0">
-          <Sidebar
-            pathname={pathname}
-            userEmail={userEmail}
-            onSignOut={() => void handleSignOut()}
-          />
-        </aside>
+    <PermissionsProvider permissions={permissions}>
+      <AdminViewArticleProvider>
+        <div className="flex min-h-screen bg-slate-50">
+          <aside className="hidden lg:block w-56 bg-slate-950 fixed inset-y-0 left-0 z-30 flex-shrink-0">
+            <Sidebar
+              pathname={pathname}
+              userEmail={userEmail}
+              onSignOut={() => void handleSignOut()}
+            />
+          </aside>
 
-        {mobileOpen && (
-          <div
-            className="fixed inset-0 z-20 bg-black/50 backdrop-blur-sm lg:hidden"
-            onClick={() => setMobileOpen(false)}
-          />
-        )}
+          {mobileOpen && (
+            <div
+              className="fixed inset-0 z-20 bg-black/50 backdrop-blur-sm lg:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+          )}
 
-        <aside
-          className={`fixed inset-y-0 left-0 z-30 w-56 bg-slate-950 flex-shrink-0 transition-transform duration-200 lg:hidden ${
-            mobileOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <Sidebar
-            pathname={pathname}
-            userEmail={userEmail}
-            onSignOut={() => void handleSignOut()}
-          />
-        </aside>
+          <aside
+            className={`fixed inset-y-0 left-0 z-30 w-56 bg-slate-950 flex-shrink-0 transition-transform duration-200 lg:hidden ${
+              mobileOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+          >
+            <Sidebar
+              pathname={pathname}
+              userEmail={userEmail}
+              onSignOut={() => void handleSignOut()}
+            />
+          </aside>
 
-        <div className="flex-1 lg:ml-56 flex flex-col min-h-screen min-w-0">
-          <header className="lg:hidden sticky top-0 z-20 flex items-center gap-3 px-4 h-14 bg-white border-b border-slate-200 shadow-sm">
-            <button
-              type="button"
-              onClick={() => setMobileOpen(true)}
-              className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
+          <div className="flex-1 lg:ml-56 flex flex-col min-h-screen min-w-0">
+            <header className="lg:hidden sticky top-0 z-20 flex items-center gap-3 px-4 h-14 bg-white border-b border-slate-200 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setMobileOpen(true)}
+                className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-            <span className="font-semibold text-slate-900 text-sm flex-1 min-w-0 truncate">
-              {tSidebar('brand')}
-            </span>
-            <AdminLocaleSwitcherLight className="flex-shrink-0" />
-          </header>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+              <span className="font-semibold text-slate-900 text-sm flex-1 min-w-0 truncate">
+                {tSidebar('brand')}
+              </span>
+              <AdminLocaleSwitcherLight className="flex-shrink-0" />
+            </header>
 
-          <main className="flex-1 min-w-0 overflow-x-clip">{children}</main>
+            <main className="flex-1 min-w-0 overflow-x-clip">{children}</main>
+          </div>
         </div>
-      </div>
-    </AdminViewArticleProvider>
+      </AdminViewArticleProvider>
+    </PermissionsProvider>
   );
 }

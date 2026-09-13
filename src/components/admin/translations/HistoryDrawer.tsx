@@ -10,6 +10,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { usePermissions } from '@/components/admin/PermissionsContext';
 import { formatRelative } from '@/lib/format';
 import {
   deleteTranslationHistoryItem,
@@ -38,6 +39,7 @@ function EntryCard({
   onDelete,
 }: EntryCardProps) {
   const t = useTranslations('admin.translationsEditor');
+  const { can } = usePermissions();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const busy = restoringId !== null || deleting;
@@ -133,15 +135,17 @@ function EntryCard({
               )}
               {t('restore')}
             </button>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => setConfirmDelete(true)}
-              className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-500 shadow-sm hover:border-red-300 hover:text-red-600 disabled:opacity-50"
-            >
-              <Trash2 className="h-3 w-3" />
-              {t('deleteHistory')}
-            </button>
+            {can('translations.history.delete') && (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => setConfirmDelete(true)}
+                className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-500 shadow-sm hover:border-red-300 hover:text-red-600 disabled:opacity-50"
+              >
+                <Trash2 className="h-3 w-3" />
+                {t('deleteHistory')}
+              </button>
+            )}
           </div>
         )}
       </div>

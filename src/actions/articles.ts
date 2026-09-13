@@ -2,7 +2,9 @@
 
 import { revalidatePath } from 'next/cache';
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
-import { requireUser } from '@/lib/require-user';
+import { statusChangePermissions } from '@/lib/article-status-permissions';
+import { requireAnyPermission, requirePermission } from '@/lib/authz';
+import type { Permission } from '@/lib/permissions';
 import {
   SAVE_FAILED_ERROR,
   SLUG_CONFLICT_ERROR,
@@ -25,6 +27,7 @@ import {
   deleteArticleRecord,
   deleteArticlesRecord,
   getArticleByIdAdmin,
+  getArticleMetasByIds,
   getArticleSlugCategoryById,
   getArticleStatusCounts,
   getArticles,
@@ -41,10 +44,29 @@ import type {
   ContentCategory,
 } from '@/types';
 
+async function requireStatusTransitions(
+  metas: { status: ArticleStatus }[],
+  to: ArticleStatus
+): Promise<void> {
+  const needed = [
+    ...new Set(metas.flatMap((m) => statusChangePermissions(m.status, to))),
+  ] as Permission[];
+  if (needed.length > 0) await requirePermission(...needed);
+}
+
+async function loadArticleMetasOrThrow(
+  ids: string[]
+): Promise<Awaited<ReturnType<typeof getArticleMetasByIds>>> {
+  const unique = [...new Set(ids)];
+  const metas = await getArticleMetasByIds(unique);
+  if (metas.length !== unique.length) throw new Error('Not found');
+  return metas;
+}
+
 export async function getArticleByIdAction(
   id: string
 ): Promise<Article | null> {
-  await requireUser();
+  await requireAnyPermission('dashboard.view', 'articles.edit');
   return getArticleByIdAdmin(id);
 }
 
@@ -66,7 +88,7 @@ export async function listArticlesAdminAction(options: {
   total: number;
   stats: AdminArticleListStats;
 }> {
-  await requireUser();
+  await requirePermission('dashboard.view');
   const statuses =
     options.statuses && options.statuses.length > 0
       ? options.statuses
@@ -103,7 +125,7 @@ export async function createArticleAction(
   data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>,
   options: CreateArticleOptions = {}
 ): Promise<ArticleMutationResult> {
-  await requireUser();
+  await requirePermission('articles.edit');
   const parsed = createArticleSchema.safeParse(data);
   if (!parsed.success) {
     return {
@@ -111,6 +133,9 @@ export async function createArticleAction(
       error: `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`,
     };
   }
+  // A new article counts as coming from draft (publishing needs articles.publish).
+  const extra = statusChangePermissions('draft', parsed.data.status);
+  if (extra.length > 0) await requirePermission(...extra);
   // Persist the validated + normalized payload (unknown keys stripped, fields
   // trimmed) rather than the raw client object — defense in depth.
   const payload = toCreateArticlePayload(parsed.data);
@@ -134,7 +159,7 @@ export async function updateArticleAction(
   id: string,
   data: Partial<Omit<Article, 'id' | 'createdAt'>>
 ): Promise<ArticleMutationResult> {
-  await requireUser();
+  await requirePermission('articles.edit');
   const parsed = updateArticleSchema.safeParse(data);
   if (!parsed.success) {
     return {
@@ -142,11 +167,23 @@ export async function updateArticleAction(
       error: `Invalid article data: ${zodErrorDetails(parsed.error).join('; ')}`,
     };
   }
+  let previous: Awaited<ReturnType<typeof getArticleSlugCategoryById>>;
   try {
-    const previous = await getArticleSlugCategoryById(id);
-    if (!previous) {
-      return { ok: false, error: SAVE_FAILED_ERROR };
-    }
+    previous = await getArticleSlugCategoryById(id);
+  } catch (error) {
+    console.error('[updateArticleAction]', error);
+    return { ok: false, error: SAVE_FAILED_ERROR };
+  }
+  if (!previous) {
+    return { ok: false, error: SAVE_FAILED_ERROR };
+  }
+  // Status transitions need their own permissions on top of articles.edit.
+  const extra = statusChangePermissions(
+    previous.status,
+    parsed.data.status ?? previous.status
+  );
+  if (extra.length > 0) await requirePermission(...extra);
+  try {
     await updateArticleRecord(id, toUpdateArticlePayload(parsed.data));
     const nextSlug = parsed.data.slug ?? previous.slug;
     const nextCategory = parsed.data.category ?? previous.category;
@@ -175,16 +212,20 @@ export async function archiveArticleAction(
   slug: string,
   category: ContentCategory
 ): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.archive');
+  const meta = await getArticleSlugCategoryById(id);
+  if (!meta) throw new Error('Not found');
+  await requireStatusTransitions([meta], 'archived');
   await archiveArticleRecord(id);
   revalidateArticlePaths(slug, category);
 }
 
 /** Restores an archived article back to draft. */
 export async function restoreArticleAction(id: string): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.archive');
   const meta = await getArticleSlugCategoryById(id);
   if (!meta) throw new Error('Not found');
+  await requireStatusTransitions([meta], 'draft');
   await updateArticleRecord(id, { status: 'draft' });
   revalidatePath('/admin/dashboard');
   revalidateArticlePaths(meta.slug, meta.category);
@@ -196,7 +237,12 @@ export async function hardDeleteArticleAction(
   slug: string,
   category: ContentCategory
 ): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.delete');
+  const meta = await getArticleSlugCategoryById(id);
+  if (!meta) throw new Error('Not found');
+  // Treat delete as a transition through archived so published/draft
+  // deletions still need archive (and publish when leaving published).
+  await requireStatusTransitions([meta], 'archived');
   await deleteArticleRecord(id);
   revalidateArticlePaths(slug, category);
 }
@@ -207,50 +253,65 @@ export async function hardDeleteArticleAction(
  * multiple categories).
  */
 export async function publishArticlesAction(ids: string[]): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.publish');
   if (ids.length === 0) return;
+  await requireStatusTransitions(
+    await loadArticleMetasOrThrow(ids),
+    'published'
+  );
   await publishArticlesRecord(ids);
   revalidatePath('/admin/dashboard');
   revalidateArticlePaths();
 }
 
 export async function unpublishArticlesAction(ids: string[]): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.publish');
   if (ids.length === 0) return;
+  await requireStatusTransitions(await loadArticleMetasOrThrow(ids), 'draft');
   await unpublishArticlesRecord(ids);
   revalidatePath('/admin/dashboard');
   revalidateArticlePaths();
 }
 
 export async function archiveArticlesAction(ids: string[]): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.archive');
   if (ids.length === 0) return;
+  await requireStatusTransitions(
+    await loadArticleMetasOrThrow(ids),
+    'archived'
+  );
   await archiveArticlesRecord(ids);
   revalidatePath('/admin/dashboard');
   revalidateArticlePaths();
 }
 
 export async function deleteArticlesAction(ids: string[]): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.delete');
   if (ids.length === 0) return;
+  await requireStatusTransitions(
+    await loadArticleMetasOrThrow(ids),
+    'archived'
+  );
   await deleteArticlesRecord(ids);
   revalidatePath('/admin/dashboard');
   revalidateArticlePaths();
 }
 
 export async function publishArticleAction(id: string): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.publish');
   const meta = await getArticleSlugCategoryById(id);
   if (!meta) throw new Error('Not found');
+  await requireStatusTransitions([meta], 'published');
   await publishArticleRecord(id);
   revalidatePath('/admin/dashboard');
   revalidateArticlePaths(meta.slug, meta.category);
 }
 
 export async function unpublishArticleAction(id: string): Promise<void> {
-  await requireUser();
+  await requirePermission('articles.publish');
   const meta = await getArticleSlugCategoryById(id);
   if (!meta) throw new Error('Not found');
+  await requireStatusTransitions([meta], 'draft');
   await unpublishArticleRecord(id);
   revalidatePath('/admin/dashboard');
   revalidateArticlePaths(meta.slug, meta.category);

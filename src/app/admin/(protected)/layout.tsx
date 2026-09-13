@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { getCurrentAdmin } from '@/lib/authz';
 import AdminProtectedShell from './AdminProtectedShell';
 
 export default async function AdminProtectedLayout({
@@ -7,16 +7,23 @@ export default async function AdminProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
+  const current = await getCurrentAdmin();
+  if (current.status === 'unauthenticated') {
     redirect('/admin');
+  }
+  if (current.status === 'disabled') {
+    // Server components can't clear auth cookies; the login page signs out.
+    redirect('/admin?error=disabled');
+  }
+  if (current.status === 'must-change-password') {
+    redirect('/admin/change-password');
   }
 
   return (
-    <AdminProtectedShell userEmail={user.email ?? null}>
+    <AdminProtectedShell
+      userEmail={current.user.email ?? null}
+      permissions={[...current.actor.permissions]}
+    >
       {children}
     </AdminProtectedShell>
   );
