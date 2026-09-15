@@ -6,6 +6,11 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
+    // Firebase App Hosting disables Next.js' built-in image optimizer, so the
+    // `/_next/image` endpoint 404s in production and any <Image src={remoteUrl}>
+    // (e.g. Supabase article images) breaks. Serve originals directly instead.
+    // See: https://firebase.google.com/docs/app-hosting/optimize-image-loading
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {

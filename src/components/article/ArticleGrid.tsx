@@ -68,11 +68,7 @@ async function ArticleGridInner(props: ArticleGridProps) {
         emptyMessage={emptyMessage}
       />
       {totalPages > 1 && (
-        <ArticlePagination
-          currentPage={page}
-          totalPages={totalPages}
-          locale={locale}
-        />
+        <ArticlePagination currentPage={page} totalPages={totalPages} />
       )}
     </>
   );
