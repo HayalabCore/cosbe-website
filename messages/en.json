@@ -14,7 +14,22 @@
     "Useful-vedio": "Useful-vedio",
     "useful-video": "Useful Video",
     "download": "Download",
-    "button": "Consult about AI (Free)"
+    "button": "Consult about AI (Free)",
+    "nav": {
+      "aiTransformation": "AI Transformation",
+      "caseStudies": "Case Studies",
+      "resources": "Resources",
+      "company": "Company",
+      "partners": "Partners",
+      "contactUs": "Contact Us",
+      "aboutAit": "What is AI Transformation",
+      "cosbeAit": "CosBE's AI Transformation",
+      "fastAiLab": "Fast AI Lab",
+      "articles": "Articles",
+      "videos": "Videos",
+      "aiAgents": "AI Agents",
+      "news": "News"
+    }
   },
   "hero": {
     "eyebrow": "Opening up the future for business leaders",
@@ -81,10 +96,10 @@
       }
     },
     "cta": {
-      "title": "We support your business from many angles.\nPlease feel free to contact us.",
-      "description": "For detailed service inquiries and estimates, please use the contact form.",
-      "additionalText": "We respond flexibly to your situation—reach out anytime.",
-      "button": "Contact us about Fast AI Lab"
+      "title": "Get in Touch",
+      "description": "Not seeing results from AI? Not sure where to start? That doubt is where the design begins.",
+      "button": "Book a Consultation",
+      "secondaryButton": "Request Materials"
     }
   },
   "company": {
@@ -1221,16 +1236,20 @@
     }
   },
   "footer": {
-    "tagline": "The Cosmopolitan Business Engine",
-    "businessContent": "Business content",
-    "companyProfile": "Company Profile",
-    "caseStudies": "Case studies",
-    "usefulColumn": "Useful Column",
-    "announcement": "Announcement",
-    "homePage": "Top Page",
+    "companyName": "CosBE Incorporated",
+    "address": "3 East Third Ave, San Mateo, CA, United States of America",
+    "aiTransformation": "AI Transformation",
+    "caseStudies": "Case Studies",
+    "partners": "Partners",
+    "company": "Company",
+    "careers": "Careers",
+    "contact": "Contact",
+    "resources": "Resources",
+    "videos": "Videos",
+    "articles": "Articles",
+    "materials": "Materials",
     "privacyPolicy": "Privacy Policy",
-    "inquiry": "inquiry",
-    "copyright": "© CosBE Incorporated"
+    "copyright": "© 2026 CosBE Inc. All rights reserved."
   },
   "usefulColumnPage": {
     "heroTitle": "Useful Information",

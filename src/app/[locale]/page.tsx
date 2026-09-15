@@ -112,9 +112,10 @@ export default async function Home({ params }: PageProps) {
       <CtaSection
         title={tCta('title')}
         description={tCta('description')}
-        additionalText={tCta('additionalText')}
         buttonText={tCta('button')}
         buttonHref="/contact"
+        secondaryButtonText={tCta('secondaryButton')}
+        secondaryButtonHref="/download"
       />
     </div>
   );

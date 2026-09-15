@@ -1,7 +1,5 @@
-'use client';
-
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Link } from '@/i18n/routing';
+import { ArrowRight } from 'lucide-react';
 
 interface CtaSectionProps {
   title: string;
@@ -10,23 +8,28 @@ interface CtaSectionProps {
   additionalText?: string;
   buttonText: string;
   buttonHref?: string;
+  secondaryButtonText?: string;
+  secondaryButtonHref?: string;
 }
 
-const PARALLAX_FACTOR = 0.35;
-const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-
-function subscribeReducedMotion(onStoreChange: () => void) {
-  const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
-  mediaQuery.addEventListener('change', onStoreChange);
-  return () => mediaQuery.removeEventListener('change', onStoreChange);
-}
-
-function getReducedMotionSnapshot() {
-  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
-}
-
-function getReducedMotionServerSnapshot() {
-  return false;
+function CtaButton({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex w-full items-center justify-between gap-5 rounded-full border-2 border-white py-2.5 pl-7 pr-2.5 text-white transition-colors hover:bg-white/10"
+    >
+      <span className="text-lg font-medium sm:text-xl">{children}</span>
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-primaryColor transition-transform group-hover:translate-x-0.5">
+        <ArrowRight className="size-4" strokeWidth={2.5} />
+      </span>
+    </Link>
+  );
 }
 
 export default function CtaSection({
@@ -36,95 +39,37 @@ export default function CtaSection({
   additionalText,
   buttonText,
   buttonHref = '/contact',
+  secondaryButtonText,
+  secondaryButtonHref = '/download',
 }: CtaSectionProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [bgOffset, setBgOffset] = useState(0);
-  const prefersReducedMotion = useSyncExternalStore(
-    subscribeReducedMotion,
-    getReducedMotionSnapshot,
-    getReducedMotionServerSnapshot
-  );
-  const parallaxEnabled = !prefersReducedMotion;
-
-  useEffect(() => {
-    if (!parallaxEnabled) return;
-
-    const updateParallax = () => {
-      const section = sectionRef.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const sectionCenter = rect.top + rect.height / 2;
-      const viewportCenter = viewportHeight / 2;
-      const distanceFromCenter = sectionCenter - viewportCenter;
-
-      setBgOffset(distanceFromCenter * PARALLAX_FACTOR);
-    };
-
-    const frame = requestAnimationFrame(updateParallax);
-    window.addEventListener('scroll', updateParallax, { passive: true });
-    window.addEventListener('resize', updateParallax);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', updateParallax);
-      window.removeEventListener('resize', updateParallax);
-    };
-  }, [parallaxEnabled]);
-
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-20 md:py-24 overflow-hidden isolate"
-    >
-      <div className="absolute inset-0" aria-hidden>
-        <div
-          className="absolute -inset-[25%] bg-cover bg-center bg-cta-background will-change-transform"
-          style={
-            parallaxEnabled
-              ? { transform: `translate3d(0, ${bgOffset}px, 0)` }
-              : undefined
-          }
-        />
-      </div>
-      <div className="absolute inset-0 bg-black/60" aria-hidden />
-      <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 whitespace-pre-line">
-          {title}
-        </h2>
-        {subtitle && <p className="text-xl text-white mb-2">{subtitle}</p>}
-        {description && (
-          <p className="text-white/80 mb-2 text-base max-w-2xl mx-auto">
-            {description}
-          </p>
-        )}
-        {additionalText && (
-          <p className="text-white/80 mb-10 text-base max-w-2xl mx-auto">
-            {additionalText}
-          </p>
-        )}
-        {!additionalText && !description && <div className="mb-10" />}
-        <Link
-          href={buttonHref}
-          className="inline-flex items-center justify-center gap-3 w-full max-w-2xl mx-auto px-12 py-5 bg-primaryColor text-white rounded-full font-bold text-lg hover:bg-primaryLight transition-all duration-200 shadow-lg hover:shadow-xl"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
-          {buttonText}
-        </Link>
+    <section className="bg-primaryColor text-white">
+      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-16 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:px-8">
+        <div className="max-w-xl">
+          <h2 className="text-2xl font-medium! sm:text-3xl lg:text-[32px]">
+            {title}
+          </h2>
+          {subtitle && <p className="mt-3 text-lg">{subtitle}</p>}
+          {description && (
+            <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-white/90 sm:text-base">
+              {description}
+            </p>
+          )}
+          {additionalText && (
+            <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-white/90 sm:text-base">
+              {additionalText}
+            </p>
+          )}
+        </div>
+
+        <div className="flex w-full flex-col gap-4 sm:flex-row lg:w-fit lg:shrink-0 lg:flex-col">
+          <CtaButton href={buttonHref}>{buttonText}</CtaButton>
+          {secondaryButtonText && (
+            <CtaButton href={secondaryButtonHref}>
+              {secondaryButtonText}
+            </CtaButton>
+          )}
+        </div>
       </div>
     </section>
   );
