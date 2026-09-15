@@ -1,206 +1,110 @@
-'use client';
-
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { CONSENT_OPEN_EVENT, GA_MEASUREMENT_ID } from '@/lib/analytics';
+import CookieSettingsButton from './CookieSettingsButton';
 
 export default function Footer() {
   const t = useTranslations('footer');
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
-    <footer className="bg-white border-t border-borderPrimary py-12 mt-16 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Logo and Tagline */}
-          <div className="flex flex-col items-center md:items-start">
-            <div className="mb-4">
-              <Link href="/">
-                <Image
-                  src="/logo.svg"
-                  alt="CosBE Logo"
-                  width={150}
-                  height={50}
-                  className="h-12 w-auto"
-                />
-              </Link>
-            </div>
-            <p className="text-sm text-textTertiary font-medium">
-              <span className="text-textTertiary">The </span>
-              <span className="text-primaryColor">Cos</span>
-              <span className="text-textTertiary">mopolitan </span>
-              <span className="text-primaryColor">B</span>
-              <span className="text-textTertiary">usiness </span>
-              <span className="text-primaryColor">E</span>
-              <span className="text-textTertiary">ngine</span>
+    <footer className="bg-bgFooter text-white">
+      <div className="mx-auto max-w-[1440px] px-6 py-12 sm:px-10 lg:px-[60px]">
+        {/* Top: company info + link columns */}
+        <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
+          {/* Company info */}
+          <div>
+            <p className="text-2xl font-medium">{t('companyName')}</p>
+            <p className="mt-2 max-w-[448px] text-sm font-medium">
+              {t('address')}
             </p>
           </div>
 
-          {/* Navigation Links - Column 1 */}
-          <div>
-            <ul className="space-y-2">
+          {/* Link columns */}
+          <div className="flex flex-col gap-10 sm:flex-row sm:gap-16 lg:gap-24">
+            <ul className="space-y-2 text-sm">
+              <li className="font-medium">{t('aiTransformation')}</li>
               <li>
-                <Link
-                  href="/ai-lab"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('businessContent')}
-                </Link>
+                <FooterLink href="/case-studies">{t('caseStudies')}</FooterLink>
               </li>
               <li>
-                <Link
-                  href="/company"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('companyProfile')}
-                </Link>
+                <FooterLink href="/#partners">{t('partners')}</FooterLink>
               </li>
               <li>
-                <Link
-                  href="/case-studies"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('caseStudies')}
-                </Link>
+                <FooterLink href="/company">{t('company')}</FooterLink>
               </li>
               <li>
-                <Link
-                  href="/useful-column"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('usefulColumn')}
-                </Link>
+                <FooterLink href="/recruit" muted>
+                  {t('careers')}
+                </FooterLink>
               </li>
               <li>
-                <Link
-                  href="/useful-video"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('videoArticles')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/notice"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('announcement')}
-                </Link>
+                <FooterLink href="/contact">{t('contact')}</FooterLink>
               </li>
             </ul>
-          </div>
 
-          {/* Navigation Links - Column 2 */}
-          <div>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm">
+              <li className="font-medium">{t('resources')}</li>
               <li>
-                <Link
-                  href="/"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('homePage')}
-                </Link>
+                <FooterLink href="/useful-video" muted>
+                  {t('videos')}
+                </FooterLink>
               </li>
               <li>
-                <Link
-                  href="/privacy-policy"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('privacyPolicy')}
-                </Link>
+                <FooterLink href="/useful-column" muted>
+                  {t('articles')}
+                </FooterLink>
               </li>
-              {GA_MEASUREMENT_ID && (
-                <li>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      window.dispatchEvent(new Event(CONSENT_OPEN_EVENT))
-                    }
-                    className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                  >
-                    <span className="mr-2 text-primaryColor">▸</span>
-                    {t('cookieSettings')}
-                  </button>
-                </li>
-              )}
               <li>
-                <Link
-                  href="/contact"
-                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
-                >
-                  <span className="mr-2 text-primaryColor">▸</span>
-                  {t('inquiry')}
-                </Link>
+                <FooterLink href="/download" muted>
+                  {t('materials')}
+                </FooterLink>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Company Info */}
-        <div className="border-t border-borderPrimary pt-8">
-          <div className="text-center md:text-left mb-4">
-            <h3 className="text-lg font-semibold text-primaryColor mb-2">
-              CosBE Incorporated
-            </h3>
-            <p className="text-sm text-textTertiary">
-              3 East Third Ave, San Mateo, CA, United States of America
-            </p>
-          </div>
+        {/* Tagline */}
+        <p className="mt-16 text-3xl font-medium sm:text-[40px]">
+          <span>The </span>
+          <span className="text-primaryColor">Cos</span>
+          <span>mopolitan </span>
+          <span className="text-primaryColor">B</span>
+          <span>usiness </span>
+          <span className="text-primaryColor">E</span>
+          <span>ngine</span>
+        </p>
 
-          {/* Copyright */}
-          <div className="text-center text-sm text-textTertiary">
-            {t('copyright')}
+        {/* Bottom bar */}
+        <div className="mt-6 flex flex-col gap-2 border-t border-white/20 pt-4 text-xs sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <FooterLink href="/privacy-policy" muted>
+              {t('privacyPolicy')}
+            </FooterLink>
+            <CookieSettingsButton label={t('cookieSettings')} />
           </div>
+          <p>{t('copyright')}</p>
         </div>
       </div>
-
-      {/* Scroll to Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-14 h-14 bg-white border-2 border-primaryColor rounded-full shadow-lg flex flex-col items-center justify-center hover:bg-bgAccent transition-all duration-300 z-50"
-          aria-label="Scroll to top"
-        >
-          <svg
-            className="w-4 h-4 text-primaryColor"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 15l7-7 7 7"
-            />
-          </svg>
-          <span className="text-xs font-semibold text-primaryColor mt-0.5">
-            TOP
-          </span>
-        </button>
-      )}
     </footer>
+  );
+}
+
+function FooterLink({
+  href,
+  muted = false,
+  children,
+}: {
+  href: string;
+  muted?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`transition-colors hover:text-primaryColor ${
+        muted ? 'font-normal' : 'font-medium'
+      }`}
+    >
+      {children}
+    </Link>
   );
 }

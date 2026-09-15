@@ -13,7 +13,22 @@
     "notice": "お知らせ",
     "useful-video": "お役立ち動画",
     "download": "ダウンロード",
-    "button": "AIの課題を相談する（無料）"
+    "button": "AIの課題を相談する（無料）",
+    "nav": {
+      "aiTransformation": "AIトランスフォーメーション支援",
+      "caseStudies": "導入事例",
+      "resources": "お役立ち情報",
+      "company": "会社概要",
+      "partners": "パートナー",
+      "contactUs": "ご相談はこちら",
+      "aboutAit": "AIトランスフォーメーションとは",
+      "cosbeAit": "CosBEのAIトランスフォーメーション",
+      "fastAiLab": "速AIラボ",
+      "articles": "お役立ちコラム",
+      "videos": "お役立ち動画",
+      "aiAgents": "AIエージェント",
+      "news": "お知らせ"
+    }
   },
   "hero": {
     "eyebrow": "経営者の未来を切り拓く",
@@ -80,10 +95,10 @@
       }
     },
     "cta": {
-      "title": "様々な側面から貴社のビジネスをサポートいたします\nまずはお気軽にご相談ください",
-      "description": "詳しいサービス内容についてのご相談やお見積りはフォームからお願いします。",
-      "additionalText": "状況にあわせて柔軟に対応しますので、まずは、お気軽にお問い合わせください。",
-      "button": "速AIラボについてお問い合わせ"
+      "title": "ご相談・お問い合わせ",
+      "description": "AI導入の効果が見えない・どこから変えればいいかわからない。\nその違和感が設計の出発点です。",
+      "button": "相談する",
+      "secondaryButton": "資料請求"
     }
   },
   "company": {
@@ -1220,17 +1235,20 @@
     }
   },
   "footer": {
-    "tagline": "The Cosmopolitan Business Engine",
-    "businessContent": "事業内容",
-    "companyProfile": "会社概要",
-    "caseStudies": "事例紹介",
-    "usefulColumn": "お役立ちコラム",
-    "videoArticles": "動画解説記事",
-    "announcement": "お知らせ",
-    "homePage": "トップページ",
+    "companyName": "CosBE Incorporated",
+    "address": "3 East Third Ave, San Mateo, CA, United States of America",
+    "aiTransformation": "AIトランスフォーメーション支援",
+    "caseStudies": "導入事例",
+    "partners": "パートナー",
+    "company": "会社概要",
+    "careers": "・採用情報",
+    "contact": "お問い合わせ",
+    "resources": "お役立ち情報",
+    "videos": "・お役立ち動画",
+    "articles": "・お役立ちコラム",
+    "materials": "・お役立ち資料",
     "privacyPolicy": "プライバシーポリシー",
-    "inquiry": "お問い合わせ",
-    "copyright": "© CosBE Incorporated",
+    "copyright": "© 2026 CosBE Inc. All rights reserved.",
     "cookieSettings": "Cookie設定"
   },
   "usefulColumnPage": {
