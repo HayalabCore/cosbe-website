@@ -9,6 +9,7 @@ import {
   type RunExecutors,
 } from '../runs/run-handler';
 import { getRun } from '../runs/runs-repository';
+import { RUN_KINDS } from '../runs/run-types';
 import { createAndEnqueueRun } from './enqueue';
 import {
   DEAD_LETTER_QUEUE,
@@ -51,7 +52,9 @@ beforeAll(async () => {
   workerBoss = new PgBoss({ connectionString: url, max: 2 });
   workerBoss.on('error', (e) => console.error(e));
   await workerBoss.start();
-  for (const name of [QUEUE, DEAD_LETTER_QUEUE]) {
+  // Every run queue (e.g. one a local worker created) references the dead
+  // letter queue, so delete them all before it.
+  for (const name of [...RUN_KINDS.map(queueForKind), DEAD_LETTER_QUEUE]) {
     if (await workerBoss.getQueue(name)) await workerBoss.deleteQueue(name);
   }
   await ensureQueues(workerBoss, ['system_check'], {

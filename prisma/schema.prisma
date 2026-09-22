@@ -32,37 +32,38 @@ model Author {
 
 /// CMS article row (managed via Prisma Migrate — do not hand-edit SQL for this table).
 model Article {
-  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  slug              String        @unique
+  id                String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug              String         @unique
   title             String
-  titleEn           String?       @map("title_en")
+  titleEn           String?        @map("title_en")
   excerpt           String?
-  excerptEn         String?       @map("excerpt_en")
-  featuredImage     String?       @map("featured_image")
+  excerptEn         String?        @map("excerpt_en")
+  featuredImage     String?        @map("featured_image")
   /// When false, the featured image is hidden on the article page but still
   /// used as the thumbnail on listing pages.
-  showFeaturedImage Boolean       @default(true) @map("show_featured_image")
-  sourceUrl         String?       @map("source_url")
-  status            ArticleStatus @default(draft)
+  showFeaturedImage Boolean        @default(true) @map("show_featured_image")
+  sourceUrl         String?        @map("source_url")
+  status            ArticleStatus  @default(draft)
   category          String
-  tags              String[]      @default([])
-  authorId          String        @map("author_id") @db.Uuid
-  author            Author        @relation(fields: [authorId], references: [id])
+  tags              String[]       @default([])
+  authorId          String         @map("author_id") @db.Uuid
+  author            Author         @relation(fields: [authorId], references: [id])
   blocks            Json
   toc               Json
   seo               Json?
   // Case-study specific metadata (null for non-case-study articles)
-  clientName        String?       @map("client_name")
-  clientLocation    String?       @map("client_location")
-  clientUrl         String?       @map("client_url")
-  aiModels          String[]      @default([]) @map("ai_models")
-  mainChallenges    String?       @map("main_challenges")
-  relatedArticleIds String[]      @default([]) @map("related_article_ids")
-  viewCount         Int           @default(0) @map("view_count")
-  publishedAt       DateTime?     @map("published_at") @db.Timestamptz(6)
-  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt         DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  clientName        String?        @map("client_name")
+  clientLocation    String?        @map("client_location")
+  clientUrl         String?        @map("client_url")
+  aiModels          String[]       @default([]) @map("ai_models")
+  mainChallenges    String?        @map("main_challenges")
+  relatedArticleIds String[]       @default([]) @map("related_article_ids")
+  viewCount         Int            @default(0) @map("view_count")
+  publishedAt       DateTime?      @map("published_at") @db.Timestamptz(6)
+  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
   views             ArticleView[]
+  studioSources     StudioSource[]
 
   @@index([status, category, publishedAt(sort: Desc)])
   @@index([createdAt(sort: Desc)], map: "articles_created_at_idx")
@@ -130,16 +131,18 @@ model TranslationHistory {
 
 /// Admin portal account. `id` equals the Supabase auth.users id.
 model AdminUser {
-  id                 String      @id @db.Uuid
-  email              String      @unique
-  displayName        String?     @map("display_name")
-  disabled           Boolean     @default(false)
-  mustChangePassword Boolean     @default(false) @map("must_change_password")
-  createdBy          String?     @map("created_by")
-  createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id                 String          @id @db.Uuid
+  email              String          @unique
+  displayName        String?         @map("display_name")
+  disabled           Boolean         @default(false)
+  mustChangePassword Boolean         @default(false) @map("must_change_password")
+  createdBy          String?         @map("created_by")
+  createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   roles              UserRole[]
   studioRuns         StudioRun[]
+  studioSources      StudioSource[]
+  studioProjects     StudioProject[]
 
   @@map("admin_users")
 }
@@ -189,6 +192,7 @@ model StudioRun {
   status       String          @default("queued")
   pieceId      String?         @map("piece_id") @db.Uuid
   sourceId     String?         @map("source_id") @db.Uuid
+  source       StudioSource?   @relation(fields: [sourceId], references: [id], onDelete: SetNull)
   input        Json            @default("{}")
   error        String?
   tokensIn     Int             @default(0) @map("tokens_in")
@@ -222,4 +226,79 @@ model StudioRunStep {
 
   @@unique([runId, key])
   @@map("studio_run_steps")
+}
+
+/// Global library entry. Generation only sees sources linked to its project.
+model StudioSource {
+  id             String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  kind           String
+  status         String                @default("pending")
+  error          String?
+  title          String
+  language       String?
+  originUrl      String?               @map("origin_url")
+  youtubeVideoId String?               @map("youtube_video_id")
+  storagePath    String?               @map("storage_path")
+  articleId      String?               @map("article_id") @db.Uuid
+  article        Article?              @relation(fields: [articleId], references: [id], onDelete: SetNull)
+  text           String?
+  charCount      Int                   @default(0) @map("char_count")
+  contentHash    String?               @map("content_hash")
+  meta           Json                  @default("{}")
+  tags           String[]              @default([])
+  createdById    String?               @map("created_by") @db.Uuid
+  createdBy      AdminUser?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt      DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  chunks         StudioSourceChunk[]
+  projects       StudioProjectSource[]
+  runs           StudioRun[]
+
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("studio_sources")
+}
+
+/// Retrieval unit. embedding and the PGroonga index are managed in raw SQL.
+model StudioSourceChunk {
+  id             String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceId       String                       @map("source_id") @db.Uuid
+  source         StudioSource                 @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  ordinal        Int
+  text           String
+  charStart      Int                          @map("char_start")
+  charEnd        Int                          @map("char_end")
+  locator        Json                         @default("{}")
+  embedding      Unsupported("vector(1536)")?
+  embeddingModel String?                      @map("embedding_model")
+
+  @@unique([sourceId, ordinal])
+  @@map("studio_source_chunks")
+}
+
+model StudioProject {
+  id          String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String                @default("")
+  createdById String?               @map("created_by") @db.Uuid
+  createdBy   AdminUser?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  archivedAt  DateTime?             @map("archived_at") @db.Timestamptz(6)
+  createdAt   DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  sources     StudioProjectSource[]
+
+  @@map("studio_projects")
+}
+
+model StudioProjectSource {
+  projectId String        @map("project_id") @db.Uuid
+  project   StudioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sourceId  String        @map("source_id") @db.Uuid
+  source    StudioSource  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  addedBy   String?       @map("added_by") @db.Uuid
+  addedAt   DateTime      @default(now()) @map("added_at") @db.Timestamptz(6)
+
+  @@id([projectId, sourceId])
+  @@index([sourceId])
+  @@map("studio_project_sources")
 }

@@ -72,10 +72,30 @@ export async function markRunSucceeded(id: string): Promise<void> {
   });
 }
 
+/**
+ * Also fails the run's source if it is still waiting on this run, so a source
+ * never stays "processing" after its ingest run died (retries exhausted,
+ * token ceiling, lost permission).
+ */
 export async function markRunFailed(id: string, error: string): Promise<void> {
-  await prisma.studioRun.updateMany({
-    where: { id, status: { in: ['queued', 'running'] } },
-    data: { status: 'failed', error, finishedAt: new Date() },
+  await prisma.$transaction(async (tx) => {
+    const run = await tx.studioRun.findUnique({
+      where: { id },
+      select: { sourceId: true },
+    });
+    const { count } = await tx.studioRun.updateMany({
+      where: { id, status: { in: ['queued', 'running'] } },
+      data: { status: 'failed', error, finishedAt: new Date() },
+    });
+    if (count === 1 && run?.sourceId) {
+      await tx.studioSource.updateMany({
+        where: {
+          id: run.sourceId,
+          status: { in: ['pending', 'processing'] },
+        },
+        data: { status: 'failed', error },
+      });
+    }
   });
 }
 

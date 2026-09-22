@@ -82,3 +82,12 @@ create policy "article_images_delete"
     bucket_id = 'article-images'
     and public.admin_has_any_permission(array['media.delete'])
   );
+
+-- Content Studio source files (PDFs). Private: read and write only through the
+-- server (service role) — browsers upload with a one-time signed upload URL.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('studio-sources', 'studio-sources', false, 52428800, array['application/pdf'])
+on conflict (id) do update
+  set public = false,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;

@@ -693,7 +693,6 @@
   "studio": {
     "title": "Content Studio",
     "subtitle": "Generate source-grounded article drafts.",
-    "comingSoon": "Projects, sources and generation arrive in the next releases.",
     "systemCheck": {
       "title": "System check",
       "description": "Confirms the studio worker is running and connected to the database.",
@@ -704,6 +703,71 @@
       "failed": "The check failed: {error}",
       "timeout": "No response after 90 seconds. Is the studio worker running?",
       "startError": "Could not start the check."
+    },
+    "tabs": {
+      "overview": "Overview",
+      "library": "Source library",
+      "projects": "Projects"
+    },
+    "status": {
+      "pending": "Queued",
+      "processing": "Processing",
+      "ready": "Ready",
+      "stored": "Stored — not used for generation yet",
+      "needs_transcript": "Needs transcript",
+      "failed": "Failed"
+    },
+    "kind": {
+      "text": "Text",
+      "article": "CosBE article",
+      "pdf": "PDF",
+      "youtube": "YouTube"
+    },
+    "library": {
+      "title": "Source library",
+      "search": "Search sources…",
+      "add": "Add source",
+      "empty": "No sources yet. Add notes, an article or a PDF.",
+      "columns": {
+        "title": "Title",
+        "kind": "Type",
+        "status": "Status",
+        "size": "Characters",
+        "projects": "Projects"
+      },
+      "retry": "Retry",
+      "delete": "Delete",
+      "link": "Link",
+      "confirmDelete": "Delete “{title}”? This cannot be undone.",
+      "linkedError": "This source is used by a project. Only users who can delete studio sources can remove it."
+    },
+    "addSource": {
+      "title": "Add source",
+      "text": "Paste text",
+      "article": "CosBE article",
+      "pdf": "Upload PDF",
+      "titleLabel": "Title",
+      "textLabel": "Text",
+      "articleSearch": "Search articles…",
+      "pdfHint": "PDF, up to 50 MB. PDFs are stored for later; they are not used for generation yet.",
+      "save": "Add",
+      "cancel": "Cancel",
+      "tooLarge": "The file is larger than 50 MB.",
+      "failed": "Could not add the source."
+    },
+    "projects": {
+      "title": "Projects",
+      "new": "New project",
+      "name": "Name",
+      "description": "Description",
+      "create": "Create",
+      "empty": "No projects yet.",
+      "sources": "{count, plural, =0 {No sources} one {# source} other {# sources}}",
+      "linkExisting": "Link from library",
+      "unlink": "Remove from project",
+      "archive": "Archive project",
+      "back": "All projects",
+      "noSources": "Link or add sources to use them in this project."
     }
   }
 }

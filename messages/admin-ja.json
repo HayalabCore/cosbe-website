@@ -693,7 +693,6 @@
   "studio": {
     "title": "コンテンツスタジオ",
     "subtitle": "ソースに基づいた記事の下書きを生成します。",
-    "comingSoon": "プロジェクト、ソース、生成機能は今後のリリースで追加されます。",
     "systemCheck": {
       "title": "システムチェック",
       "description": "スタジオのワーカーが稼働し、データベースに接続できることを確認します。",
@@ -704,6 +703,71 @@
       "failed": "チェックに失敗しました: {error}",
       "timeout": "90秒経っても応答がありません。スタジオのワーカーは稼働していますか？",
       "startError": "チェックを開始できませんでした。"
+    },
+    "tabs": {
+      "overview": "概要",
+      "library": "ソースライブラリ",
+      "projects": "プロジェクト"
+    },
+    "status": {
+      "pending": "待機中",
+      "processing": "処理中",
+      "ready": "利用可能",
+      "stored": "保存済み（まだ生成には使用されません）",
+      "needs_transcript": "文字起こしが必要",
+      "failed": "失敗"
+    },
+    "kind": {
+      "text": "テキスト",
+      "article": "CosBE記事",
+      "pdf": "PDF",
+      "youtube": "YouTube"
+    },
+    "library": {
+      "title": "ソースライブラリ",
+      "search": "ソースを検索…",
+      "add": "ソースを追加",
+      "empty": "ソースはまだありません。メモ、記事、PDFを追加してください。",
+      "columns": {
+        "title": "タイトル",
+        "kind": "種類",
+        "status": "状態",
+        "size": "文字数",
+        "projects": "プロジェクト"
+      },
+      "retry": "再試行",
+      "delete": "削除",
+      "link": "追加",
+      "confirmDelete": "「{title}」を削除しますか？元に戻せません。",
+      "linkedError": "このソースはプロジェクトで使用中です。スタジオソースの削除権限を持つユーザーのみ削除できます。"
+    },
+    "addSource": {
+      "title": "ソースを追加",
+      "text": "テキストを貼り付け",
+      "article": "CosBE記事",
+      "pdf": "PDFをアップロード",
+      "titleLabel": "タイトル",
+      "textLabel": "テキスト",
+      "articleSearch": "記事を検索…",
+      "pdfHint": "PDF（50MBまで）。PDFは保存のみで、まだ生成には使用されません。",
+      "save": "追加",
+      "cancel": "キャンセル",
+      "tooLarge": "ファイルが50MBを超えています。",
+      "failed": "ソースを追加できませんでした。"
+    },
+    "projects": {
+      "title": "プロジェクト",
+      "new": "新規プロジェクト",
+      "name": "名前",
+      "description": "説明",
+      "create": "作成",
+      "empty": "プロジェクトはまだありません。",
+      "sources": "{count, plural, =0 {ソースなし} other {#件のソース}}",
+      "linkExisting": "ライブラリから追加",
+      "unlink": "プロジェクトから外す",
+      "archive": "プロジェクトをアーカイブ",
+      "back": "プロジェクト一覧",
+      "noSources": "ソースを追加すると、このプロジェクトで使用できます。"
     }
   }
 }
