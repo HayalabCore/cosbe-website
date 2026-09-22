@@ -13,7 +13,9 @@ export type LoadedChunk = {
 };
 
 /** Selection ∩ project links ∩ ready sources, with ticked chapters as char ranges. */
-export async function buildScope(piece: Pick<PieceData, 'projectId' | 'selection'>): Promise<SearchScope> {
+export async function buildScope(
+  piece: Pick<PieceData, 'projectId' | 'selection'>
+): Promise<SearchScope> {
   const rows = await prisma.studioSource.findMany({
     where: {
       id: { in: piece.selection.sourceIds },
@@ -50,27 +52,65 @@ export async function buildScope(piece: Pick<PieceData, 'projectId' | 'selection
 }
 
 const chunkSelect = {
-  id: true, sourceId: true, ordinal: true, text: true, locator: true, charStart: true, charEnd: true,
+  id: true,
+  sourceId: true,
+  ordinal: true,
+  text: true,
+  locator: true,
+  charStart: true,
+  charEnd: true,
   source: { select: { title: true } },
 } as const;
 
-type ChunkRow = { id: string; sourceId: string; ordinal: number; text: string; locator: unknown; source: { title: string } };
+type ChunkRow = {
+  id: string;
+  sourceId: string;
+  ordinal: number;
+  text: string;
+  locator: unknown;
+  source: { title: string };
+};
 
 function toLoaded(row: ChunkRow): LoadedChunk {
   return {
-    id: row.id, sourceId: row.sourceId, sourceTitle: row.source.title,
-    ordinal: row.ordinal, text: row.text, locator: row.locator as Record<string, unknown>,
+    id: row.id,
+    sourceId: row.sourceId,
+    sourceTitle: row.source.title,
+    ordinal: row.ordinal,
+    text: row.text,
+    locator: row.locator as Record<string, unknown>,
   };
 }
 
-export async function getChunks(ids: string[]): Promise<LoadedChunk[]> {
+export async function getChunks(
+  ids: string[],
+  scope?: SearchScope
+): Promise<LoadedChunk[]> {
   if (ids.length === 0) return [];
-  const rows = await prisma.studioSourceChunk.findMany({ where: { id: { in: ids } }, select: chunkSelect });
-  const byId = new Map(rows.map((r) => [r.id, toLoaded(r)]));
+  const rows = await prisma.studioSourceChunk.findMany({
+    where: {
+      id: { in: ids },
+      ...(scope ? { sourceId: { in: scope.sourceIds } } : {}),
+    },
+    select: chunkSelect,
+  });
+  const byId = new Map(
+    rows
+      .filter((r) => {
+        const ranges = scope?.charRanges?.[r.sourceId];
+        return (
+          !ranges?.length ||
+          ranges.some(([start, end]) => r.charStart < end && r.charEnd > start)
+        );
+      })
+      .map((r) => [r.id, toLoaded(r)])
+  );
   return ids.flatMap((id) => (byId.has(id) ? [byId.get(id)!] : []));
 }
 
-export async function listScopeChunks(scope: SearchScope): Promise<LoadedChunk[]> {
+export async function listScopeChunks(
+  scope: SearchScope
+): Promise<LoadedChunk[]> {
   const rows = await prisma.studioSourceChunk.findMany({
     where: { sourceId: { in: scope.sourceIds } },
     orderBy: [{ sourceId: 'asc' }, { ordinal: 'asc' }],
@@ -79,12 +119,18 @@ export async function listScopeChunks(scope: SearchScope): Promise<LoadedChunk[]
   return rows
     .filter((r) => {
       const ranges = scope.charRanges?.[r.sourceId];
-      return !ranges?.length || ranges.some(([s, e]) => r.charStart < e && r.charEnd > s);
+      return (
+        !ranges?.length ||
+        ranges.some(([s, e]) => r.charStart < e && r.charEnd > s)
+      );
     })
     .map(toLoaded);
 }
 
-export async function chunkIdsForOrdinals(sourceId: string, ordinals: number[]): Promise<string[]> {
+export async function chunkIdsForOrdinals(
+  sourceId: string,
+  ordinals: number[]
+): Promise<string[]> {
   const rows = await prisma.studioSourceChunk.findMany({
     where: { sourceId, ordinal: { in: ordinals } },
     select: { id: true, ordinal: true },
@@ -93,7 +139,10 @@ export async function chunkIdsForOrdinals(sourceId: string, ordinals: number[]):
   return ordinals.flatMap((o) => (byOrdinal.has(o) ? [byOrdinal.get(o)!] : []));
 }
 
-export type Aliases = { toAlias: Map<string, string>; toId: Map<string, string> };
+export type Aliases = {
+  toAlias: Map<string, string>;
+  toId: Map<string, string>;
+};
 
 /** Short per-call names so models never handle UUIDs. */
 export function aliasChunks(ids: string[]): Aliases {

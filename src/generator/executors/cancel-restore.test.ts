@@ -30,7 +30,9 @@ vi.mock('../pieces/translate', () => ({
   translateSection: vi.fn(),
   translateMeta: vi.fn(),
 }));
-vi.mock('../retrieval/search', () => ({ searchSources: vi.fn(async () => []) }));
+vi.mock('../retrieval/search', () => ({
+  searchSources: vi.fn(async () => []),
+}));
 vi.mock('../pieces/scope', () => ({
   buildScope: vi.fn(),
   getChunks: vi.fn(async () => []),
@@ -47,7 +49,13 @@ function basePiece(overrides: Record<string, unknown> = {}) {
     id: 'p1',
     projectId: 'proj',
     stage: 'outline',
-    brief: { goal: '', audience: '', keywords: [], tone: '', targetLength: 'auto' },
+    brief: {
+      goal: '',
+      audience: '',
+      keywords: [],
+      tone: '',
+      targetLength: 'auto',
+    },
     selection: { sourceIds: [], chapters: {} },
     outline: [
       {
@@ -80,18 +88,19 @@ function ctx(runOverrides: Record<string, unknown> = {}): RunContext {
   };
 }
 
-describe('cancel restores previous stage', () => {
+describe('cancelled executors stop without restoring a stale stage', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it('write restores outline stage when cancelled before sections', async () => {
-    vi.mocked(loadPiece).mockResolvedValue(basePiece({ stage: 'outline' }) as never);
+  it('write stops before sections when cancellation is observed', async () => {
+    vi.mocked(loadPiece).mockResolvedValue(
+      basePiece({ stage: 'outline' }) as never
+    );
     vi.mocked(isRunCancelled).mockResolvedValue(true);
     await writeExecutor(ctx());
-    expect(setStage).toHaveBeenCalledWith('p1', 'writing');
-    expect(setStage).toHaveBeenLastCalledWith('p1', 'outline');
+    expect(setStage).toHaveBeenCalledExactlyOnceWith('p1', 'writing', 'r1');
   });
 
-  it('translate restores review stage when cancelled before sections', async () => {
+  it('translate stops before sections when cancellation is observed', async () => {
     vi.mocked(loadPiece).mockResolvedValue(
       basePiece({
         stage: 'review',
@@ -102,14 +111,18 @@ describe('cancel restores previous stage', () => {
             flags: [],
             enStale: false,
             en: null,
-            blocks: [{ type: 'paragraph', sentences: [{ text: 'x', cite: [], connective: true }] }],
+            blocks: [
+              {
+                type: 'paragraph',
+                sentences: [{ text: 'x', cite: [], connective: true }],
+              },
+            ],
           },
         ],
       }) as never
     );
     vi.mocked(isRunCancelled).mockResolvedValue(true);
     await translateExecutor(ctx());
-    expect(setStage).toHaveBeenCalledWith('p1', 'translating');
-    expect(setStage).toHaveBeenLastCalledWith('p1', 'review');
+    expect(setStage).toHaveBeenCalledExactlyOnceWith('p1', 'translating', 'r1');
   });
 });

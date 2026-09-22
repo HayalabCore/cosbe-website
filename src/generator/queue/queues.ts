@@ -10,7 +10,8 @@ export function queueForKind(kind: RunKind): string {
 export type QueueSettings = Omit<Queue, 'name'>;
 
 /**
- * singleton + singletonKey (piece or source id) = one active job per piece.
+ * Singleton keys prevent duplicate execution of a run (or source ingest).
+ * PostgreSQL separately enforces one active run per piece across all kinds.
  * A job that stops heartbeating or outlives expireInSeconds is retried, then
  * dead-lettered; the dead-letter handler marks its run failed.
  */
