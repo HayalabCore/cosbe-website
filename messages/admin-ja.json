@@ -705,9 +705,10 @@
       "startError": "チェックを開始できませんでした。"
     },
     "tabs": {
-      "overview": "概要",
+      "overview": "記事",
       "library": "ソースライブラリ",
-      "projects": "プロジェクト"
+      "projects": "プロジェクト",
+      "templates": "テンプレート"
     },
     "status": {
       "pending": "待機中",
@@ -768,6 +769,141 @@
       "archive": "プロジェクトをアーカイブ",
       "back": "プロジェクト一覧",
       "noSources": "ソースを追加すると、このプロジェクトで使用できます。"
+    },
+    "category": {
+      "useful-info": "コラム",
+      "case-study": "導入事例",
+      "video": "動画",
+      "notice": "お知らせ"
+    },
+    "stages": {
+      "sources": "ソース",
+      "brief": "概要",
+      "outline": "構成",
+      "writing": "執筆",
+      "review": "確認",
+      "translating": "翻訳",
+      "ready": "下書き作成",
+      "handed_off": "公開"
+    },
+    "pieces": {
+      "title": "記事",
+      "new": "新しい記事",
+      "chooseProject": "プロジェクトを選択",
+      "empty": "記事はまだありません。",
+      "columns": {
+        "title": "タイトル",
+        "project": "プロジェクト",
+        "stage": "段階",
+        "updated": "更新日時"
+      },
+      "untitled": "無題",
+      "tracked": {
+        "draft": "下書き",
+        "published": "公開済み",
+        "archived": "アーカイブ",
+        "removed": "投稿は削除されました"
+      }
+    },
+    "workspace": {
+      "back": "記事一覧",
+      "busy": "処理中…",
+      "cancel": "中止",
+      "failed": "直前の処理に失敗しました: {error}",
+      "undo": "履歴",
+      "undoButton": "この状態に戻す",
+      "noHistory": "履歴はまだありません。",
+      "errors": {
+        "BUSY": "現在の処理が終わるまでお待ちください。",
+        "LOCKED": "この記事はすでに下書き投稿済みです。",
+        "NO_AUTHOR": "先に概要で著者を選択してください。",
+        "FAILED": "問題が発生しました。もう一度お試しください。"
+      }
+    },
+    "sourcesPanel": {
+      "title": "ソースを選択",
+      "none": "先にこのプロジェクトへソースを追加してください。",
+      "notReady": "未処理",
+      "next": "概要へ進む"
+    },
+    "brief": {
+      "title": "概要",
+      "goal": "記事の目的",
+      "audience": "読者",
+      "keywords": "キーワード（カンマ区切り）",
+      "tone": "トーン",
+      "length": "文字数",
+      "auto": "ソースに応じて",
+      "chars": "目標文字数",
+      "template": "テンプレート",
+      "category": "カテゴリー",
+      "author": "著者",
+      "save": "概要を保存",
+      "createOutline": "構成を作成"
+    },
+    "outline": {
+      "title": "構成",
+      "heading": "見出し",
+      "intent": "この節で扱う内容",
+      "sources": "{count, plural, =0 {ソース箇所なし} other {#件のソース箇所}}",
+      "boilerplate": "テンプレートの節（ソース不要）",
+      "add": "節を追加",
+      "remove": "削除",
+      "up": "上へ",
+      "down": "下へ",
+      "stale": "変更あり — 書き直されます",
+      "gaps": "ソースに含まれていない内容",
+      "save": "構成を保存",
+      "write": "記事を執筆"
+    },
+    "writing": {
+      "title": "執筆",
+      "section": "{total}節中 {n}節目",
+      "finishing": "タイトル・要約・SEO"
+    },
+    "review": {
+      "title": "確認",
+      "flags": "要確認",
+      "citation": "出典",
+      "connective": "つなぎの文（事実なし）",
+      "actions": {
+        "regenerate": "再生成",
+        "expand": "詳しく",
+        "shorten": "短く",
+        "formal": "よりフォーマルに",
+        "custom": "指示を入力…"
+      },
+      "instructions": {
+        "regenerate": "この節をソースから書き直してください。",
+        "expand": "ソースの内容でこの節をより詳しくしてください。",
+        "shorten": "この節を約半分の長さにしてください。",
+        "formal": "よりフォーマルな文体にしてください。"
+      },
+      "customPrompt": "この節をどう変更しますか？",
+      "translate": "英語に翻訳",
+      "handoff": "下書き投稿を作成"
+    },
+    "translate": {
+      "title": "翻訳",
+      "stale": "翻訳後に変更されました — 再翻訳してください"
+    },
+    "handoff": {
+      "title": "下書き投稿",
+      "open": "エディターで開く",
+      "view": "サイトで見る",
+      "duplicate": "記事を複製",
+      "status": "投稿の状態: {status}"
+    },
+    "templates": {
+      "title": "テンプレート",
+      "new": "新しいテンプレート",
+      "name": "名前",
+      "description": "説明",
+      "instructions": "執筆者への指示",
+      "defaultCategory": "既定のカテゴリー",
+      "default": "既定",
+      "save": "保存",
+      "delete": "削除"
     }
   }
 }

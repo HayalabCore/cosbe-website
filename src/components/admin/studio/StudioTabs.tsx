@@ -8,6 +8,7 @@ const TABS = [
   { key: 'overview', href: '/admin/studio' },
   { key: 'library', href: '/admin/studio/library' },
   { key: 'projects', href: '/admin/studio/projects' },
+  { key: 'templates', href: '/admin/studio/templates' },
 ] as const;
 
 export default function StudioTabs() {

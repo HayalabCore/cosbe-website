@@ -705,9 +705,10 @@
       "startError": "Could not start the check."
     },
     "tabs": {
-      "overview": "Overview",
+      "overview": "Pieces",
       "library": "Source library",
-      "projects": "Projects"
+      "projects": "Projects",
+      "templates": "Templates"
     },
     "status": {
       "pending": "Queued",
@@ -768,6 +769,141 @@
       "archive": "Archive project",
       "back": "All projects",
       "noSources": "Link or add sources to use them in this project."
+    },
+    "category": {
+      "useful-info": "Column",
+      "case-study": "Case study",
+      "video": "Video",
+      "notice": "Notice"
+    },
+    "stages": {
+      "sources": "Sources",
+      "brief": "Brief",
+      "outline": "Outline",
+      "writing": "Writing",
+      "review": "Review",
+      "translating": "Translate",
+      "ready": "Draft post",
+      "handed_off": "Published"
+    },
+    "pieces": {
+      "title": "Pieces",
+      "new": "New piece",
+      "chooseProject": "Choose a project",
+      "empty": "No pieces yet.",
+      "columns": {
+        "title": "Title",
+        "project": "Project",
+        "stage": "Stage",
+        "updated": "Updated"
+      },
+      "untitled": "Untitled",
+      "tracked": {
+        "draft": "Draft post",
+        "published": "Published",
+        "archived": "Archived",
+        "removed": "Post deleted"
+      }
+    },
+    "workspace": {
+      "back": "All pieces",
+      "busy": "Working…",
+      "cancel": "Cancel",
+      "failed": "The last step failed: {error}",
+      "undo": "History",
+      "undoButton": "Restore",
+      "noHistory": "No history yet.",
+      "errors": {
+        "BUSY": "Wait for the current step to finish.",
+        "LOCKED": "This piece was already handed off.",
+        "NO_AUTHOR": "Choose an author in the brief first.",
+        "FAILED": "Something went wrong. Try again."
+      }
+    },
+    "sourcesPanel": {
+      "title": "Choose sources",
+      "none": "Link sources to this project first.",
+      "notReady": "Not ready",
+      "next": "Continue to brief"
+    },
+    "brief": {
+      "title": "Brief",
+      "goal": "Goal of the article",
+      "audience": "Audience",
+      "keywords": "Keywords (comma-separated)",
+      "tone": "Tone",
+      "length": "Length",
+      "auto": "What the sources support",
+      "chars": "Target characters",
+      "template": "Template",
+      "category": "Category",
+      "author": "Author",
+      "save": "Save brief",
+      "createOutline": "Create outline"
+    },
+    "outline": {
+      "title": "Outline",
+      "heading": "Heading",
+      "intent": "What this section covers",
+      "sources": "{count, plural, =0 {No source passages} one {# passage} other {# passages}}",
+      "boilerplate": "Template section (no sources)",
+      "add": "Add section",
+      "remove": "Remove",
+      "up": "Move up",
+      "down": "Move down",
+      "stale": "Changed — will be rewritten",
+      "gaps": "Not covered by the sources",
+      "save": "Save outline",
+      "write": "Write article"
+    },
+    "writing": {
+      "title": "Writing",
+      "section": "Section {n} of {total}",
+      "finishing": "Title, excerpt and SEO"
+    },
+    "review": {
+      "title": "Review",
+      "flags": "Needs attention",
+      "citation": "Source",
+      "connective": "Transition (no facts)",
+      "actions": {
+        "regenerate": "Regenerate",
+        "expand": "Expand",
+        "shorten": "Shorten",
+        "formal": "More formal",
+        "custom": "Custom instruction…"
+      },
+      "instructions": {
+        "regenerate": "Rewrite this section from its sources.",
+        "expand": "Expand this section with more detail from its sources.",
+        "shorten": "Make this section about half as long.",
+        "formal": "Make the tone more formal."
+      },
+      "customPrompt": "What should change in this section?",
+      "translate": "Translate to English",
+      "handoff": "Create draft post"
+    },
+    "translate": {
+      "title": "Translation",
+      "stale": "Changed since translation — translate again"
+    },
+    "handoff": {
+      "title": "Draft post",
+      "open": "Open in editor",
+      "view": "View on site",
+      "duplicate": "Duplicate piece",
+      "status": "Post status: {status}"
+    },
+    "templates": {
+      "title": "Templates",
+      "new": "New template",
+      "name": "Name",
+      "description": "Description",
+      "instructions": "Instructions for the writer",
+      "defaultCategory": "Default category",
+      "default": "Default",
+      "save": "Save",
+      "delete": "Delete"
     }
   }
 }
