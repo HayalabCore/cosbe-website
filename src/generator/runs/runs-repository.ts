@@ -1,0 +1,166 @@
+import type { Prisma, StudioRun } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
+import { errorMessage, type RunKind } from './run-types';
+
+export type Db = Prisma.TransactionClient | typeof prisma;
+
+export type CreateRunInput = {
+  kind: RunKind;
+  createdById: string;
+  input?: Prisma.InputJsonValue;
+  pieceId?: string;
+  sourceId?: string;
+  tokenCeiling?: number | null;
+};
+
+export class TokenCeilingExceededError extends Error {
+  readonly runId: string;
+  readonly used: number;
+  readonly ceiling: number;
+
+  constructor(runId: string, used: number, ceiling: number) {
+    super(
+      `Run used ${used} tokens, over its ceiling of ${ceiling}. Raise STUDIO_RUN_TOKEN_CEILING or narrow the sources.`
+    );
+    this.name = 'TokenCeilingExceededError';
+    this.runId = runId;
+    this.used = used;
+    this.ceiling = ceiling;
+  }
+}
+
+export function createRun(db: Db, input: CreateRunInput): Promise<StudioRun> {
+  return db.studioRun.create({
+    data: {
+      kind: input.kind,
+      createdById: input.createdById,
+      input: input.input ?? {},
+      pieceId: input.pieceId ?? null,
+      sourceId: input.sourceId ?? null,
+      tokenCeiling: input.tokenCeiling ?? null,
+    },
+  });
+}
+
+export function getRun(id: string) {
+  return prisma.studioRun.findUnique({
+    where: { id },
+    include: { steps: { orderBy: { ordinal: 'asc' } } },
+  });
+}
+
+export type RunWithSteps = NonNullable<Awaited<ReturnType<typeof getRun>>>;
+
+/** queued|running → running. False when the run was cancelled or already ended. */
+export async function markRunStarted(id: string): Promise<boolean> {
+  const { count } = await prisma.studioRun.updateMany({
+    where: { id, status: { in: ['queued', 'running'] } },
+    data: { status: 'running', error: null },
+  });
+  if (count === 0) return false;
+  await prisma.studioRun.updateMany({
+    where: { id, startedAt: null },
+    data: { startedAt: new Date() },
+  });
+  return true;
+}
+
+export async function markRunSucceeded(id: string): Promise<void> {
+  await prisma.studioRun.updateMany({
+    where: { id, status: 'running' },
+    data: { status: 'succeeded', finishedAt: new Date() },
+  });
+}
+
+export async function markRunFailed(id: string, error: string): Promise<void> {
+  await prisma.studioRun.updateMany({
+    where: { id, status: { in: ['queued', 'running'] } },
+    data: { status: 'failed', error, finishedAt: new Date() },
+  });
+}
+
+/** Remembers an attempt's error while pg-boss retries; the run stays running. */
+export async function recordRunError(id: string, error: string): Promise<void> {
+  await prisma.studioRun.updateMany({
+    where: { id, status: 'running' },
+    data: { error },
+  });
+}
+
+export async function cancelRun(id: string): Promise<boolean> {
+  const { count } = await prisma.studioRun.updateMany({
+    where: { id, status: { in: ['queued', 'running'] } },
+    data: { status: 'cancelled', finishedAt: new Date() },
+  });
+  return count === 1;
+}
+
+export async function addRunUsage(
+  id: string,
+  usage: { inputTokens: number; outputTokens: number }
+): Promise<void> {
+  const run = await prisma.studioRun.update({
+    where: { id },
+    data: {
+      tokensIn: { increment: usage.inputTokens },
+      tokensOut: { increment: usage.outputTokens },
+    },
+    select: { tokensIn: true, tokensOut: true, tokenCeiling: true },
+  });
+  const used = run.tokensIn + run.tokensOut;
+  if (run.tokenCeiling !== null && used > run.tokenCeiling) {
+    throw new TokenCeilingExceededError(id, used, run.tokenCeiling);
+  }
+}
+
+/**
+ * Executes one resumable step. A step that already succeeded returns its stored
+ * output without running `fn` again, so a retried job resumes where it failed.
+ */
+export async function runStep<T extends Prisma.InputJsonValue>(
+  runId: string,
+  step: { key: string; ordinal: number },
+  fn: () => Promise<T>
+): Promise<T> {
+  const where = { runId_key: { runId, key: step.key } };
+  const existing = await prisma.studioRunStep.findUnique({ where });
+  if (existing?.status === 'succeeded') return existing.output as T;
+
+  await prisma.studioRunStep.upsert({
+    where,
+    create: {
+      runId,
+      key: step.key,
+      ordinal: step.ordinal,
+      status: 'running',
+      attempts: 1,
+      startedAt: new Date(),
+    },
+    update: {
+      status: 'running',
+      error: null,
+      attempts: { increment: 1 },
+      startedAt: new Date(),
+      finishedAt: null,
+    },
+  });
+
+  try {
+    const output = await fn();
+    await prisma.studioRunStep.update({
+      where,
+      data: { status: 'succeeded', output, finishedAt: new Date() },
+    });
+    return output;
+  } catch (error) {
+    await prisma.studioRunStep.update({
+      where,
+      data: {
+        status: 'failed',
+        error: errorMessage(error),
+        finishedAt: new Date(),
+      },
+    });
+    throw error;
+  }
+}

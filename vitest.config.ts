@@ -30,7 +30,7 @@ export default defineConfig({
           name: 'unit',
           environment: 'node',
           env: dummySupabaseEnv,
-          include: ['src/**/*.test.ts'],
+          include: ['src/**/*.test.ts', 'worker/**/*.test.ts'],
           exclude: [
             'src/**/*.db.test.ts',
             'src/lib/translations/flatten.roundtrip.test.ts',

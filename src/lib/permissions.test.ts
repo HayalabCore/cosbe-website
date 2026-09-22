@@ -9,10 +9,28 @@ import {
 } from './permissions';
 
 describe('permission catalog', () => {
-  it('has the 16 spec permissions', () => {
-    expect(ALL_PERMISSIONS).toHaveLength(16);
+  it('has the 19 permissions (16 access/content + 3 studio)', () => {
+    expect(ALL_PERMISSIONS).toHaveLength(19);
     expect(ALL_PERMISSIONS).toContain('users.delete');
     expect(ALL_PERMISSIONS).toContain('translations.history.delete');
+    expect(ALL_PERMISSIONS).toEqual(
+      expect.arrayContaining([
+        'studio.use',
+        'studio.templates.manage',
+        'studio.sources.delete',
+      ])
+    );
+  });
+
+  it('developer and marketing can use studio but not delete sources', () => {
+    for (const role of ['developer', 'marketing'] as const) {
+      expect(DEFAULT_ROLE_PERMISSIONS[role]).toEqual(
+        expect.arrayContaining(['studio.use', 'studio.templates.manage'])
+      );
+      expect(DEFAULT_ROLE_PERMISSIONS[role]).not.toContain(
+        'studio.sources.delete'
+      );
+    }
   });
 
   it('isPermission rejects unknown strings', () => {

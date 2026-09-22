@@ -130,15 +130,16 @@ model TranslationHistory {
 
 /// Admin portal account. `id` equals the Supabase auth.users id.
 model AdminUser {
-  id                 String     @id @db.Uuid
-  email              String     @unique
-  displayName        String?    @map("display_name")
-  disabled           Boolean    @default(false)
-  mustChangePassword Boolean    @default(false) @map("must_change_password")
-  createdBy          String?    @map("created_by")
-  createdAt          DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id                 String      @id @db.Uuid
+  email              String      @unique
+  displayName        String?     @map("display_name")
+  disabled           Boolean     @default(false)
+  mustChangePassword Boolean     @default(false) @map("must_change_password")
+  createdBy          String?     @map("created_by")
+  createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   roles              UserRole[]
+  studioRuns         StudioRun[]
 
   @@map("admin_users")
 }
@@ -178,4 +179,47 @@ model UserRole {
   @@id([userId, roleId])
   @@index([roleId])
   @@map("user_roles")
+}
+
+/// One unit of studio background work (system check, ingest, outline, write, ...).
+/// piece_id / source_id get foreign keys when those tables exist (P1b/P1c).
+model StudioRun {
+  id           String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  kind         String
+  status       String          @default("queued")
+  pieceId      String?         @map("piece_id") @db.Uuid
+  sourceId     String?         @map("source_id") @db.Uuid
+  input        Json            @default("{}")
+  error        String?
+  tokensIn     Int             @default(0) @map("tokens_in")
+  tokensOut    Int             @default(0) @map("tokens_out")
+  tokenCeiling Int?            @map("token_ceiling")
+  createdById  String?         @map("created_by") @db.Uuid
+  createdBy    AdminUser?      @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  startedAt    DateTime?       @map("started_at") @db.Timestamptz(6)
+  finishedAt   DateTime?       @map("finished_at") @db.Timestamptz(6)
+  steps        StudioRunStep[]
+
+  @@index([pieceId, createdAt(sort: Desc)])
+  @@index([status])
+  @@map("studio_runs")
+}
+
+/// A resumable step of a run. A succeeded step is never re-executed.
+model StudioRunStep {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId      String    @map("run_id") @db.Uuid
+  run        StudioRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  ordinal    Int
+  key        String
+  status     String
+  output     Json?
+  error      String?
+  attempts   Int       @default(0)
+  startedAt  DateTime? @map("started_at") @db.Timestamptz(6)
+  finishedAt DateTime? @map("finished_at") @db.Timestamptz(6)
+
+  @@unique([runId, key])
+  @@map("studio_run_steps")
 }

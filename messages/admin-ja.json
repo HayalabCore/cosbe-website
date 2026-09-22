@@ -33,7 +33,8 @@
     "signOut": "ログアウト",
     "accessSection": "アクセス管理",
     "users": "ユーザー",
-    "roles": "ロール"
+    "roles": "ロール",
+    "studio": "コンテンツスタジオ"
   },
   "dashboard": {
     "title": "すべての記事",
@@ -502,6 +503,7 @@
       "content": "コンテンツ",
       "media": "メディア",
       "translations": "翻訳",
+      "studio": "コンテンツスタジオ",
       "access": "ユーザーとロール"
     },
     "permissions": {
@@ -544,6 +546,18 @@
       "translations_history_delete": {
         "label": "翻訳履歴の削除",
         "description": "翻訳履歴のエントリを削除します。"
+      },
+      "studio_use": {
+        "label": "コンテンツスタジオの利用",
+        "description": "プロジェクトとソースを作成し、記事の下書きを生成します。"
+      },
+      "studio_templates_manage": {
+        "label": "スタジオテンプレートの管理",
+        "description": "共有の生成テンプレートを作成・編集・削除します。"
+      },
+      "studio_sources_delete": {
+        "label": "スタジオソースの削除",
+        "description": "共有ライブラリからソースを完全に削除します。"
       },
       "users_view": {
         "label": "ユーザーの閲覧",
@@ -675,5 +689,21 @@
     "submit": "パスワードを保存",
     "submitting": "保存中…",
     "signOut": "サインアウト"
+  },
+  "studio": {
+    "title": "コンテンツスタジオ",
+    "subtitle": "ソースに基づいた記事の下書きを生成します。",
+    "comingSoon": "プロジェクト、ソース、生成機能は今後のリリースで追加されます。",
+    "systemCheck": {
+      "title": "システムチェック",
+      "description": "スタジオのワーカーが稼働し、データベースに接続できることを確認します。",
+      "run": "システムチェックを実行",
+      "queued": "ワーカーを待っています…",
+      "running": "ワーカーがチェックを実行中…",
+      "succeeded": "ワーカー {worker} が {seconds} 秒でチェックを完了しました。",
+      "failed": "チェックに失敗しました: {error}",
+      "timeout": "90秒経っても応答がありません。スタジオのワーカーは稼働していますか？",
+      "startError": "チェックを開始できませんでした。"
+    }
   }
 }
