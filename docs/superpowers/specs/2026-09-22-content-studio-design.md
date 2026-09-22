@@ -129,7 +129,7 @@ studio_pieces                  one per article being generated
   selection Json { source_ids[], chapters { source_id: chapter_index[] } }
   outline Json [{ id, heading, intent, chunk_ids[], est_chars, kind: "source" | "boilerplate", stale }]
   gaps Json [string]
-  blocks Json (JA, with citations), blocks_en Json
+  sections Json [{ outlineId, heading, blocks: StudioBlock[] (JA sentences, each with cite: chunkId[] or connective), flags[], enStale, en: { heading, blocks } | null }]
   category, author_id → authors
   article_id? → articles (set at handoff, ON DELETE SET NULL), handed_off_at
   created_by, created_at, updated_at
@@ -139,7 +139,7 @@ studio_runs                    id, piece_id?, source_id?, kind: ingest | digest 
                                tokens_in, tokens_out, token_ceiling, created_by, started_at, finished_at
 studio_run_steps               id, run_id → cascade, ordinal, key (e.g. "section:<outlineId>"), status, output Json, error
                                attempts, prompt_version, started_at, finished_at, tokens_in, tokens_out
-studio_piece_snapshots         id, piece_id → cascade, outline Json, blocks Json, blocks_en Json, reason, run_id?, created_at
+studio_piece_snapshots         id, piece_id → cascade, outline Json, sections Json, title, excerpt, reason, run_id?, created_at
 studio_messages                id, piece_id → cascade, role: user | assistant | tool, content Json, run_id?, created_by, created_at
 ```
 
@@ -148,7 +148,7 @@ studio_messages                id, piece_id → cascade, role: user | assistant 
 ### Rules
 
 - **Grounding lives in the data.** Outline sections carry `chunk_ids`; the writer receives only those chunks. Citations reference `chunk_id`s, resolving to a quote plus a timestamp or block.
-- **Citations** are inline marks in the piece's paragraph HTML: `<span data-cite="chunkId,chunkId">…</span>`. JA only. `handoff.ts` strips them when creating the draft post, so the public site never receives them.
+- **Citations** are structured, not markup: every JA sentence in `piece.sections` carries `cite: chunkId[]` (or `connective: true`). The studio renders them from that structure; `toArticleBlocks` converts sections to ordinary cosbe `ContentBlock`s at handoff, so the public site never receives citation data. Edits in the post editor after handoff do not touch the piece.
 - **Snapshots** are taken before every AI write to a piece (button or agent), giving one-click undo.
 - **Cosbe article sources** store a JA text snapshot and `content_hash`; they are re-chunked when the hash changes.
 - **One active run per piece** (see §7).
@@ -189,12 +189,12 @@ Hybrid: pgvector top-k + PGroonga keyword top-k, merged by reciprocal rank fusio
 - Output (Zod): blocks (`paragraph`, `list`, `table`, `callout`, `quote`, `heading` level 3) composed of sentences with `cite[]` or `connective: true`.
 - Deterministic checks (`grounding.ts`): every cited id is in the provided set; `source` sections have citations; `connective` sentences contain no digits or proper-noun candidates (heuristic). Violation → one repair call for that section; still failing → the section is flagged in Review.
 - No whole-article rewrites and no length padding.
-- `toBlocks` renders the HTML with `data-cite` spans and generates block ids; the step writes the section into `piece.blocks` on success.
+- The step writes the validated section (structured sentences) into `piece.sections` on success.
 - **Finish step** (after all sections): title, excerpt and SEO meta from the finished sections; TOC is derived deterministically from headings at handoff using the existing TOC logic.
 
 ### 4.5 Translate
 
-Each block's JA → `*En`, plus `title_en` and `excerpt_en`, reusing the logic of `src/actions/block-translation.ts` moved into `src/generator/translate.ts` (the existing action then calls the engine). Citations are not carried into EN.
+Each block's JA → `*En`, plus `title_en` and `excerpt_en`, with the `translate` model task in `src/generator/pieces/translate.ts`, one structured call per section (the existing `block-translation-server.ts` imports `server-only` and cannot run in the worker; it stays as is for the post editor). Citations are not carried into EN.
 
 Translation is optional: handoff is allowed from `review` (EN empty, the public site's existing fallback in `src/lib/article-locale.ts` applies) or from `ready` (EN done). A rewrite after translation marks the affected EN blocks stale and the rail shows Translate as needing a re-run.
 
@@ -297,7 +297,7 @@ The assistant is available at every stage.
 
 Vitest, existing setup.
 
-- **Unit:** JA/EN chunker, chapter → character mapping, VTT/SRT parsing, `toBlocks`, citation stripping at handoff, grounding validator, RRF merge, stage transitions, permission guards on actions and agent tools.
+- **Unit:** JA/EN chunker, chapter → character mapping, VTT/SRT parsing, `toArticleBlocks` (sections → ContentBlocks, no citation data), digest coverage, grounding validator, RRF merge, stage transitions, permission guards on actions and agent tools.
 - **Engine:** full pipeline with the AI SDK mock model (deterministic, no network): ingest text → outline → write (including the repair path) → translate → handoff.
 - **Retrieval SQL:** against local Supabase (`supabase start`) in a separate `yarn test:db` script, not part of the default run.
 - **Quality eval (manual):** `yarn studio:eval` runs a small golden set of real sources and briefs and reports citation coverage, connective-sentence ratio and gap detection; the baseline P2 is measured against.

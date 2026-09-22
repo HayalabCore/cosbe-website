@@ -1,7 +1,14 @@
 import type { Permission } from '@/lib/permissions';
 
 /** Later plans append kinds (ingest, outline, write, ...). */
-export const RUN_KINDS = ['system_check', 'ingest'] as const;
+export const RUN_KINDS = [
+  'system_check',
+  'ingest',
+  'outline',
+  'write',
+  'rewrite_section',
+  'translate',
+] as const;
 export type RunKind = (typeof RUN_KINDS)[number];
 
 export function isRunKind(value: string): value is RunKind {
@@ -27,7 +34,20 @@ export function isTerminalRunStatus(status: string): boolean {
 export const RUN_KIND_PERMISSION: Record<RunKind, Permission> = {
   system_check: 'studio.use',
   ingest: 'studio.use',
+  outline: 'studio.use',
+  write: 'studio.use',
+  rewrite_section: 'studio.use',
+  translate: 'studio.use',
 };
+
+const DEFAULT_TOKEN_CEILING = 400_000;
+
+export function runTokenCeiling(
+  env: Record<string, string | undefined> = process.env
+): number {
+  const value = Number(env.STUDIO_RUN_TOKEN_CEILING);
+  return Number.isInteger(value) && value > 0 ? value : DEFAULT_TOKEN_CEILING;
+}
 
 /** Thrown by executors for failures a retry cannot fix (bad input, missing data). */
 export class NonRetryableRunError extends Error {

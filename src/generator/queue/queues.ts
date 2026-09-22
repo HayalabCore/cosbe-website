@@ -28,6 +28,10 @@ export const RUN_QUEUE_SETTINGS: QueueSettings = {
 export const WORKER_CONCURRENCY: Record<RunKind, number> = {
   system_check: 1,
   ingest: 2,
+  outline: 2,
+  write: 2,
+  rewrite_section: 2,
+  translate: 2,
 };
 
 /** Creates missing queues. Changing settings of an existing queue is a manual migration. */
