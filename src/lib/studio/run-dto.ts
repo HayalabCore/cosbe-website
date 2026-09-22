@@ -14,7 +14,8 @@ export function toRunStatusDTO(run: RunWithSteps): RunStatusDTO {
     steps: run.steps.map((step) => ({
       key: step.key,
       status: step.status,
-      output: step.output,
+      // Ingest and generation steps can hold source text. System check is a ping.
+      ...(run.kind === 'system_check' ? { output: step.output } : {}),
       error: step.error,
     })),
   };

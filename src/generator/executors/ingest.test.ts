@@ -36,6 +36,7 @@ function ctx(sourceId: string | null = 's1'): RunContext {
     signal: new AbortController().signal,
     step: vi.fn(async (_k, _o, fn) => fn()) as RunContext['step'],
     recordUsage: vi.fn(),
+    ensureBudget: vi.fn(),
   };
 }
 

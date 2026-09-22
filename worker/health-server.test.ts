@@ -27,6 +27,11 @@ describe('health server', () => {
     expect(await res.json()).toMatchObject({ ready: true });
   });
 
+  it('answers /healthz when the probe adds a query string', async () => {
+    const base = await listening({ ready: true, startedAt: new Date() });
+    expect((await fetch(`${base}/healthz?ready=1`)).status).toBe(200);
+  });
+
   it('answers 404 for other paths', async () => {
     const base = await listening({ ready: true, startedAt: new Date() });
     expect((await fetch(`${base}/`)).status).toBe(404);

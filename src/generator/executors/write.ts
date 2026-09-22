@@ -33,6 +33,7 @@ export async function chunksForSection(
       outputTokens: number;
     }) => Promise<void>;
     signal?: AbortSignal;
+    ensureBudget?: (estimatedTokens: number) => Promise<void>;
   }
 ): Promise<LoadedChunk[]> {
   const scope = await buildScope(piece);
@@ -61,6 +62,7 @@ export const writeExecutor: RunExecutor = async ({
   step,
   recordUsage,
   signal,
+  ensureBudget,
 }) => {
   let piece = await loadPiece(run.pieceId);
   const blocked = canStartWriting(piece);
@@ -79,11 +81,11 @@ export const writeExecutor: RunExecutor = async ({
     return { targets: targets.length };
   });
   const template = await loadTemplate(piece);
-  const usage = { onUsage: recordUsage, signal };
+  const usage = { onUsage: recordUsage, signal, ensureBudget };
 
   for (const [index, section] of targets.entries()) {
     if (await isRunCancelled(run.id)) {
-      return;
+      throw new NonRetryableRunError('The run was cancelled.');
     }
     await step(`section:${section.id}`, index + 1, async () => {
       piece = readPiece((await getPiece(piece.id))!);

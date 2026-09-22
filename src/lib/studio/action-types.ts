@@ -27,7 +27,7 @@ export type RunStatusDTO = {
   steps: Array<{
     key: string;
     status: string;
-    output: unknown;
+    output?: unknown;
     error: string | null;
   }>;
 };

@@ -5,7 +5,9 @@ import { actorHasPermission } from '../authz';
 import { runJobDataSchema } from '../queue/job-data';
 import {
   addRunUsage,
+  assertRunBudget,
   getRun,
+  isRunCancelled,
   markRunFailed,
   markRunStarted,
   markRunSucceeded,
@@ -32,6 +34,7 @@ export type RunContext = {
     fn: () => Promise<T>
   ): Promise<T>;
   recordUsage(usage: TokenUsage): Promise<void>;
+  ensureBudget(estimatedTokens: number): Promise<void>;
 };
 
 export type RunExecutor = (ctx: RunContext) => Promise<void>;
@@ -41,11 +44,15 @@ export type RunExecutors = Partial<Record<RunKind, RunExecutor>>;
  * One job = one run. Returning completes the job; throwing makes pg-boss retry
  * it (and dead-letter it after the last retry).
  */
+const CANCEL_POLL_MS = 200;
+
 export async function handleRunJob(
   job: Job<unknown>,
   executors: RunExecutors
 ): Promise<void> {
-  const { runId } = runJobDataSchema.parse(job.data);
+  const parsed = runJobDataSchema.safeParse(job.data);
+  if (!parsed.success) return;
+  const { runId } = parsed.data;
   const run = await getRun(runId);
   if (!run || isTerminalRunStatus(run.status)) return;
 
@@ -66,15 +73,27 @@ export async function handleRunJob(
   }
   if (!(await markRunStarted(runId))) return;
 
+  const cancellation = new AbortController();
+  const signal = AbortSignal.any([job.signal, cancellation.signal]);
+  const watch = setInterval(() => {
+    void isRunCancelled(runId)
+      .then((cancelled) => {
+        if (cancelled) cancellation.abort();
+      })
+      .catch(() => {});
+  }, CANCEL_POLL_MS);
+
   try {
     await executor({
       run,
-      signal: job.signal,
+      signal,
       step: (key, ordinal, fn) => runStep(runId, { key, ordinal }, fn),
       recordUsage: (usage) => addRunUsage(runId, usage),
+      ensureBudget: (estimated) => assertRunBudget(runId, estimated),
     });
     await markRunSucceeded(runId);
   } catch (error) {
+    if (cancellation.signal.aborted || (await isRunCancelled(runId))) return;
     if (
       error instanceof NonRetryableRunError ||
       error instanceof TokenCeilingExceededError
@@ -84,6 +103,8 @@ export async function handleRunJob(
     }
     await recordRunError(runId, errorMessage(error));
     throw error;
+  } finally {
+    clearInterval(watch);
   }
 }
 

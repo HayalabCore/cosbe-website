@@ -112,6 +112,14 @@ describe('pieces repository', () => {
     await updatePiece(piece.id, {
       title: 'before',
       stage: 'review',
+      selection: { sourceIds: ['source-a'], chapters: { 'source-a': [2, 1] } },
+      brief: {
+        goal: 'old goal',
+        audience: '',
+        keywords: [],
+        tone: '',
+        targetLength: 'auto',
+      },
       titleEn: 'Before',
       excerpt: 'old excerpt',
       excerptEn: 'Old excerpt',
@@ -126,6 +134,14 @@ describe('pieces repository', () => {
     await updatePiece(piece.id, {
       title: 'after',
       stage: 'ready',
+      selection: { sourceIds: ['source-b'], chapters: {} },
+      brief: {
+        goal: 'new goal',
+        audience: '',
+        keywords: [],
+        tone: '',
+        targetLength: 'auto',
+      },
       titleEn: 'After',
       excerpt: 'new excerpt',
       excerptEn: 'New excerpt',
@@ -151,6 +167,11 @@ describe('pieces repository', () => {
       },
     });
     expect(data.stage).toBe('review');
+    expect(data.selection).toEqual({
+      sourceIds: ['source-a'],
+      chapters: { 'source-a': [2, 1] },
+    });
+    expect(data.brief.goal).toBe('old goal');
     expect(data.sections[0].blocks[0]).toMatchObject({
       sentences: [{ text: 'old' }],
     });

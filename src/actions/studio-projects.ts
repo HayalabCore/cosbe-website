@@ -134,6 +134,8 @@ export async function linkSourceAction(
   const ctx = await requirePermission('studio.use');
   if (!id.safeParse(projectId).success || !id.safeParse(sourceId).success)
     return { ok: false, error: 'INVALID_INPUT' };
+  const project = await getProject(projectId);
+  if (!project || project.archivedAt) return { ok: false, error: 'NOT_FOUND' };
   await linkSource(projectId, sourceId, ctx.admin.id);
   return { ok: true, data: undefined };
 }

@@ -66,10 +66,14 @@ export async function markRunStarted(id: string): Promise<boolean> {
   return true;
 }
 
+/**
+ * Called only after the executor returns. A cancel that lands in that gap has
+ * already set `cancelled`; the finished work still counts as success.
+ */
 export async function markRunSucceeded(id: string): Promise<void> {
   await prisma.studioRun.updateMany({
-    where: { id, status: 'running' },
-    data: { status: 'succeeded', finishedAt: new Date() },
+    where: { id, status: { in: ['running', 'cancelled'] } },
+    data: { status: 'succeeded', error: null, finishedAt: new Date() },
   });
 }
 
@@ -135,10 +139,22 @@ async function cancelPieceRun(
     orderBy: { createdAt: 'asc' },
   });
   if (snapshot) {
-    await tx.studioPiece.updateMany({
-      where: { id: pieceId, stage: { in: ['writing', 'translating'] } },
-      data: { stage: snapshot.stage },
+    const piece = await tx.studioPiece.findUnique({
+      where: { id: pieceId },
+      select: { stage: true, sections: true },
     });
+    if (piece?.stage === 'writing' || piece?.stage === 'translating') {
+      const hasSections =
+        Array.isArray(piece.sections) && piece.sections.length > 0;
+      // A cancelled write that already saved sections stays reviewable.
+      // Rolling back to the pre-write stage would hide that text.
+      const stage =
+        piece.stage === 'writing' && hasSections ? 'review' : snapshot.stage;
+      await tx.studioPiece.update({
+        where: { id: pieceId },
+        data: { stage },
+      });
+    }
   }
   return true;
 }
@@ -165,6 +181,22 @@ export async function isRunCancelled(id: string): Promise<boolean> {
     select: { status: true },
   });
   return run?.status === 'cancelled';
+}
+
+/** Refuse a call whose estimate would pass the ceiling. Null ceilings are uncapped. */
+export async function assertRunBudget(
+  id: string,
+  estimatedTokens: number
+): Promise<void> {
+  const run = await prisma.studioRun.findUnique({
+    where: { id },
+    select: { tokensIn: true, tokensOut: true, tokenCeiling: true },
+  });
+  if (!run || run.tokenCeiling === null) return;
+  const projected = run.tokensIn + run.tokensOut + Math.max(0, estimatedTokens);
+  if (projected > run.tokenCeiling) {
+    throw new TokenCeilingExceededError(id, projected, run.tokenCeiling);
+  }
 }
 
 export async function addRunUsage(

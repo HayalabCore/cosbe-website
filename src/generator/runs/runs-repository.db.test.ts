@@ -11,6 +11,7 @@ import {
 import { prisma } from '@/lib/prisma';
 import {
   addRunUsage,
+  assertRunBudget,
   cancelRun,
   createRun,
   getRun,
@@ -155,6 +156,23 @@ describe('studio runs repository', () => {
     const after = await getRun(run.id);
     expect(after?.tokensIn).toBe(80);
     expect(after?.tokensOut).toBe(30);
+  });
+
+  it('records success when cancel lands after the work has finished', async () => {
+    const run = await newRun();
+    await markRunStarted(run.id);
+    expect(await cancelRun(run.id)).toBe(true);
+    await markRunSucceeded(run.id);
+    expect((await getRun(run.id))?.status).toBe('succeeded');
+  });
+
+  it('assertRunBudget refuses an estimate that would pass the ceiling', async () => {
+    const run = await newRun({ tokenCeiling: 100 });
+    await addRunUsage(run.id, { inputTokens: 90, outputTokens: 0 });
+    await expect(assertRunBudget(run.id, 20)).rejects.toBeInstanceOf(
+      TokenCeilingExceededError
+    );
+    await expect(assertRunBudget(run.id, 10)).resolves.toBeUndefined();
   });
 
   it('addRunUsage never throws without a ceiling', async () => {

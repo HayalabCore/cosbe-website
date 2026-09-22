@@ -188,7 +188,9 @@ model UserRole {
 }
 
 /// One unit of studio background work (system check, ingest, outline, write, ...).
-/// piece_id / source_id get foreign keys when those tables exist (P1b/P1c).
+/// One active run per piece is enforced in SQL by the partial unique index
+/// `studio_runs_one_active_piece` on (piece_id) WHERE piece_id IS NOT NULL
+/// AND status IN ('queued', 'running'). Prisma cannot model that predicate.
 model StudioRun {
   id           String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   kind         String
@@ -373,6 +375,10 @@ model StudioPieceSnapshot {
   excerpt   String?
   excerptEn String? @map("excerpt_en")
   seo       Json?
+  /// Null on snapshots taken before selection was stored; restore leaves the current selection.
+  selection Json?
+  /// Null on snapshots taken before brief was stored; restore leaves the current brief.
+  brief     Json?
   outline   Json
   gaps      Json
   sections  Json

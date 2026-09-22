@@ -72,7 +72,23 @@ describe('studio project actions', () => {
   });
 
   it('links a source', async () => {
+    vi.mocked(getProject).mockResolvedValue({
+      id: P,
+      archivedAt: null,
+    } as never);
     expect((await linkSourceAction(P, S)).ok).toBe(true);
     expect(linkSource).toHaveBeenCalledWith(P, S, TEST_USER.id);
+  });
+
+  it('does not link a source into an archived project', async () => {
+    vi.mocked(getProject).mockResolvedValue({
+      id: P,
+      archivedAt: new Date(),
+    } as never);
+    expect(await linkSourceAction(P, S)).toEqual({
+      ok: false,
+      error: 'NOT_FOUND',
+    });
+    expect(linkSource).not.toHaveBeenCalled();
   });
 });

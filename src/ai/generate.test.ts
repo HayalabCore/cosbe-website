@@ -43,6 +43,27 @@ describe('generateStructured', () => {
     expect(onUsage).toHaveBeenCalledWith({ inputTokens: 12, outputTokens: 5 });
   });
 
+  it('checks the budget before calling the model', async () => {
+    const model = textModel(JSON.stringify({ title: 'T', sections: [] }));
+    const ensureBudget = vi.fn(async () => {
+      throw new Error('over budget');
+    });
+    await expect(
+      generateStructured(
+        'outline',
+        {
+          schema: outlineSchema,
+          schemaName: 'outline',
+          instructions: 'Plan.',
+          prompt: 'Sources',
+        },
+        { model, ensureBudget }
+      )
+    ).rejects.toThrow('over budget');
+    expect(ensureBudget).toHaveBeenCalledWith(expect.any(Number));
+    expect(model.doGenerateCalls).toHaveLength(0);
+  });
+
   it('rejects output that does not match the schema', async () => {
     await expect(
       generateStructured(
@@ -116,6 +137,23 @@ describe('embedTexts', () => {
     await expect(embedTexts(['a'], { model })).rejects.toThrow(
       `expected ${EMBEDDING_DIMENSIONS}`
     );
+  });
+
+  it('checks the budget before embedding', async () => {
+    const model = new MockEmbeddingModelV4({
+      doEmbed: {
+        embeddings: [vector(0.1)],
+        usage: { tokens: 1 },
+        warnings: [],
+      },
+    });
+    const ensureBudget = vi.fn(async () => {
+      throw new Error('over budget');
+    });
+    await expect(
+      embedTexts(['hello'], { model, ensureBudget })
+    ).rejects.toThrow('over budget');
+    expect(model.doEmbedCalls).toHaveLength(0);
   });
 
   it('returns [] without calling the model for no input', async () => {

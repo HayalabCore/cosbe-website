@@ -13,6 +13,9 @@ vi.mock('next/cache', () => ({
 vi.mock('@/lib/studio/web-boss', () => ({
   getWebBoss: vi.fn(async () => ({})),
 }));
+vi.mock('@/generator/sources/projects-repository', () => ({
+  listProjectSources: vi.fn(async () => [{ id: 's1', status: 'ready' }]),
+}));
 vi.mock('@/generator/queue/enqueue', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/generator/queue/enqueue')>()),
   createAndEnqueueRun: vi.fn(async () => ({ id: 'run1' })),
@@ -55,6 +58,7 @@ vi.mock('@/lib/prisma', () => ({
 }));
 
 import { prisma } from '@/lib/prisma';
+import { listProjectSources } from '@/generator/sources/projects-repository';
 import { createAndEnqueueRun } from '@/generator/queue/enqueue';
 import { createArticleRecord } from '@/lib/articles';
 import {
@@ -159,6 +163,44 @@ describe('piece actions', () => {
       ok: false,
       error: 'BUSY',
     });
+  });
+
+  it('waits for a selected source to be ready', async () => {
+    vi.mocked(listProjectSources).mockResolvedValueOnce([
+      { id: 's1', status: 'pending' },
+    ] as never);
+    expect(await startRunAction(ID, 'outline')).toMatchObject({
+      ok: false,
+      error: 'BLOCKED',
+      reason: expect.stringMatching(/processing/i),
+    });
+  });
+
+  it('rejects a brief that is too long', async () => {
+    expect(
+      await updatePieceSetupAction(ID, {
+        brief: {
+          goal: 'x'.repeat(4001),
+          audience: '',
+          keywords: [],
+          tone: '',
+          targetLength: 'auto',
+        },
+      })
+    ).toEqual({ ok: false, error: 'INVALID_INPUT' });
+  });
+
+  it('rejects a source that is not linked to the project', async () => {
+    vi.mocked(listProjectSources).mockResolvedValueOnce([]);
+    expect(
+      await updatePieceSetupAction(ID, {
+        selection: {
+          sourceIds: ['6f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e'],
+          chapters: {},
+        },
+      })
+    ).toEqual({ ok: false, error: 'INVALID_INPUT' });
+    expect(updatePiece).not.toHaveBeenCalled();
   });
 
   it('reports why a stage rule blocks the run', async () => {

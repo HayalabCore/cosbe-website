@@ -21,7 +21,7 @@ describe('translateSection', () => {
     expect(en.blocks.map((b) => b.type)).toEqual(['paragraph', 'list']);
   });
 
-  it('throws when the structure does not match (the run step retries)', async () => {
+  it('fails the run without retrying when the structure does not match', async () => {
     await expect(
       translateSection(section, { model: jsonModel([{ heading: 'x', blocks: [{ type: 'paragraph', text: 'only one' }] }]) })
     ).rejects.toThrow('structure');

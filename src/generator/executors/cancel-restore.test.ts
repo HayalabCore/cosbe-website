@@ -85,6 +85,7 @@ function ctx(runOverrides: Record<string, unknown> = {}): RunContext {
     signal: new AbortController().signal,
     step: vi.fn(async (_k, _o, fn) => fn()) as RunContext['step'],
     recordUsage: vi.fn(),
+    ensureBudget: vi.fn(),
   };
 }
 
@@ -96,7 +97,7 @@ describe('cancelled executors stop without restoring a stale stage', () => {
       basePiece({ stage: 'outline' }) as never
     );
     vi.mocked(isRunCancelled).mockResolvedValue(true);
-    await writeExecutor(ctx());
+    await expect(writeExecutor(ctx())).rejects.toThrow(/cancelled/i);
     expect(setStage).toHaveBeenCalledExactlyOnceWith('p1', 'writing', 'r1');
   });
 
@@ -122,7 +123,7 @@ describe('cancelled executors stop without restoring a stale stage', () => {
       }) as never
     );
     vi.mocked(isRunCancelled).mockResolvedValue(true);
-    await translateExecutor(ctx());
+    await expect(translateExecutor(ctx())).rejects.toThrow(/cancelled/i);
     expect(setStage).toHaveBeenCalledExactlyOnceWith('p1', 'translating', 'r1');
   });
 });

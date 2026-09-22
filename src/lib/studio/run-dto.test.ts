@@ -41,4 +41,29 @@ describe('toRunStatusDTO', () => {
       ],
     });
   });
+
+  it('omits step output for runs that can store source text', () => {
+    const run = {
+      id: 'r1',
+      kind: 'ingest',
+      status: 'succeeded',
+      error: null,
+      createdAt: new Date('2026-09-22T00:00:00Z'),
+      startedAt: null,
+      finishedAt: null,
+      steps: [
+        {
+          key: 'extract',
+          status: 'succeeded',
+          output: { text: 'full source' },
+          error: null,
+        },
+      ],
+    } as unknown as RunWithSteps;
+    expect(toRunStatusDTO(run).steps[0]).toEqual({
+      key: 'extract',
+      status: 'succeeded',
+      error: null,
+    });
+  });
 });

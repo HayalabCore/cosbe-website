@@ -30,9 +30,26 @@ const projectId = z.uuid().optional();
 
 const QUEUE_FAILED = 'Could not queue processing.';
 
-/** Links the new source, then queues ingest; a source is never left pending without a job. */
+/** A missing or archived project must not receive a new source. */
+async function projectIsOpen(projectId: string): Promise<boolean> {
+  const project = await prisma.studioProject.findUnique({
+    where: { id: projectId },
+    select: { archivedAt: true },
+  });
+  return Boolean(project && !project.archivedAt);
+}
+
+/**
+ * Links the new source, then queues ingest. A failed link deletes the row.
+ * A failed enqueue marks it failed so it is never left pending without a job.
+ */
 async function afterCreate(sourceId: string, userId: string, project?: string) {
-  if (project) await linkSource(project, sourceId, userId);
+  try {
+    if (project) await linkSource(project, sourceId, userId);
+  } catch (error) {
+    await deleteSource(sourceId);
+    throw error;
+  }
   try {
     await enqueueIngest(await getWebBoss(), sourceId, userId);
   } catch (error) {
@@ -63,6 +80,9 @@ export async function createTextSourceAction(input: {
     })
     .safeParse(input);
   if (!parsed.success) return { ok: false, error: 'INVALID_INPUT' };
+  if (parsed.data.projectId && !(await projectIsOpen(parsed.data.projectId))) {
+    return { ok: false, error: 'NOT_FOUND' };
+  }
   try {
     const source = await createSource({
       kind: 'text',
@@ -90,6 +110,9 @@ export async function createArticleSourceAction(input: {
     select: { id: true, title: true },
   });
   if (!article) return { ok: false, error: 'NOT_FOUND' };
+  if (parsed.data.projectId && !(await projectIsOpen(parsed.data.projectId))) {
+    return { ok: false, error: 'NOT_FOUND' };
+  }
   try {
     const source = await createSource({
       kind: 'article',
@@ -145,6 +168,9 @@ export async function startPdfUploadAction(input: {
   if (!parsed.success) return { ok: false, error: 'INVALID_INPUT' };
   if (parsed.data.size > MAX_PDF_BYTES)
     return { ok: false, error: 'TOO_LARGE' };
+  if (parsed.data.projectId && !(await projectIsOpen(parsed.data.projectId))) {
+    return { ok: false, error: 'NOT_FOUND' };
+  }
   let sourceId: string | null = null;
   try {
     const source = await createSource({

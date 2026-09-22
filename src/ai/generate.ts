@@ -17,9 +17,13 @@ import {
 export type TokenUsage = { inputTokens: number; outputTokens: number };
 export type UsageSink = (usage: TokenUsage) => Promise<void> | void;
 
+export type BudgetCheck = (estimatedTokens: number) => Promise<void>;
+
 export type AiCallOptions = {
   onUsage?: UsageSink;
   signal?: AbortSignal;
+  /** Refuse the call when the run cannot afford this estimate. */
+  ensureBudget?: BudgetCheck;
   /** Tests inject a mock model; production resolves it from the task. */
   model?: LanguageModel;
 };
@@ -27,11 +31,24 @@ export type AiCallOptions = {
 export type EmbedOptions = {
   onUsage?: UsageSink;
   signal?: AbortSignal;
+  ensureBudget?: BudgetCheck;
   model?: EmbeddingModel;
 };
 
 const MAX_RETRIES = 2;
 const TIMEOUT_MS = 120_000;
+const OUTPUT_RESERVE = 4_096;
+
+function estimateTokens(text: string): number {
+  return Math.ceil(text.length / 4) + OUTPUT_RESERVE;
+}
+
+async function guardBudget(
+  ensureBudget: BudgetCheck | undefined,
+  text: string
+): Promise<void> {
+  if (ensureBudget) await ensureBudget(estimateTokens(text));
+}
 
 async function reportUsage(
   sink: UsageSink | undefined,
@@ -55,6 +72,10 @@ export async function generateStructured<T>(
   },
   options: AiCallOptions = {}
 ): Promise<T> {
+  await guardBudget(
+    options.ensureBudget,
+    `${request.instructions}\n${request.prompt}`
+  );
   const result = await generateText({
     model: options.model ?? languageModelForTask(task),
     instructions: request.instructions,
@@ -73,6 +94,10 @@ export async function generatePlainText(
   request: { instructions: string; prompt: string },
   options: AiCallOptions = {}
 ): Promise<string> {
+  await guardBudget(
+    options.ensureBudget,
+    `${request.instructions}\n${request.prompt}`
+  );
   const result = await generateText({
     model: options.model ?? languageModelForTask(task),
     instructions: request.instructions,
@@ -90,11 +115,15 @@ export async function embedTexts(
   options: EmbedOptions = {}
 ): Promise<number[][]> {
   if (values.length === 0) return [];
+  await guardBudget(options.ensureBudget, values.join('\n'));
+  const timeout = AbortSignal.timeout(TIMEOUT_MS);
   const result = await embedMany({
     model: options.model ?? embeddingModel(),
     values,
     maxRetries: MAX_RETRIES,
-    abortSignal: options.signal,
+    abortSignal: options.signal
+      ? AbortSignal.any([options.signal, timeout])
+      : timeout,
   });
   for (const embedding of result.embeddings) {
     if (embedding.length !== EMBEDDING_DIMENSIONS) {

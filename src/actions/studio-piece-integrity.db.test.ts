@@ -34,12 +34,16 @@ import { prisma } from '@/lib/prisma';
 import {
   cancelRunAction,
   createDraftPostAction,
+  undoAction,
   updatePieceSetupAction,
 } from '@/actions/studio-pieces';
 import { createRun } from '@/generator/runs/runs-repository';
+import { linkSource } from '@/generator/sources/projects-repository';
+import { createSource } from '@/generator/sources/sources-repository';
 import {
   createPiece,
   getPiece,
+  listSnapshots,
   readPiece,
   updatePiece,
   saveSection,
@@ -200,7 +204,25 @@ it('rolls article insertion back if handoff fails before recording the article I
   expect(await createDraftPostAction(p.id)).toMatchObject({ ok: true });
 });
 
-it('invalidates generated content when the source selection changes', async () => {
+it('rejects a source that is not linked to the project', async () => {
+  const p = await piece();
+  expect(
+    await updatePieceSetupAction(p.id, {
+      selection: { sourceIds: [randomUUID()], chapters: {} },
+    })
+  ).toEqual({ ok: false, error: 'INVALID_INPUT' });
+  expect(readPiece((await getPiece(p.id))!).sections).toHaveLength(1);
+});
+
+it('invalidates generated content when the source selection changes and undo puts it back', async () => {
+  const source = await createSource({
+    kind: 'text',
+    title: 'linked',
+    text: '本文。',
+    createdById: adminId,
+    status: 'ready',
+  });
+  await linkSource(projectId, source.id, adminId);
   const p = await piece();
   await updatePiece(p.id, {
     outline: [
@@ -215,9 +237,10 @@ it('invalidates generated content when the source selection changes', async () =
       },
     ],
   });
+  const before = readPiece((await getPiece(p.id))!);
   expect(
     await updatePieceSetupAction(p.id, {
-      selection: { sourceIds: [randomUUID()], chapters: {} },
+      selection: { sourceIds: [source.id], chapters: {} },
     })
   ).toMatchObject({ ok: true });
   expect(readPiece((await getPiece(p.id))!)).toMatchObject({
@@ -229,4 +252,64 @@ it('invalidates generated content when the source selection changes', async () =
     seo: null,
     outline: [{ stale: true }],
   });
+  const change = (await listSnapshots(p.id)).find(
+    (row) => row.reason === 'change sources'
+  );
+  expect(await undoAction(p.id, change!.id)).toMatchObject({ ok: true });
+  const restored = readPiece((await getPiece(p.id))!);
+  expect(restored.selection).toEqual(before.selection);
+  expect(restored.sections).toEqual(before.sections);
+  expect(restored.stage).toBe(before.stage);
+});
+
+it('keeps written sections reviewable when a write is cancelled', async () => {
+  const p = await piece();
+  await updatePiece(p.id, { stage: 'outline', sections: [] });
+  const run = await createRun(prisma, {
+    kind: 'write',
+    createdById: adminId,
+    pieceId: p.id,
+  });
+  await takeSnapshot(p.id, 'write', run.id);
+  await updatePiece(
+    p.id,
+    {
+      stage: 'writing',
+      sections: [
+        {
+          outlineId: 'o',
+          heading: 'Kept',
+          blocks: [
+            {
+              type: 'paragraph',
+              sentences: [{ text: 'Saved.', cite: [], connective: true }],
+            },
+          ],
+          flags: [],
+          en: null,
+          enStale: false,
+        },
+      ],
+    },
+    run.id
+  );
+  await cancelRunAction(p.id);
+  expect(readPiece((await getPiece(p.id))!)).toMatchObject({
+    stage: 'review',
+    sections: [{ heading: 'Kept' }],
+  });
+});
+
+it('returns a cancelled write with no sections to the snapshotted stage', async () => {
+  const p = await piece();
+  await updatePiece(p.id, { stage: 'outline', sections: [] });
+  const run = await createRun(prisma, {
+    kind: 'write',
+    createdById: adminId,
+    pieceId: p.id,
+  });
+  await takeSnapshot(p.id, 'write', run.id);
+  await updatePiece(p.id, { stage: 'writing', sections: [] }, run.id);
+  await cancelRunAction(p.id);
+  expect(readPiece((await getPiece(p.id))!).stage).toBe('outline');
 });

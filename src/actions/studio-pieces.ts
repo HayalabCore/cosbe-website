@@ -42,10 +42,12 @@ import {
   type PieceData,
 } from '@/generator/pieces/pieces-repository';
 import {
-  briefSchema,
-  selectionSchema,
+  briefInputSchema,
+  sameSelection,
+  selectionInputSchema,
   type OutlineSection,
   type PieceStage,
+  type Selection,
 } from '@/generator/pieces/piece-types';
 import {
   canHandOff,
@@ -187,12 +189,22 @@ export async function getPieceAction(
 }
 
 const setupSchema = z.object({
-  selection: selectionSchema.optional(),
-  brief: briefSchema.optional(),
+  selection: selectionInputSchema.optional(),
+  brief: briefInputSchema.optional(),
   templateId: z.uuid().nullable().optional(),
   category: z.enum(ARTICLE_CREATE_CATEGORIES).optional(),
   authorId: z.uuid().nullable().optional(),
 });
+
+async function selectionInProject(
+  projectId: string,
+  selection: Selection
+): Promise<boolean> {
+  const linked = new Set(
+    (await listProjectSources(projectId)).map((source) => source.id)
+  );
+  return selection.sourceIds.every((id) => linked.has(id));
+}
 
 export async function updatePieceSetupAction(
   id: string,
@@ -209,9 +221,15 @@ export async function updatePieceSetupAction(
     if (parsed.data.selection && (stage === 'sources' || stage === 'brief')) {
       stage = parsed.data.selection.sourceIds.length > 0 ? 'brief' : 'sources';
     }
+    if (
+      parsed.data.selection &&
+      !(await selectionInProject(piece.projectId, parsed.data.selection))
+    ) {
+      return { ok: false, error: 'INVALID_INPUT' };
+    }
     const scopeChanged =
       parsed.data.selection &&
-      JSON.stringify(parsed.data.selection) !== JSON.stringify(piece.selection);
+      !sameSelection(parsed.data.selection, piece.selection);
     if (scopeChanged) {
       await takeSnapshot(id, 'change sources', undefined, tx);
       stage =
@@ -257,7 +275,10 @@ export async function startRunAction(
   const ctx = await requirePermission('studio.use');
   const piece = await loadEditable(id);
   if (isFail(piece)) return piece;
-  const blocked = RULES[kind](piece as never);
+  const blocked =
+    kind === 'outline'
+      ? canStartOutline(piece, await listProjectSources(piece.projectId))
+      : RULES[kind](piece as never);
   if (blocked) return { ok: false, error: 'BLOCKED', reason: blocked };
   return enqueue(piece, ctx.admin.id, kind);
 }
@@ -388,9 +409,7 @@ export async function cancelRunAction(
   return { ok: true, data: undefined };
 }
 
-export async function getChunksAction(
-  ids: string[]
-): Promise<
+export async function getChunksAction(ids: string[]): Promise<
   StudioResult<
     Array<{
       id: string;

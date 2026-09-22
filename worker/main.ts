@@ -58,11 +58,19 @@ async function main(): Promise<void> {
     console.log(`[studio-worker] ${signal}: finishing active jobs`);
     await boss.stop({ graceful: true, timeout: SHUTDOWN_TIMEOUT_MS });
     await prisma.$disconnect();
-    server.close();
+    await new Promise<void>((resolve, reject) => {
+      server.close((error) => (error ? reject(error) : resolve()));
+    });
     process.exit(0);
   };
-  process.on('SIGTERM', () => void shutdown('SIGTERM'));
-  process.on('SIGINT', () => void shutdown('SIGINT'));
+  const onStop = (signal: string) => {
+    void shutdown(signal).catch((error) => {
+      console.error('[studio-worker] shutdown', error);
+      process.exit(1);
+    });
+  };
+  process.on('SIGTERM', () => onStop('SIGTERM'));
+  process.on('SIGINT', () => onStop('SIGINT'));
 }
 
 main().catch((error) => {

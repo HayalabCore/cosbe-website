@@ -37,6 +37,9 @@ vi.mock('@/lib/prisma', () => ({
   prisma: {
     article: { findUnique: vi.fn(), findMany: vi.fn(async () => []) },
     studioSource: { update: vi.fn() },
+    studioProject: {
+      findUnique: vi.fn(async () => ({ id: PROJECT, archivedAt: null })),
+    },
   },
 }));
 
@@ -102,6 +105,33 @@ describe('studio source actions', () => {
       's1',
       TEST_USER.id
     );
+  });
+
+  it('does not create a source for a missing project', async () => {
+    vi.mocked(prisma.studioProject.findUnique).mockResolvedValueOnce(null);
+    expect(
+      await createTextSourceAction({
+        title: 't',
+        text: 'x',
+        projectId: PROJECT,
+      })
+    ).toEqual({ ok: false, error: 'NOT_FOUND' });
+    expect(createSource).not.toHaveBeenCalled();
+    expect(enqueueIngest).not.toHaveBeenCalled();
+  });
+
+  it('deletes the source when linking fails', async () => {
+    vi.mocked(linkSource).mockRejectedValueOnce(new Error('missing project'));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(
+      await createTextSourceAction({
+        title: 't',
+        text: 'x',
+        projectId: PROJECT,
+      })
+    ).toEqual({ ok: false, error: 'FAILED' });
+    expect(deleteSource).toHaveBeenCalledWith('s1');
+    expect(enqueueIngest).not.toHaveBeenCalled();
   });
 
   it('rejects empty text', async () => {
