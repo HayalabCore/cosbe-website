@@ -81,10 +81,12 @@ export async function searchSources(input: {
   limit?: number;
   onUsage?: UsageSink;
   signal?: AbortSignal;
+  ensureBudget?: (estimatedTokens: number) => Promise<void>;
 }): Promise<RetrievedChunk[]> {
   const [queryEmbedding] = await embedTexts([input.query], {
     onUsage: input.onUsage,
     signal: input.signal,
+    ensureBudget: input.ensureBudget,
   });
   return searchChunks({ ...input, queryEmbedding });
 }

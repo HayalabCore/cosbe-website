@@ -11,6 +11,7 @@ export const outlineExecutor: RunExecutor = async ({
   step,
   recordUsage,
   signal,
+  ensureBudget,
 }) => {
   const piece = await loadPiece(run.pieceId);
   const blocked = canStartOutline(piece);
@@ -22,7 +23,7 @@ export const outlineExecutor: RunExecutor = async ({
     const material = await loadOutlineMaterial(scope);
     const result = await planOutline(
       { brief: piece.brief, template: await loadTemplate(piece), material },
-      { onUsage: recordUsage, signal }
+      { onUsage: recordUsage, signal, ensureBudget }
     );
     await takeSnapshot(piece.id, 'outline', run.id);
     await updatePiece(

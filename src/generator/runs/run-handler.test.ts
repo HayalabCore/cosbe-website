@@ -9,6 +9,8 @@ vi.mock('./runs-repository', () => ({
   recordRunError: vi.fn(),
   runStep: vi.fn(),
   addRunUsage: vi.fn(),
+  assertRunBudget: vi.fn(),
+  isRunCancelled: vi.fn(async () => false),
   TokenCeilingExceededError: class TokenCeilingExceededError extends Error {},
 }));
 vi.mock('../authz', () => ({ actorHasPermission: vi.fn() }));
@@ -16,6 +18,7 @@ vi.mock('../authz', () => ({ actorHasPermission: vi.fn() }));
 import { actorHasPermission } from '../authz';
 import {
   addRunUsage,
+  isRunCancelled,
   getRun,
   markRunFailed,
   markRunStarted,
@@ -66,13 +69,14 @@ describe('handleRunJob', () => {
     vi.mocked(getRun).mockResolvedValue(run());
     vi.mocked(actorHasPermission).mockResolvedValue(true);
     vi.mocked(markRunStarted).mockResolvedValue(true);
+    vi.mocked(isRunCancelled).mockResolvedValue(false);
     executor.mockResolvedValue(undefined);
   });
 
-  it('rejects malformed job data', async () => {
-    await expect(
-      handleRunJob(job({ nope: 1 }), { system_check: executor })
-    ).rejects.toThrow();
+  it('drops malformed job data without retrying', async () => {
+    await handleRunJob(job({ nope: 1 }), { system_check: executor });
+    expect(executor).not.toHaveBeenCalled();
+    expect(markRunFailed).not.toHaveBeenCalled();
   });
 
   it('does nothing when the run no longer exists', async () => {
@@ -155,6 +159,23 @@ describe('handleRunJob', () => {
     executor.mockRejectedValue(error);
     await handleRunJob(job(), { system_check: executor });
     expect(markRunFailed).toHaveBeenCalledWith(RUN_ID, error.message);
+  });
+
+  it('aborts an in-flight executor when the run is cancelled and does not retry', async () => {
+    vi.mocked(isRunCancelled).mockResolvedValue(true);
+    executor.mockImplementation(async (ctx) => {
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(resolve, 5_000);
+        ctx.signal.addEventListener('abort', () => {
+          clearTimeout(timer);
+          reject(new Error('aborted'));
+        });
+      });
+    });
+    await handleRunJob(job(), { system_check: executor });
+    expect(markRunSucceeded).not.toHaveBeenCalled();
+    expect(markRunFailed).not.toHaveBeenCalled();
+    expect(recordRunError).not.toHaveBeenCalled();
   });
 
   it('records other errors and rethrows so pg-boss retries', async () => {

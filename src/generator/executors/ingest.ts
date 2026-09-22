@@ -52,6 +52,7 @@ export const ingestExecutor: RunExecutor = async ({
   step,
   recordUsage,
   signal,
+  ensureBudget,
 }) => {
   if (!run.sourceId)
     throw new NonRetryableRunError('Ingest run has no source.');
@@ -67,24 +68,31 @@ export const ingestExecutor: RunExecutor = async ({
   }
 
   await setSourceStatus(source.id, 'processing');
-  const extracted = await step('extract', 0, async () => {
-    const { text, segments } = await extract(source);
+  await step('extract', 0, async () => {
+    const { text } = await extract(source);
     if (!text.trim()) return fail(source.id, 'The source has no text.');
     await setSourceText(source.id, {
       text,
       language: detectLanguage(text),
       contentHash: contentHash(text),
     });
-    return { text, segments };
+    return { charCount: text.length };
   });
 
-  const chunks = chunkSegments(extracted.segments);
+  const stored = await getSource(source.id);
+  if (!stored) throw new NonRetryableRunError('The source no longer exists.');
+  const { segments } = await extract(stored);
+  const chunks = chunkSegments(segments);
   await step('chunk-embed', 1, async () => {
     const vectors: number[][] = [];
     for (let i = 0; i < chunks.length; i += EMBED_BATCH) {
       const batch = chunks.slice(i, i + EMBED_BATCH).map((c) => c.text);
       vectors.push(
-        ...(await embedTexts(batch, { onUsage: recordUsage, signal }))
+        ...(await embedTexts(batch, {
+          onUsage: recordUsage,
+          signal,
+          ensureBudget,
+        }))
       );
     }
     await replaceChunks(
@@ -102,7 +110,7 @@ export const ingestExecutor: RunExecutor = async ({
         text: c.text,
         label: String(c.locator.chapter ?? c.locator.blockId ?? 'all'),
       })),
-      { onUsage: recordUsage, signal }
+      { onUsage: recordUsage, signal, ensureBudget }
     );
     const meta: SourceMeta = { ...(source.meta as SourceMeta), digest };
     await setSourceMeta(source.id, meta);

@@ -17,6 +17,7 @@ export const rewriteSectionExecutor: RunExecutor = async ({
   step,
   recordUsage,
   signal,
+  ensureBudget,
 }) => {
   const piece = await loadPiece(run.pieceId);
   const input = parseRunInput(inputSchema, run.input ?? {});
@@ -24,7 +25,7 @@ export const rewriteSectionExecutor: RunExecutor = async ({
   const current = piece.sections.find((s) => s.outlineId === input.sectionId);
   if (!section || !current)
     throw new NonRetryableRunError('That section does not exist.');
-  const usage = { onUsage: recordUsage, signal };
+  const usage = { onUsage: recordUsage, signal, ensureBudget };
   await step('rewrite', 0, async () => {
     await takeSnapshot(piece.id, `rewrite:${section.heading}`, run.id);
     const position = piece.outline.findIndex((o) => o.id === section.id);

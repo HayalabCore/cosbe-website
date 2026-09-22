@@ -18,11 +18,12 @@ export const translateExecutor: RunExecutor = async ({
   step,
   recordUsage,
   signal,
+  ensureBudget,
 }) => {
   const piece = await loadPiece(run.pieceId);
   const blocked = canTranslate(piece);
   if (blocked) throw new NonRetryableRunError(blocked);
-  const usage = { onUsage: recordUsage, signal };
+  const usage = { onUsage: recordUsage, signal, ensureBudget };
   await step('prepare', 0, async () => {
     await takeSnapshot(piece.id, 'translate', run.id);
     await setStage(piece.id, 'translating', run.id);
@@ -31,7 +32,7 @@ export const translateExecutor: RunExecutor = async ({
   const targets = piece.sections.filter((s) => s.en === null || s.enStale);
   for (const [index, section] of targets.entries()) {
     if (await isRunCancelled(run.id)) {
-      return;
+      throw new NonRetryableRunError('The run was cancelled.');
     }
     await step(`section:${section.outlineId}`, index + 1, async () => {
       const en = await translateSection(section, usage);

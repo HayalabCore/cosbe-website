@@ -6,6 +6,7 @@ const envSchema = z.object({
   /** Session pooler (:5432). pg-boss needs a session-mode connection. */
   DIRECT_URL: z.string().min(1),
   PORT: z.coerce.number().int().positive().default(8080),
+  OPENAI_API_KEY: z.string().min(1),
 });
 
 export type WorkerEnv = z.infer<typeof envSchema>;

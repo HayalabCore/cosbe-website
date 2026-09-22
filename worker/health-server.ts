@@ -5,7 +5,8 @@ export type HealthState = { ready: boolean; startedAt: Date };
 /** Cloud Run services must listen on $PORT; this is all the worker serves. */
 export function startHealthServer(port: number, state: HealthState): Server {
   const server = createServer((req, res) => {
-    if (req.url === '/healthz') {
+    const path = req.url ? new URL(req.url, 'http://localhost').pathname : '';
+    if (path === '/healthz') {
       res.writeHead(state.ready ? 200 : 503, {
         'content-type': 'application/json',
       });
