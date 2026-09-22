@@ -11,6 +11,6 @@ export async function actorHasPermission(
 ): Promise<boolean> {
   if (!userId) return false;
   const user = await findAdminUserWithRoles(userId);
-  if (!user || user.disabled) return false;
+  if (!user || user.disabled || user.mustChangePassword) return false;
   return resolvePermissions(rolesOf(user)).permissions.has(permission);
 }

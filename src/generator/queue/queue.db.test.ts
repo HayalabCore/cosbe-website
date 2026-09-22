@@ -8,6 +8,8 @@ import {
   createRunHandler,
   type RunExecutors,
 } from '../runs/run-handler';
+import { createPiece, updatePiece } from '../pieces/pieces-repository';
+import { cancelRun } from '../runs/runs-repository';
 import { getRun } from '../runs/runs-repository';
 import { RUN_KINDS } from '../runs/run-types';
 import { createAndEnqueueRun } from './enqueue';
@@ -57,7 +59,7 @@ beforeAll(async () => {
   for (const name of [...RUN_KINDS.map(queueForKind), DEAD_LETTER_QUEUE]) {
     if (await workerBoss.getQueue(name)) await workerBoss.deleteQueue(name);
   }
-  await ensureQueues(workerBoss, ['system_check'], {
+  await ensureQueues(workerBoss, ['system_check', 'outline', 'write'], {
     ...RUN_QUEUE_SETTINGS,
     retryLimit: 0,
     retryBackoff: false,
@@ -101,6 +103,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await workerBoss?.stop({ graceful: false });
   await webBoss?.stop({ graceful: false });
+  await prisma.studioProject.deleteMany({ where: { createdById: allowedId } });
   await prisma.studioRun.deleteMany({
     where: { createdById: { in: [allowedId, deniedId] } },
   });
@@ -139,6 +142,29 @@ describe('studio queue end to end', () => {
     expect(done.error).toBe('boom');
   }, 20_000);
 
+  it('rejects queued work after a forced password reset', async () => {
+    await work(RUN_EXECUTORS);
+    await prisma.adminUser.update({
+      where: { id: allowedId },
+      data: { mustChangePassword: true },
+    });
+    try {
+      const run = await createAndEnqueueRun(webBoss, {
+        kind: 'system_check',
+        createdById: allowedId,
+      });
+      const done = await waitForRun(run.id, ['failed', 'succeeded']);
+      expect(done.status).toBe('failed');
+      expect(done.error).toBe('FORBIDDEN');
+      expect(done.steps).toHaveLength(0);
+    } finally {
+      await prisma.adminUser.update({
+        where: { id: allowedId },
+        data: { mustChangePassword: false },
+      });
+    }
+  }, 20_000);
+
   it('fails runs whose creator lacks studio.use', async () => {
     await work(RUN_EXECUTORS);
     const run = await createAndEnqueueRun(webBoss, {
@@ -150,4 +176,48 @@ describe('studio queue end to end', () => {
     expect(done.error).toBe('FORBIDDEN');
     expect(done.steps).toHaveLength(0);
   }, 20_000);
+});
+
+it('serializes competing kinds and permits a replacement after cancellation', async () => {
+  const project = await prisma.studioProject.create({
+    data: { name: 'race', createdById: allowedId },
+  });
+  const piece = await createPiece({
+    projectId: project.id,
+    createdById: allowedId,
+    templateId: null,
+    category: 'notice',
+  });
+  const results = await Promise.allSettled(
+    (['outline', 'write'] as const).map((kind) =>
+      createAndEnqueueRun(webBoss, {
+        kind,
+        pieceId: piece.id,
+        createdById: allowedId,
+      })
+    )
+  );
+  const accepted = results.filter((r) => r.status === 'fulfilled');
+  expect(accepted).toHaveLength(1);
+  expect(results.find((r) => r.status === 'rejected')).toMatchObject({
+    reason: { reason: 'BUSY' },
+  });
+  const first = accepted[0];
+  if (first.status !== 'fulfilled') throw new Error('missing accepted run');
+  await cancelRun(first.value.id);
+  const replacement = await createAndEnqueueRun(webBoss, {
+    kind: first.value.kind as 'outline' | 'write',
+    pieceId: piece.id,
+    createdById: allowedId,
+  });
+  expect(replacement.id).not.toBe(first.value.id);
+  await cancelRun(replacement.id);
+  await updatePiece(piece.id, { stage: 'handed_off' });
+  await expect(
+    createAndEnqueueRun(webBoss, {
+      kind: 'write',
+      pieceId: piece.id,
+      createdById: allowedId,
+    })
+  ).rejects.toMatchObject({ reason: 'LOCKED' });
 });

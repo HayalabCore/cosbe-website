@@ -28,13 +28,16 @@ export async function chunksForSection(
   piece: Pick<PieceData, 'projectId' | 'selection'>,
   section: OutlineSection,
   options: {
-    onUsage?: (u: { inputTokens: number; outputTokens: number }) => Promise<void>;
+    onUsage?: (u: {
+      inputTokens: number;
+      outputTokens: number;
+    }) => Promise<void>;
     signal?: AbortSignal;
   }
 ): Promise<LoadedChunk[]> {
-  const planned = await getChunks(section.chunkIds);
-  if (section.kind === 'boilerplate') return planned;
   const scope = await buildScope(piece);
+  const planned = await getChunks(section.chunkIds, scope);
+  if (section.kind === 'boilerplate') return planned;
   const extra = await searchSources({
     scope,
     query: `${section.heading} ${section.intent}`,
@@ -42,7 +45,10 @@ export async function chunksForSection(
     ...options,
   });
   const seen = new Set(planned.map((c) => c.id));
-  const more = await getChunks(extra.map((e) => e.id).filter((id) => !seen.has(id)));
+  const more = await getChunks(
+    extra.map((e) => e.id).filter((id) => !seen.has(id)),
+    scope
+  );
   return [...planned, ...more].slice(0, MAX_CHUNKS);
 }
 
@@ -50,20 +56,26 @@ function tail(text: string): string {
   return text.slice(-200);
 }
 
-export const writeExecutor: RunExecutor = async ({ run, step, recordUsage, signal }) => {
+export const writeExecutor: RunExecutor = async ({
+  run,
+  step,
+  recordUsage,
+  signal,
+}) => {
   let piece = await loadPiece(run.pieceId);
   const blocked = canStartWriting(piece);
   if (blocked) throw new NonRetryableRunError(blocked);
   const input = parseRunInput(inputSchema, run.input ?? {});
-  const previousStage = piece.stage;
   const written = new Set(piece.sections.map((s) => s.outlineId));
   const targets = piece.outline.filter((o) =>
-    input.sectionIds ? input.sectionIds.includes(o.id) : !written.has(o.id) || o.stale
+    input.sectionIds
+      ? input.sectionIds.includes(o.id)
+      : !written.has(o.id) || o.stale
   );
 
   await step('prepare', 0, async () => {
     await takeSnapshot(piece.id, 'write', run.id);
-    await setStage(piece.id, 'writing');
+    await setStage(piece.id, 'writing', run.id);
     return { targets: targets.length };
   });
   const template = await loadTemplate(piece);
@@ -71,13 +83,14 @@ export const writeExecutor: RunExecutor = async ({ run, step, recordUsage, signa
 
   for (const [index, section] of targets.entries()) {
     if (await isRunCancelled(run.id)) {
-      await setStage(piece.id, previousStage);
       return;
     }
     await step(`section:${section.id}`, index + 1, async () => {
       piece = readPiece((await getPiece(piece.id))!);
       const position = piece.outline.findIndex((o) => o.id === section.id);
-      const previous = piece.sections.find((s) => s.outlineId === piece.outline[position - 1]?.id);
+      const previous = piece.sections.find(
+        (s) => s.outlineId === piece.outline[position - 1]?.id
+      );
       const result = await writeSection(
         {
           brief: piece.brief,
@@ -89,10 +102,16 @@ export const writeExecutor: RunExecutor = async ({ run, step, recordUsage, signa
         },
         usage
       );
-      await saveSection(piece.id, result);
-      await updatePiece(piece.id, {
-        outline: piece.outline.map((o) => (o.id === section.id ? { ...o, stale: false } : o)),
-      });
+      await saveSection(piece.id, result, run.id);
+      await updatePiece(
+        piece.id,
+        {
+          outline: piece.outline.map((o) =>
+            o.id === section.id ? { ...o, stale: false } : o
+          ),
+        },
+        run.id
+      );
       return { flags: result.flags.length };
     });
   }
@@ -100,12 +119,16 @@ export const writeExecutor: RunExecutor = async ({ run, step, recordUsage, signa
   await step('finish', targets.length + 1, async () => {
     piece = readPiece((await getPiece(piece.id))!);
     const finish = await finishArticle(piece.sections, piece.brief, usage);
-    await updatePiece(piece.id, {
-      title: finish.title,
-      excerpt: finish.excerpt,
-      seo: finish.seo,
-      stage: 'review',
-    });
+    await updatePiece(
+      piece.id,
+      {
+        title: finish.title,
+        excerpt: finish.excerpt,
+        seo: finish.seo,
+        stage: 'review',
+      },
+      run.id
+    );
     return { title: finish.title };
   });
 };

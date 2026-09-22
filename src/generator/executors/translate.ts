@@ -13,26 +13,29 @@ import { canTranslate } from '../pieces/stages';
 import { translateMeta, translateSection } from '../pieces/translate';
 import { loadPiece } from './piece-context';
 
-export const translateExecutor: RunExecutor = async ({ run, step, recordUsage, signal }) => {
+export const translateExecutor: RunExecutor = async ({
+  run,
+  step,
+  recordUsage,
+  signal,
+}) => {
   const piece = await loadPiece(run.pieceId);
   const blocked = canTranslate(piece);
   if (blocked) throw new NonRetryableRunError(blocked);
-  const previousStage = piece.stage;
   const usage = { onUsage: recordUsage, signal };
   await step('prepare', 0, async () => {
     await takeSnapshot(piece.id, 'translate', run.id);
-    await setStage(piece.id, 'translating');
+    await setStage(piece.id, 'translating', run.id);
     return {};
   });
   const targets = piece.sections.filter((s) => s.en === null || s.enStale);
   for (const [index, section] of targets.entries()) {
     if (await isRunCancelled(run.id)) {
-      await setStage(piece.id, previousStage);
       return;
     }
     await step(`section:${section.outlineId}`, index + 1, async () => {
       const en = await translateSection(section, usage);
-      await saveSection(piece.id, { ...section, en, enStale: false });
+      await saveSection(piece.id, { ...section, en, enStale: false }, run.id);
       return { blocks: en.blocks.length };
     });
   }
@@ -42,11 +45,15 @@ export const translateExecutor: RunExecutor = async ({ run, step, recordUsage, s
       { title: latest.title, excerpt: latest.excerpt ?? '' },
       usage
     );
-    await updatePiece(piece.id, {
-      titleEn: meta.titleEn,
-      excerptEn: meta.excerptEn,
-      stage: 'ready',
-    });
+    await updatePiece(
+      piece.id,
+      {
+        titleEn: meta.titleEn,
+        excerptEn: meta.excerptEn,
+        stage: 'ready',
+      },
+      run.id
+    );
     return {};
   });
 };

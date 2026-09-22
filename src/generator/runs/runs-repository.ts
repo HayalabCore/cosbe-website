@@ -1,5 +1,6 @@
 import type { Prisma, StudioRun } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { withPieceLock } from '../pieces/piece-lock';
 import { errorMessage, type RunKind } from './run-types';
 
 export type Db = Prisma.TransactionClient | typeof prisma;
@@ -107,7 +108,50 @@ export async function recordRunError(id: string, error: string): Promise<void> {
   });
 }
 
+/** Cancelling and restoring the stage shares the worker's piece lock. */
+export async function cancelPieceRuns(pieceId: string): Promise<void> {
+  await withPieceLock(pieceId, async (tx) => {
+    const run = await tx.studioRun.findFirst({
+      where: { pieceId, status: { in: ['queued', 'running'] } },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!run) return;
+    await cancelPieceRun(tx, pieceId, run.id);
+  });
+}
+
+async function cancelPieceRun(
+  tx: Prisma.TransactionClient,
+  pieceId: string,
+  runId: string
+): Promise<boolean> {
+  const { count } = await tx.studioRun.updateMany({
+    where: { id: runId, status: { in: ['queued', 'running'] } },
+    data: { status: 'cancelled', finishedAt: new Date() },
+  });
+  if (!count) return false;
+  const snapshot = await tx.studioPieceSnapshot.findFirst({
+    where: { pieceId, runId },
+    orderBy: { createdAt: 'asc' },
+  });
+  if (snapshot) {
+    await tx.studioPiece.updateMany({
+      where: { id: pieceId, stage: { in: ['writing', 'translating'] } },
+      data: { stage: snapshot.stage },
+    });
+  }
+  return true;
+}
+
 export async function cancelRun(id: string): Promise<boolean> {
+  const run = await prisma.studioRun.findUnique({
+    where: { id },
+    select: { pieceId: true },
+  });
+  if (run?.pieceId) {
+    const pieceId = run.pieceId;
+    return withPieceLock(pieceId, (tx) => cancelPieceRun(tx, pieceId, id));
+  }
   const { count } = await prisma.studioRun.updateMany({
     where: { id, status: { in: ['queued', 'running'] } },
     data: { status: 'cancelled', finishedAt: new Date() },

@@ -11,11 +11,15 @@ import { actorHasPermission } from './authz';
 function user(
   roleKey: string,
   permissions: string[],
-  { disabled = false }: { disabled?: boolean } = {}
+  {
+    disabled = false,
+    mustChangePassword = false,
+  }: { disabled?: boolean; mustChangePassword?: boolean } = {}
 ) {
   return {
     id: 'u1',
     disabled,
+    mustChangePassword,
     roles: [
       {
         role: {
@@ -48,6 +52,16 @@ describe('actorHasPermission', () => {
     );
     expect(await actorHasPermission('u1', 'studio.use')).toBe(false);
   });
+
+  it.each(['marketing', 'super-admin'])(
+    'rejects %s while a forced password change is pending',
+    async (role) => {
+      vi.mocked(findAdminUserWithRoles).mockResolvedValue(
+        user(role, ['studio.use'], { mustChangePassword: true })
+      );
+      expect(await actorHasPermission('u1', 'studio.use')).toBe(false);
+    }
+  );
 
   it('is true when a role grants the permission', async () => {
     vi.mocked(findAdminUserWithRoles).mockResolvedValue(

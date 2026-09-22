@@ -219,7 +219,8 @@ export async function getArticleMetasByIds(ids: string[]): Promise<
 
 export async function allocateUniqueSlug(
   desired: string,
-  excludeId?: string
+  excludeId?: string,
+  db: Prisma.TransactionClient = prisma
 ): Promise<string> {
   const base = sanitizeSlug(desired);
   const candidates = base
@@ -228,7 +229,7 @@ export async function allocateUniqueSlug(
   const rows =
     candidates.length === 0
       ? []
-      : await prisma.article.findMany({
+      : await db.article.findMany({
           where: { slug: { in: candidates } },
           select: { id: true, slug: true },
         });
@@ -417,11 +418,12 @@ export async function getAuthors(): Promise<DbAuthor[]> {
 export async function upsertAuthor(
   name: string,
   designation: string,
-  avatarUrl?: string
+  avatarUrl?: string,
+  db: Prisma.TransactionClient = prisma
 ): Promise<string> {
   const avatarPatch =
     avatarUrl === undefined ? {} : { avatarUrl: avatarUrl.trim() || null };
-  const row = await prisma.author.upsert({
+  const row = await db.author.upsert({
     where: {
       name_designation: { name, designation },
     },
@@ -432,17 +434,19 @@ export async function upsertAuthor(
 }
 
 export async function createArticleRecord(
-  data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>
+  data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>,
+  db: Prisma.TransactionClient = prisma
 ): Promise<string> {
   const toc = generateTOC(data.blocks);
   // Upsert the author so inline name/designation changes persist
   const authorId = await upsertAuthor(
     data.author.name,
     data.author.designation,
-    data.author.avatarUrl
+    data.author.avatarUrl,
+    db
   );
 
-  const row = await prisma.article.create({
+  const row = await db.article.create({
     data: {
       slug: data.slug,
       title: data.title,

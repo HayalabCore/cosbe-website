@@ -369,6 +369,10 @@ model StudioPieceSnapshot {
   runId     String?     @map("run_id") @db.Uuid
   stage     String
   title     String
+  titleEn   String? @map("title_en")
+  excerpt   String?
+  excerptEn String? @map("excerpt_en")
+  seo       Json?
   outline   Json
   gaps      Json
   sections  Json
