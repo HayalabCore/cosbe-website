@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Languages, Loader2, ShieldCheck, Users } from 'lucide-react';
+import { Languages, Loader2, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { signOut } from '@/lib/auth';
@@ -58,12 +58,7 @@ function NavItem({
     );
   }
   return (
-    <button
-      type="button"
-      className={cls}
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <button type="button" className={cls} onClick={onClick} disabled={disabled}>
       {icon}
       {label}
     </button>
@@ -114,6 +109,7 @@ function Sidebar({
           'import.run',
           'media.upload',
           'translations.edit',
+          'studio.use',
         ] as const
       ).some(can) && (
         <div className="px-3 mb-1">
@@ -219,6 +215,16 @@ function Sidebar({
             label={t('translations')}
             icon={
               <Languages className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
+            }
+          />
+        )}
+        {can('studio.use') && (
+          <NavItem
+            href="/admin/studio"
+            active={pathname.startsWith('/admin/studio')}
+            label={t('studio')}
+            icon={
+              <Sparkles className="w-4 h-4 flex-shrink-0" strokeWidth={1.75} />
             }
           />
         )}

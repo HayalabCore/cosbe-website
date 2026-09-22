@@ -33,6 +33,10 @@ yarn db:sync-translations --dry-run  # Preview sync without writing
 yarn db:seed-translations            # Insert missing keys only (skip existing)
 yarn db:seed-translations --force    # Disaster recovery: wipe DB + history, restore from JSON
 yarn test:translations-flatten       # Round-trip test for flatten/unflatten utilities
+
+# Content Studio worker (separate process; see "Content Studio" below)
+yarn worker:dev     # tsx watch, loads .env — never point it at production data by accident
+yarn worker:start   # what the worker image runs
 ```
 
 ### Translation commands cheat-sheet
@@ -133,6 +137,29 @@ Admin locale preference is stored in a cookie and does not affect the public sit
 ### Content Blocks
 
 Articles are stored as structured JSON block arrays (not raw HTML). Block types: `heading`, `paragraph`, `list`, `quote`, `callout`, `image`, `code`, `divider`, `embed`. The admin editor is built with **TipTap** and **@dnd-kit** for drag-and-drop reordering. See `src/types/index.ts` for the full type definitions.
+
+### Content Studio
+
+AI article generation lives in the admin at `/admin/studio` (permission `studio.use`). Spec: `docs/superpowers/specs/2026-09-22-content-studio-design.md`.
+
+- **Engine** — `src/generator/` (runs, queue, executors) and `src/ai/` (model config and calls) are framework-free: ESLint forbids Next.js, UI, server-action and session-auth imports there. The worker re-checks permissions by user id via `src/generator/authz.ts`.
+- **Runs** — every background job is a `studio_runs` row with resumable `studio_run_steps` (`runStep` never re-executes a succeeded step). Executors throw `NonRetryableRunError` for failures a retry cannot fix.
+- **Queue** — pg-boss 12 in the same Postgres (`pgboss` schema, installed by the worker on start). One queue per run kind (`studio.run.<kind>`), dead letters in `studio.dead`. The web app enqueues with `createAndEnqueueRun`: the job is inserted inside the Prisma transaction that creates the run (`db: fromPrisma(tx)`). `getWebBoss()` keeps its own one-connection pool on `DIRECT_URL` only for pg-boss's startup check and queue cache (Prisma raw queries cannot read those columns).
+- **Worker** — `worker/main.ts`, run with `tsx`, deployed as its own Cloud Run service from `worker/Dockerfile` (never in the website's containers, so generation cannot slow the public site). Needs `DATABASE_URL` (+ `&connection_limit=3`) and `DIRECT_URL` (session pooler; pg-boss requires it). Serves `GET /healthz` on `$PORT`.
+- **Models** — `STUDIO_MODEL_<TASK>` = `<provider>:<model-id>` per task; defaults in `src/ai/models.ts` are placeholders for local use.
+- **Tests** — DB tests (`*.db.test.ts`) run only against a disposable local Postgres, e.g. `docker run -d --name cosbe-studio-test-pg -e POSTGRES_PASSWORD=postgres -p 55432:5432 postgres:17`, then pass `DATABASE_URL`/`DIRECT_URL` explicitly with `ADMIN_TEST_DB=1 yarn test:db`.
+
+Worker deployment (manual; same GCP project as App Hosting, `cosbe-website-ed97c`; use the App Hosting backend's region, see `firebase apphosting:backends:list --project cosbe-website-ed97c`):
+
+1. `yarn db:deploy` (applies studio migrations).
+2. One-time: create the Artifact Registry repo and secrets:
+   `gcloud artifacts repositories create studio --repository-format=docker --location=$REGION --project cosbe-website-ed97c`
+   `printf '%s' "$VALUE" | gcloud secrets create studio-database-url --data-file=- --project cosbe-website-ed97c` (repeat for `studio-direct-url` and `studio-openai-api-key`; the database URL gets `&connection_limit=3`).
+3. Build and push, with `IMAGE=$REGION-docker.pkg.dev/cosbe-website-ed97c/studio/worker:$(git rev-parse --short HEAD)`:
+   `docker build --platform linux/amd64 -f worker/Dockerfile -t "$IMAGE" . && docker push "$IMAGE"`
+4. `gcloud run deploy studio-worker --image "$IMAGE" --region $REGION --project cosbe-website-ed97c --min-instances 1 --max-instances 1 --no-cpu-throttling --cpu 1 --memory 2Gi --port 8080 --no-allow-unauthenticated --set-secrets DATABASE_URL=studio-database-url:latest,DIRECT_URL=studio-direct-url:latest,OPENAI_API_KEY=studio-openai-api-key:latest`
+5. Confirm the App Hosting build uses Node ≥ 22.12 and that `DIRECT_URL` is set there (the web app loads pg-boss to enqueue).
+6. Deploy the web app, then run **System check** at `/admin/studio`.
 
 ### Key Libraries
 

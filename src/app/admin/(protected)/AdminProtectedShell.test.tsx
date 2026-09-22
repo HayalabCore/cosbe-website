@@ -52,6 +52,9 @@ describe('AdminProtectedShell', () => {
       screen.getAllByRole('link', { name: 'Media' }).length
     ).toBeGreaterThan(0);
     expect(
+      screen.getAllByRole('link', { name: 'Content Studio' }).length
+    ).toBeGreaterThan(0);
+    expect(
       screen.getAllByRole('link', { name: 'Translations' }).length
     ).toBeGreaterThan(0);
     expect(
@@ -171,6 +174,7 @@ describe('AdminProtectedShell', () => {
     ).toBeGreaterThan(0);
     expect(screen.queryByRole('link', { name: 'All Posts' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Users' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Content Studio' })).toBeNull();
     expect(screen.queryByText('Access')).toBeNull();
     // View Site and Sign Out are always available
     expect(

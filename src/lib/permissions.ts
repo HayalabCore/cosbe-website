@@ -1,9 +1,11 @@
-export type PermissionGroup = 'content' | 'media' | 'translations' | 'access';
+export type PermissionGroup =
+  'content' | 'media' | 'translations' | 'access' | 'studio';
 
 export const PERMISSION_GROUPS: PermissionGroup[] = [
   'content',
   'media',
   'translations',
+  'studio',
   'access',
 ];
 
@@ -23,6 +25,9 @@ export const PERMISSIONS = {
   'media.delete': { group: 'media' },
   'translations.edit': { group: 'translations' },
   'translations.history.delete': { group: 'translations' },
+  'studio.use': { group: 'studio' },
+  'studio.templates.manage': { group: 'studio' },
+  'studio.sources.delete': { group: 'studio' },
   'users.view': { group: 'access' },
   'users.create': { group: 'access' },
   'users.assign-roles': { group: 'access' },
@@ -37,7 +42,10 @@ export const ALL_PERMISSIONS = Object.keys(PERMISSIONS) as Permission[];
 
 export const SUPER_ADMIN_ROLE_KEY = 'super-admin';
 
-/** Must match the seed SQL in the add_user_management migration. */
+/**
+ * Must match the seed SQL in the add_user_management and
+ * add_studio_permissions migrations.
+ */
 export const DEFAULT_ROLE_PERMISSIONS: Record<
   'admin' | 'developer' | 'marketing',
   Permission[]
@@ -54,6 +62,8 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<
     'media.delete',
     'translations.edit',
     'translations.history.delete',
+    'studio.use',
+    'studio.templates.manage',
   ],
   marketing: [
     'dashboard.view',
@@ -61,6 +71,8 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<
     'articles.publish',
     'media.upload',
     'translations.edit',
+    'studio.use',
+    'studio.templates.manage',
   ],
 };
 

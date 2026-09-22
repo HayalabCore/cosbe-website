@@ -23,6 +23,33 @@ const eslintConfig = defineConfig([
       '@next/next/no-img-element': 'off',
     },
   },
+  {
+    // Engine code runs in the studio worker, tests and (later) in-process.
+    // It must not depend on Next.js or request-scoped auth.
+    files: ['src/generator/**/*.ts', 'src/ai/**/*.ts', 'worker/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['next', 'next/*'],
+              message: 'Engine code must not depend on Next.js.',
+            },
+            {
+              group: ['@/app/*', '@/actions/*', '@/components/*'],
+              message: 'Engine code must not import UI or server actions.',
+            },
+            {
+              group: ['@/lib/authz', '@/lib/supabase/server', 'server-only'],
+              message:
+                'Engine code has no request session; use src/generator/authz.ts.',
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
