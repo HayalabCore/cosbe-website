@@ -1,7 +1,7 @@
 import type { Permission } from '@/lib/permissions';
 
 /** Later plans append kinds (ingest, outline, write, ...). */
-export const RUN_KINDS = ['system_check'] as const;
+export const RUN_KINDS = ['system_check', 'ingest'] as const;
 export type RunKind = (typeof RUN_KINDS)[number];
 
 export function isRunKind(value: string): value is RunKind {
@@ -26,6 +26,7 @@ export function isTerminalRunStatus(status: string): boolean {
 /** Permission the run's creator must still hold when the worker executes it. */
 export const RUN_KIND_PERMISSION: Record<RunKind, Permission> = {
   system_check: 'studio.use',
+  ingest: 'studio.use',
 };
 
 /** Thrown by executors for failures a retry cannot fix (bad input, missing data). */

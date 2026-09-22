@@ -27,6 +27,7 @@ export const RUN_QUEUE_SETTINGS: QueueSettings = {
 /** Jobs of each kind processed at once by one worker instance. */
 export const WORKER_CONCURRENCY: Record<RunKind, number> = {
   system_check: 1,
+  ingest: 2,
 };
 
 /** Creates missing queues. Changing settings of an existing queue is a manual migration. */

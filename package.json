@@ -23,6 +23,7 @@
     "db:push-translations": "tsx scripts/push-translations.ts",
     "db:sync-translations": "tsx scripts/sync-translations.ts",
     "db:bootstrap-admins": "tsx scripts/bootstrap-admin-users.ts",
+    "db:local-super-admin": "tsx scripts/grant-local-super-admin.ts",
     "test": "vitest run --project unit --project component",
     "test:watch": "vitest --project unit --project component",
     "test:db": "vitest run --project db",
