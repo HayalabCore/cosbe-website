@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
+import PieceList from './pieces/PieceList';
 import StudioTabs from './StudioTabs';
 import SystemCheckCard from './SystemCheckCard';
 
@@ -15,7 +16,12 @@ export default function StudioHome({ children }: { children?: ReactNode }) {
         <p className="text-sm text-slate-500 mt-1">{t('subtitle')}</p>
       </header>
       <StudioTabs />
-      {children ?? <SystemCheckCard />}
+      {children ?? (
+        <>
+          <PieceList />
+          <SystemCheckCard />
+        </>
+      )}
     </div>
   );
 }
