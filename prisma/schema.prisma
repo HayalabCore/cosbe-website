@@ -22,9 +22,10 @@ model Author {
   bio         String?
   avatarUrl   String?   @map("avatar_url")
   socialLinks Json?     @map("social_links")
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  articles    Article[]
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  articles     Article[]
+  studioPieces StudioPiece[]
 
   @@unique([name, designation])
   @@map("authors")
@@ -64,6 +65,7 @@ model Article {
   updatedAt         DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
   views             ArticleView[]
   studioSources     StudioSource[]
+  studioPieces      StudioPiece[]
 
   @@index([status, category, publishedAt(sort: Desc)])
   @@index([createdAt(sort: Desc)], map: "articles_created_at_idx")
@@ -143,6 +145,7 @@ model AdminUser {
   studioRuns         StudioRun[]
   studioSources      StudioSource[]
   studioProjects     StudioProject[]
+  studioPieces       StudioPiece[]
 
   @@map("admin_users")
 }
@@ -191,6 +194,7 @@ model StudioRun {
   kind         String
   status       String          @default("queued")
   pieceId      String?         @map("piece_id") @db.Uuid
+  piece        StudioPiece?    @relation(fields: [pieceId], references: [id], onDelete: SetNull)
   sourceId     String?         @map("source_id") @db.Uuid
   source       StudioSource?   @relation(fields: [sourceId], references: [id], onDelete: SetNull)
   input        Json            @default("{}")
@@ -286,6 +290,7 @@ model StudioProject {
   createdAt   DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   sources     StudioProjectSource[]
+  pieces      StudioPiece[]
 
   @@map("studio_projects")
 }
@@ -301,4 +306,74 @@ model StudioProjectSource {
   @@id([projectId, sourceId])
   @@index([sourceId])
   @@map("studio_project_sources")
+}
+
+/// Shared generation template (voice, structure, category default).
+model StudioTemplate {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  description     String        @default("")
+  instructions    String
+  defaultCategory String        @map("default_category")
+  isDefault       Boolean       @default(false) @map("is_default")
+  createdById     String?       @map("created_by") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  pieces          StudioPiece[]
+
+  @@map("studio_templates")
+}
+
+/// One article being generated. Handed off as an articles draft, then locked.
+model StudioPiece {
+  id           String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId    String                @map("project_id") @db.Uuid
+  project      StudioProject         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  templateId   String?               @map("template_id") @db.Uuid
+  template     StudioTemplate?       @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  stage        String                @default("sources")
+  title        String                @default("")
+  titleEn      String?               @map("title_en")
+  excerpt      String?
+  excerptEn    String?               @map("excerpt_en")
+  seo          Json?
+  brief        Json                  @default("{}")
+  selection    Json                  @default("{}")
+  outline      Json                  @default("[]")
+  gaps         Json                  @default("[]")
+  sections     Json                  @default("[]")
+  category     String                @default("useful-info")
+  authorId     String?               @map("author_id") @db.Uuid
+  author       Author?               @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  articleId    String?               @map("article_id") @db.Uuid
+  article      Article?              @relation(fields: [articleId], references: [id], onDelete: SetNull)
+  handedOffAt  DateTime?             @map("handed_off_at") @db.Timestamptz(6)
+  createdById  String?               @map("created_by") @db.Uuid
+  createdBy    AdminUser?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  snapshots    StudioPieceSnapshot[]
+  runs         StudioRun[]
+
+  @@index([projectId, updatedAt(sort: Desc)])
+  @@index([updatedAt(sort: Desc)])
+  @@map("studio_pieces")
+}
+
+/// Taken before every AI write to a piece; restoring one is "undo".
+model StudioPieceSnapshot {
+  id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pieceId   String      @map("piece_id") @db.Uuid
+  piece     StudioPiece @relation(fields: [pieceId], references: [id], onDelete: Cascade)
+  reason    String
+  runId     String?     @map("run_id") @db.Uuid
+  stage     String
+  title     String
+  outline   Json
+  gaps      Json
+  sections  Json
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([pieceId, createdAt(sort: Desc)])
+  @@map("studio_piece_snapshots")
 }

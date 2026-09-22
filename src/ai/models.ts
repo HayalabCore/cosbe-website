@@ -28,7 +28,7 @@ const TASK_DEFAULTS: Record<AiTask, string> = {
   write: STRONG_DEFAULT,
   repair: STRONG_DEFAULT,
   agent: STRONG_DEFAULT,
-  digest: SMALL_DEFAULT,
+  digest: STRONG_DEFAULT,
   translate: SMALL_DEFAULT,
   finish: SMALL_DEFAULT,
 };

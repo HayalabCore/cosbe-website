@@ -43,6 +43,10 @@ describe('modelSpecForTask', () => {
     expect(modelSpecForTask('translate', {}).modelId).toBe('gpt-4o-mini');
   });
 
+  it('defaults digest to the strong model (digests feed outlines)', () => {
+    expect(modelSpecForTask('digest', {}).modelId).toBe('gpt-4o');
+  });
+
   it('defaults embeddings to text-embedding-3-small', () => {
     expect(embeddingSpec({}).modelId).toBe('text-embedding-3-small');
   });

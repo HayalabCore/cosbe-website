@@ -115,6 +115,14 @@ export async function cancelRun(id: string): Promise<boolean> {
   return count === 1;
 }
 
+export async function isRunCancelled(id: string): Promise<boolean> {
+  const run = await prisma.studioRun.findUnique({
+    where: { id },
+    select: { status: true },
+  });
+  return run?.status === 'cancelled';
+}
+
 export async function addRunUsage(
   id: string,
   usage: { inputTokens: number; outputTokens: number }
