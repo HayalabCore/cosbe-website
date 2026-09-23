@@ -26,7 +26,7 @@ export function chunkSegments(
   const { target, max, overlap } = { ...DEFAULTS, ...options };
   const chunks: Chunk[] = [];
   for (const segment of segments) {
-    const pieces = hardSplit(splitSentences(segment.text), max);
+    const pieces = splitLong(segment.text, splitSentences(segment.text), max, overlap);
     let i = 0;
     while (i < pieces.length) {
       let j = i;
@@ -55,22 +55,74 @@ export function chunkSegments(
   return chunks;
 }
 
-/** Splits any sentence longer than `max` into max-sized pieces. */
-function hardSplit(sentences: Sentence[], max: number): Sentence[] {
+/**
+ * Weaker breaks, tried in order, for "sentences" longer than `max` — typical
+ * of transcripts with one caption per line and no 。.
+ */
+const FALLBACK_BREAKS = [/\n/g, /[、，,]|\s+/g];
+
+/**
+ * Splits any sentence longer than `max`: first at single newlines, then at
+ * commas or spaces, and only then by a hard cut. Hard cuts are `overlap`
+ * sized so the packer's overlap still applies across them.
+ */
+function splitLong(
+  text: string,
+  sentences: Sentence[],
+  max: number,
+  overlap: number
+): Sentence[] {
   const out: Sentence[] = [];
-  for (const s of sentences) {
-    if (s.text.length <= max) {
-      out.push(s);
-      continue;
+  const visit = (piece: Sentence, level: number) => {
+    if (piece.end - piece.start <= max) {
+      out.push(piece);
+      return;
     }
-    for (let at = s.start; at < s.end; at += max) {
-      const end = Math.min(at + max, s.end);
-      out.push({
-        text: s.text.slice(at - s.start, end - s.start),
-        start: at,
-        end,
-      });
+    const pattern = FALLBACK_BREAKS[level];
+    if (!pattern) {
+      hardCut(text, piece, overlap > 0 ? Math.min(overlap, max) : max, out);
+      return;
     }
-  }
+    const parts = splitAt(text, piece, pattern);
+    if (parts.length <= 1) {
+      visit(piece, level + 1);
+      return;
+    }
+    for (const part of parts) visit(part, level + 1);
+  };
+  for (const s of sentences) visit(s, 0);
   return out;
+}
+
+/** Breaks after each match; trims whitespace; offsets stay exact. */
+function splitAt(text: string, piece: Sentence, pattern: RegExp): Sentence[] {
+  const body = text.slice(piece.start, piece.end);
+  const parts: Sentence[] = [];
+  let from = 0;
+  for (const match of body.matchAll(pattern)) {
+    const to = match.index + match[0].length;
+    pushTrimmed(text, piece.start + from, piece.start + to, parts);
+    from = to;
+  }
+  pushTrimmed(text, piece.start + from, piece.end, parts);
+  return parts;
+}
+
+function pushTrimmed(text: string, from: number, to: number, out: Sentence[]) {
+  let start = from;
+  let end = to;
+  while (start < end && /\s/.test(text[start])) start++;
+  while (end > start && /\s/.test(text[end - 1])) end--;
+  if (end > start) out.push({ text: text.slice(start, end), start, end });
+}
+
+function hardCut(text: string, piece: Sentence, size: number, out: Sentence[]) {
+  let at = piece.start;
+  while (at < piece.end) {
+    let end = Math.min(at + size, piece.end);
+    // Never cut between the two halves of a surrogate pair.
+    if (end < piece.end && /[\uD800-\uDBFF]/.test(text[end - 1])) end--;
+    out.push({ text: text.slice(at, end), start: at, end });
+    at = end;
+  }
 }

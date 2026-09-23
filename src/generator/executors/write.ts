@@ -18,6 +18,8 @@ import { buildScope, getChunks, type LoadedChunk } from '../pieces/scope';
 import { canStartWriting } from '../pieces/stages';
 import { writeSection } from '../pieces/write-section';
 import { loadPiece, loadTemplate, parseRunInput } from './piece-context';
+import { VERSION as FINISH_VERSION } from '@/ai/prompts/finish.v1';
+import { VERSION as WRITE_VERSION } from '@/ai/prompts/write.v1';
 
 const inputSchema = z.object({ sectionIds: z.array(z.string()).optional() });
 const EXTRA_CHUNKS = 4;
@@ -39,6 +41,11 @@ export async function chunksForSection(
   const scope = await buildScope(piece);
   const planned = await getChunks(section.chunkIds, scope);
   if (section.kind === 'boilerplate') return planned;
+  // Retrieval alone would write from loosely related text, which is exactly
+  // the "doesn't use the notes" failure. The author must re-plan instead.
+  if (planned.length === 0) {
+    throw new NonRetryableRunError(`NO_MATERIAL:${section.heading}`);
+  }
   const extra = await searchSources({
     scope,
     query: `${section.heading} ${section.intent}`,
@@ -87,50 +94,63 @@ export const writeExecutor: RunExecutor = async ({
     if (await isRunCancelled(run.id)) {
       throw new NonRetryableRunError('The run was cancelled.');
     }
-    await step(`section:${section.id}`, index + 1, async () => {
+    await step(
+      `section:${section.id}`,
+      index + 1,
+      async () => {
+        piece = readPiece((await getPiece(piece.id))!);
+        const position = piece.outline.findIndex((o) => o.id === section.id);
+        const previous = piece.sections.find(
+          (s) => s.outlineId === piece.outline[position - 1]?.id
+        );
+        const result = await writeSection(
+          {
+            brief: piece.brief,
+            template,
+            outline: piece.outline,
+            section,
+            chunks: await chunksForSection(piece, section, usage),
+            previousTail: previous ? tail(sectionPlainText(previous)) : '',
+          },
+          usage
+        );
+        await saveSection(piece.id, result, run.id);
+        await updatePiece(
+          piece.id,
+          {
+            outline: piece.outline.map((o) =>
+              o.id === section.id ? { ...o, stale: false } : o
+            ),
+          },
+          run.id
+        );
+        return { flags: result.flags.length };
+      },
+      { promptVersion: WRITE_VERSION }
+    );
+  }
+
+  await step(
+    'finish',
+    targets.length + 1,
+    async () => {
       piece = readPiece((await getPiece(piece.id))!);
-      const position = piece.outline.findIndex((o) => o.id === section.id);
-      const previous = piece.sections.find(
-        (s) => s.outlineId === piece.outline[position - 1]?.id
-      );
-      const result = await writeSection(
-        {
-          brief: piece.brief,
-          template,
-          outline: piece.outline,
-          section,
-          chunks: await chunksForSection(piece, section, usage),
-          previousTail: previous ? tail(sectionPlainText(previous)) : '',
-        },
-        usage
-      );
-      await saveSection(piece.id, result, run.id);
+      const finish = await finishArticle(piece.sections, piece.brief, usage);
       await updatePiece(
         piece.id,
         {
-          outline: piece.outline.map((o) =>
-            o.id === section.id ? { ...o, stale: false } : o
-          ),
+          title: finish.title,
+          excerpt: finish.excerpt,
+          seo: finish.seo,
+          // The English versions described the old title and excerpt.
+          titleEn: null,
+          excerptEn: null,
+          stage: 'review',
         },
         run.id
       );
-      return { flags: result.flags.length };
-    });
-  }
-
-  await step('finish', targets.length + 1, async () => {
-    piece = readPiece((await getPiece(piece.id))!);
-    const finish = await finishArticle(piece.sections, piece.brief, usage);
-    await updatePiece(
-      piece.id,
-      {
-        title: finish.title,
-        excerpt: finish.excerpt,
-        seo: finish.seo,
-        stage: 'review',
-      },
-      run.id
-    );
-    return { title: finish.title };
-  });
+      return { title: finish.title };
+    },
+    { promptVersion: FINISH_VERSION }
+  );
 };

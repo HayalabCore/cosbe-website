@@ -56,6 +56,16 @@ describe('AddSourceDialog', () => {
     expect(onAdded).toHaveBeenCalled();
   });
 
+  it('recovers when the action throws', async () => {
+    vi.mocked(createTextSourceAction).mockRejectedValueOnce(new Error('413'));
+    renderAdmin(<AddSourceDialog onClose={vi.fn()} onAdded={vi.fn()} />);
+    await userEvent.type(screen.getByLabelText('Title'), 'メモ');
+    await userEvent.type(screen.getByLabelText('Text'), '本文です');
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled();
+  });
+
   it('adds a chosen article', async () => {
     renderAdmin(<AddSourceDialog onClose={vi.fn()} onAdded={vi.fn()} />);
     await userEvent.click(screen.getByRole('tab', { name: 'CosBE article' }));

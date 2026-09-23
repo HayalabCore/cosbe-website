@@ -5,31 +5,51 @@ import { instructions } from '@/ai/prompts/outline.v1';
 import type { SearchScope } from '../retrieval/search';
 import type { SourceMeta } from '../sources/source-types';
 import { prisma } from '@/lib/prisma';
-import type { Brief, OutlineSection } from './piece-types';
-import { aliasChunks, chunkIdsForOrdinals, listScopeChunks, type LoadedChunk } from './scope';
+import { briefLines, type Brief, type OutlineSection } from './piece-types';
+import { escapeMaterial } from './write-section';
+import {
+  aliasChunks,
+  chunkIdsForOrdinals,
+  listScopeChunks,
+  type LoadedChunk,
+} from './scope';
 
 export type OutlineMaterial =
   | { mode: 'chunks'; chunks: LoadedChunk[] }
-  | { mode: 'digest'; items: Array<{ sourceTitle: string; label: string; text: string; chunkIds: string[] }> };
+  | {
+      mode: 'digest';
+      items: Array<{
+        sourceTitle: string;
+        label: string;
+        text: string;
+        chunkIds: string[];
+      }>;
+    };
 
 const MAX_DIRECT_CHARS = 60_000;
 
-const outlineSchema = z.object({
+export const outlineSchema = z.object({
   titleOptions: z.array(z.string()),
-  sections: z.array(z.object({
-    heading: z.string(),
-    intent: z.string(),
-    chunkRefs: z.array(z.string()),
-    estChars: z.number().int(),
-    kind: z.enum(['source', 'boilerplate']),
-  })),
+  sections: z.array(
+    z.object({
+      heading: z.string(),
+      intent: z.string(),
+      chunkRefs: z.array(z.string()),
+      estChars: z.number().int(),
+      kind: z.enum(['source', 'boilerplate']),
+    })
+  ),
   gaps: z.array(z.string()),
 });
 
 /** Whole chunks when they fit; otherwise the cached digests (no truncation). */
-export async function loadOutlineMaterial(scope: SearchScope, maxChars = MAX_DIRECT_CHARS): Promise<OutlineMaterial> {
+export async function loadOutlineMaterial(
+  scope: SearchScope,
+  maxChars = MAX_DIRECT_CHARS
+): Promise<OutlineMaterial> {
   const chunks = await listScopeChunks(scope);
-  if (chunks.reduce((n, c) => n + c.text.length, 0) <= maxChars) return { mode: 'chunks', chunks };
+  if (chunks.reduce((n, c) => n + c.text.length, 0) <= maxChars)
+    return { mode: 'chunks', chunks };
   const inScope = new Set(chunks.map((c) => `${c.sourceId}:${c.ordinal}`));
   const sources = await prisma.studioSource.findMany({
     where: { id: { in: scope.sourceIds } },
@@ -39,7 +59,9 @@ export async function loadOutlineMaterial(scope: SearchScope, maxChars = MAX_DIR
   for (const source of sources) {
     for (const section of (source.meta as SourceMeta).digest ?? []) {
       for (const point of section.points) {
-        const ordinals = point.chunkOrdinals.filter((o) => inScope.has(`${source.id}:${o}`));
+        const ordinals = point.chunkOrdinals.filter((o) =>
+          inScope.has(`${source.id}:${o}`)
+        );
         if (ordinals.length === 0) continue;
         items.push({
           sourceTitle: source.title,
@@ -53,38 +75,55 @@ export async function loadOutlineMaterial(scope: SearchScope, maxChars = MAX_DIR
   return { mode: 'digest', items };
 }
 
-function renderMaterial(material: OutlineMaterial, alias: (id: string) => string): string {
+function renderMaterial(
+  material: OutlineMaterial,
+  alias: (id: string) => string
+): string {
   if (material.mode === 'chunks') {
-    return material.chunks.map((c) => `[${alias(c.id)}] (${c.sourceTitle})\n${c.text}`).join('\n\n');
+    return material.chunks
+      .map(
+        (c) => `[${alias(c.id)}] (${c.sourceTitle})\n${escapeMaterial(c.text)}`
+      )
+      .join('\n\n');
   }
   return material.items
-    .map((i) => `${i.chunkIds.map((id) => `[${alias(id)}]`).join('')} (${i.sourceTitle} / ${i.label}) ${i.text}`)
+    .map(
+      (i) =>
+        `${i.chunkIds.map((id) => `[${alias(id)}]`).join('')} (${i.sourceTitle} / ${i.label}) ${escapeMaterial(i.text)}`
+    )
     .join('\n');
 }
 
 export async function planOutline(
-  input: { brief: Brief; template: { instructions: string } | null; material: OutlineMaterial },
+  input: {
+    brief: Brief;
+    template: { instructions: string } | null;
+    material: OutlineMaterial;
+  },
   options: AiCallOptions = {}
 ): Promise<{ title: string; outline: OutlineSection[]; gaps: string[] }> {
-  const ids = input.material.mode === 'chunks'
-    ? input.material.chunks.map((c) => c.id)
-    : [...new Set(input.material.items.flatMap((i) => i.chunkIds))];
+  const ids =
+    input.material.mode === 'chunks'
+      ? input.material.chunks.map((c) => c.id)
+      : [...new Set(input.material.items.flatMap((i) => i.chunkIds))];
   const aliases = aliasChunks(ids);
   const result = await generateStructured(
     'outline',
     {
       schema: outlineSchema,
       schemaName: 'article_outline',
-      instructions: instructions({ template: input.template?.instructions ?? '', targetLength: input.brief.targetLength }),
+      instructions: instructions({
+        template: input.template?.instructions ?? '',
+        targetLength: input.brief.targetLength,
+      }),
       prompt: [
-        `Goal: ${input.brief.goal}`,
-        input.brief.audience && `Audience: ${input.brief.audience}`,
-        input.brief.keywords.length ? `Keywords: ${input.brief.keywords.join(', ')}` : '',
-        input.brief.tone && `Tone: ${input.brief.tone}`,
+        ...briefLines(input.brief),
         '<material>',
         renderMaterial(input.material, (id) => aliases.toAlias.get(id)!),
         '</material>',
-      ].filter(Boolean).join('\n'),
+      ]
+        .filter(Boolean)
+        .join('\n'),
     },
     options
   );
@@ -92,19 +131,31 @@ export async function planOutline(
   const gaps = [...result.gaps];
   const outline: OutlineSection[] = [];
   for (const section of result.sections) {
-    const chunkIds = section.chunkRefs.map((ref) => aliases.toId.get(ref.replace(/[[\]]/g, ''))).filter((id): id is string => Boolean(id));
+    const chunkIds = section.chunkRefs
+      .map((ref) => aliases.toId.get(ref.replace(/[[\]]/g, '')))
+      .filter((id): id is string => Boolean(id));
     if (section.kind === 'source' && chunkIds.length === 0) {
       gaps.push(`No source material for 「${section.heading}」.`);
       continue;
     }
     outline.push({
-      id: randomUUID(), heading: section.heading, intent: section.intent, chunkIds,
-      estChars: Math.max(0, section.estChars), kind: section.kind, stale: false,
+      id: randomUUID(),
+      heading: section.heading,
+      intent: section.intent,
+      chunkIds,
+      estChars: Math.max(0, section.estChars),
+      kind: section.kind,
+      stale: false,
     });
   }
   const supported = outline.reduce((n, s) => n + s.estChars, 0);
-  if (typeof input.brief.targetLength === 'number' && supported < input.brief.targetLength * 0.8) {
-    gaps.push(`The sources support about ${supported} characters; the target is ${input.brief.targetLength}. Add sources or lower the target.`);
+  if (
+    typeof input.brief.targetLength === 'number' &&
+    supported < input.brief.targetLength * 0.8
+  ) {
+    gaps.push(
+      `The sources support about ${supported} characters; the target is ${input.brief.targetLength}. Add sources or lower the target.`
+    );
   }
   return { title: result.titleOptions[0] ?? '', outline, gaps };
 }

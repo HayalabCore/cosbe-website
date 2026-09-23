@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import type { Job } from 'pg-boss';
+import { APICallError } from 'ai';
 import type { TokenUsage } from '@/ai/generate';
 import { actorHasPermission } from '../authz';
 import { runJobDataSchema } from '../queue/job-data';
@@ -31,7 +32,8 @@ export type RunContext = {
   step<T extends Prisma.InputJsonValue>(
     key: string,
     ordinal: number,
-    fn: () => Promise<T>
+    fn: () => Promise<T>,
+    opts?: { promptVersion?: string }
   ): Promise<T>;
   recordUsage(usage: TokenUsage): Promise<void>;
   ensureBudget(estimatedTokens: number): Promise<void>;
@@ -44,7 +46,16 @@ export type RunExecutors = Partial<Record<RunKind, RunExecutor>>;
  * One job = one run. Returning completes the job; throwing makes pg-boss retry
  * it (and dead-letter it after the last retry).
  */
-const CANCEL_POLL_MS = 200;
+const CANCEL_POLL_MS = 2_000;
+
+/**
+ * A provider rejection the SDK marks non-retryable (bad request, invalid
+ * schema, wrong API key) fails the same way on every attempt; retrying only
+ * delays the error the editor needs to see.
+ */
+function isPermanentProviderError(error: unknown): boolean {
+  return APICallError.isInstance(error) && !error.isRetryable;
+}
 
 export async function handleRunJob(
   job: Job<unknown>,
@@ -75,20 +86,40 @@ export async function handleRunJob(
 
   const cancellation = new AbortController();
   const signal = AbortSignal.any([job.signal, cancellation.signal]);
+  // Skips a tick while the previous check is still waiting on the small pool.
+  let checking = false;
   const watch = setInterval(() => {
+    if (checking) return;
+    checking = true;
     void isRunCancelled(runId)
       .then((cancelled) => {
         if (cancelled) cancellation.abort();
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        checking = false;
+      });
   }, CANCEL_POLL_MS);
 
+  // Steps of one run execute one at a time, so usage belongs to this step.
+  let currentStep: string | undefined;
   try {
     await executor({
       run,
       signal,
-      step: (key, ordinal, fn) => runStep(runId, { key, ordinal }, fn),
-      recordUsage: (usage) => addRunUsage(runId, usage),
+      step: async (key, ordinal, fn, opts) => {
+        currentStep = key;
+        try {
+          return await runStep(
+            runId,
+            { key, ordinal, promptVersion: opts?.promptVersion },
+            fn
+          );
+        } finally {
+          currentStep = undefined;
+        }
+      },
+      recordUsage: (usage) => addRunUsage(runId, usage, currentStep),
       ensureBudget: (estimated) => assertRunBudget(runId, estimated),
     });
     await markRunSucceeded(runId);
@@ -96,7 +127,8 @@ export async function handleRunJob(
     if (cancellation.signal.aborted || (await isRunCancelled(runId))) return;
     if (
       error instanceof NonRetryableRunError ||
-      error instanceof TokenCeilingExceededError
+      error instanceof TokenCeilingExceededError ||
+      isPermanentProviderError(error)
     ) {
       await markRunFailed(runId, errorMessage(error));
       return;

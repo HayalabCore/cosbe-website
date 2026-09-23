@@ -173,7 +173,7 @@ Claim-verification results (P2), Drive file ids (P3), social posts (P4), PDF tex
 
 ### 4.2 Retrieval
 
-Hybrid: pgvector top-k + PGroonga keyword top-k, merged by reciprocal rank fusion. Always filtered to the run's scope: project's linked sources ∩ piece selection ∩ character ranges of ticked chapters; `stored` PDFs excluded.
+Hybrid: pgvector top-k + PGroonga keyword top-k, merged by reciprocal rank fusion. Always filtered to the run's scope: project's linked sources ∩ piece selection ∩ character ranges of ticked chapters; `stored` PDFs excluded. The vector half scans the scope exactly (the HNSW index filters only after its nearest-neighbour search, which starves a small scope in a large library); the keyword half matches literal content words (split on hiragana runs and punctuation), never query syntax from model text. A source whose chapter list is present but empty contributes nothing.
 
 ### 4.3 Outline (one structured call)
 
@@ -185,22 +185,23 @@ Hybrid: pgvector top-k + PGroonga keyword top-k, merged by reciprocal rank fusio
 
 ### 4.4 Write (one step per section, sequential)
 
-- Input: brief, template voice, all headings, the previous section's final paragraph, this section's chunks topped up by retrieval on its intent (capped).
+- Input: brief (goal, audience, keywords, tone), template voice, all headings, the previous section's final paragraph, this section's chunks topped up by retrieval on its intent (capped).
 - Output (Zod): blocks (`paragraph`, `list`, `table`, `callout`, `quote`, `heading` level 3) composed of sentences with `cite[]` or `connective: true`.
-- Deterministic checks (`grounding.ts`): every cited id is in the provided set; `source` sections have citations; `connective` sentences contain no digits or proper-noun candidates (heuristic). Violation → one repair call for that section; still failing → the section is flagged in Review.
+- Deterministic checks (`grounding.ts`): every cited id is in the provided set; `source` sections have at least one cited sentence and no empty blocks; `connective` sentences contain no digits or proper-noun candidates (heuristic; terms from the outline headings and brief keywords are allowed). Violation → one repair call for that section; the version with fewer violations is kept; still failing → the section is flagged in Review. Invented citation ids are never stored.
+- A `source` section none of whose planned passages is still in scope is refused before any model call (the run fails with a message naming the section); the author edits the outline or the sources.
 - No whole-article rewrites and no length padding.
 - The step writes the validated section (structured sentences) into `piece.sections` on success.
 - **Finish step** (after all sections): title, excerpt and SEO meta from the finished sections; TOC is derived deterministically from headings at handoff using the existing TOC logic.
 
 ### 4.5 Translate
 
-Each block's JA → `*En`, plus `title_en` and `excerpt_en`, with the `translate` model task in `src/generator/pieces/translate.ts`, one structured call per section (the existing `block-translation-server.ts` imports `server-only` and cannot run in the worker; it stays as is for the post editor). Citations are not carried into EN.
+Each block's JA → `*En`, plus `title_en` and `excerpt_en`, with the `translate` model task in `src/generator/pieces/translate.ts`, one structured call per section (the existing `block-translation-server.ts` imports `server-only` and cannot run in the worker; it stays as is for the post editor). Citations are not carried into EN. The EN section must keep the JA shape (block count and types, list item counts, table rows and columns) because the public site maps EN onto JA by position; a mismatch gets one repair call, then fails the run. Regenerating the JA title or excerpt clears their EN versions.
 
-Translation is optional: handoff is allowed from `review` (EN empty, the public site's existing fallback in `src/lib/article-locale.ts` applies) or from `ready` (EN done). A rewrite after translation marks the affected EN blocks stale and the rail shows Translate as needing a re-run.
+Translation is optional: handoff is allowed from `review` (EN empty, the public site's existing fallback in `src/lib/article-locale.ts` applies) or from `ready` (EN done). Translate and handoff both require a complete article: every outline section written and not stale, and the finish step done. A rewrite after translation marks the affected EN blocks stale and moves the piece back to `review`.
 
 ### 4.6 Handoff
 
-`Create draft post` (human click only; requires `studio.use` and `articles.edit`): strip citations → build TOC → `createArticleRecord` with `status = draft`, the piece's category, author, title/excerpt (JA + EN), SEO and blocks; slug from the English title plus a short suffix, editable later in the editor. Sets `piece.article_id`, `handed_off_at`, stage `handed_off`; the piece is locked. Case-study metadata fields are left empty for the editor.
+`Create draft post` (human click only; requires `studio.use` and `articles.edit`; the button is hidden without `articles.edit`): strip citations → build TOC → `createArticleRecord` with `status = draft`, the piece's category, author, title/excerpt (JA + EN), SEO and blocks; slug from the English title plus a short suffix (an `article-xxxxxxxx` fallback when there is no English title), editable later in the editor. Sets `piece.article_id`, `handed_off_at`, stage `handed_off`; the piece is locked. Case-study metadata fields are left empty for the editor.
 
 ### Progress
 
@@ -210,8 +211,8 @@ Step-level in P1 ("Writing section 3/6"); sections appear as each step finishes.
 
 ### `src/ai/`
 
-- `models.ts` — task → model map (`outline`, `write`, `repair`, `digest`, `translate`, `finish`, `agent`, `embed`), each overridable by env (`STUDIO_MODEL_<TASK>`). Defaults: a strong model for outline/write/repair/agent, a small model for digest/translate/finish, `text-embedding-3-small` (1536 dims) for embed.
-- `generate.ts` — `generateObject(task, schema, prompt)`, `generateText(task, …)`, `embed(texts)`, `runAgent(task, messages, tools)` on the Vercel AI SDK. Timeouts, retry on 429/5xx, token accounting written to the current run step, run token ceiling enforcement, redacting logger (never logs full source text).
+- `models.ts` — task → model map (`outline`, `write`, `repair`, `digest`, `translate`, `finish`, `agent`, `embed`), each overridable by env (`STUDIO_MODEL_<TASK>`). Defaults: a strong model for outline/write/repair/agent **and digest** (a small model produced thin digests that silently dropped facts, the outline plans from digests for large material), a small model for translate/finish, `text-embedding-3-small` (1536 dims) for embed.
+- `generate.ts` — `generateObject(task, schema, prompt)`, `generateText(task, …)`, `embed(texts)`, `runAgent(task, messages, tools)` on the Vercel AI SDK. Timeouts, retry on 429/5xx, token accounting written to the current run step and the run, run token ceiling enforcement (pre-call estimate counts CJK characters as one token each), redacting logger (never logs full source text). Ingest runs get a ceiling proportional to the source size.
 - `prompts/` — versioned modules (`outline.v1.ts`, `writeSection.v1.ts`, …); the version is stored on each step (`prompt_version`).
 - `verify.ts` — `verifyClaim(claim, passages)` interface defined in P1, implemented in P2 (LLM judge, Jev spike).
 
@@ -239,7 +240,7 @@ Labels in `messages/admin-{en,ja}.json`; migration inserts `role_permissions` ro
 - `/admin/studio` — pieces list: title, project, stage (dots + label), updated; filters by project and stage. Tabs: **Pieces**, **Projects**, **Source library**, **Templates**.
 - `/admin/studio/projects/[id]` — project's linked sources; link from library or add new (uploads land in the library and are linked).
 - `/admin/studio/settings` — YouTube owner connection status and Connect / Reconnect.
-- `/admin/studio/[pieceId]` — workspace: stage rail (top), stage panel (main), assistant (right).
+- `/admin/studio/pieces/[pieceId]` — workspace: stage rail (top), stage panel (main), assistant (right). (Under `pieces/` so it cannot collide with the `projects`, `library` and `templates` segments.)
 
 ### Stage rail
 
@@ -260,6 +261,8 @@ Labels in `messages/admin-{en,ja}.json`; migration inserts `role_permissions` ro
 
 The assistant is available at every stage.
 
+**Deferred to plan P1c-3 (workspace completion):** pieces list filters by project and stage; re-pointing a section's sources (shared with the P1d `setSectionSources` tool); adding a source to the library from the Sources panel; the rail marking Translate as needing a re-run; sections appearing live during Writing; translated validator flags. P1 ships without them.
+
 ## 7. Worker, deployment and operations
 
 - **Build:** `worker/Dockerfile` in this repo runs `worker/main.ts` with `tsx` (resolves the `@/` path alias without a bundler); deployed as its own Cloud Run service (starting size 1 vCPU / 2 GiB, max 1 instance). Cloud Run services must listen on `$PORT`, so the worker serves `GET /healthz`.
@@ -267,7 +270,8 @@ The assistant is available at every stage.
 - **Always on:** pg-boss pulls jobs, so the worker runs with `minInstances: 1` and CPU always allocated. Rough, unverified cost estimate ~$25–55/month; compare with the current EC2 bill. Scale-to-zero (web app wakes the worker on enqueue) is an open decision.
 - **Concurrency:** pg-boss team sizes — ingest 2, write 2, agent 4.
 - **Connections:** Prisma via `DATABASE_URL` with `connection_limit=3`; pg-boss via `DIRECT_URL` with max 2. Each web instance also holds a one-connection pg-boss pool on `DIRECT_URL` (closed when idle) for pg-boss's startup check and queue cache; the job insert itself runs in the caller's Prisma transaction.
-- **Local dev:** `yarn worker:dev` (tsx watch) alongside `yarn dev`.
+- **Local dev:** `yarn worker:dev` (tsx watch) alongside `yarn dev`. It refuses a non-localhost `DIRECT_URL` unless `STUDIO_WORKER_ALLOW_REMOTE=1`, so a laptop never joins the live queue by accident.
+- **Shutdown:** SIGTERM stops pg-boss within 8 s (Cloud Run kills after 10 s), failing active jobs so they retry at once and resume from their last finished step.
 - **Environment:** worker — `DATABASE_URL`, `DIRECT_URL`, `OPENAI_API_KEY`, `STUDIO_MODEL_*`, `STUDIO_RUN_TOKEN_CEILING`, `YOUTUBE_API_KEY`, `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_URL`. Web — `DIRECT_URL` (the web app's pg-boss pool; must be set in App Hosting, otherwise it falls back to `DATABASE_URL` with a warning) and the Google OAuth redirect values for the YouTube connect callback. Documented in `.env.example`.
 - **Deploy order:**
   1. Migration: `create extension vector`, `create extension pgroonga`, `studio_*` tables, raw-SQL indexes, RLS, Realtime publication + policies, permission rows.
@@ -279,7 +283,8 @@ The assistant is available at every stage.
 ## 8. Error handling
 
 - One active run per piece: pg-boss `singletonKey = piece_id` plus a DB check before enqueue.
-- Stuck work: studio queues set pg-boss `heartbeatSeconds` and `expireInSeconds`. A job whose worker dies or stops heartbeating is retried, and after its last retry pg-boss routes it to the `studio.dead` dead-letter queue, whose handler marks the run failed, so the UI shows Retry instead of spinning.
+- Stuck work: studio queues set pg-boss `heartbeatSeconds` and `expireInSeconds` (1 h for `write` and `ingest`, 15 min otherwise; heartbeats still catch a dead worker within a minute). A job whose worker dies or stops heartbeating is retried, and after its last retry pg-boss routes it to the `studio.dead` dead-letter queue, whose handler (itself retried) marks the run failed, so the UI shows Retry instead of spinning.
+- A run that fails or is cancelled never leaves the piece in `writing`/`translating`: the stage is settled from the content (complete → `review`, or `ready` if fully translated; otherwise `outline`, with finished sections kept so writing again resumes).
 - The web app enqueues inside the same Prisma transaction that creates the run row (pg-boss `fromPrisma` adapter), so a run never exists without its job or vice versa.
 - Transient provider errors and 429s: retried with backoff (2 attempts) by pg-boss; then the step fails and only that section shows Retry.
 - Per-run token ceiling (`STUDIO_RUN_TOKEN_CEILING`) fails the run with a clear message.

@@ -4,8 +4,10 @@ import { prisma } from '@/lib/prisma';
 import { EMBEDDING_DIMENSIONS } from '@/ai/models';
 import { createRun, markRunFailed } from '../runs/runs-repository';
 import {
+  claimFailedSource,
   countProjectLinks,
   createSource,
+  deleteSourceGuarded,
   deleteSource,
   getSource,
   listSources,
@@ -122,5 +124,43 @@ describe('sources repository', () => {
       status: 'failed',
       error: 'The job failed after all retries.',
     });
+  });
+
+  it('lets only the creator delete an unlinked source without the delete permission', async () => {
+    const otherId = randomUUID();
+    await prisma.adminUser.create({
+      data: { id: otherId, email: `src-o-${otherId}@test.local` },
+    });
+    try {
+      const mine = await createSource({ kind: 'text', title: 'm', text: 'x', createdById: adminId });
+      const theirs = await createSource({ kind: 'text', title: 't', text: 'x', createdById: otherId });
+      const plain = { id: adminId, canDeleteShared: false };
+      expect(await deleteSourceGuarded(theirs.id, plain)).toMatchObject({ result: 'LINKED' });
+      expect(await getSource(theirs.id)).not.toBeNull();
+      expect(await deleteSourceGuarded(mine.id, plain)).toMatchObject({ result: 'OK' });
+      expect(await getSource(mine.id)).toBeNull();
+
+      const project = await createProject({ name: 'p', createdById: adminId });
+      const linked = await createSource({ kind: 'text', title: 'l', text: 'x', createdById: adminId });
+      await linkSource(project.id, linked.id, adminId);
+      expect(await deleteSourceGuarded(linked.id, plain)).toMatchObject({ result: 'LINKED' });
+      expect(
+        await deleteSourceGuarded(linked.id, { id: adminId, canDeleteShared: true })
+      ).toMatchObject({ result: 'OK' });
+      expect(await deleteSourceGuarded(randomUUID(), plain)).toMatchObject({ result: 'NOT_FOUND' });
+    } finally {
+      await prisma.studioSource.deleteMany({ where: { createdById: otherId } });
+      await prisma.adminUser.delete({ where: { id: otherId } });
+    }
+  });
+
+  it('claims only failed sources for a retry, once', async () => {
+    const s = await createSource({ kind: 'text', title: 'r', text: 'x', createdById: adminId });
+    await setSourceStatus(s.id, 'ready');
+    expect(await claimFailedSource(s.id)).toBe(false);
+    await setSourceStatus(s.id, 'failed', 'boom');
+    const claims = await Promise.all([claimFailedSource(s.id), claimFailedSource(s.id)]);
+    expect(claims.filter(Boolean)).toHaveLength(1);
+    expect((await getSource(s.id))?.status).toBe('pending');
   });
 });

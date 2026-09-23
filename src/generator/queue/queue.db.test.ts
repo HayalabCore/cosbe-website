@@ -221,3 +221,32 @@ it('serializes competing kinds and permits a replacement after cancellation', as
     })
   ).rejects.toMatchObject({ reason: 'LOCKED' });
 });
+
+it('gives long-running kinds a longer job expiry', async () => {
+  const project = await prisma.studioProject.create({
+    data: { name: 'expiry', createdById: allowedId },
+  });
+  const piece = await createPiece({
+    projectId: project.id,
+    createdById: allowedId,
+    templateId: null,
+    category: 'notice',
+  });
+  const run = await createAndEnqueueRun(webBoss, {
+    kind: 'write',
+    pieceId: piece.id,
+    createdById: allowedId,
+  });
+  const [job] = await prisma.$queryRaw<Array<{ expire_seconds: number }>>`
+    SELECT expire_seconds FROM pgboss.job WHERE data->>'runId' = ${run.id}`;
+  expect(job.expire_seconds).toBe(3600);
+  await cancelRun(run.id);
+});
+
+it('restarting the worker updates existing queues instead of failing', async () => {
+  await expect(ensureQueues(workerBoss, ['system_check'])).resolves.toBeUndefined();
+  await expect(ensureQueues(workerBoss, ['system_check'])).resolves.toBeUndefined();
+  expect((await workerBoss.getQueue(queueForKind('system_check')))?.policy).toBe(
+    'singleton'
+  );
+});

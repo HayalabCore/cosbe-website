@@ -128,4 +128,18 @@ describe('SystemCheckCard', () => {
       )
     ).toBeInTheDocument();
   });
+
+  it('recovers when starting the check throws', async () => {
+    vi.mocked(startSystemCheckAction).mockRejectedValueOnce(new Error('session'));
+    await start();
+    expect(await screen.findByText(/could not start/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Run system check' })).toBeEnabled();
+  });
+
+  it('shows a failure when polling throws', async () => {
+    vi.mocked(getRunStatusAction).mockRejectedValueOnce(new Error('network'));
+    await start();
+    await tick();
+    expect(screen.getByRole('button', { name: 'Run system check' })).toBeEnabled();
+  });
 });

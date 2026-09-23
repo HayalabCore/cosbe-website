@@ -49,6 +49,33 @@ export function runTokenCeiling(
   return Number.isInteger(value) && value > 0 ? value : DEFAULT_TOKEN_CEILING;
 }
 
+/**
+ * Ingest cost is bounded by the source size: Japanese embeds at about one
+ * token per character (plus chunk overlap), and each digest group may need a
+ * second pass over the same passages, plus output. Five tokens per character
+ * covers that worst case (see ingest-budget.test.ts); the generation default
+ * would stop a large Japanese source part way.
+ */
+export function ingestTokenCeiling(
+  chars: number,
+  env: Record<string, string | undefined> = process.env
+): number {
+  return Math.max(runTokenCeiling(env), Math.ceil(chars * 5));
+}
+
+/**
+ * Codes the worker stores as a run's error (`CODE` or `CODE:detail`) so the
+ * UI can translate them; stage-rule codes (BlockReason) are used as well.
+ */
+export const RUN_ERROR_CODES = [
+  'FORBIDDEN',
+  'NO_MATERIAL',
+  'TRANSLATION_SHAPE',
+  'TOKEN_CEILING',
+  'RUN_FAILED',
+] as const;
+export type RunErrorCode = (typeof RUN_ERROR_CODES)[number];
+
 /** Thrown by executors for failures a retry cannot fix (bad input, missing data). */
 export class NonRetryableRunError extends Error {
   constructor(message: string) {

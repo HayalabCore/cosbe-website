@@ -64,6 +64,23 @@ describe('generateStructured', () => {
     expect(model.doGenerateCalls).toHaveLength(0);
   });
 
+  it('estimates Japanese at about one token per character', async () => {
+    const model = textModel(JSON.stringify({ title: 'T', sections: [] }));
+    const ensureBudget = vi.fn<(estimate: number) => Promise<void>>(async () => {});
+    await generateStructured(
+      'outline',
+      {
+        schema: outlineSchema,
+        schemaName: 'outline',
+        instructions: '',
+        prompt: '課'.repeat(1000),
+      },
+      { model, ensureBudget }
+    );
+    // 1000 CJK characters plus the output reserve.
+    expect(ensureBudget.mock.calls[0][0]).toBeGreaterThanOrEqual(1000 + 4096);
+  });
+
   it('rejects output that does not match the schema', async () => {
     await expect(
       generateStructured(
@@ -154,6 +171,15 @@ describe('embedTexts', () => {
       embedTexts(['hello'], { model, ensureBudget })
     ).rejects.toThrow('over budget');
     expect(model.doEmbedCalls).toHaveLength(0);
+  });
+
+  it('does not reserve output tokens for embeddings', async () => {
+    const model = new MockEmbeddingModelV4({
+      doEmbed: { embeddings: [vector(0.1)], usage: { tokens: 1 }, warnings: [] },
+    });
+    const ensureBudget = vi.fn(async () => {});
+    await embedTexts(['abcd'], { model, ensureBudget });
+    expect(ensureBudget).toHaveBeenCalledWith(1);
   });
 
   it('returns [] without calling the model for no input', async () => {

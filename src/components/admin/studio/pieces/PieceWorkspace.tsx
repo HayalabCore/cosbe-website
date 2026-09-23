@@ -15,11 +15,13 @@ import ReviewPanel from './ReviewPanel';
 import TranslatePanel from './TranslatePanel';
 import HandoffPanel from './HandoffPanel';
 import HistoryList from './HistoryList';
+import { errorText, runErrorText } from './errorText';
 
 export default function PieceWorkspace({ pieceId }: { pieceId: string }) {
   const t = useTranslations('admin.studio');
   const { piece, refresh, error } = usePiece(pieceId);
   const [picked, setPicked] = useState<{ at: PieceStage; view: PieceStage } | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   if (!piece) {
     return error ? <p className="text-sm text-red-600">{t('workspace.errors.FAILED')}</p> : null;
@@ -27,33 +29,50 @@ export default function PieceWorkspace({ pieceId }: { pieceId: string }) {
   const viewing = picked && picked.at === piece.stage ? picked.view : piece.stage;
   const setViewing = (view: PieceStage) => setPicked({ at: piece.stage, view });
   const busy = Boolean(piece.activeRun);
-  const panel = { piece, busy, refresh };
+  const locked = piece.stage === 'handed_off';
+  const panel = { piece, busy, locked, refresh, notify: setNotice };
+  async function cancel() {
+    try {
+      const result = await cancelRunAction(piece!.id);
+      setNotice(result.ok ? null : errorText(t, result));
+    } catch {
+      setNotice(errorText(t, { error: 'FAILED' }));
+    }
+    await refresh();
+  }
+  // The FK is ON DELETE SET NULL, so a deleted post leaves only handedOffAt.
+  const articleStatus = piece.article?.status ?? (piece.handedOffAt ? 'removed' : null);
+  // Panels copy the piece into local state; a new version (Undo, save, run
+  // output) must remount them instead of leaving stale edits to be saved.
+  const panelKey = `${viewing}:${piece.updatedAt}`;
 
   return (
     <div className="space-y-5">
       <Link href="/admin/studio" className="text-sm text-slate-500">← {t('workspace.back')}</Link>
       <h2 className="text-xl font-semibold text-slate-900">{piece.title || t('pieces.untitled')}</h2>
-      <StageRail stage={piece.stage} articleStatus={piece.article?.status ?? (piece.articleId ? 'removed' : null)} viewing={viewing} onView={setViewing} />
+      <StageRail stage={piece.stage} articleStatus={articleStatus} viewing={viewing} onView={setViewing} />
+      {error && <p className="rounded-lg bg-amber-50 px-4 py-2 text-sm text-amber-800">{t('workspace.errors.FAILED')}</p>}
       {busy && (
         <div className="flex items-center justify-between rounded-lg bg-blue-50 px-4 py-2 text-sm text-blue-800">
           <span>{t('workspace.busy')}</span>
-          <button type="button" onClick={() => void cancelRunAction(piece.id).then(refresh)} className="underline">
+          <button type="button" onClick={() => void cancel()} className="underline">
             {t('workspace.cancel')}
           </button>
         </div>
       )}
       {!busy && piece.lastRunError && (
-        <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">{t('workspace.failed', { error: piece.lastRunError })}</p>
+        <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">{t('workspace.failed', { error: runErrorText(t, piece.lastRunError) })}</p>
       )}
+      {notice && <p role="alert" className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">{notice}</p>}
       <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
         <main>
-          {viewing === 'sources' && <SourcesPanel {...panel} />}
-          {viewing === 'brief' && <BriefPanel {...panel} />}
-          {viewing === 'outline' && <OutlinePanel {...panel} />}
-          {viewing === 'writing' && <WritingPanel {...panel} />}
-          {viewing === 'review' && <ReviewPanel {...panel} />}
-          {(viewing === 'translating' || viewing === 'ready') && <TranslatePanel {...panel} />}
-          {viewing === 'handed_off' && <HandoffPanel {...panel} />}
+          {viewing === 'sources' && <SourcesPanel key={panelKey} {...panel} />}
+          {viewing === 'brief' && <BriefPanel key={panelKey} {...panel} />}
+          {viewing === 'outline' && <OutlinePanel key={panelKey} {...panel} />}
+          {viewing === 'writing' && <WritingPanel key={panelKey} {...panel} />}
+          {viewing === 'review' && <ReviewPanel key={panelKey} {...panel} />}
+          {(viewing === 'translating' || viewing === 'ready') && <TranslatePanel key={panelKey} {...panel} />}
+          {viewing === 'handed_off' && <HandoffPanel key={panelKey} {...panel} />}
         </main>
         <aside>
           <HistoryList {...panel} />

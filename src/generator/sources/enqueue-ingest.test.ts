@@ -20,4 +20,12 @@ describe('enqueueIngest', () => {
       })
     );
   });
+
+  it('sizes the ceiling for a large Japanese source', async () => {
+    await enqueueIngest({} as never, 'source-1', 'user-1', 400_000);
+    expect(createAndEnqueueRun).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({ tokenCeiling: 2_000_000 })
+    );
+  });
 });

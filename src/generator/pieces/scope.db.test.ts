@@ -96,6 +96,13 @@ describe('buildScope', () => {
 });
 
 describe('chunks and aliases', () => {
+  it('omits a source whose chapter ticks are an empty list', async () => {
+    const scope = await buildScope(
+      piece({ sourceIds: [linked], chapters: { [linked]: [] } })
+    );
+    expect(scope.sourceIds).toEqual([]);
+  });
+
   it('loads chunks in the requested order with source titles', async () => {
     const ids = (
       await prisma.studioSourceChunk.findMany({

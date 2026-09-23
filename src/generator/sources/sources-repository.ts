@@ -148,3 +148,42 @@ export function countProjectLinks(sourceId: string): Promise<number> {
 export async function deleteSource(id: string): Promise<void> {
   await prisma.studioSource.delete({ where: { id } });
 }
+
+export type DeleteOutcome = {
+  result: 'OK' | 'LINKED' | 'NOT_FOUND';
+  storagePath: string | null;
+};
+
+/**
+ * Without `studio.sources.delete`, a user may delete only a source they
+ * created that no project uses; otherwise unlinking everywhere and then
+ * deleting would bypass the permission. Checked and deleted under a row lock.
+ */
+export function deleteSourceGuarded(
+  id: string,
+  actor: { id: string; canDeleteShared: boolean }
+): Promise<DeleteOutcome> {
+  return prisma.$transaction(async (tx) => {
+    const rows = await tx.$queryRaw<
+      Array<{ created_by: string | null; storage_path: string | null }>
+    >`SELECT created_by, storage_path FROM studio_sources WHERE id = ${id}::uuid FOR UPDATE`;
+    const row = rows[0];
+    if (!row) return { result: 'NOT_FOUND', storagePath: null };
+    if (!actor.canDeleteShared) {
+      const links = await tx.studioProjectSource.count({ where: { sourceId: id } });
+      if (links > 0 || row.created_by !== actor.id)
+        return { result: 'LINKED', storagePath: null };
+    }
+    await tx.studioSource.delete({ where: { id } });
+    return { result: 'OK', storagePath: row.storage_path };
+  });
+}
+
+/** failed → pending, exactly once however many retries race. */
+export async function claimFailedSource(id: string): Promise<boolean> {
+  const { count } = await prisma.studioSource.updateMany({
+    where: { id, status: 'failed' },
+    data: { status: 'pending', error: null },
+  });
+  return count === 1;
+}

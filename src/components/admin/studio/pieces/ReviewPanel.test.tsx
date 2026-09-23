@@ -47,4 +47,11 @@ describe('ReviewPanel', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Shorten' }));
     expect(rewriteSectionAction).toHaveBeenCalledWith('p1', { sectionId: 'o1', instruction: 'Make this section about half as long.' });
   });
+
+  it('hides Create draft post from users who cannot edit articles', () => {
+    renderAdmin(<ReviewPanel piece={piece} busy={false} refresh={vi.fn()} />, {
+      permissions: ['studio.use'],
+    });
+    expect(screen.queryByRole('button', { name: 'Create draft post' })).toBeNull();
+  });
 });

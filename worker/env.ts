@@ -11,6 +11,16 @@ const envSchema = z.object({
 
 export type WorkerEnv = z.infer<typeof envSchema>;
 
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+
+function isLocal(url: string): boolean {
+  try {
+    return LOCAL_HOSTS.has(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+}
+
 export function loadWorkerEnv(
   env: Record<string, string | undefined> = process.env
 ): WorkerEnv {
@@ -18,6 +28,17 @@ export function loadWorkerEnv(
   if (!parsed.success) {
     const keys = parsed.error.issues.map((issue) => issue.path.join('.'));
     throw new Error(`Invalid worker environment: ${keys.join(', ')}`);
+  }
+  // `yarn worker:dev` loads .env, which points at Supabase. A laptop worker
+  // there would take real jobs with uncommitted code.
+  const remoteAllowed =
+    env.NODE_ENV === 'production' || env.STUDIO_WORKER_ALLOW_REMOTE === '1';
+  const local =
+    isLocal(parsed.data.DIRECT_URL) && isLocal(parsed.data.DATABASE_URL);
+  if (!remoteAllowed && !local) {
+    throw new Error(
+      'Refusing to attach a development worker to a remote database. Set STUDIO_WORKER_ALLOW_REMOTE=1 if you mean it.'
+    );
   }
   return parsed.data;
 }

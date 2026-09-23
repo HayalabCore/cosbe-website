@@ -14,6 +14,8 @@ export default function PieceList() {
   const [pieces, setPieces] = useState<PieceListItemDTO[]>([]);
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [projectId, setProjectId] = useState('');
+  const [creating, setCreating] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     void listPiecesAction().then((r) => r.ok && setPieces(r.data));
@@ -21,9 +23,20 @@ export default function PieceList() {
   }, []);
 
   async function create() {
-    if (!projectId) return;
-    const result = await createPieceAction({ projectId });
-    if (result.ok) router.push(`/admin/studio/pieces/${result.data.pieceId}`);
+    if (!projectId || creating) return;
+    setCreating(true);
+    setFailed(false);
+    try {
+      const result = await createPieceAction({ projectId });
+      if (result.ok) {
+        router.push(`/admin/studio/pieces/${result.data.pieceId}`);
+        return; // stay disabled while navigating
+      }
+      setFailed(true);
+    } catch {
+      setFailed(true);
+    }
+    setCreating(false);
   }
 
   return (
@@ -33,10 +46,11 @@ export default function PieceList() {
           <option value="">{t('pieces.chooseProject')}</option>
           {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
-        <button type="button" disabled={!projectId} onClick={() => void create()} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed">
+        <button type="button" disabled={!projectId || creating} onClick={() => void create()} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed">
           {t('pieces.new')}
         </button>
       </div>
+      {failed && <p className="text-sm text-red-600">{t('workspace.errors.FAILED')}</p>}
       {pieces.length === 0 ? (
         <p className="text-sm text-slate-500">{t('pieces.empty')}</p>
       ) : (
@@ -51,7 +65,7 @@ export default function PieceList() {
                 <td className="text-slate-600">{p.projectName}</td>
                 <td className="text-slate-600">
                   {t(`stages.${p.stage}`)}
-                  {p.stage === 'handed_off' && p.articleStatus && ` · ${t(`pieces.tracked.${p.articleStatus}`)}`}
+                  {p.stage === 'handed_off' && ` · ${t(`pieces.tracked.${p.articleStatus ?? 'removed'}`)}`}
                 </td>
                 <td className="text-slate-500">{new Date(p.updatedAt).toLocaleString()}</td>
               </tr>

@@ -24,6 +24,16 @@ export const briefSchema = z.object({
 });
 export type Brief = z.infer<typeof briefSchema>;
 
+/** The brief as prompt lines; every generation prompt uses the same wording. */
+export function briefLines(brief: Brief): string[] {
+  return [
+    `Goal: ${brief.goal}`,
+    brief.audience && `Audience: ${brief.audience}`,
+    brief.keywords.length > 0 && `Keywords: ${brief.keywords.join(', ')}`,
+    brief.tone && `Tone: ${brief.tone}`,
+  ].filter((line): line is string => Boolean(line));
+}
+
 export const MAX_BRIEF_CHARS = 4_000;
 export const MAX_KEYWORDS = 30;
 export const MAX_KEYWORD_CHARS = 80;
@@ -102,8 +112,12 @@ const sentenceSchema = z.object({
 });
 export type Sentence = z.infer<typeof sentenceSchema>;
 
-/** Also the model's output shape; there `cite` holds aliases (c1, c2…). */
-export const studioBlockSchema = z.discriminatedUnion('type', [
+/**
+ * Also the model's output shape; there `cite` holds aliases (c1, c2…).
+ * z.union (JSON Schema `anyOf`), not z.discriminatedUnion (`oneOf`): OpenAI
+ * structured output rejects `oneOf`. The inferred type is the same.
+ */
+export const studioBlockSchema = z.union([
   z.object({
     type: z.literal('paragraph'),
     sentences: z.array(sentenceSchema),
@@ -130,7 +144,8 @@ export const modelSectionSchema = z.object({
   blocks: z.array(studioBlockSchema),
 });
 
-export const enBlockSchema = z.discriminatedUnion('type', [
+/** z.union for the same provider reason as studioBlockSchema. */
+export const enBlockSchema = z.union([
   z.object({ type: z.literal('paragraph'), text: z.string() }),
   z.object({ type: z.literal('list'), items: z.array(z.string()) }),
   z.object({ type: z.literal('heading3'), text: z.string() }),

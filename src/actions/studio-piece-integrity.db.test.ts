@@ -87,7 +87,19 @@ async function piece() {
   await updatePiece(p.id, {
     stage: 'review',
     title: `Review ${p.id}`,
+    excerpt: 'Excerpt',
     authorId,
+    outline: [
+      {
+        id: 'o',
+        heading: 'H',
+        intent: '',
+        chunkIds: [],
+        estChars: 100,
+        kind: 'boilerplate',
+        stale: false,
+      },
+    ],
     sections: [
       {
         outlineId: 'o',
@@ -160,6 +172,7 @@ it('fences cancelled worker mutations after undo and after a replacement run sta
 
 it('restores null metadata rather than retaining values from a newer generation', async () => {
   const p = await piece();
+  await updatePiece(p.id, { excerpt: null });
   const snapshot = await takeSnapshot(p.id, 'no metadata');
   await updatePiece(p.id, {
     titleEn: 'new',
@@ -253,7 +266,7 @@ it('invalidates generated content when the source selection changes and undo put
     outline: [{ stale: true }],
   });
   const change = (await listSnapshots(p.id)).find(
-    (row) => row.reason === 'change sources'
+    (row) => row.reason === 'change_sources'
   );
   expect(await undoAction(p.id, change!.id)).toMatchObject({ ok: true });
   const restored = readPiece((await getPiece(p.id))!);
@@ -262,9 +275,9 @@ it('invalidates generated content when the source selection changes and undo put
   expect(restored.stage).toBe(before.stage);
 });
 
-it('keeps written sections reviewable when a write is cancelled', async () => {
+it('keeps written sections but returns an unfinished cancelled write to outline', async () => {
   const p = await piece();
-  await updatePiece(p.id, { stage: 'outline', sections: [] });
+  await updatePiece(p.id, { stage: 'outline', sections: [], excerpt: null });
   const run = await createRun(prisma, {
     kind: 'write',
     createdById: adminId,
@@ -295,7 +308,7 @@ it('keeps written sections reviewable when a write is cancelled', async () => {
   );
   await cancelRunAction(p.id);
   expect(readPiece((await getPiece(p.id))!)).toMatchObject({
-    stage: 'review',
+    stage: 'outline',
     sections: [{ heading: 'Kept' }],
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { jsonModel, promptOf } from '@/test/ai-mock';
-import { buildDigest } from './digest';
+import { buildDigest, digestGroup, digestGroups } from './digest';
 
 const chunk = (ordinal: number, label = 'all') => ({
   ordinal,
@@ -88,5 +88,18 @@ describe('buildDigest coverage', () => {
     const m = jsonModel([{ points: [{ text: 'A', chunkOrdinals: [0, 1] }] }]);
     await buildDigest([chunk(0), chunk(1)], { model: m });
     expect(m.doGenerateCalls).toHaveLength(1);
+  });
+
+  it('exposes groups so ingest can digest them as separate resumable steps', async () => {
+    const chunks = [
+      ...Array.from({ length: 13 }, (_, i) => chunk(i, '第1章')),
+      chunk(13, '第2章'),
+    ];
+    expect(digestGroups(chunks).map((g) => g.length)).toEqual([12, 1, 1]);
+    const m = jsonModel([{ points: [{ text: 'C', chunkOrdinals: [13] }] }]);
+    expect(await digestGroup([chunk(13, '第2章')], { model: m })).toEqual({
+      label: '第2章',
+      points: [{ text: 'C', chunkOrdinals: [13] }],
+    });
   });
 });

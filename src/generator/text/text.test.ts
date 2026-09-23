@@ -44,6 +44,17 @@ describe('splitSentences', () => {
   it('treats blank lines as sentence breaks', () => {
     expect(splitSentences('見出し\n\n本文です。')).toHaveLength(2);
   });
+
+  it('does not break inside a URL query string', () => {
+    expect(splitSentences('See https://x.io/a?b=1 now.')).toHaveLength(1);
+  });
+
+  it('breaks on the full-width period', () => {
+    expect(splitSentences('全角ピリオド．次の文').map((x) => x.text)).toEqual([
+      '全角ピリオド．',
+      '次の文',
+    ]);
+  });
 });
 
 describe('chunkSegments', () => {
@@ -101,6 +112,33 @@ describe('chunkSegments', () => {
     );
     expect(chunks.every((c) => c.text.length <= 400)).toBe(true);
     expect(chunks.map((c) => c.text).join('')).toBe('あ'.repeat(1000));
+  });
+
+  it('splits a caption-per-line transcript at line starts, with overlap', () => {
+    const lines = Array.from(
+      { length: 150 },
+      (_, i) => `字幕の行その${i}です話は続きます`
+    );
+    const text = lines.join('\n'); // no 。 anywhere
+    const chunks = chunkSegments([{ text, start: 0, locator: {} }]);
+    expect(chunks.length).toBeGreaterThan(2);
+    for (const c of chunks) {
+      expect(c.text.length).toBeLessThanOrEqual(1400);
+      expect(text.slice(c.charStart, c.charEnd)).toBe(c.text);
+      expect(c.charStart === 0 || text[c.charStart - 1] === '\n').toBe(true);
+    }
+    for (let i = 1; i < chunks.length; i++) {
+      expect(chunks[i].charStart).toBeLessThan(chunks[i - 1].charEnd);
+    }
+  });
+
+  it('overlaps hard-cut text that has no break at all', () => {
+    const chunks = chunkSegments([
+      { text: 'あ'.repeat(3000), start: 0, locator: {} },
+    ]);
+    for (let i = 1; i < chunks.length; i++) {
+      expect(chunks[i].charStart).toBeLessThan(chunks[i - 1].charEnd);
+    }
   });
 
   it('skips empty segments', () => {

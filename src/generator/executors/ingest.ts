@@ -5,8 +5,12 @@ import type { ContentBlock } from '@/types';
 import type { RunExecutor } from '../runs/run-handler';
 import { NonRetryableRunError } from '../runs/run-types';
 import { articleToSegments } from '../sources/article-text';
-import { buildDigest } from '../sources/digest';
-import type { SourceMeta } from '../sources/source-types';
+import {
+  digestGroup,
+  digestGroups,
+  VERSION as DIGEST_VERSION,
+} from '../sources/digest';
+import type { DigestSection, SourceMeta } from '../sources/source-types';
 import {
   getSource,
   replaceChunks,
@@ -68,20 +72,39 @@ export const ingestExecutor: RunExecutor = async ({
   }
 
   await setSourceStatus(source.id, 'processing');
-  await step('extract', 0, async () => {
-    const { text } = await extract(source);
+  // The step stores segment boundaries so a retry never re-reads a live
+  // article that may have changed since its text snapshot was taken.
+  const extracted = await step('extract', 0, async () => {
+    const { text, segments } = await extract(source);
     if (!text.trim()) return fail(source.id, 'The source has no text.');
     await setSourceText(source.id, {
       text,
       language: detectLanguage(text),
       contentHash: contentHash(text),
     });
-    return { charCount: text.length };
+    return {
+      charCount: text.length,
+      segments: segments.map((g) => ({
+        start: g.start,
+        end: g.start + g.text.length,
+        locator: g.locator,
+      })),
+    };
   });
 
   const stored = await getSource(source.id);
   if (!stored) throw new NonRetryableRunError('The source no longer exists.');
-  const { segments } = await extract(stored);
+  const text = stored.text;
+  if (!text) throw new NonRetryableRunError('The source text is missing.');
+  // An extract step recorded before boundaries were stored: one segment.
+  const bounds = extracted.segments ?? [
+    { start: 0, end: text.length, locator: {} },
+  ];
+  const segments: Segment[] = bounds.map((g) => ({
+    text: text.slice(g.start, g.end),
+    start: g.start,
+    locator: g.locator,
+  }));
   const chunks = chunkSegments(segments);
   await step('chunk-embed', 1, async () => {
     const vectors: number[][] = [];
@@ -103,15 +126,28 @@ export const ingestExecutor: RunExecutor = async ({
     return { chunkCount: chunks.length };
   });
 
-  await step('digest', 2, async () => {
-    const digest = await buildDigest(
-      chunks.map((c) => ({
-        ordinal: c.ordinal,
-        text: c.text,
-        label: String(c.locator.chapter ?? c.locator.blockId ?? 'all'),
-      })),
-      { onUsage: recordUsage, signal, ensureBudget }
+  // One step per group: a long source resumes where its digest stopped
+  // instead of repeating every model call within one job's time limit.
+  const groups = digestGroups(
+    chunks.map((c) => ({
+      ordinal: c.ordinal,
+      text: c.text,
+      label: String(c.locator.chapter ?? c.locator.blockId ?? 'all'),
+    }))
+  );
+  const digest: DigestSection[] = [];
+  for (const [index, group] of groups.entries()) {
+    digest.push(
+      await step(
+        `digest:${index}`,
+        2 + index,
+        () =>
+          digestGroup(group, { onUsage: recordUsage, signal, ensureBudget }),
+        { promptVersion: DIGEST_VERSION }
+      )
     );
+  }
+  await step('digest', 2 + groups.length, async () => {
     const meta: SourceMeta = { ...(source.meta as SourceMeta), digest };
     await setSourceMeta(source.id, meta);
     return { sections: digest.length };

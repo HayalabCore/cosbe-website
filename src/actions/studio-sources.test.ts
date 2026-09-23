@@ -19,6 +19,8 @@ vi.mock('@/generator/sources/sources-repository', () => ({
   setSourceStatus: vi.fn(),
   countProjectLinks: vi.fn(async () => 0),
   deleteSource: vi.fn(),
+  deleteSourceGuarded: vi.fn(async () => ({ result: 'OK', storagePath: null })),
+  claimFailedSource: vi.fn(async () => true),
 }));
 vi.mock('@/generator/sources/projects-repository', () => ({
   linkSource: vi.fn(),
@@ -47,12 +49,17 @@ import { ALL_PERMISSIONS } from '@/lib/permissions';
 import { prisma } from '@/lib/prisma';
 import { enqueueIngest } from '@/generator/sources/enqueue-ingest';
 import {
-  countProjectLinks,
+  claimFailedSource,
   createSource,
   deleteSource,
+  deleteSourceGuarded,
   getSource,
   setSourceStatus,
 } from '@/generator/sources/sources-repository';
+import {
+  pdfObjectExists,
+  removeSourceObject,
+} from '@/lib/studio/source-storage';
 import { linkSource } from '@/generator/sources/projects-repository';
 import {
   createArticleSourceAction,
@@ -103,7 +110,19 @@ describe('studio source actions', () => {
     expect(enqueueIngest).toHaveBeenCalledWith(
       expect.anything(),
       's1',
-      TEST_USER.id
+      TEST_USER.id,
+      2 // the text length sizes the ingest token ceiling
+    );
+  });
+
+  it('accepts a maximum-size Japanese source and sizes its ingest ceiling', async () => {
+    const text = 'あ'.repeat(400_000);
+    expect((await createTextSourceAction({ title: '長い書き起こし', text })).ok).toBe(true);
+    expect(enqueueIngest).toHaveBeenCalledWith(
+      expect.anything(),
+      's1',
+      TEST_USER.id,
+      400_000
     );
   });
 
@@ -195,22 +214,36 @@ describe('studio source actions', () => {
     expect(setSourceStatus).toHaveBeenCalledWith(SOURCE, 'stored');
   });
 
-  it('protects linked sources unless the user may delete them', async () => {
-    vi.mocked(getSource).mockResolvedValue({
-      id: SOURCE,
-      kind: 'text',
-      storagePath: null,
-    } as never);
-    vi.mocked(countProjectLinks).mockResolvedValue(2);
+  it('passes who may delete shared sources to the guarded delete', async () => {
     authed(ALL_PERMISSIONS.filter((p) => p !== 'studio.sources.delete'));
+    vi.mocked(deleteSourceGuarded).mockResolvedValueOnce({
+      result: 'LINKED',
+      storagePath: null,
+    });
     expect(await deleteSourceAction(SOURCE)).toEqual({
       ok: false,
       error: 'LINKED',
     });
-    expect(deleteSource).not.toHaveBeenCalled();
+    expect(deleteSourceGuarded).toHaveBeenCalledWith(SOURCE, {
+      id: TEST_USER.id,
+      canDeleteShared: false,
+    });
     authed();
     expect((await deleteSourceAction(SOURCE)).ok).toBe(true);
-    expect(deleteSource).toHaveBeenCalledWith(SOURCE);
+    expect(deleteSourceGuarded).toHaveBeenLastCalledWith(SOURCE, {
+      id: TEST_USER.id,
+      canDeleteShared: true,
+    });
+  });
+
+  it('still reports success when only the stored file could not be removed', async () => {
+    vi.mocked(deleteSourceGuarded).mockResolvedValueOnce({
+      result: 'OK',
+      storagePath: 'pdf/x.pdf',
+    });
+    vi.mocked(removeSourceObject).mockRejectedValueOnce(new Error('storage down'));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect((await deleteSourceAction(SOURCE)).ok).toBe(true);
   });
 
   it('marks the source failed when it cannot be queued', async () => {
@@ -227,27 +260,39 @@ describe('studio source actions', () => {
     );
   });
 
-  it('retries only sources that are not already processing', async () => {
+  it('retries only failed sources, claimed atomically', async () => {
     vi.mocked(getSource).mockResolvedValue({
       id: SOURCE,
       kind: 'text',
-      status: 'processing',
+      status: 'ready',
+      charCount: 1234,
     } as never);
+    vi.mocked(claimFailedSource).mockResolvedValueOnce(false);
     expect(await retryIngestAction(SOURCE)).toEqual({
       ok: false,
       error: 'INVALID_INPUT',
     });
-    vi.mocked(getSource).mockResolvedValue({
-      id: SOURCE,
-      kind: 'text',
-      status: 'failed',
-    } as never);
+    expect(enqueueIngest).not.toHaveBeenCalled();
     expect((await retryIngestAction(SOURCE)).ok).toBe(true);
-    expect(setSourceStatus).toHaveBeenCalledWith(SOURCE, 'pending');
     expect(enqueueIngest).toHaveBeenCalledWith(
       expect.anything(),
       SOURCE,
-      TEST_USER.id
+      TEST_USER.id,
+      1234
     );
+  });
+
+  it('settles a PDF whose upload was never confirmed', async () => {
+    vi.mocked(getSource).mockResolvedValue({
+      id: SOURCE,
+      kind: 'pdf',
+      status: 'pending',
+      storagePath: 'pdf/x.pdf',
+      createdAt: new Date(Date.now() - 11 * 60_000),
+    } as never);
+    vi.mocked(pdfObjectExists).mockResolvedValueOnce(true);
+    expect((await retryIngestAction(SOURCE)).ok).toBe(true);
+    expect(setSourceStatus).toHaveBeenCalledWith(SOURCE, 'stored');
+    expect(enqueueIngest).not.toHaveBeenCalled();
   });
 });

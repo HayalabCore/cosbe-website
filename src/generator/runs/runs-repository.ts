@@ -1,6 +1,8 @@
 import type { Prisma, StudioRun } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { withPieceLock } from '../pieces/piece-lock';
+import { lockPiece, withPieceLock } from '../pieces/piece-lock';
+import { readPiece } from '../pieces/pieces-repository';
+import { settledStage } from '../pieces/stages';
 import { errorMessage, type RunKind } from './run-types';
 
 export type Db = Prisma.TransactionClient | typeof prisma;
@@ -20,9 +22,8 @@ export class TokenCeilingExceededError extends Error {
   readonly ceiling: number;
 
   constructor(runId: string, used: number, ceiling: number) {
-    super(
-      `Run used ${used} tokens, over its ceiling of ${ceiling}. Raise STUDIO_RUN_TOKEN_CEILING or narrow the sources.`
-    );
+    // Shown to editors through the run error translation.
+    super(`TOKEN_CEILING:${used}/${ceiling}`);
     this.name = 'TokenCeilingExceededError';
     this.runId = runId;
     this.used = used;
@@ -80,19 +81,22 @@ export async function markRunSucceeded(id: string): Promise<void> {
 /**
  * Also fails the run's source if it is still waiting on this run, so a source
  * never stays "processing" after its ingest run died (retries exhausted,
- * token ceiling, lost permission).
+ * token ceiling, lost permission), and moves a piece out of the transient
+ * stage the run left it in. The piece is locked before the run (lock order).
  */
 export async function markRunFailed(id: string, error: string): Promise<void> {
   await prisma.$transaction(async (tx) => {
     const run = await tx.studioRun.findUnique({
       where: { id },
-      select: { sourceId: true },
+      select: { sourceId: true, pieceId: true },
     });
+    if (run?.pieceId) await lockPiece(tx, run.pieceId);
     const { count } = await tx.studioRun.updateMany({
       where: { id, status: { in: ['queued', 'running'] } },
       data: { status: 'failed', error, finishedAt: new Date() },
     });
-    if (count === 1 && run?.sourceId) {
+    if (count === 0) return;
+    if (run?.sourceId) {
       await tx.studioSource.updateMany({
         where: {
           id: run.sourceId,
@@ -101,7 +105,22 @@ export async function markRunFailed(id: string, error: string): Promise<void> {
         data: { status: 'failed', error },
       });
     }
+    if (run?.pieceId) await settlePiece(tx, run.pieceId);
   });
+}
+
+/** Caller holds the piece lock. */
+async function settlePiece(
+  tx: Prisma.TransactionClient,
+  pieceId: string
+): Promise<void> {
+  const row = await tx.studioPiece.findUnique({ where: { id: pieceId } });
+  if (!row) return;
+  const piece = readPiece(row);
+  const stage = settledStage(piece);
+  if (stage !== piece.stage) {
+    await tx.studioPiece.update({ where: { id: pieceId }, data: { stage } });
+  }
 }
 
 /** Remembers an attempt's error while pg-boss retries; the run stays running. */
@@ -134,28 +153,7 @@ async function cancelPieceRun(
     data: { status: 'cancelled', finishedAt: new Date() },
   });
   if (!count) return false;
-  const snapshot = await tx.studioPieceSnapshot.findFirst({
-    where: { pieceId, runId },
-    orderBy: { createdAt: 'asc' },
-  });
-  if (snapshot) {
-    const piece = await tx.studioPiece.findUnique({
-      where: { id: pieceId },
-      select: { stage: true, sections: true },
-    });
-    if (piece?.stage === 'writing' || piece?.stage === 'translating') {
-      const hasSections =
-        Array.isArray(piece.sections) && piece.sections.length > 0;
-      // A cancelled write that already saved sections stays reviewable.
-      // Rolling back to the pre-write stage would hide that text.
-      const stage =
-        piece.stage === 'writing' && hasSections ? 'review' : snapshot.stage;
-      await tx.studioPiece.update({
-        where: { id: pieceId },
-        data: { stage },
-      });
-    }
-  }
+  await settlePiece(tx, pieceId);
   return true;
 }
 
@@ -199,10 +197,21 @@ export async function assertRunBudget(
   }
 }
 
+/** Counts usage on the run and, when given, on the step that spent it. */
 export async function addRunUsage(
   id: string,
-  usage: { inputTokens: number; outputTokens: number }
+  usage: { inputTokens: number; outputTokens: number },
+  stepKey?: string
 ): Promise<void> {
+  if (stepKey) {
+    await prisma.studioRunStep.updateMany({
+      where: { runId: id, key: stepKey },
+      data: {
+        tokensIn: { increment: usage.inputTokens },
+        tokensOut: { increment: usage.outputTokens },
+      },
+    });
+  }
   const run = await prisma.studioRun.update({
     where: { id },
     data: {
@@ -223,7 +232,7 @@ export async function addRunUsage(
  */
 export async function runStep<T extends Prisma.InputJsonValue>(
   runId: string,
-  step: { key: string; ordinal: number },
+  step: { key: string; ordinal: number; promptVersion?: string },
   fn: () => Promise<T>
 ): Promise<T> {
   const where = { runId_key: { runId, key: step.key } };
@@ -238,10 +247,12 @@ export async function runStep<T extends Prisma.InputJsonValue>(
       ordinal: step.ordinal,
       status: 'running',
       attempts: 1,
+      promptVersion: step.promptVersion ?? null,
       startedAt: new Date(),
     },
     update: {
       status: 'running',
+      promptVersion: step.promptVersion ?? null,
       error: null,
       attempts: { increment: 1 },
       startedAt: new Date(),

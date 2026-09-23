@@ -17,9 +17,10 @@ import { enqueueIngest } from '@/generator/sources/enqueue-ingest';
 import { linkSource } from '@/generator/sources/projects-repository';
 import { MAX_TEXT_SOURCE_CHARS } from '@/generator/sources/source-types';
 import {
-  countProjectLinks,
+  claimFailedSource,
   createSource,
   deleteSource,
+  deleteSourceGuarded,
   getSource,
   listSources,
   setSourceStatus,
@@ -43,7 +44,12 @@ async function projectIsOpen(projectId: string): Promise<boolean> {
  * Links the new source, then queues ingest. A failed link deletes the row.
  * A failed enqueue marks it failed so it is never left pending without a job.
  */
-async function afterCreate(sourceId: string, userId: string, project?: string) {
+async function afterCreate(
+  sourceId: string,
+  userId: string,
+  project?: string,
+  chars?: number
+) {
   try {
     if (project) await linkSource(project, sourceId, userId);
   } catch (error) {
@@ -51,7 +57,7 @@ async function afterCreate(sourceId: string, userId: string, project?: string) {
     throw error;
   }
   try {
-    await enqueueIngest(await getWebBoss(), sourceId, userId);
+    await enqueueIngest(await getWebBoss(), sourceId, userId, chars);
   } catch (error) {
     await setSourceStatus(sourceId, 'failed', QUEUE_FAILED);
     throw error;
@@ -90,7 +96,12 @@ export async function createTextSourceAction(input: {
       text: parsed.data.text,
       createdById: ctx.admin.id,
     });
-    await afterCreate(source.id, ctx.admin.id, parsed.data.projectId);
+    await afterCreate(
+      source.id,
+      ctx.admin.id,
+      parsed.data.projectId,
+      parsed.data.text.length
+    );
     return { ok: true, data: { sourceId: source.id } };
   } catch (error) {
     console.error('[createTextSourceAction]', error);
@@ -224,6 +235,9 @@ export async function finishPdfUploadAction(
   return { ok: true, data: undefined };
 }
 
+/** A browser upload that never confirmed within this time is settled on retry. */
+const STALE_UPLOAD_MS = 10 * 60_000;
+
 export async function retryIngestAction(
   sourceId: string
 ): Promise<StudioResult<undefined>> {
@@ -232,15 +246,29 @@ export async function retryIngestAction(
     return { ok: false, error: 'INVALID_INPUT' };
   const source = await getSource(sourceId);
   if (!source) return { ok: false, error: 'NOT_FOUND' };
-  if (
-    source.kind === 'pdf' ||
-    source.status === 'pending' ||
-    source.status === 'processing'
-  )
+  if (source.kind === 'pdf') {
+    // PDFs are stored, not ingested; settle an upload the browser abandoned.
+    const stale =
+      source.status === 'pending' &&
+      Date.now() - source.createdAt.getTime() > STALE_UPLOAD_MS;
+    if (!stale || !source.storagePath) return { ok: false, error: 'INVALID_INPUT' };
+    if (await pdfObjectExists(source.storagePath)) {
+      await setSourceStatus(sourceId, 'stored');
+    } else {
+      await setSourceStatus(sourceId, 'failed', 'The upload did not complete.');
+    }
+    return { ok: true, data: undefined };
+  }
+  // Re-ingesting a ready source would replace chunk ids that pieces cite.
+  if (!(await claimFailedSource(sourceId)))
     return { ok: false, error: 'INVALID_INPUT' };
-  await setSourceStatus(sourceId, 'pending');
   try {
-    await enqueueIngest(await getWebBoss(), sourceId, ctx.admin.id);
+    await enqueueIngest(
+      await getWebBoss(),
+      sourceId,
+      ctx.admin.id,
+      source.charCount ?? undefined
+    );
   } catch (error) {
     console.error('[retryIngestAction]', error);
     await setSourceStatus(sourceId, 'failed', QUEUE_FAILED);
@@ -255,15 +283,18 @@ export async function deleteSourceAction(
   const ctx = await requirePermission('studio.use');
   if (!id.safeParse(sourceId).success)
     return { ok: false, error: 'INVALID_INPUT' };
-  const source = await getSource(sourceId);
-  if (!source) return { ok: false, error: 'NOT_FOUND' };
-  if (
-    (await countProjectLinks(sourceId)) > 0 &&
-    !ctx.actor.permissions.has('studio.sources.delete')
-  ) {
-    return { ok: false, error: 'LINKED' };
+  const outcome = await deleteSourceGuarded(sourceId, {
+    id: ctx.admin.id,
+    canDeleteShared: ctx.actor.permissions.has('studio.sources.delete'),
+  });
+  if (outcome.result !== 'OK') return { ok: false, error: outcome.result };
+  if (outcome.storagePath) {
+    try {
+      await removeSourceObject(outcome.storagePath);
+    } catch (error) {
+      // The row is gone; an orphaned private object is harmless.
+      console.error('[deleteSourceAction] storage', error);
+    }
   }
-  if (source.storagePath) await removeSourceObject(source.storagePath);
-  await deleteSource(sourceId);
   return { ok: true, data: undefined };
 }

@@ -1,10 +1,11 @@
 export type Sentence = { text: string; start: number; end: number };
 
 /**
- * JA sentences end at 。！？ (full or half width); EN at . ! ? followed by
- * whitespace; blank lines always break. Offsets index into `text`.
+ * JA sentences end at 。！？． (plus closing brackets); EN at . ! ? followed by
+ * whitespace or the end, so "a?b=1" in a URL is not a break; blank lines
+ * always break. Offsets index into `text`.
  */
-const BREAK = /[。！？!?](?:[」』）)]*)|\.(?=\s)|[!?](?=\s)|\n\s*\n/g;
+const BREAK = /[。！？．][」』）)]*|[!?](?=\s|$)|\.(?=\s)|\n\s*\n/g;
 
 export function splitSentences(text: string): Sentence[] {
   const out: Sentence[] = [];

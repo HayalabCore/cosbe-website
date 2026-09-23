@@ -5,9 +5,9 @@ import { useTranslations } from 'next-intl';
 import { listPieceChoicesAction, startRunAction, updatePieceSetupAction } from '@/actions/studio-pieces';
 import { ARTICLE_CREATE_CATEGORIES } from '@/lib/api/article-create-metadata';
 import type { PanelProps } from './panel-props';
-import { errorText } from './errorText';
+import { useStudioAction } from './useStudioAction';
 
-export default function BriefPanel({ piece, busy, refresh }: PanelProps) {
+export default function BriefPanel({ piece, busy, locked = false, refresh, notify }: PanelProps) {
   const t = useTranslations('admin.studio');
   const [goal, setGoal] = useState(piece.brief.goal);
   const [audience, setAudience] = useState(piece.brief.audience);
@@ -18,14 +18,15 @@ export default function BriefPanel({ piece, busy, refresh }: PanelProps) {
   const [category, setCategory] = useState(piece.category);
   const [authorId, setAuthorId] = useState(piece.authorId ?? '');
   const [choices, setChoices] = useState<{ templates: Array<{ id: string; name: string }>; authors: Array<{ id: string; name: string; designation: string }> }>({ templates: [], authors: [] });
-  const [message, setMessage] = useState<string | null>(null);
+  const { run, pending, message } = useStudioAction(refresh, notify);
+  const disabled = busy || locked || pending;
 
   useEffect(() => {
     void listPieceChoicesAction(piece.id).then((r) => r.ok && setChoices(r.data));
   }, [piece.id]);
 
-  async function save(): Promise<boolean> {
-    const result = await updatePieceSetupAction(piece.id, {
+  const setup = () =>
+    updatePieceSetupAction(piece.id, {
       brief: {
         goal, audience, tone,
         keywords: keywords.split(',').map((k) => k.trim()).filter(Boolean),
@@ -35,16 +36,13 @@ export default function BriefPanel({ piece, busy, refresh }: PanelProps) {
       category: category as (typeof ARTICLE_CREATE_CATEGORIES)[number],
       authorId: authorId || null,
     });
-    if (!result.ok) setMessage(errorText(t, result));
-    return result.ok;
-  }
 
-  async function createOutline() {
-    if (!(await save())) return;
-    const result = await startRunAction(piece.id, 'outline');
-    if (!result.ok) setMessage(errorText(t, result));
-    await refresh();
-  }
+  const save = () => run(setup);
+  const createOutline = () =>
+    run(async () => {
+      const saved = await setup();
+      return saved.ok ? startRunAction(piece.id, 'outline') : saved;
+    });
 
   const field = 'mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm';
   return (
@@ -74,8 +72,8 @@ export default function BriefPanel({ piece, busy, refresh }: PanelProps) {
       </label>
       {message && <p className="text-sm text-red-600">{message}</p>}
       <div className="flex gap-2">
-        <button type="button" disabled={busy} onClick={() => void save().then(refresh)} className="rounded-lg border border-slate-200 px-4 py-2 text-sm">{t('brief.save')}</button>
-        <button type="button" disabled={busy} onClick={() => void createOutline()} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed">{t('brief.createOutline')}</button>
+        <button type="button" disabled={disabled} onClick={() => void save()} className="rounded-lg border border-slate-200 px-4 py-2 text-sm">{t('brief.save')}</button>
+        <button type="button" disabled={disabled} onClick={() => void createOutline()} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed">{t('brief.createOutline')}</button>
       </div>
     </section>
   );

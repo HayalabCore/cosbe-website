@@ -17,16 +17,22 @@ vi.mock('@/generator/sources/projects-repository', () => ({
   listProjectSources: vi.fn(async () => []),
 }));
 
+import { Prisma } from '@prisma/client';
 import {
+  archiveProject,
   createProject,
   getProject,
   linkSource,
 } from '@/generator/sources/projects-repository';
 import {
+  archiveProjectAction,
   createProjectAction,
   getProjectAction,
   linkSourceAction,
 } from './studio-projects';
+
+const prismaError = (code: string) =>
+  new Prisma.PrismaClientKnownRequestError('x', { code, clientVersion: 'test' });
 
 const P = '6f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
 const S = '8f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
@@ -90,5 +96,13 @@ describe('studio project actions', () => {
       error: 'NOT_FOUND',
     });
     expect(linkSource).not.toHaveBeenCalled();
+  });
+
+  it('reports NOT_FOUND instead of throwing for a missing source or project', async () => {
+    vi.mocked(getProject).mockResolvedValue({ id: P, archivedAt: null } as never);
+    vi.mocked(linkSource).mockRejectedValueOnce(prismaError('P2003'));
+    expect(await linkSourceAction(P, S)).toEqual({ ok: false, error: 'NOT_FOUND' });
+    vi.mocked(archiveProject).mockRejectedValueOnce(prismaError('P2025'));
+    expect(await archiveProjectAction(P)).toEqual({ ok: false, error: 'NOT_FOUND' });
   });
 });

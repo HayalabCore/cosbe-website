@@ -15,7 +15,12 @@ import { prisma } from '@/lib/prisma';
 import { loadWorkerEnv } from './env';
 import { startHealthServer } from './health-server';
 
-const SHUTDOWN_TIMEOUT_MS = 25_000;
+/**
+ * Cloud Run kills the container 10 s after SIGTERM. Stopping within that lets
+ * pg-boss fail the active jobs itself, so they retry at once (resuming from
+ * their last finished step) instead of waiting for heartbeat expiry.
+ */
+const SHUTDOWN_TIMEOUT_MS = 8_000;
 
 async function main(): Promise<void> {
   const env = loadWorkerEnv();

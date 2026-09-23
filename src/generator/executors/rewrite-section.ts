@@ -2,10 +2,15 @@ import { z } from 'zod';
 import type { RunExecutor } from '../runs/run-handler';
 import { NonRetryableRunError } from '../runs/run-types';
 import { sectionPlainText } from '../pieces/piece-types';
-import { saveSection, takeSnapshot } from '../pieces/pieces-repository';
+import {
+  saveSection,
+  setStage,
+  takeSnapshot,
+} from '../pieces/pieces-repository';
 import { writeSection } from '../pieces/write-section';
 import { loadPiece, loadTemplate, parseRunInput } from './piece-context';
 import { chunksForSection } from './write';
+import { VERSION as WRITE_VERSION } from '@/ai/prompts/write.v1';
 
 const inputSchema = z.object({
   sectionId: z.string(),
@@ -26,30 +31,37 @@ export const rewriteSectionExecutor: RunExecutor = async ({
   if (!section || !current)
     throw new NonRetryableRunError('That section does not exist.');
   const usage = { onUsage: recordUsage, signal, ensureBudget };
-  await step('rewrite', 0, async () => {
-    await takeSnapshot(piece.id, `rewrite:${section.heading}`, run.id);
-    const position = piece.outline.findIndex((o) => o.id === section.id);
-    const previous = piece.sections.find(
-      (s) => s.outlineId === piece.outline[position - 1]?.id
-    );
-    const result = await writeSection(
-      {
-        brief: piece.brief,
-        template: await loadTemplate(piece),
-        outline: piece.outline,
-        section,
-        chunks: await chunksForSection(piece, section, usage),
-        previousTail: previous ? sectionPlainText(previous).slice(-200) : '',
-        instruction: input.instruction,
-        current: current.blocks,
-      },
-      usage
-    );
-    await saveSection(
-      piece.id,
-      { ...result, en: current.en, enStale: current.en !== null },
-      run.id
-    );
-    return { flags: result.flags.length };
-  });
+  await step(
+    'rewrite',
+    0,
+    async () => {
+      await takeSnapshot(piece.id, `rewrite:${section.heading}`, run.id);
+      const position = piece.outline.findIndex((o) => o.id === section.id);
+      const previous = piece.sections.find(
+        (s) => s.outlineId === piece.outline[position - 1]?.id
+      );
+      const result = await writeSection(
+        {
+          brief: piece.brief,
+          template: await loadTemplate(piece),
+          outline: piece.outline,
+          section,
+          chunks: await chunksForSection(piece, section, usage),
+          previousTail: previous ? sectionPlainText(previous).slice(-200) : '',
+          instruction: input.instruction,
+          current: current.blocks,
+        },
+        usage
+      );
+      await saveSection(
+        piece.id,
+        { ...result, en: current.en, enStale: current.en !== null },
+        run.id
+      );
+      // "ready" means EN is complete; this section's EN is now stale.
+      if (piece.stage === 'ready') await setStage(piece.id, 'review', run.id);
+      return { flags: result.flags.length };
+    },
+    { promptVersion: WRITE_VERSION }
+  );
 };

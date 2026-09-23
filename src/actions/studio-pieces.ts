@@ -9,7 +9,7 @@ import { requirePermission } from '@/lib/authz';
 import { prisma } from '@/lib/prisma';
 import { createArticleRecord } from '@/lib/articles';
 import { allocateUniqueSlug } from '@/lib/articles-repository';
-import { generateSlug } from '@/lib/article-utils';
+import { createFallbackSlug, generateSlug } from '@/lib/article-utils';
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
 import {
   createArticleSchema,
@@ -122,6 +122,8 @@ export async function listPiecesAction(
   filter: { projectId?: string } = {}
 ): Promise<StudioResult<PieceListItemDTO[]>> {
   await requirePermission('studio.use');
+  if (filter.projectId !== undefined && !uuid.safeParse(filter.projectId).success)
+    return { ok: false, error: 'INVALID_INPUT' };
   const rows = await listPieces(filter);
   return {
     ok: true,
@@ -174,7 +176,7 @@ export async function getPieceAction(
     piece.articleId
       ? prisma.article.findUnique({
           where: { id: piece.articleId },
-          select: { id: true, status: true, slug: true },
+          select: { id: true, status: true, slug: true, category: true },
         })
       : null,
   ]);
@@ -196,14 +198,27 @@ const setupSchema = z.object({
   authorId: z.uuid().nullable().optional(),
 });
 
-async function selectionInProject(
+/**
+ * Drops ids that were already selected but have since been unlinked from the
+ * project (the editor cannot see or untick them). A newly added unlinked id
+ * is invalid input. Chapter maps only survive for selected sources.
+ */
+async function normalizeSelection(
   projectId: string,
-  selection: Selection
-): Promise<boolean> {
+  next: Selection,
+  previous: Selection
+): Promise<Selection | null> {
   const linked = new Set(
     (await listProjectSources(projectId)).map((source) => source.id)
   );
-  return selection.sourceIds.every((id) => linked.has(id));
+  const before = new Set(previous.sourceIds);
+  if (next.sourceIds.some((id) => !linked.has(id) && !before.has(id)))
+    return null;
+  const sourceIds = next.sourceIds.filter((id) => linked.has(id));
+  const chapters = Object.fromEntries(
+    Object.entries(next.chapters).filter(([id]) => sourceIds.includes(id))
+  );
+  return { sourceIds, chapters };
 }
 
 export async function updatePieceSetupAction(
@@ -217,23 +232,24 @@ export async function updatePieceSetupAction(
   return withPieceLock(id, async (tx) => {
     const piece = await loadEditable(id, {}, tx);
     if (isFail(piece)) return piece;
+    const selection = parsed.data.selection
+      ? await normalizeSelection(
+          piece.projectId,
+          parsed.data.selection,
+          piece.selection
+        )
+      : undefined;
+    if (selection === null) return { ok: false, error: 'INVALID_INPUT' };
     let stage = piece.stage;
-    if (parsed.data.selection && (stage === 'sources' || stage === 'brief')) {
-      stage = parsed.data.selection.sourceIds.length > 0 ? 'brief' : 'sources';
-    }
-    if (
-      parsed.data.selection &&
-      !(await selectionInProject(piece.projectId, parsed.data.selection))
-    ) {
-      return { ok: false, error: 'INVALID_INPUT' };
+    if (selection && (stage === 'sources' || stage === 'brief')) {
+      stage = selection.sourceIds.length > 0 ? 'brief' : 'sources';
     }
     const scopeChanged =
-      parsed.data.selection &&
-      !sameSelection(parsed.data.selection, piece.selection);
+      selection && !sameSelection(selection, piece.selection);
     if (scopeChanged) {
-      await takeSnapshot(id, 'change sources', undefined, tx);
+      await takeSnapshot(id, 'change_sources', undefined, tx);
       stage =
-        parsed.data.selection!.sourceIds.length === 0
+        selection.sourceIds.length === 0
           ? 'sources'
           : piece.outline.length > 0
             ? 'outline'
@@ -243,6 +259,7 @@ export async function updatePieceSetupAction(
       id,
       {
         ...parsed.data,
+        ...(selection ? { selection } : {}),
         stage,
         ...(scopeChanged
           ? {
@@ -267,12 +284,15 @@ const RULES = {
   write: canStartWriting,
   translate: canTranslate,
 } as const;
+const startKind = z.enum(['outline', 'write', 'translate']);
 
 export async function startRunAction(
   id: string,
   kind: keyof typeof RULES
 ): Promise<StudioResult<{ runId: string }>> {
   const ctx = await requirePermission('studio.use');
+  if (!startKind.safeParse(kind).success)
+    return { ok: false, error: 'INVALID_INPUT' };
   const piece = await loadEditable(id);
   if (isFail(piece)) return piece;
   const blocked =
@@ -344,13 +364,17 @@ export async function saveOutlineAction(
       };
     });
     const kept = new Set(outline.map((o) => o.id));
-    await takeSnapshot(id, 'edit outline', undefined, tx);
+    // Stale sections will be rewritten; the old excerpt must not let the
+    // piece count as finished before the finish step runs again.
+    const edited = outline.some((o) => o.stale && !previous.get(o.id)?.section.stale);
+    await takeSnapshot(id, 'edit_outline', undefined, tx);
     await updatePiece(
       id,
       {
         outline,
         sections: piece.sections.filter((s) => kept.has(s.outlineId)),
         stage: stageAfterOutlineEdit(piece.stage),
+        ...(edited ? { excerpt: null } : {}),
       },
       undefined,
       tx
@@ -376,7 +400,7 @@ export async function undoAction(
     });
     if (!snapshot || snapshot.pieceId !== id)
       return { ok: false, error: 'NOT_FOUND' };
-    await takeSnapshot(id, 'before undo', undefined, tx);
+    await takeSnapshot(id, 'before_undo', undefined, tx);
     await restoreSnapshot(snapshotId, tx);
     return { ok: true, data: undefined };
   });
@@ -481,10 +505,20 @@ export async function listPieceChoicesAction(id: string): Promise<
   };
 }
 
+/** English title when there is one; never a Latin remnant of a Japanese title. */
+function handoffSlug(piece: PieceData): string {
+  const fromEn = piece.titleEn ? generateSlug(piece.titleEn) : '';
+  return fromEn.length >= 3 ? fromEn : createFallbackSlug(piece.title);
+}
+
 export async function createDraftPostAction(
   id: string
 ): Promise<StudioResult<{ articleId: string }>> {
-  await requirePermission('studio.use', 'articles.edit');
+  const ctx = await requirePermission('studio.use');
+  // The studio shows this button to studio users; a missing article
+  // permission is an answer, not a crash.
+  if (!ctx.actor.permissions.has('articles.edit'))
+    return { ok: false, error: 'FORBIDDEN' };
   if (!uuid.safeParse(id).success)
     return { ok: false as const, error: 'INVALID_INPUT' as const };
   const result = await withPieceLock(id, async (tx) => {
@@ -497,11 +531,7 @@ export async function createDraftPostAction(
       ? await tx.author.findUnique({ where: { id: piece.authorId } })
       : null;
     if (!author) return { ok: false as const, error: 'NO_AUTHOR' as const };
-    const slug = await allocateUniqueSlug(
-      generateSlug(piece.titleEn || piece.title),
-      undefined,
-      tx
-    );
+    const slug = await allocateUniqueSlug(handoffSlug(piece), undefined, tx);
     const parsed = createArticleSchema.safeParse({
       slug,
       title: piece.title,

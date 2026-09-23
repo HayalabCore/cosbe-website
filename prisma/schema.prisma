@@ -226,9 +226,12 @@ model StudioRunStep {
   status     String
   output     Json?
   error      String?
-  attempts   Int       @default(0)
-  startedAt  DateTime? @map("started_at") @db.Timestamptz(6)
-  finishedAt DateTime? @map("finished_at") @db.Timestamptz(6)
+  attempts      Int       @default(0)
+  promptVersion String?   @map("prompt_version")
+  tokensIn      Int       @default(0) @map("tokens_in")
+  tokensOut     Int       @default(0) @map("tokens_out")
+  startedAt     DateTime? @map("started_at") @db.Timestamptz(6)
+  finishedAt    DateTime? @map("finished_at") @db.Timestamptz(6)
 
   @@unique([runId, key])
   @@map("studio_run_steps")

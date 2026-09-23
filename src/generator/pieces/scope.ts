@@ -28,7 +28,12 @@ export async function buildScope(
   const omit = new Set<string>();
   for (const row of rows) {
     const ticked = piece.selection.chapters[row.id];
-    if (!ticked?.length) continue;
+    if (ticked === undefined) continue;
+    // An explicit empty list means "no chapter", never "whole source".
+    if (ticked.length === 0) {
+      omit.add(row.id);
+      continue;
+    }
     const chapters = (row.meta as SourceMeta).chapters ?? [];
     const ranges = ticked
       .map((i) => chapters[i])

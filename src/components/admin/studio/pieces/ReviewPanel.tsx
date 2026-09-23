@@ -1,13 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { createDraftPostAction, rewriteSectionAction, startRunAction } from '@/actions/studio-pieces';
 import type { Sentence, StudioBlock } from '@/generator/pieces/piece-types';
-import type { StudioResult } from '@/lib/studio/action-types';
 import type { PanelProps } from './panel-props';
 import CitationPopover from './CitationPopover';
-import { errorText } from './errorText';
+import { usePermissions } from '@/components/admin/PermissionsContext';
+import { useStudioAction } from './useStudioAction';
 
 const ACTIONS = ['regenerate', 'expand', 'shorten', 'formal'] as const;
 
@@ -67,18 +66,14 @@ function Block({ block, numbers, connectiveLabel }: { block: StudioBlock; number
   }
 }
 
-export default function ReviewPanel({ piece, busy, refresh }: PanelProps) {
+export default function ReviewPanel({ piece, busy, locked = false, refresh, notify }: PanelProps) {
   const t = useTranslations('admin.studio');
-  const [message, setMessage] = useState<string | null>(null);
-
-  async function act(promise: Promise<StudioResult<unknown>>) {
-    const r = await promise;
-    if (!r.ok) setMessage(errorText(t, r));
-    await refresh();
-  }
+  const { can } = usePermissions();
+  const { run, pending, message } = useStudioAction(refresh, notify);
+  const disabled = busy || locked || pending;
 
   function rewrite(sectionId: string, instruction: string) {
-    void act(rewriteSectionAction(piece.id, { sectionId, instruction }));
+    void run(() => rewriteSectionAction(piece.id, { sectionId, instruction }));
   }
 
   const numbers = citeNumbersForSections(piece.sections);
@@ -100,11 +95,11 @@ export default function ReviewPanel({ piece, busy, refresh }: PanelProps) {
           ))}
           <div className="flex flex-wrap gap-2 border-t border-slate-100 pt-3 text-xs">
             {ACTIONS.map((a) => (
-              <button key={a} type="button" disabled={busy} onClick={() => rewrite(section.outlineId, t(`review.instructions.${a}`))} className="rounded-md border border-slate-200 px-2 py-1">
+              <button key={a} type="button" disabled={disabled} onClick={() => rewrite(section.outlineId, t(`review.instructions.${a}`))} className="rounded-md border border-slate-200 px-2 py-1">
                 {t(`review.actions.${a}`)}
               </button>
             ))}
-            <button type="button" disabled={busy} onClick={() => { const text = window.prompt(t('review.customPrompt')); if (text) rewrite(section.outlineId, text); }} className="rounded-md border border-slate-200 px-2 py-1">
+            <button type="button" disabled={disabled} onClick={() => { const text = window.prompt(t('review.customPrompt')); if (text) rewrite(section.outlineId, text); }} className="rounded-md border border-slate-200 px-2 py-1">
               {t('review.actions.custom')}
             </button>
           </div>
@@ -112,8 +107,10 @@ export default function ReviewPanel({ piece, busy, refresh }: PanelProps) {
       ))}
       {message && <p className="text-sm text-red-600">{message}</p>}
       <div className="flex gap-2">
-        <button type="button" disabled={busy} onClick={() => void act(startRunAction(piece.id, 'translate'))} className="rounded-lg border border-slate-200 px-4 py-2 text-sm">{t('review.translate')}</button>
-        <button type="button" disabled={busy} onClick={() => void act(createDraftPostAction(piece.id))} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed">{t('review.handoff')}</button>
+        <button type="button" disabled={disabled} onClick={() => void run(() => startRunAction(piece.id, 'translate'))} className="rounded-lg border border-slate-200 px-4 py-2 text-sm">{t('review.translate')}</button>
+        {can('articles.edit') && (
+          <button type="button" disabled={disabled} onClick={() => void run(() => createDraftPostAction(piece.id))} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed">{t('review.handoff')}</button>
+        )}
       </div>
     </section>
   );

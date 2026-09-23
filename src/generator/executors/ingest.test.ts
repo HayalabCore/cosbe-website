@@ -13,12 +13,16 @@ vi.mock('@/lib/prisma', () => ({
 vi.mock('@/ai/generate', () => ({
   embedTexts: vi.fn(async (values: string[]) => values.map(() => [0.1])),
 }));
-vi.mock('../sources/digest', () => ({
-  buildDigest: vi.fn(async () => [{ label: 'all', points: [] }]),
+vi.mock('../sources/digest', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../sources/digest')>()),
+  digestGroup: vi.fn(async (group: Array<{ label: string }>) => ({
+    label: group[0].label,
+    points: [],
+  })),
 }));
 
 import { prisma } from '@/lib/prisma';
-import { buildDigest } from '../sources/digest';
+import { digestGroup } from '../sources/digest';
 import {
   getSource,
   replaceChunks,
@@ -67,7 +71,7 @@ describe('ingestExecutor', () => {
       [expect.objectContaining({ ordinal: 0, embedding: [0.1] })],
       expect.any(String)
     );
-    expect(buildDigest).toHaveBeenCalled();
+    expect(digestGroup).toHaveBeenCalled();
     expect(setSourceMeta).toHaveBeenCalledWith('s1', {
       digest: [{ label: 'all', points: [] }],
     });
@@ -75,12 +79,11 @@ describe('ingestExecutor', () => {
   });
 
   it('reads the Japanese text of an article source', async () => {
-    vi.mocked(getSource).mockResolvedValue({
-      id: 's1',
-      kind: 'article',
-      articleId: 'a1',
-      meta: {},
-    } as never);
+    const article = { id: 's1', kind: 'article', articleId: 'a1', meta: {} };
+    vi.mocked(getSource)
+      .mockResolvedValueOnce(article as never)
+      // After extract, the row holds the stored snapshot.
+      .mockResolvedValue({ ...article, text: '記事の本文です。' } as never);
     vi.mocked(prisma.article.findUnique).mockResolvedValue({
       blocks: [
         { id: 'p', type: 'paragraph', content: '<p>記事の本文です。</p>' },
@@ -119,5 +122,74 @@ describe('ingestExecutor', () => {
     await ingestExecutor(ctx());
     expect(setSourceStatus).toHaveBeenCalledWith('s1', 'stored');
     expect(replaceChunks).not.toHaveBeenCalled();
+  });
+
+  it('builds chunks from the stored snapshot when a retry skips extract', async () => {
+    const stored = '保存された本文です。';
+    vi.mocked(getSource).mockResolvedValue({
+      id: 's1',
+      kind: 'article',
+      articleId: 'a1',
+      text: stored,
+      meta: {},
+    } as never);
+    // The article was edited after the first attempt extracted it.
+    vi.mocked(prisma.article.findUnique).mockResolvedValue({
+      blocks: [
+        { id: 'p', type: 'paragraph', content: '<p>編集後の本文。</p>' },
+      ],
+    } as never);
+    const context = ctx();
+    context.step = vi.fn(
+      async (key: string, _o: number, fn: () => Promise<unknown>) =>
+        key === 'extract'
+          ? {
+              charCount: stored.length,
+              segments: [
+                { start: 0, end: stored.length, locator: { blockId: 'p' } },
+              ],
+            }
+          : fn()
+    ) as RunContext['step'];
+    await ingestExecutor(context);
+    expect(prisma.article.findUnique).not.toHaveBeenCalled();
+    expect(replaceChunks).toHaveBeenCalledWith(
+      's1',
+      [expect.objectContaining({ text: stored, locator: { blockId: 'p' } })],
+      expect.any(String)
+    );
+  });
+
+  it('digests each group as its own step and saves the assembled digest', async () => {
+    vi.mocked(getSource).mockResolvedValue({
+      id: 's1',
+      kind: 'text',
+      text: 'まず課題を定義します。',
+      meta: {},
+    } as never);
+    const context = ctx();
+    await ingestExecutor(context);
+    const keys = vi.mocked(context.step).mock.calls.map((c) => c[0]);
+    expect(keys).toEqual(['extract', 'chunk-embed', 'digest:0', 'digest']);
+  });
+
+  it('resumes from an extract step recorded before segments were stored', async () => {
+    const stored = '古い形式の本文です。';
+    vi.mocked(getSource).mockResolvedValue({
+      id: 's1',
+      kind: 'text',
+      text: stored,
+      meta: {},
+    } as never);
+    const context = ctx();
+    context.step = vi.fn(async (key: string, _o: number, fn: () => Promise<unknown>) =>
+      key === 'extract' ? { charCount: stored.length } : fn()
+    ) as RunContext['step'];
+    await ingestExecutor(context);
+    expect(replaceChunks).toHaveBeenCalledWith(
+      's1',
+      [expect.objectContaining({ text: stored })],
+      expect.any(String)
+    );
   });
 });

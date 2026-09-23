@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { embedTexts, type UsageSink } from '@/ai/generate';
 import { prisma } from '@/lib/prisma';
+import { keywordTerms } from './keywords';
 import { mergeRrf } from './rrf';
 
 export type SearchScope = {
@@ -40,28 +41,51 @@ function scopeSql(scope: SearchScope): Prisma.Sql {
 const COLUMNS = Prisma.sql`c.id, c.source_id AS "sourceId", c.ordinal, c.text,
   c.char_start AS "charStart", c.char_end AS "charEnd", c.locator`;
 
+/**
+ * Exact scan over the scope. The HNSW index filters only after its
+ * nearest-neighbour search, so a project's few sources inside a large library
+ * would get few or no hits. Scopes are small (≤ 40 sources).
+ */
+export function semanticSql(scope: SearchScope, queryEmbedding: number[]): Prisma.Sql {
+  const vector = `[${queryEmbedding.join(',')}]`;
+  // Only ids and distances are materialized; text and columns are joined
+  // back for the few winners, so a large scope never copies every chunk.
+  return Prisma.sql`
+      WITH scoped AS MATERIALIZED (
+        SELECT c.id, c.embedding <=> ${vector}::vector AS distance
+        FROM studio_source_chunks c
+        JOIN studio_sources s ON s.id = c.source_id
+        WHERE ${scopeSql(scope)} AND c.embedding IS NOT NULL
+      ),
+      nearest AS (
+        SELECT id, distance FROM scoped ORDER BY distance LIMIT ${CANDIDATES}
+      )
+      SELECT ${COLUMNS} FROM nearest n
+      JOIN studio_source_chunks c ON c.id = n.id
+      ORDER BY n.distance`;
+}
+
 export async function searchChunks(input: {
   scope: SearchScope;
   query: string;
   queryEmbedding: number[];
   limit?: number;
+  /** Tests pass a transaction; production uses the shared client. */
+  db?: Prisma.TransactionClient;
 }): Promise<RetrievedChunk[]> {
   if (input.scope.sourceIds.length === 0) return [];
+  const db = input.db ?? prisma;
   const where = scopeSql(input.scope);
-  const vector = `[${input.queryEmbedding.join(',')}]`;
+  const terms = keywordTerms(input.query);
 
   const [semantic, keyword] = await Promise.all([
-    prisma.$queryRaw<Row[]>`
-      SELECT ${COLUMNS} FROM studio_source_chunks c
-      JOIN studio_sources s ON s.id = c.source_id
-      WHERE ${where} AND c.embedding IS NOT NULL
-      ORDER BY c.embedding <=> ${vector}::vector
-      LIMIT ${CANDIDATES}`,
-    input.query.trim()
-      ? prisma.$queryRaw<Row[]>`
+    db.$queryRaw<Row[]>(semanticSql(input.scope, input.queryEmbedding)),
+    // Any-keyword match on literal terms: no query syntax reaches Groonga.
+    terms.length > 0
+      ? db.$queryRaw<Row[]>`
           SELECT ${COLUMNS} FROM studio_source_chunks c
           JOIN studio_sources s ON s.id = c.source_id
-          WHERE ${where} AND c.text &@~ ${input.query}
+          WHERE ${where} AND c.text &@| ${terms}::text[]
           ORDER BY pgroonga_score(c.tableoid, c.ctid) DESC
           LIMIT ${CANDIDATES}`
       : Promise.resolve([] as Row[]),
@@ -83,6 +107,7 @@ export async function searchSources(input: {
   signal?: AbortSignal;
   ensureBudget?: (estimatedTokens: number) => Promise<void>;
 }): Promise<RetrievedChunk[]> {
+  if (input.scope.sourceIds.length === 0) return [];
   const [queryEmbedding] = await embedTexts([input.query], {
     onUsage: input.onUsage,
     signal: input.signal,

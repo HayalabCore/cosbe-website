@@ -21,7 +21,8 @@ beforeAll(async () => {
   authorId = (await prisma.author.create({ data: { name: `Handoff ${adminId}`, designation: 'Editor' } })).id;
   pieceId = (await createPiece({ projectId: project.id, createdById: adminId, templateId: null, category: 'notice' })).id;
   await updatePiece(pieceId, {
-    stage: 'ready', title: 'AI導入の始め方', authorId,
+    stage: 'ready', title: 'AI導入の始め方', excerpt: '導入の要点', authorId,
+    outline: [{ id: 'o1', heading: '課題', intent: '', chunkIds: [], estChars: 100, kind: 'source', stale: false }],
     sections: [{
       outlineId: 'o1', heading: '課題', flags: [], enStale: false, en: null,
       blocks: [{ type: 'paragraph', sentences: [{ text: '課題を一つに絞ります。', cite: ['chunk-secret'], connective: false }] }],
