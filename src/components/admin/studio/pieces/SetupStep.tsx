@@ -1,14 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ChevronDown, FileText, Plus } from 'lucide-react';
+import { ChevronDown, FileText, Library, Plus } from 'lucide-react';
 import {
   listPieceChoicesAction,
   startRunAction,
   updatePieceSetupAction,
 } from '@/actions/studio-pieces';
+import AdminDialog from '@/components/admin/access/AdminDialog';
+import { ARTICLE_CREATE_CATEGORIES } from '@/lib/api/article-create-metadata';
+import type { ContentCategory } from '@/types';
 import AddSourceDialog from '../AddSourceDialog';
+import SourceLibrary from '../SourceLibrary';
 import ConfirmDialog from '../ConfirmDialog';
 import KeywordInput from '../KeywordInput';
 import SourceStatusBadge from '../SourceStatusBadge';
@@ -19,6 +23,7 @@ import {
   Select,
   Skeleton,
   TextArea,
+  InfoFor,
   TextInput,
 } from '../ui';
 import CommandBar, { BarButton, BarPrimary } from './CommandBar';
@@ -34,7 +39,7 @@ type Source = {
 };
 type Choices = {
   sources: Source[];
-  templates: Array<{ id: string; name: string }>;
+  templates: Array<{ id: string; name: string; defaultCategory: string }>;
 };
 
 const LENGTHS = ['auto', 2000, 4000, 6000] as const;
@@ -58,14 +63,23 @@ export default function SetupStep() {
     piece.brief.targetLength
   );
   const [templateId, setTemplateId] = useState(piece.templateId ?? '');
+  const [category, setCategory] = useState(piece.category as ContentCategory);
   const [selected, setSelected] = useState<string[]>(piece.selection.sourceIds);
   const [chapters, setChapters] = useState<Record<string, number[]>>(
     piece.selection.chapters
   );
   const [choices, setChoices] = useState<Choices | null>(null);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState<'new' | 'library' | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [openChapters, setOpenChapters] = useState<string | null>(null);
+  const goalRef = useRef<HTMLTextAreaElement>(null);
+
+  // A new article starts here: put the cursor in the goal without scrolling
+  // the steps and title out of view.
+  useEffect(() => {
+    if (!piece.brief.goal && !locked)
+      goalRef.current?.focus({ preventScroll: true });
+  }, [piece.brief.goal, locked]);
 
   const load = useCallback(
     () =>
@@ -128,7 +142,8 @@ export default function SetupStep() {
     brief.tone !== piece.brief.tone ||
     !sameList(keywords, piece.brief.keywords) ||
     length !== piece.brief.targetLength ||
-    templateId !== (piece.templateId ?? '');
+    templateId !== (piece.templateId ?? '') ||
+    category !== piece.category;
 
   const readyIds = new Set(
     (choices?.sources ?? [])
@@ -149,7 +164,18 @@ export default function SetupStep() {
       brief,
       selection,
       templateId: templateId || null,
+      category,
     });
+
+  // The category is the kind of post; its template follows unless the
+  // editor already chose one made for that category.
+  function changeCategory(next: ContentCategory) {
+    setCategory(next);
+    const current = choices?.templates.find((x) => x.id === templateId);
+    if (current?.defaultCategory === next) return;
+    const match = choices?.templates.find((x) => x.defaultCategory === next);
+    if (match) setTemplateId(match.id);
+  }
 
   function createOutline() {
     setConfirming(false);
@@ -185,16 +211,14 @@ export default function SetupStep() {
   return (
     <>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <Card
-          title={t('setup.briefTitle')}
-          description={t('setup.briefDescription')}
-        >
+        <Card title={t('setup.briefTitle')}>
           <div className="space-y-5">
-            <Field label={t('brief.goal')} hint={t('setup.goalHint')} required>
+            <Field label={t('brief.goal')} info={t('info.goal')} required>
               {(p) => (
                 <TextArea
                   {...p}
                   rows={3}
+                  ref={goalRef}
                   value={goal}
                   disabled={readOnly}
                   placeholder={t('newArticle.goalPlaceholder')}
@@ -203,7 +227,7 @@ export default function SetupStep() {
               )}
             </Field>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label={t('brief.audience')} hint={t('setup.audienceHint')}>
+              <Field label={t('brief.audience')} info={t('info.audience')}>
                 {(p) => (
                   <TextInput
                     {...p}
@@ -214,7 +238,7 @@ export default function SetupStep() {
                   />
                 )}
               </Field>
-              <Field label={t('brief.tone')} hint={t('setup.toneHint')}>
+              <Field label={t('brief.tone')} info={t('info.tone')}>
                 {(p) => (
                   <TextInput
                     {...p}
@@ -226,7 +250,7 @@ export default function SetupStep() {
                 )}
               </Field>
             </div>
-            <Field label={t('setup.keywords')} hint={t('setup.keywordsHint')}>
+            <Field label={t('setup.keywords')} info={t('info.keywords')}>
               {(p) => (
                 <KeywordInput
                   {...p}
@@ -238,10 +262,13 @@ export default function SetupStep() {
               )}
             </Field>
             <fieldset className="space-y-1.5">
-              <legend className="text-sm font-medium text-slate-700">
+              <legend className="float-left text-sm font-medium text-slate-700">
                 {t('setup.length')}
               </legend>
-              <div className="flex flex-wrap items-center gap-1.5">
+              <span className="ml-1 inline-flex align-middle">
+                <InfoFor label={t('setup.length')} info={t('info.length')} />
+              </span>
+              <div className="clear-both flex flex-wrap items-center gap-1.5">
                 {LENGTHS.map((l) => (
                   <button
                     key={l}
@@ -275,43 +302,50 @@ export default function SetupStep() {
                   />
                 </label>
               </div>
-              <p className="text-xs text-slate-500">{t('setup.lengthHint')}</p>
             </fieldset>
-            <Field label={t('brief.template')} hint={t('setup.templateHint')}>
-              {(p) => (
-                <Select
-                  {...p}
-                  value={templateId}
-                  disabled={readOnly || !choices}
-                  onChange={(e) => setTemplateId(e.target.value)}
-                >
-                  <option value="">{t('setup.noTemplate')}</option>
-                  {choices?.templates.map((x) => (
-                    <option key={x.id} value={x.id}>
-                      {x.name}
-                    </option>
-                  ))}
-                </Select>
-              )}
-            </Field>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field label={t('brief.category')} info={t('info.category')}>
+                {(p) => (
+                  <Select
+                    {...p}
+                    value={category}
+                    disabled={readOnly}
+                    onChange={(e) =>
+                      changeCategory(e.target.value as ContentCategory)
+                    }
+                  >
+                    {ARTICLE_CREATE_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {t(`category.${c}`)}
+                      </option>
+                    ))}
+                  </Select>
+                )}
+              </Field>
+              <Field label={t('brief.template')} info={t('info.template')}>
+                {(p) => (
+                  <Select
+                    {...p}
+                    value={templateId}
+                    disabled={readOnly || !choices}
+                    onChange={(e) => setTemplateId(e.target.value)}
+                  >
+                    <option value="">{t('setup.noTemplate')}</option>
+                    {choices?.templates.map((x) => (
+                      <option key={x.id} value={x.id}>
+                        {x.name}
+                      </option>
+                    ))}
+                  </Select>
+                )}
+              </Field>
+            </div>
           </div>
         </Card>
 
         <Card
           title={t('setup.materialTitle')}
-          description={t('setup.materialDescription')}
-          actions={
-            !locked && (
-              <Button
-                size="sm"
-                icon={<Plus className="h-3.5 w-3.5" aria-hidden />}
-                disabled={readOnly}
-                onClick={() => setAdding(true)}
-              >
-                {t('setup.addMaterial')}
-              </Button>
-            )
-          }
+          info={t('info.material')}
           className="self-start"
         >
           {!choices ? (
@@ -419,6 +453,28 @@ export default function SetupStep() {
               })}
             </ul>
           )}
+          {!locked && (
+            <div className="-mx-5 -mb-4 mt-4 flex gap-2 border-t border-slate-100 px-5 py-3">
+              <Button
+                size="sm"
+                className="flex-1"
+                icon={<Library className="h-3.5 w-3.5" aria-hidden />}
+                disabled={readOnly}
+                onClick={() => setAdding('library')}
+              >
+                {t('topics.linkExisting')}
+              </Button>
+              <Button
+                size="sm"
+                className="flex-1"
+                icon={<Plus className="h-3.5 w-3.5" aria-hidden />}
+                disabled={readOnly}
+                onClick={() => setAdding('new')}
+              >
+                {t('setup.addMaterial')}
+              </Button>
+            </div>
+          )}
         </Card>
       </div>
 
@@ -430,7 +486,10 @@ export default function SetupStep() {
               ? t('bar.unsaved')
               : hasOutline
                 ? t('setup.outlineExists')
-                : t('setup.nextHint'))
+                : t('setup.selectedCount', {
+                    selected: selected.length,
+                    total: choices?.sources.length ?? selected.length,
+                  }))
           }
         >
           {dirty && (
@@ -464,15 +523,27 @@ export default function SetupStep() {
         </CommandBar>
       )}
 
-      {adding && (
+      {adding === 'new' && (
         <AddSourceDialog
           projectId={piece.projectId}
-          onClose={() => setAdding(false)}
+          onClose={() => setAdding(null)}
           onAdded={() => {
-            setAdding(false);
+            setAdding(null);
             void load();
           }}
         />
+      )}
+      {adding === 'library' && (
+        <AdminDialog
+          title={t('topics.linkExisting')}
+          onClose={() => setAdding(null)}
+        >
+          <SourceLibrary
+            projectId={piece.projectId}
+            linkedIds={choices?.sources.map((s) => s.id) ?? []}
+            onChanged={() => void load()}
+          />
+        </AdminDialog>
       )}
       {confirming && (
         <ConfirmDialog

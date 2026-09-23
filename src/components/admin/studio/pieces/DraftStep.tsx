@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronDown, Loader2, Sparkles, Undo2 } from 'lucide-react';
@@ -10,10 +11,11 @@ import {
   undoAction,
   updatePieceMetaAction,
 } from '@/actions/studio-pieces';
-import type {
-  Section,
-  Sentence,
-  StudioBlock,
+import {
+  sectionPlainText,
+  type Section,
+  type Sentence,
+  type StudioBlock,
 } from '@/generator/pieces/piece-types';
 import { Banner, Skeleton } from '../ui';
 import CommandBar, { BarPrimary } from './CommandBar';
@@ -573,6 +575,10 @@ export default function DraftStep() {
   };
 
   const all = piece.sections.flatMap((s) => s.blocks.flatMap(sentencesOf));
+  const writtenChars = piece.sections.reduce(
+    (n, s) => n + sectionPlainText({ ...s, heading: '' }).trim().length,
+    0
+  );
   const stats = {
     cited: all.filter((s) => s.cite.length > 0).length,
     transitions: all.filter((s) => s.connective).length,
@@ -595,9 +601,22 @@ export default function DraftStep() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-      {locked && (
+      {piece.stage === 'handed_off' && (
         <div className="lg:col-span-2">
-          <Banner tone="info">{t('draft.lockedHint')}</Banner>
+          <Banner
+            tone="info"
+            title={t('draft.lockedHint')}
+            action={
+              piece.article && (
+                <Link
+                  href={`/admin/posts/${piece.article.id}`}
+                  className="text-sm font-semibold text-primaryDark hover:underline"
+                >
+                  {t('handoff.open')}
+                </Link>
+              )
+            }
+          />
         </div>
       )}
       <article className="rounded-xl border border-slate-200 bg-white px-6 py-8 sm:px-12 sm:py-12">
@@ -688,7 +707,16 @@ export default function DraftStep() {
       />
 
       {locked ? null : (
-        <CommandBar hint={complete ? t('draft.hint') : t('draft.incomplete')}>
+        <CommandBar
+          hint={
+            complete
+              ? t('outline.summary', {
+                  sections: piece.sections.length,
+                  chars: writtenChars,
+                })
+              : t('draft.incomplete')
+          }
+        >
           {complete ? (
             <BarPrimary onClick={() => go('handoff')}>
               {t('draft.toHandoff')}

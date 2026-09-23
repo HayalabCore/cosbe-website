@@ -41,6 +41,7 @@ vi.mock('@/generator/pieces/pieces-repository', () => ({
   listPieces: vi.fn(async () => []),
   getDefaultTemplate: vi.fn(async () => null),
   listTemplates: vi.fn(async () => []),
+  getTemplateForCategory: vi.fn(async () => null),
 }));
 vi.mock('@/generator/pieces/piece-lock', () => ({
   withPieceLock: async (_id: string, fn: (tx: unknown) => unknown) =>
@@ -54,6 +55,7 @@ vi.mock('@/lib/prisma', () => ({
       findUnique: vi.fn(async () => ({ id: 'proj', archivedAt: null })),
     },
     author: { findUnique: vi.fn(), findMany: vi.fn(async () => []) },
+    studioPiece: { update: vi.fn(), delete: vi.fn() },
     article: { findUnique: vi.fn(async () => null) },
   },
 }));
@@ -63,7 +65,9 @@ import { listProjectSources } from '@/generator/sources/projects-repository';
 import { createAndEnqueueRun } from '@/generator/queue/enqueue';
 import { createArticleRecord } from '@/lib/articles';
 import {
+  createPiece,
   getPiece,
+  getTemplateForCategory,
   restoreSnapshot,
   takeSnapshot,
   updatePiece,
@@ -71,6 +75,10 @@ import {
 import { upsertAuthor } from '@/lib/articles-repository';
 import {
   addAuthorAction,
+  archivePieceAction,
+  changePiecesAction,
+  deletePieceAction,
+  restorePieceAction,
   createDraftPostAction,
   createPieceAction,
   duplicatePieceAction,
@@ -607,6 +615,154 @@ describe('piece actions', () => {
     expect(await addAuthorAction({ name: 'A', designation: 'B' })).toEqual({
       ok: false,
       error: 'FORBIDDEN',
+    });
+  });
+
+  it("starts a piece in the chosen category with that category's template", async () => {
+    vi.mocked(getTemplateForCategory).mockResolvedValueOnce({
+      id: 'tpl-case',
+      defaultCategory: 'case-study',
+    } as never);
+    await createPieceAction({ projectId: ID, category: 'case-study' });
+    expect(getTemplateForCategory).toHaveBeenCalledWith('case-study');
+    expect(createPiece).toHaveBeenCalledWith(
+      expect.objectContaining({
+        templateId: 'tpl-case',
+        category: 'case-study',
+      })
+    );
+  });
+
+  it('rejects a category that posts do not have', async () => {
+    expect(
+      await createPieceAction({ projectId: ID, category: 'blog' as never })
+    ).toEqual({ ok: false, error: 'INVALID_INPUT' });
+    expect(createPiece).not.toHaveBeenCalled();
+  });
+
+  it('archives a piece, even one already sent to posts', async () => {
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({ stage: 'handed_off' }) as never
+    );
+    expect(await archivePieceAction(ID)).toEqual({ ok: true, data: undefined });
+    expect(prisma.studioPiece.update).toHaveBeenCalledWith({
+      where: { id: ID },
+      data: { archivedAt: expect.any(Date) },
+    });
+  });
+
+  it('does not archive while a run is working on the piece', async () => {
+    vi.mocked(getPiece).mockResolvedValue(piece() as never);
+    vi.mocked(prisma.studioRun.findFirst).mockResolvedValueOnce({
+      id: 'run',
+    } as never);
+    expect(await archivePieceAction(ID)).toMatchObject({
+      ok: false,
+      error: 'BUSY',
+    });
+    expect(prisma.studioPiece.update).not.toHaveBeenCalled();
+  });
+
+  it('restores an archived piece', async () => {
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({ archivedAt: new Date() }) as never
+    );
+    expect(await restorePieceAction(ID)).toEqual({ ok: true, data: undefined });
+    expect(prisma.studioPiece.update).toHaveBeenCalledWith({
+      where: { id: ID },
+      data: { archivedAt: null },
+    });
+  });
+
+  it('refuses edits to an archived piece', async () => {
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({ archivedAt: new Date() }) as never
+    );
+    expect(await updatePieceMetaAction(ID, { title: 'T' })).toMatchObject({
+      ok: false,
+      error: 'LOCKED',
+    });
+  });
+
+  it('deletes only an archived piece, never the post it created', async () => {
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({ stage: 'handed_off', articleId: 'art1' }) as never
+    );
+    expect(await deletePieceAction(ID)).toMatchObject({
+      ok: false,
+      error: 'INVALID_INPUT',
+    });
+    expect(prisma.studioPiece.delete).not.toHaveBeenCalled();
+
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({
+        stage: 'handed_off',
+        articleId: 'art1',
+        archivedAt: new Date(),
+      }) as never
+    );
+    expect(await deletePieceAction(ID)).toEqual({ ok: true, data: undefined });
+    expect(prisma.studioPiece.delete).toHaveBeenCalledWith({
+      where: { id: ID },
+    });
+    expect(createArticleRecord).not.toHaveBeenCalled();
+  });
+
+  it('archives several pieces and reports the ones a running job kept', async () => {
+    const B = '7f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
+    vi.mocked(getPiece).mockImplementation(
+      (async (id: string) => piece({ id })) as never
+    );
+    vi.mocked(prisma.studioRun.findFirst).mockImplementation((async (args: {
+      where: { pieceId: string };
+    }) => (args.where.pieceId === B ? { id: 'run' } : null)) as never);
+    expect(await changePiecesAction('archive', [ID, B])).toEqual({
+      ok: true,
+      data: { done: 1, busy: 1, failed: 0 },
+    });
+    expect(prisma.studioPiece.update).toHaveBeenCalledTimes(1);
+    expect(prisma.studioPiece.update).toHaveBeenCalledWith({
+      where: { id: ID },
+      data: { archivedAt: expect.any(Date) },
+    });
+  });
+
+  it('deletes only the archived ones among several', async () => {
+    const B = '7f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
+    vi.mocked(getPiece).mockImplementation(
+      (async (id: string) =>
+        piece({ id, archivedAt: id === ID ? new Date() : null })) as never
+    );
+    vi.mocked(prisma.studioRun.findFirst).mockImplementation(
+      (async () => null) as never
+    );
+    expect(await changePiecesAction('delete', [ID, B])).toEqual({
+      ok: true,
+      data: { done: 1, busy: 0, failed: 1 },
+    });
+    expect(prisma.studioPiece.delete).toHaveBeenCalledWith({
+      where: { id: ID },
+    });
+  });
+
+  it('rejects an empty, oversized or malformed selection', async () => {
+    expect(await changePiecesAction('archive', [])).toMatchObject({
+      ok: false,
+      error: 'INVALID_INPUT',
+    });
+    expect(await changePiecesAction('archive', ['nope'])).toMatchObject({
+      ok: false,
+      error: 'INVALID_INPUT',
+    });
+    expect(
+      await changePiecesAction(
+        'archive',
+        Array.from({ length: 201 }, () => ID)
+      )
+    ).toMatchObject({ ok: false, error: 'INVALID_INPUT' });
+    expect(await changePiecesAction('publish' as never, [ID])).toMatchObject({
+      ok: false,
+      error: 'INVALID_INPUT',
     });
   });
 });

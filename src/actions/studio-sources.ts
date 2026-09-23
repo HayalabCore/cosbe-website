@@ -251,7 +251,8 @@ export async function retryIngestAction(
     const stale =
       source.status === 'pending' &&
       Date.now() - source.createdAt.getTime() > STALE_UPLOAD_MS;
-    if (!stale || !source.storagePath) return { ok: false, error: 'INVALID_INPUT' };
+    if (!stale || !source.storagePath)
+      return { ok: false, error: 'INVALID_INPUT' };
     if (await pdfObjectExists(source.storagePath)) {
       await setSourceStatus(sourceId, 'stored');
     } else {

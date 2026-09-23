@@ -36,6 +36,7 @@ export type PieceData = {
   authorId: string | null;
   articleId: string | null;
   handedOffAt: Date | null;
+  archivedAt: Date | null;
   createdById: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -264,6 +265,22 @@ export function getTemplate(id: string) {
 
 export function getDefaultTemplate() {
   return prisma.studioTemplate.findFirst({ where: { isDefault: true } });
+}
+
+/**
+ * The template an article of this category starts with: the default one when
+ * it is meant for the category, else the first template made for it, else the
+ * default anyway.
+ */
+export async function getTemplateForCategory(category: string) {
+  const [fallback, match] = await Promise.all([
+    getDefaultTemplate(),
+    prisma.studioTemplate.findFirst({
+      where: { defaultCategory: category },
+      orderBy: [{ isDefault: 'desc' }, { name: 'asc' }],
+    }),
+  ]);
+  return match ?? fallback;
 }
 
 export type TemplateInput = {

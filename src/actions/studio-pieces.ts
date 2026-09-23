@@ -32,6 +32,7 @@ import {
   createPiece,
   getDefaultTemplate,
   getPiece,
+  getTemplateForCategory,
   listPieces,
   listSnapshots,
   listTemplates,
@@ -83,7 +84,8 @@ async function loadEditable(
   const row = await getPiece(id, db);
   if (!row) return { ok: false, error: 'NOT_FOUND' };
   const piece = readPiece(row);
-  if (isLocked(piece.stage)) return { ok: false, error: 'LOCKED' };
+  if (isLocked(piece.stage) || piece.archivedAt)
+    return { ok: false, error: 'LOCKED' };
   if (!opts.allowBusy && (await activeRun(id, db)))
     return { ok: false, error: 'BUSY' };
   return piece;
@@ -141,6 +143,7 @@ export async function listPiecesAction(
       stage: row.stage as PieceStage,
       articleStatus: row.article?.status ?? null,
       updatedAt: row.updatedAt.toISOString(),
+      archived: Boolean(row.archivedAt),
     })),
   };
 }
@@ -148,22 +151,30 @@ export async function listPiecesAction(
 export async function createPieceAction(input: {
   projectId: string;
   goal?: string;
+  category?: ContentCategory;
 }): Promise<StudioResult<{ pieceId: string }>> {
   const ctx = await requirePermission('studio.use');
   if (!uuid.safeParse(input.projectId).success)
     return { ok: false, error: 'INVALID_INPUT' };
+  const category = z
+    .enum(ARTICLE_CREATE_CATEGORIES)
+    .optional()
+    .safeParse(input.category);
+  if (!category.success) return { ok: false, error: 'INVALID_INPUT' };
   const goal = briefInputSchema.shape.goal.safeParse(input.goal?.trim() ?? '');
   if (!goal.success) return { ok: false, error: 'INVALID_INPUT' };
   const project = await prisma.studioProject.findUnique({
     where: { id: input.projectId },
   });
   if (!project || project.archivedAt) return { ok: false, error: 'NOT_FOUND' };
-  const template = await getDefaultTemplate();
+  const template = category.data
+    ? await getTemplateForCategory(category.data)
+    : await getDefaultTemplate();
   const piece = await createPiece({
     projectId: project.id,
     createdById: ctx.admin.id,
     templateId: template?.id ?? null,
-    category: template?.defaultCategory ?? 'useful-info',
+    category: category.data ?? template?.defaultCategory ?? 'useful-info',
   });
   // Start with every source that can already be used; the editor unticks
   // what does not belong instead of hunting for what does.
@@ -747,4 +758,104 @@ export async function addAuthorAction(
   const { name, designation } = parsed.data;
   const authorId = await upsertAuthor(name, designation);
   return { ok: true, data: { id: authorId, name, designation } };
+}
+
+/**
+ * Loads a piece for archive, restore or delete: these work whatever its stage
+ * (a sent piece can be tidied away too), but never under a running job.
+ */
+async function loadForRemoval(
+  id: string,
+  db: Prisma.TransactionClient
+): Promise<PieceData | Fail> {
+  if (!uuid.safeParse(id).success) return { ok: false, error: 'INVALID_INPUT' };
+  const row = await getPiece(id, db);
+  if (!row) return { ok: false, error: 'NOT_FOUND' };
+  if (await activeRun(id, db)) return { ok: false, error: 'BUSY' };
+  return readPiece(row);
+}
+
+const REMOVALS = ['archive', 'restore', 'delete'] as const;
+type Removal = (typeof REMOVALS)[number];
+
+/**
+ * One archive, restore or delete under the piece's lock. Archive hides the
+ * piece from the studio list and makes it read-only. Delete removes an
+ * archived piece and its history for good: a post it created is a separate
+ * copy in All Posts and is not touched, and past runs keep their token
+ * accounting with the piece link cleared.
+ */
+function changePiece(
+  id: string,
+  kind: Removal
+): Promise<StudioResult<undefined>> {
+  return withPieceLock(id, async (tx) => {
+    const piece = await loadForRemoval(id, tx);
+    if (isFail(piece)) return piece;
+    if (kind === 'delete') {
+      if (!piece.archivedAt) return { ok: false, error: 'INVALID_INPUT' };
+      await tx.studioPiece.delete({ where: { id } });
+    } else {
+      await tx.studioPiece.update({
+        where: { id },
+        data: { archivedAt: kind === 'archive' ? new Date() : null },
+      });
+    }
+    return { ok: true, data: undefined };
+  });
+}
+
+async function changeOne(
+  id: string,
+  kind: Removal
+): Promise<StudioResult<undefined>> {
+  await requirePermission('studio.use');
+  if (!uuid.safeParse(id).success) return { ok: false, error: 'INVALID_INPUT' };
+  return changePiece(id, kind);
+}
+
+export async function archivePieceAction(
+  id: string
+): Promise<StudioResult<undefined>> {
+  return changeOne(id, 'archive');
+}
+
+export async function restorePieceAction(
+  id: string
+): Promise<StudioResult<undefined>> {
+  return changeOne(id, 'restore');
+}
+
+export async function deletePieceAction(
+  id: string
+): Promise<StudioResult<undefined>> {
+  return changeOne(id, 'delete');
+}
+
+const MAX_BULK = 200;
+
+/**
+ * Archive, restore or delete several pieces. Each goes through its own lock;
+ * a piece with a running job is skipped and counted, not a reason to stop.
+ */
+export async function changePiecesAction(
+  kind: Removal,
+  ids: string[]
+): Promise<StudioResult<{ done: number; busy: number; failed: number }>> {
+  await requirePermission('studio.use');
+  const parsed = z
+    .object({
+      kind: z.enum(REMOVALS),
+      ids: z.array(z.uuid()).min(1).max(MAX_BULK),
+    })
+    .safeParse({ kind, ids });
+  if (!parsed.success) return { ok: false, error: 'INVALID_INPUT' };
+  const counts = { done: 0, busy: 0, failed: 0 };
+  for (const id of new Set(parsed.data.ids)) {
+    const result = await changePiece(id, parsed.data.kind);
+    if (result.ok) counts.done += 1;
+    else if (result.error === 'BUSY') counts.busy += 1;
+    else counts.failed += 1;
+  }
+  return { ok: true, data: counts };
 }

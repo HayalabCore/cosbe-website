@@ -11,15 +11,18 @@ export type ActiveRunDTO = {
   steps: Array<{ key: string; status: string }>;
   /** Sections a write run will write (from its prepare step); step rows appear only as each starts. */
   targets: number | null;
+  /** When the run was queued; a run still queued long after is not being picked up. */
+  createdAt: string;
 };
 
 export type PieceDTO = Omit<
   PieceData,
-  'createdAt' | 'updatedAt' | 'handedOffAt'
+  'createdAt' | 'updatedAt' | 'handedOffAt' | 'archivedAt'
 > & {
   createdAt: string;
   updatedAt: string;
   handedOffAt: string | null;
+  archivedAt: string | null;
   activeRun: ActiveRunDTO | null;
   lastRunError: string | null;
   article: {
@@ -38,6 +41,7 @@ export type PieceListItemDTO = {
   stage: PieceStage;
   articleStatus: string | null;
   updatedAt: string;
+  archived: boolean;
 };
 
 function prepareTargets(steps: RunWithSteps['steps']): number | null {
@@ -55,6 +59,7 @@ export function toActiveRunDTO(run: RunWithSteps | null): ActiveRunDTO | null {
     error: run.error,
     steps: run.steps.map((s) => ({ key: s.key, status: s.status })),
     targets: prepareTargets(run.steps),
+    createdAt: run.createdAt.toISOString(),
   };
 }
 
@@ -70,6 +75,7 @@ export function toPieceDTO(
     createdAt: data.createdAt.toISOString(),
     updatedAt: data.updatedAt.toISOString(),
     handedOffAt: data.handedOffAt?.toISOString() ?? null,
+    archivedAt: data.archivedAt?.toISOString() ?? null,
     ...extras,
   };
 }

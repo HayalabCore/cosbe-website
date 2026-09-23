@@ -88,13 +88,11 @@ describe('planOutline', () => {
       { model: m }
     );
     expect(result.outline).toEqual([]);
-    expect(result.gaps).toEqual([
-      '事例がない',
-      'No source material for 「料金」.',
-    ]);
+    // Codes, not sentences: the UI words them in the admin's language.
+    expect(result.gaps).toEqual(['事例がない', 'NO_MATERIAL:料金']);
   });
 
-  it('reports when a numeric target exceeds what the material supports', async () => {
+  it('leaves the length check to the editor, who sees it update live', async () => {
     const m = jsonModel([
       {
         titleOptions: ['t'],
@@ -118,7 +116,7 @@ describe('planOutline', () => {
       },
       { model: m }
     );
-    expect(result.gaps.at(-1)).toContain('500');
+    expect(result.gaps).toEqual([]);
   });
 
   it('escapes a closing material tag inside source text', async () => {

@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderAdmin } from '@/test/render-admin';
@@ -84,6 +84,7 @@ const base = {
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock('@/actions/studio-pieces', () => ({
   getPieceAction: vi.fn(async () => ({ ok: true, data: base })),
+  restorePieceAction: vi.fn(async () => ({ ok: true, data: undefined })),
   cancelRunAction: vi.fn(async () => ({ ok: true, data: undefined })),
   listSnapshotsAction: vi.fn(async () => ({ ok: true, data: [] })),
   undoAction: vi.fn(async () => ({ ok: true, data: undefined })),
@@ -124,6 +125,8 @@ import {
   createDraftPostAction,
   editSentenceAction,
   getPieceAction,
+  listPieceChoicesAction,
+  updatePieceMetaAction,
   listSnapshotsAction,
   startRunAction,
   updatePieceSetupAction,
@@ -346,5 +349,209 @@ describe('PieceWorkspace', () => {
     expect(
       await screen.findByText('Post status: Post deleted')
     ).toBeInTheDocument();
+  });
+  it('switches to the template made for a newly chosen category', async () => {
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: idle({
+        stage: 'brief',
+        outline: [],
+        templateId: 't-col',
+        category: 'useful-info',
+      }),
+    } as never);
+    vi.mocked(listPieceChoicesAction).mockResolvedValue({
+      ok: true,
+      data: {
+        sources: [
+          {
+            id: 's',
+            title: 'メモ',
+            status: 'ready',
+            kind: 'text',
+            chapters: [],
+          },
+        ],
+        templates: [
+          { id: 't-col', name: 'コラム', defaultCategory: 'useful-info' },
+          { id: 't-case', name: '事例', defaultCategory: 'case-study' },
+        ],
+        authors: [],
+      },
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    const template = await screen.findByLabelText('Template');
+    await waitFor(() => expect(template).toHaveValue('t-col'));
+    await userEvent.selectOptions(
+      screen.getByLabelText('Category'),
+      'case-study'
+    );
+    expect(template).toHaveValue('t-case');
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    expect(updatePieceSetupAction).toHaveBeenCalledWith(
+      'p1',
+      expect.objectContaining({ category: 'case-study', templateId: 't-case' })
+    );
+  });
+  it('explains the outline: sources, lengths, gaps and a live length warning', async () => {
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: idle({
+        stage: 'outline',
+        title: '仮の題',
+        brief: { ...base.brief, targetLength: 2000 },
+        gaps: [
+          'NO_MATERIAL:料金',
+          'The sources support about 700 characters; the target is 2000. Add sources or lower the target.',
+        ],
+        outline: [
+          {
+            id: 'o1',
+            heading: 'A',
+            intent: '',
+            chunkIds: ['c1'],
+            estChars: 400,
+            kind: 'source',
+            stale: false,
+          },
+          {
+            id: 'o2',
+            heading: 'B',
+            intent: '',
+            chunkIds: ['c1'],
+            estChars: 300,
+            kind: 'source',
+            stale: false,
+          },
+        ],
+      }),
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    expect(await screen.findByText('Working title')).toBeInTheDocument();
+    expect(screen.getByText('No material for “料金”.')).toBeInTheDocument();
+    // The old stored sentence is replaced by the live warning.
+    expect(screen.queryByText(/The sources support about/)).toBeNull();
+    expect(screen.getByText('Shorter than your target')).toBeInTheDocument();
+    expect(screen.getByText('About 400 chars')).toBeInTheDocument();
+    expect((await screen.findAllByText('メモ')).length).toBe(2);
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Use about 700 chars' })
+    );
+    expect(updatePieceSetupAction).toHaveBeenCalledWith('p1', {
+      brief: expect.objectContaining({ goal: 'g', targetLength: 700 }),
+    });
+  });
+
+  it('drops the length warning as soon as sections make up the target', async () => {
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: idle({
+        stage: 'outline',
+        brief: { ...base.brief, targetLength: 500 },
+        outline: [
+          {
+            id: 'o1',
+            heading: 'A',
+            intent: '',
+            chunkIds: [],
+            estChars: 300,
+            kind: 'source',
+            stale: false,
+          },
+        ],
+      }),
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    expect(
+      await screen.findByText('Shorter than your target')
+    ).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Add section' }));
+    expect(screen.queryByText('Shorter than your target')).toBeNull();
+  });
+  it('says the writing service is not responding when a job sits in the queue', async () => {
+    const queued = (secondsAgo: number) => ({
+      ...base,
+      stage: 'brief',
+      outline: [],
+      activeRun: {
+        id: 'r',
+        kind: 'outline',
+        status: 'queued',
+        error: null,
+        targets: null,
+        steps: [],
+        createdAt: new Date(Date.now() - secondsAgo * 1000).toISOString(),
+      },
+    });
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: queued(5),
+    } as never);
+    const { unmount } = renderAdmin(<PieceWorkspace pieceId="p1" />);
+    expect(
+      await screen.findByText('Waiting for the worker…')
+    ).toBeInTheDocument();
+    unmount();
+
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: queued(120),
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    expect(
+      await screen.findByText(/The writing service is not responding/)
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+  });
+  it('edits the title from the header at any step', async () => {
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: idle({ stage: 'brief', outline: [], title: '' }),
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Untitled article' })
+    );
+    await userEvent.type(
+      screen.getByLabelText('Edit title'),
+      '導入事例{Enter}'
+    );
+    expect(updatePieceMetaAction).toHaveBeenCalledWith('p1', {
+      title: '導入事例',
+    });
+  });
+
+  it('shows an archived article read-only with a way back', async () => {
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: idle({
+        stage: 'brief',
+        outline: [],
+        archivedAt: '2026-09-23T00:00:00Z',
+      }),
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    expect(await screen.findByText('Archived')).toBeInTheDocument();
+    expect(screen.queryByTitle('Edit title')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Create outline' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Restore' })).toBeInTheDocument();
+  });
+  it('points a sent article to the post editor instead of explaining', async () => {
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: reviewed({
+        stage: 'handed_off',
+        articleId: 'art',
+        article: { id: 'art', status: 'draft', slug: 's', category: 'notice' },
+      }),
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    await userEvent.click(await screen.findByRole('button', { name: /Draft/ }));
+    expect(await screen.findByText('Sent to All Posts')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Open in post editor' })
+    ).toHaveAttribute('href', '/admin/posts/art');
+    expect(screen.queryByText(/read-only/)).toBeNull();
   });
 });

@@ -186,7 +186,7 @@ export default function TemplateManager() {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-sm text-slate-500">{t('templates.intro')}</p>
+        <span />
         {canManage && (
           <Button
             variant="primary"

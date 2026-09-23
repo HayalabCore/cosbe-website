@@ -31,8 +31,8 @@ describe('studio actions', () => {
     await expect(startSystemCheckAction()).rejects.toThrow('Unauthorized');
   });
 
-  it('startSystemCheckAction requires studio.use', async () => {
-    authed(['articles.edit']);
+  it('startSystemCheckAction requires studio.system, not just studio.use', async () => {
+    authed(['studio.use']);
     await expect(startSystemCheckAction()).rejects.toThrow('Forbidden');
     expect(createAndEnqueueRun).not.toHaveBeenCalled();
   });

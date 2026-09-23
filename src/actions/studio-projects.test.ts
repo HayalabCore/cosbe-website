@@ -32,7 +32,10 @@ import {
 } from './studio-projects';
 
 const prismaError = (code: string) =>
-  new Prisma.PrismaClientKnownRequestError('x', { code, clientVersion: 'test' });
+  new Prisma.PrismaClientKnownRequestError('x', {
+    code,
+    clientVersion: 'test',
+  });
 
 const P = '6f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
 const S = '8f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
@@ -99,10 +102,19 @@ describe('studio project actions', () => {
   });
 
   it('reports NOT_FOUND instead of throwing for a missing source or project', async () => {
-    vi.mocked(getProject).mockResolvedValue({ id: P, archivedAt: null } as never);
+    vi.mocked(getProject).mockResolvedValue({
+      id: P,
+      archivedAt: null,
+    } as never);
     vi.mocked(linkSource).mockRejectedValueOnce(prismaError('P2003'));
-    expect(await linkSourceAction(P, S)).toEqual({ ok: false, error: 'NOT_FOUND' });
+    expect(await linkSourceAction(P, S)).toEqual({
+      ok: false,
+      error: 'NOT_FOUND',
+    });
     vi.mocked(archiveProject).mockRejectedValueOnce(prismaError('P2025'));
-    expect(await archiveProjectAction(P)).toEqual({ ok: false, error: 'NOT_FOUND' });
+    expect(await archiveProjectAction(P)).toEqual({
+      ok: false,
+      error: 'NOT_FOUND',
+    });
   });
 });

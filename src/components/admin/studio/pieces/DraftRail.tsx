@@ -93,7 +93,6 @@ function SourcesHelp({
   const t = useTranslations('admin.studio.draft');
   return (
     <div className="space-y-4 text-sm text-slate-600">
-      <p className="leading-relaxed">{t('railHelp')}</p>
       <dl className="grid grid-cols-3 gap-2 text-center">
         {[
           [cited, t('statCited')],
@@ -138,9 +137,6 @@ function HistoryPanel() {
     return <p className="text-sm text-slate-500">{t('workspace.noHistory')}</p>;
   return (
     <>
-      <p className="mb-3 text-xs leading-relaxed text-slate-500">
-        {t('history.help')}
-      </p>
       <ol className="space-y-1">
         {snapshots.map((s) => (
           <li

@@ -167,7 +167,7 @@ Worker deployment (manual; same GCP project as App Hosting, `cosbe-website-ed97c
    `docker build --platform linux/amd64 -f worker/Dockerfile -t "$IMAGE" . && docker push "$IMAGE"`
 4. `gcloud run deploy studio-worker --image "$IMAGE" --region $REGION --project cosbe-website-ed97c --min-instances 1 --max-instances 1 --no-cpu-throttling --cpu 1 --memory 2Gi --port 8080 --no-allow-unauthenticated --set-secrets DATABASE_URL=studio-database-url:latest,DIRECT_URL=studio-direct-url:latest,OPENAI_API_KEY=studio-openai-api-key:latest`
 5. Confirm the App Hosting build uses Node ≥ 22.12 and that `DIRECT_URL` is set there (the web app loads pg-boss to enqueue).
-6. Deploy the web app, then run **System check** at `/admin/studio`.
+6. Deploy the web app, then run **Check worker** in the `/admin/studio` header. It needs the `studio.system` permission (Admin and Developer roles have it; editors never see it). Editors are warned in the workspace instead when a job sits in the queue for over 30 seconds.
 
 ### Key Libraries
 

@@ -9,6 +9,8 @@ import type {
 } from 'react';
 import { forwardRef, useId } from 'react';
 import { AlertTriangle, Info, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import AdminInfoTip from '@/components/admin/AdminInfoTip';
 
 /*
  * The studio's building blocks, in the admin's vocabulary (see the posts
@@ -66,15 +68,30 @@ export const fieldClass =
   'w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 transition-all focus:border-primaryColor focus:outline-none focus:ring-2 focus:ring-primaryColor/15 disabled:bg-slate-50 disabled:text-slate-500';
 
 /** Label, control and a hint or error underneath, wired for screen readers. */
+/** The "i" beside a label or title, named after it for screen readers. */
+function InfoFor({ label, info }: { label: ReactNode; info: ReactNode }) {
+  const t = useTranslations('admin.studio.info');
+  return (
+    <AdminInfoTip
+      label={t('about', { label: typeof label === 'string' ? label : '' })}
+    >
+      {info}
+    </AdminInfoTip>
+  );
+}
+
 export function Field({
   label,
   hint,
+  info,
   error,
   required,
   children,
 }: {
   label: ReactNode;
   hint?: ReactNode;
+  /** Explanation behind an "i" beside the label, instead of hint text. */
+  info?: ReactNode;
   error?: ReactNode;
   required?: boolean;
   children: (props: {
@@ -88,12 +105,17 @@ export function Field({
   const note = error ?? hint;
   return (
     <div className="space-y-1.5">
-      <label
-        htmlFor={id}
-        className={`block text-sm font-medium text-slate-700 ${required ? "after:ml-0.5 after:text-red-500 after:content-['*']" : ''}`}
-      >
-        {label}
-      </label>
+      {/* The "i" sits beside the label, not in it, so the field's name stays
+          its label alone. */}
+      <div className="flex items-center gap-1">
+        <label
+          htmlFor={id}
+          className={`block text-sm font-medium text-slate-700 ${required ? "after:ml-0.5 after:text-red-500 after:content-['*']" : ''}`}
+        >
+          {label}
+        </label>
+        {info && <InfoFor label={label} info={info} />}
+      </div>
       {children({
         id,
         'aria-describedby': note ? noteId : undefined,
@@ -229,12 +251,14 @@ export function EmptyState({
 
 export function Card({
   title,
+  info,
   description,
   actions,
   children,
   className = '',
 }: {
   title?: ReactNode;
+  info?: ReactNode;
   description?: ReactNode;
   actions?: ReactNode;
   children: ReactNode;
@@ -248,7 +272,12 @@ export function Card({
         <header className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4">
           <div>
             {title && (
-              <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+              <div className="flex items-center gap-1">
+                <h2 className="text-sm font-semibold text-slate-900">
+                  {title}
+                </h2>
+                {info && <InfoFor label={title} info={info} />}
+              </div>
             )}
             {description && (
               <p className="mt-0.5 text-xs text-slate-500">{description}</p>
@@ -287,3 +316,5 @@ export function relativeTime(iso: string, locale: string): string {
   }
   return new Date(iso).toLocaleDateString(locale);
 }
+
+export { InfoFor };

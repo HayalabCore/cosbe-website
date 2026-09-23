@@ -1,8 +1,8 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle, AlertTriangle, Loader2 } from 'lucide-react';
 import type { ActiveRunDTO } from '@/lib/studio/piece-dto';
 import { runErrorText } from './errorText';
 import { useWorkspace } from './workspace-context';
@@ -32,6 +32,26 @@ export function useRunLabel(
   return t('working');
 }
 
+/** A job still queued after this long is not being picked up by the worker. */
+const STALL_MS = 30_000;
+const TICK_MS = 5_000;
+
+/**
+ * True when the run has sat in the queue so long that the worker is most
+ * likely down. Editors learn it where it affects them, instead of from a
+ * diagnostic button they would never think to press.
+ */
+function useStalled(run: ActiveRunDTO | null): boolean {
+  const queuedAt = run?.status === 'queued' ? Date.parse(run.createdAt) : null;
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (queuedAt === null) return;
+    const timer = window.setInterval(() => setNow(Date.now()), TICK_MS);
+    return () => window.clearInterval(timer);
+  }, [queuedAt]);
+  return queuedAt !== null && now - queuedAt > STALL_MS;
+}
+
 /**
  * The workspace's one place for "what happens next": the step's actions on
  * the right, and on the left whatever the editor needs to know — the run in
@@ -49,6 +69,7 @@ export default function CommandBar({
   const t = useTranslations('admin.studio');
   const { piece, busy, notice, notify, cancel } = useWorkspace();
   const runLabel = useRunLabel(piece.activeRun, piece.outline.length);
+  const stalled = useStalled(piece.activeRun);
   const runError =
     !busy && piece.lastRunError ? runErrorText(t, piece.lastRunError) : null;
 
@@ -72,6 +93,13 @@ export default function CommandBar({
         {runLabel}
       </span>
     );
+  if (busy && stalled)
+    status = (
+      <span role="alert" className="flex items-center gap-2 text-amber-300">
+        <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden />
+        {t('run.stalled')}
+      </span>
+    );
 
   // An action's outcome wins over progress: a failed Cancel must be seen.
   if (notice)
@@ -89,15 +117,16 @@ export default function CommandBar({
       </span>
     );
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-5 z-40 flex justify-center px-4 lg:left-56">
-      <div className="animate-bulkbar pointer-events-auto flex w-full max-w-4xl flex-wrap items-center gap-3 rounded-2xl bg-slate-900 py-2.5 pl-5 pr-2.5 shadow-2xl ring-1 ring-black/10">
+    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lg:left-56">
+      <div className="animate-bulkbar pointer-events-auto flex w-full max-w-4xl flex-wrap items-center gap-3 rounded-xl bg-slate-900 py-2 pl-4 pr-2 shadow-2xl ring-1 ring-black/10">
+        {/* Always full width, so the bar is the same object on every step. */}
         <div className="min-w-0 flex-1 text-sm">{status}</div>
         <div className="flex shrink-0 items-center gap-2 [&_button]:ring-0">
           {busy ? (
             <button
               type="button"
               onClick={() => void cancel()}
-              className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white"
+              className="rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white"
             >
               {t('workspace.cancel')}
             </button>
@@ -118,7 +147,7 @@ export function BarButton({
   return (
     <button
       type="button"
-      className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:text-slate-500 disabled:hover:bg-transparent"
+      className="rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-200 hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:text-slate-500 disabled:hover:bg-transparent"
       {...props}
     >
       {children}
@@ -136,7 +165,7 @@ export function BarPrimary({
     <button
       type="button"
       {...props}
-      className="inline-flex items-center gap-2 rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primaryHover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+      className="inline-flex items-center gap-2 rounded-lg bg-primaryColor px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-primaryHover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
       disabled={busy || props.disabled}
     >
       {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}

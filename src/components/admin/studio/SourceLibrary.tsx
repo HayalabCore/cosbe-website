@@ -180,7 +180,7 @@ export default function SourceLibrary({
                 )}
                 {!picking && (
                   <th className="hidden w-32 whitespace-nowrap px-4 py-3 text-right md:table-cell">
-                    {t('library.columns.projects')}
+                    {t('library.columns.topics')}
                   </th>
                 )}
                 <th className="w-32 px-4 py-3">
