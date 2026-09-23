@@ -10,6 +10,9 @@ import {
   startPdfUploadAction,
 } from '@/actions/studio-sources';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
+import { Upload } from 'lucide-react';
+import AdminDialog from '@/components/admin/access/AdminDialog';
+import { Banner, Button, Field, TextArea, TextInput } from './ui';
 
 type Tab = 'text' | 'article' | 'pdf';
 type Props = { projectId?: string; onClose: () => void; onAdded: () => void };
@@ -77,15 +80,13 @@ export default function AddSourceDialog({
 
   const tabs: Tab[] = ['text', 'article', 'pdf'];
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={t('title')}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
-    >
-      <div className="w-full max-w-xl space-y-4 rounded-lg bg-white p-6">
-        <h2 className="text-lg font-semibold text-slate-900">{t('title')}</h2>
-        <div role="tablist" className="flex gap-2">
+    <AdminDialog title={t('title')} onClose={onClose}>
+      <div className="space-y-4">
+        <div
+          role="tablist"
+          aria-label={t('title')}
+          className="flex gap-1 rounded-lg bg-slate-100 p-1"
+        >
           {tabs.map((key) => (
             <button
               key={key}
@@ -93,7 +94,7 @@ export default function AddSourceDialog({
               aria-selected={tab === key}
               type="button"
               onClick={() => setTab(key)}
-              className={`rounded-md px-3 py-1.5 text-sm ${tab === key ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700'}`}
+              className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${tab === key ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
             >
               {t(key)}
             </button>
@@ -102,7 +103,7 @@ export default function AddSourceDialog({
 
         {tab === 'text' && (
           <form
-            className="space-y-3"
+            className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
               void run(() =>
@@ -110,51 +111,62 @@ export default function AddSourceDialog({
               );
             }}
           >
-            <label className="block text-sm">
-              {t('titleLabel')}
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2"
-              />
-            </label>
-            <label className="block text-sm">
-              {t('textLabel')}
-              <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                rows={10}
-                className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2"
-              />
-            </label>
-            <div className="flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-3 py-2 text-sm text-slate-600"
-              >
+            <Field label={t('titleLabel')} required>
+              {(p) => (
+                <TextInput
+                  {...p}
+                  value={title}
+                  placeholder={t('titlePlaceholder')}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              )}
+            </Field>
+            <Field
+              label={t('textLabel')}
+              required
+              hint={t('textHint', { count: text.length })}
+            >
+              {(p) => (
+                <TextArea
+                  {...p}
+                  rows={10}
+                  value={text}
+                  placeholder={t('textPlaceholder')}
+                  onChange={(e) => setText(e.target.value)}
+                />
+              )}
+            </Field>
+            {error && (
+              <p role="alert" className="text-sm text-red-600">
+                {error}
+              </p>
+            )}
+            <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
+              <Button variant="ghost" onClick={onClose}>
                 {t('cancel')}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={busy}
-                className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed"
+                variant="primary"
+                busy={busy}
+                disabled={!title.trim() || !text.trim()}
               >
                 {t('save')}
-              </button>
+              </Button>
             </div>
           </form>
         )}
 
         {tab === 'article' && (
-          <div className="space-y-2">
-            <input
+          <div className="space-y-3">
+            <p className="text-sm text-slate-500">{t('articleHint')}</p>
+            <TextInput
               value={query}
+              aria-label={t('articleSearch')}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('articleSearch')}
-              className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm"
             />
-            <ul className="max-h-64 divide-y divide-slate-100 overflow-auto">
+            <ul className="max-h-72 divide-y divide-slate-100 overflow-auto rounded-lg border border-slate-200">
               {articles.map((a) => (
                 <li key={a.id}>
                   <button
@@ -168,44 +180,61 @@ export default function AddSourceDialog({
                         })
                       )
                     }
-                    className="w-full py-2 text-left text-sm hover:bg-slate-50"
+                    className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm hover:bg-slate-50 disabled:opacity-50"
                   >
-                    {a.title}{' '}
-                    <span className="text-xs text-slate-500">
-                      ({a.category})
+                    <span className="truncate text-slate-800">{a.title}</span>
+                    <span className="shrink-0 text-xs text-slate-400">
+                      {a.category}
                     </span>
                   </button>
                 </li>
               ))}
+              {articles.length === 0 && (
+                <li className="px-3 py-6 text-center text-sm text-slate-500">
+                  {t('noArticles')}
+                </li>
+              )}
             </ul>
+            {error && (
+              <p role="alert" className="text-sm text-red-600">
+                {error}
+              </p>
+            )}
           </div>
         )}
 
         {tab === 'pdf' && (
-          <div className="space-y-2">
-            <p className="text-sm text-slate-500">{t('pdfHint')}</p>
-            <label className="block text-sm">
-              {t('pdf')}
+          <div className="space-y-3">
+            <Banner tone="warning">{t('pdfHint')}</Banner>
+            <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-slate-300 px-6 py-8 text-center text-sm hover:border-primaryColor hover:bg-blue-50/40">
+              <Upload className="h-6 w-6 text-slate-400" aria-hidden />
+              <span className="font-semibold text-slate-700">{t('pdf')}</span>
+              <span className="text-xs text-slate-500">{t('pdfLimit')}</span>
               <input
                 type="file"
                 accept="application/pdf"
                 disabled={busy}
+                aria-label={t('pdf')}
                 onChange={(e) => {
                   const f = e.target.files?.[0];
                   if (f) void uploadPdf(f);
                 }}
-                className="mt-1 block"
+                className="sr-only"
               />
             </label>
+            {busy && (
+              <p className="text-center text-sm text-slate-500">
+                {t('uploading')}
+              </p>
+            )}
+            {error && (
+              <p role="alert" className="text-sm text-red-600">
+                {error}
+              </p>
+            )}
           </div>
         )}
-
-        {error && (
-          <p role="alert" className="text-sm text-red-600">
-            {error}
-          </p>
-        )}
       </div>
-    </div>
+    </AdminDialog>
   );
 }

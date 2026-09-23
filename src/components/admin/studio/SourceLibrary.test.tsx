@@ -1,4 +1,4 @@
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderAdmin } from '@/test/render-admin';
@@ -54,9 +54,7 @@ describe('SourceLibrary', () => {
     renderAdmin(<SourceLibrary />);
     expect(await screen.findByText('メモ')).toBeInTheDocument();
     expect(screen.getByText('Ready')).toBeInTheDocument();
-    expect(
-      screen.getByText('Stored — not used for generation yet')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Stored, not used yet')).toBeInTheDocument();
   });
 
   it('offers retry for failed sources', async () => {
@@ -105,10 +103,13 @@ describe('SourceLibrary', () => {
       ok: false,
       error: 'LINKED',
     });
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
     renderAdmin(<SourceLibrary />);
     await userEvent.click(
       await screen.findByRole('button', { name: 'Delete' })
+    );
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete' })
     );
     await waitFor(() =>
       expect(
@@ -162,8 +163,13 @@ describe('SourceLibrary', () => {
       data: [source({}), source({ id: 's2', title: 'Already linked' })],
     });
     renderAdmin(<SourceLibrary projectId="p1" linkedIds={['s2']} />);
-    await userEvent.click(await screen.findByRole('button', { name: 'Link' }));
+    // Already-linked sources are not offered again, and nothing can be deleted here.
+    expect(await screen.findAllByRole('button', { name: 'Add' })).toHaveLength(
+      1
+    );
+    expect(screen.queryByText('Already linked')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Delete' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
     expect(linkSourceAction).toHaveBeenCalledWith('p1', 's1');
-    expect(screen.getAllByRole('button', { name: 'Link' })).toHaveLength(1);
   });
 });

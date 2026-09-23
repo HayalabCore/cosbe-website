@@ -51,6 +51,7 @@ const HISTORY = [
   'edit_outline',
   'change_sources',
   'before_undo',
+  'edit_text',
 ];
 
 export function historyLabel(t: T, reason: string): string {

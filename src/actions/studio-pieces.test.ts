@@ -28,6 +28,7 @@ vi.mock('@/lib/articles', () => ({
 }));
 vi.mock('@/lib/articles-repository', () => ({
   allocateUniqueSlug: vi.fn(async (s: string) => s),
+  upsertAuthor: vi.fn(async () => 'author-new'),
 }));
 vi.mock('@/generator/pieces/pieces-repository', () => ({
   getPiece: vi.fn(),
@@ -67,9 +68,14 @@ import {
   takeSnapshot,
   updatePiece,
 } from '@/generator/pieces/pieces-repository';
+import { upsertAuthor } from '@/lib/articles-repository';
 import {
+  addAuthorAction,
   createDraftPostAction,
+  createPieceAction,
   duplicatePieceAction,
+  editSentenceAction,
+  updatePieceMetaAction,
   rewriteSectionAction,
   saveOutlineAction,
   startRunAction,
@@ -210,7 +216,9 @@ describe('piece actions', () => {
       '0c1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e',
     ];
     vi.mocked(getPiece).mockResolvedValue(
-      piece({ selection: { sourceIds: [A, B], chapters: { [B]: [0] } } }) as never
+      piece({
+        selection: { sourceIds: [A, B], chapters: { [B]: [0] } },
+      }) as never
     );
     vi.mocked(listProjectSources).mockResolvedValueOnce([
       { id: A, status: 'ready' },
@@ -264,7 +272,14 @@ describe('piece actions', () => {
       piece({ stage: 'review', excerpt: 'Old', sections: [section] }) as never
     );
     await saveOutlineAction(ID, [
-      { id: 'o1', heading: '課題（改）', intent: 'i', chunkIds: ['k'], kind: 'source', estChars: 100 },
+      {
+        id: 'o1',
+        heading: '課題（改）',
+        intent: 'i',
+        chunkIds: ['k'],
+        kind: 'source',
+        estChars: 100,
+      },
     ]);
     expect(updatePiece).toHaveBeenCalledWith(
       ID,
@@ -279,9 +294,18 @@ describe('piece actions', () => {
       piece({ stage: 'review', excerpt: 'Old', sections: [section] }) as never
     );
     await saveOutlineAction(ID, [
-      { id: 'o1', heading: '課題', intent: 'i', chunkIds: ['k'], kind: 'source', estChars: 100 },
+      {
+        id: 'o1',
+        heading: '課題',
+        intent: 'i',
+        chunkIds: ['k'],
+        kind: 'source',
+        estChars: 100,
+      },
     ]);
-    expect(vi.mocked(updatePiece).mock.calls[0][1]).not.toHaveProperty('excerpt');
+    expect(vi.mocked(updatePiece).mock.calls[0][1]).not.toHaveProperty(
+      'excerpt'
+    );
   });
 
   it('marks changed outline sections stale and rewinds the stage', async () => {
@@ -368,7 +392,12 @@ describe('piece actions', () => {
 
   it('creates a draft post without citations and locks the piece', async () => {
     vi.mocked(getPiece).mockResolvedValue(
-      piece({ stage: 'ready', title: 'AI導入', excerpt: 'E', sections: [section] }) as never
+      piece({
+        stage: 'ready',
+        title: 'AI導入',
+        excerpt: 'E',
+        sections: [section],
+      }) as never
     );
     vi.mocked(prisma.author.findUnique).mockResolvedValue({
       id: 'a1',
@@ -403,10 +432,18 @@ describe('piece actions', () => {
 
   it('never derives a Latin-remnant slug from a Japanese-only title', async () => {
     vi.mocked(getPiece).mockResolvedValue(
-      piece({ stage: 'review', title: 'AI導入の始め方', excerpt: 'E', sections: [section] }) as never
+      piece({
+        stage: 'review',
+        title: 'AI導入の始め方',
+        excerpt: 'E',
+        sections: [section],
+      }) as never
     );
     vi.mocked(prisma.author.findUnique).mockResolvedValue({
-      id: 'a1', name: '山田', designation: 'Editor', avatarUrl: null,
+      id: 'a1',
+      name: '山田',
+      designation: 'Editor',
+      avatarUrl: null,
     } as never);
     await createDraftPostAction(ID);
     const created = vi.mocked(createArticleRecord).mock.calls[0][0];
@@ -415,9 +452,10 @@ describe('piece actions', () => {
 
   it('rejects an unknown run kind', async () => {
     vi.mocked(getPiece).mockResolvedValue(piece() as never);
-    expect(
-      await startRunAction(ID, 'rewrite_section' as never)
-    ).toEqual({ ok: false, error: 'INVALID_INPUT' });
+    expect(await startRunAction(ID, 'rewrite_section' as never)).toEqual({
+      ok: false,
+      error: 'INVALID_INPUT',
+    });
     expect(createAndEnqueueRun).not.toHaveBeenCalled();
   });
 
@@ -449,5 +487,126 @@ describe('piece actions', () => {
       'p2',
       expect.objectContaining({ stage: 'brief' })
     );
+  });
+
+  it('creates a piece with the goal and every ready project source selected', async () => {
+    vi.mocked(listProjectSources).mockResolvedValueOnce([
+      { id: 's1', status: 'ready' },
+      { id: 's2', status: 'processing' },
+    ] as never);
+    expect(
+      await createPieceAction({ projectId: ID, goal: '  導入効果を伝える ' })
+    ).toEqual({ ok: true, data: { pieceId: 'p2' } });
+    expect(updatePiece).toHaveBeenCalledWith(
+      'p2',
+      expect.objectContaining({
+        stage: 'brief',
+        selection: { sourceIds: ['s1'], chapters: {} },
+        brief: expect.objectContaining({ goal: '導入効果を伝える' }),
+      })
+    );
+  });
+
+  it('edits one sentence, keeps its citation and marks the translation stale', async () => {
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({
+        stage: 'ready',
+        excerpt: 'E',
+        sections: [{ ...section, en: { heading: 'H', blocks: [] } }],
+      }) as never
+    );
+    expect(
+      await editSentenceAction(ID, {
+        outlineId: 'o1',
+        block: 0,
+        index: 0,
+        text: ' 新しい本文。 ',
+      })
+    ).toEqual({ ok: true, data: undefined });
+    expect(takeSnapshot).toHaveBeenCalledWith(
+      ID,
+      'edit_text',
+      undefined,
+      prisma
+    );
+    const patch = vi.mocked(updatePiece).mock.calls[0][1];
+    expect(patch.stage).toBe('review');
+    const edited = patch.sections![0];
+    expect(edited.enStale).toBe(true);
+    expect(edited.blocks[0]).toEqual({
+      type: 'paragraph',
+      sentences: [{ text: '新しい本文。', cite: ['k'], connective: false }],
+    });
+  });
+
+  it('rejects an edit that points at no sentence', async () => {
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({ stage: 'review', sections: [section] }) as never
+    );
+    expect(
+      await editSentenceAction(ID, {
+        outlineId: 'o1',
+        block: 0,
+        index: 3,
+        text: 'x',
+      })
+    ).toMatchObject({ ok: false, error: 'NOT_FOUND' });
+    expect(
+      await editSentenceAction(ID, {
+        outlineId: 'o1',
+        block: 0,
+        index: 0,
+        text: '  ',
+      })
+    ).toMatchObject({ ok: false, error: 'INVALID_INPUT' });
+    expect(updatePiece).not.toHaveBeenCalled();
+  });
+
+  it('saves the title, excerpt and SEO the editor typed', async () => {
+    vi.mocked(getPiece).mockResolvedValue(
+      piece({
+        stage: 'review',
+        title: 'Old',
+        excerpt: 'E',
+        sections: [section],
+      }) as never
+    );
+    const seo = { title: 'T', description: 'D', keywords: ['AI'] };
+    expect(
+      await updatePieceMetaAction(ID, {
+        title: ' 新タイトル ',
+        excerpt: '要約',
+        seo,
+      })
+    ).toEqual({ ok: true, data: undefined });
+    expect(updatePiece).toHaveBeenCalledWith(
+      ID,
+      { title: '新タイトル', excerpt: '要約', seo },
+      undefined,
+      prisma
+    );
+  });
+
+  it('refuses an empty title', async () => {
+    vi.mocked(getPiece).mockResolvedValue(piece({ stage: 'review' }) as never);
+    expect(await updatePieceMetaAction(ID, { title: ' ' })).toMatchObject({
+      ok: false,
+      error: 'INVALID_INPUT',
+    });
+  });
+
+  it('adds an author for users who can edit posts', async () => {
+    expect(
+      await addAuthorAction({ name: ' 山田 花子 ', designation: '編集部' })
+    ).toEqual({
+      ok: true,
+      data: { id: 'author-new', name: '山田 花子', designation: '編集部' },
+    });
+    expect(upsertAuthor).toHaveBeenCalledWith('山田 花子', '編集部');
+    authed(['studio.use']);
+    expect(await addAuthorAction({ name: 'A', designation: 'B' })).toEqual({
+      ok: false,
+      error: 'FORBIDDEN',
+    });
   });
 });

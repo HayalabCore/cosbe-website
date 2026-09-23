@@ -692,7 +692,7 @@
   },
   "studio": {
     "title": "Content Studio",
-    "subtitle": "Generate source-grounded article drafts.",
+    "subtitle": "Draft articles from your own material, with a source for every fact.",
     "systemCheck": {
       "title": "System check",
       "description": "Confirms the studio worker is running and connected to the database.",
@@ -702,19 +702,21 @@
       "succeeded": "Worker {worker} completed the check in {seconds}s.",
       "failed": "The check failed: {error}",
       "timeout": "No response after 90 seconds. Is the studio worker running?",
-      "startError": "Could not start the check."
+      "startError": "Could not start the check.",
+      "open": "Check worker"
     },
     "tabs": {
-      "overview": "Pieces",
+      "overview": "Articles",
       "library": "Source library",
       "projects": "Projects",
-      "templates": "Templates"
+      "templates": "Templates",
+      "label": "Content Studio sections"
     },
     "status": {
       "pending": "Queued",
       "processing": "Processing",
       "ready": "Ready",
-      "stored": "Stored — not used for generation yet",
+      "stored": "Stored, not used yet",
       "needs_transcript": "Needs transcript",
       "failed": "Failed"
     },
@@ -727,48 +729,73 @@
     "library": {
       "title": "Source library",
       "search": "Search sources…",
-      "add": "Add source",
-      "empty": "No sources yet. Add notes, an article or a PDF.",
+      "add": "Add material",
+      "empty": "Material added here can be used by any project: notes, CosBE articles, PDFs.",
       "columns": {
         "title": "Title",
         "kind": "Type",
         "status": "Status",
         "size": "Characters",
-        "projects": "Projects"
+        "projects": "Projects",
+        "actions": "Actions"
       },
       "retry": "Retry",
       "delete": "Delete",
-      "link": "Link",
+      "link": "Add",
       "confirmDelete": "Delete “{title}”? This cannot be undone.",
-      "linkedError": "This source is used by a project or was added by someone else. Only its creator (once it is unlinked) or users who can delete studio sources can remove it."
+      "linkedError": "This source is used by a project or was added by someone else. Only its creator (once it is unlinked) or users who can delete studio sources can remove it.",
+      "emptyTitle": "The library is empty",
+      "deleteTitle": "Delete this source?",
+      "allLinked": "Everything in the library is already in this project.",
+      "noMatch": "No sources match."
     },
     "addSource": {
-      "title": "Add source",
+      "title": "Add material",
       "text": "Paste text",
       "article": "CosBE article",
       "pdf": "Upload PDF",
       "titleLabel": "Title",
       "textLabel": "Text",
       "articleSearch": "Search articles…",
-      "pdfHint": "PDF, up to 50 MB. PDFs are stored for later; they are not used for generation yet.",
+      "pdfHint": "PDFs are stored now and used once PDF reading is available. They cannot be cited yet.",
       "save": "Add",
       "cancel": "Cancel",
       "tooLarge": "The file is larger than 50 MB.",
-      "failed": "Could not add the source."
+      "failed": "Could not add the source.",
+      "titlePlaceholder": "e.g. Interview notes, March",
+      "textHint": "{count, number} characters",
+      "textPlaceholder": "Paste notes, a transcript or a document.",
+      "articleHint": "Use a published CosBE article as material.",
+      "noArticles": "No articles found.",
+      "pdfLimit": "PDF, up to 50 MB",
+      "uploading": "Uploading…"
     },
     "projects": {
       "title": "Projects",
       "new": "New project",
       "name": "Name",
       "description": "Description",
-      "create": "Create",
-      "empty": "No projects yet.",
+      "create": "Create project",
+      "empty": "A project collects the material a group of articles draws on: notes, past articles, documents.",
       "sources": "{count, plural, =0 {No sources} one {# source} other {# sources}}",
-      "linkExisting": "Link from library",
+      "linkExisting": "Add from library",
       "unlink": "Remove from project",
       "archive": "Archive project",
-      "back": "All projects",
-      "noSources": "Link or add sources to use them in this project."
+      "back": "Projects",
+      "noSources": "No material yet. Add notes, an article or a PDF.",
+      "namePlaceholder": "e.g. Generative AI case studies",
+      "descriptionHint": "Optional. What the material is about.",
+      "cancel": "Cancel",
+      "failed": "Could not create the project. Try again.",
+      "emptyTitle": "No projects yet",
+      "intro": "Each project holds material that its articles can cite.",
+      "noDescription": "No description",
+      "rename": "Rename project",
+      "material": "Material",
+      "materialDescription": "Articles in this project can cite any of these.",
+      "unlinkNamed": "Remove “{title}” from this project",
+      "articles": "Articles",
+      "noArticles": "No articles yet."
     },
     "category": {
       "useful-info": "Column",
@@ -777,46 +804,56 @@
       "notice": "Notice"
     },
     "stages": {
-      "sources": "Sources",
-      "brief": "Brief",
+      "sources": "Setup",
+      "brief": "Setup",
       "outline": "Outline",
-      "writing": "Writing",
-      "review": "Review",
-      "translating": "Translate",
-      "ready": "Draft post",
-      "handed_off": "Published"
+      "writing": "Writing…",
+      "review": "Draft",
+      "translating": "Translating…",
+      "ready": "Ready to send",
+      "handed_off": "In All Posts"
     },
     "pieces": {
       "title": "Pieces",
-      "new": "New piece",
+      "new": "New article",
       "chooseProject": "Choose a project",
       "empty": "No pieces yet.",
       "columns": {
-        "title": "Title",
+        "title": "Article",
         "project": "Project",
-        "stage": "Stage",
+        "stage": "Progress",
         "updated": "Updated"
       },
-      "untitled": "Untitled",
+      "untitled": "Untitled article",
       "tracked": {
-        "draft": "Draft post",
+        "draft": "Draft in posts",
         "published": "Published",
         "archived": "Archived",
         "removed": "Post deleted"
-      }
+      },
+      "loading": "Loading articles",
+      "emptyTitle": "Write your first article",
+      "emptyBody": "Choose the material it should be based on, say what it should achieve, and the studio drafts it with a source for every fact.",
+      "search": "Search articles",
+      "filters": {
+        "all": "All",
+        "active": "In progress",
+        "sent": "In All Posts"
+      },
+      "noMatch": "No articles match."
     },
     "workspace": {
-      "back": "All pieces",
+      "back": "Articles",
       "busy": "Working…",
       "cancel": "Cancel",
       "failed": "The last step failed: {error}",
       "undo": "History",
       "undoButton": "Restore",
-      "noHistory": "No history yet.",
+      "noHistory": "No earlier versions yet.",
       "errors": {
         "BUSY": "Wait for the current step to finish.",
         "LOCKED": "This piece was already handed off.",
-        "NO_AUTHOR": "Choose an author in the brief first.",
+        "NO_AUTHOR": "Choose an author in “Send to posts” first.",
         "FAILED": "Something went wrong. Try again.",
         "INVALID_INPUT": "Check the values and try again.",
         "NOT_FOUND": "It no longer exists. Reload the page.",
@@ -845,15 +882,13 @@
         "translate": "Before translation",
         "rewrite": "Before rewriting “{heading}”",
         "edit_outline": "Before outline edit",
-        "change_sources": "Before source change",
-        "before_undo": "Before restore"
-      }
-    },
-    "sourcesPanel": {
-      "title": "Choose sources",
-      "none": "Link sources to this project first.",
-      "notReady": "Not ready",
-      "next": "Continue to brief"
+        "change_sources": "Before material change",
+        "before_undo": "Before restore",
+        "edit_text": "Before text edit"
+      },
+      "breadcrumb": "Breadcrumb",
+      "notFound": "This article no longer exists.",
+      "stale": "Could not refresh. Showing the last loaded version."
     },
     "brief": {
       "title": "Brief",
@@ -874,26 +909,32 @@
       "title": "Outline",
       "heading": "Heading",
       "intent": "What this section covers",
-      "sources": "{count, plural, =0 {No source passages} one {# passage} other {# passages}}",
-      "boilerplate": "Template section (no sources)",
+      "sources": "{count, plural, one {# source passage} other {# source passages}}",
+      "boilerplate": "No source material",
       "add": "Add section",
       "remove": "Remove",
       "up": "Move up",
       "down": "Move down",
-      "stale": "Changed — will be rewritten",
-      "gaps": "Not covered by the sources",
+      "stale": "Will be rewritten",
+      "gaps": "The material does not cover:",
       "save": "Save outline",
       "write": "Write article",
-      "continue": "Continue writing"
-    },
-    "writing": {
-      "title": "Writing",
-      "section": "Section {n} of {total}",
-      "finishing": "Title, excerpt and SEO"
+      "continue": "Write remaining sections",
+      "headingPlaceholder": "Section heading",
+      "intentPlaceholder": "What this section should cover",
+      "drag": "Move section {n}",
+      "boilerplateHint": "Written from the brief and template only, so it cannot cite facts.",
+      "removeSection": "Remove “{heading}”",
+      "gapsHint": "Add material in Setup, or remove sections that depend on it.",
+      "needHeadings": "Every section needs a heading.",
+      "upToDate": "The draft matches this outline.",
+      "resumeHint": "{count, plural, one {# section} other {# sections}} still to write.",
+      "writeHint": "{count, plural, one {# section} other {# sections}} will be written, each citing its sources.",
+      "toDraft": "Go to draft"
     },
     "review": {
       "title": "Review",
-      "flags": "Needs attention",
+      "flags": "Check this section",
       "citation": "Source",
       "connective": "Transition (no facts)",
       "actions": {
@@ -909,20 +950,24 @@
         "shorten": "Make this section about half as long.",
         "formal": "Make the tone more formal."
       },
-      "customPrompt": "What should change in this section?",
+      "customPrompt": "What should change?",
       "translate": "Translate to English",
-      "handoff": "Create draft post"
+      "handoff": "Create draft post",
+      "rewrite": "Rewrite",
+      "customPlaceholder": "e.g. Lead with the cost figures",
+      "customSubmit": "Rewrite section"
     },
     "translate": {
       "title": "Translation",
-      "stale": "Changed since translation — translate again"
+      "stale": "Out of date"
     },
     "handoff": {
-      "title": "Draft post",
-      "open": "Open in editor",
+      "title": "Draft created in All Posts",
+      "open": "Open in post editor",
       "view": "View on site",
-      "duplicate": "Duplicate piece",
-      "status": "Post status: {status}"
+      "duplicate": "Start a new version",
+      "status": "Post status: {status}",
+      "readOnly": "Publish it from the post editor. The studio copy is read-only; a new version starts from the same brief and material."
     },
     "templates": {
       "title": "Templates",
@@ -933,7 +978,160 @@
       "defaultCategory": "Default category",
       "default": "Default",
       "save": "Save",
-      "delete": "Delete"
+      "delete": "Delete",
+      "intro": "Templates set the structure and tone the writer follows.",
+      "edit": "Edit template",
+      "editNamed": "Edit {name}",
+      "descriptionHint": "Shown when choosing a template.",
+      "instructionsHint": "Plain instructions for the writer: audience, tone, structure.",
+      "deleteTitle": "Delete this template?",
+      "confirmDelete": "Delete “{name}”? Articles that used it keep their text.",
+      "empty": "No templates yet."
+    },
+    "steps": {
+      "label": "Progress",
+      "setup": "Setup",
+      "outline": "Outline",
+      "draft": "Draft",
+      "handoff": "Send to posts",
+      "notYet": "Finish the earlier steps first."
+    },
+    "newArticle": {
+      "title": "New article",
+      "goal": "What should this article do?",
+      "goalHint": "One or two sentences: who it is for and what they should take away.",
+      "goalPlaceholder": "e.g. Show manufacturing executives what changed when a company used generative AI for sales proposals, including costs and obstacles.",
+      "project": "Project",
+      "projectHint": "The article can use any material in this project.",
+      "newProject": "New project…",
+      "projectName": "Project name",
+      "projectNamePlaceholder": "e.g. Generative AI case studies",
+      "cancel": "Cancel",
+      "create": "Create article",
+      "failed": "Could not create the article. Try again."
+    },
+    "run": {
+      "queued": "Waiting for the worker…",
+      "writing": "Writing section {n} of {total}…",
+      "finishing": "Writing the title, excerpt and SEO…",
+      "outline": "Creating the outline…",
+      "translate": "Translating to English…",
+      "rewrite_section": "Rewriting the section…",
+      "working": "Working…"
+    },
+    "bar": {
+      "dismiss": "Dismiss",
+      "unsaved": "Unsaved changes",
+      "save": "Save"
+    },
+    "confirm": {
+      "cancel": "Cancel"
+    },
+    "setup": {
+      "briefTitle": "Brief",
+      "briefDescription": "What the article is for. The outline and every section follow it.",
+      "goalHint": "The only required field. Say who it is for and what they should take away.",
+      "audienceHint": "Who will read it.",
+      "audiencePlaceholder": "e.g. Executives at mid-sized manufacturers",
+      "toneHint": "How it should sound.",
+      "tonePlaceholder": "e.g. Practical and polite (です・ます)",
+      "keywords": "Keywords",
+      "keywordsHint": "Press Enter or a comma to add one. Used for wording and SEO.",
+      "removeKeyword": "Remove {keyword}",
+      "length": "Length",
+      "lengthAuto": "As the material allows",
+      "lengthChars": "About {count, number} chars",
+      "lengthCustom": "Custom",
+      "lengthHint": "In Japanese characters, roughly. Short material cannot fill a long article.",
+      "noTemplate": "No template",
+      "templateHint": "Structure and tone rules the writer follows.",
+      "materialTitle": "Material",
+      "materialDescription": "What the article may draw on. Every fact cites one of these.",
+      "addMaterial": "Add material",
+      "noMaterial": "No material yet",
+      "noMaterialHint": "Paste notes, pick a CosBE article or upload a PDF.",
+      "pdfNotUsed": "Not used yet",
+      "chapters": "{picked}/{total} chapters",
+      "needGoal": "Add a goal to create the outline.",
+      "needSource": "Tick at least one ready source.",
+      "outlineExists": "The outline is ready.",
+      "nextHint": "Next, the studio proposes an outline you can edit.",
+      "recreateOutline": "Create new outline",
+      "toOutline": "Go to outline",
+      "confirmTitle": "Replace the outline?",
+      "confirmOutline": "A new outline replaces the current one.",
+      "confirmDraft": "A new outline replaces the current outline and the written draft.",
+      "confirmHistory": "The current version stays in History, so you can restore it."
+    },
+    "draft": {
+      "citationTitle": "Source for [{n}]",
+      "closeCitation": "Close source",
+      "citationFrom": "From",
+      "railHelp": "Click a number in the text to see the passage it comes from. Click any sentence to change its wording.",
+      "statCited": "cited sentences",
+      "statTransitions": "transitions",
+      "statFlagged": "sections to check",
+      "legendCited": "The number opens the source passage",
+      "legendTransition": "Transition sentence, no source",
+      "tabSources": "Sources",
+      "tabHistory": "History",
+      "editLabel": "Edit text",
+      "editKeys": "Enter saves, Esc cancels",
+      "cancel": "Cancel",
+      "save": "Save",
+      "transitionTitle": "Transition sentence: it has no source",
+      "clickToEdit": "Click to edit",
+      "citationLabel": "Source {n}",
+      "writingNow": "Writing…",
+      "editTitle": "Edit title",
+      "editExcerpt": "Edit excerpt",
+      "noExcerpt": "No excerpt",
+      "excerptLater": "The title and excerpt are written last.",
+      "rewritten": "Section rewritten.",
+      "undoRewrite": "Undo",
+      "hint": "Click a sentence to edit it, or use Rewrite on a section.",
+      "incomplete": "Some sections are not written yet.",
+      "toHandoff": "Continue",
+      "lockedHint": "This article was sent to posts. Edit it in the post editor; the studio copy is read-only."
+    },
+    "history": {
+      "help": "Each entry is the article as it was just before that change.",
+      "restore": "Restore",
+      "confirmTitle": "Restore this version?",
+      "confirmBody": "Restore the version saved “{label}”? The current version is kept in History first."
+    },
+    "handoffStep": {
+      "englishTitle": "English version",
+      "englishDescription": "Optional. Carried into the draft post together with the Japanese.",
+      "translateAgain": "Translate again",
+      "updateTranslation": "{count, plural, one {Update # section} other {Update # sections}}",
+      "noEnglish": "No English version yet",
+      "noEnglishHint": "Translate now, or create the post in Japanese only and translate it later in the post editor.",
+      "detailsTitle": "Post details",
+      "detailsDescription": "Carried into the draft post. You can still change all of it in the post editor.",
+      "chooseAuthor": "Choose an author",
+      "noAuthors": "No authors yet. Add one with +.",
+      "addAuthor": "Add author",
+      "authorName": "Name",
+      "authorRole": "Role, e.g. Editor",
+      "excerpt": "Excerpt",
+      "excerptHint": "Shown in article lists and search results.",
+      "seo": "SEO",
+      "seoTitle": "SEO title",
+      "seoDescription": "Meta description",
+      "seoKeywords": "SEO keywords",
+      "chars": "{count, number} characters",
+      "checklist": "Before you send",
+      "checkWritten": "Article written",
+      "checkAuthor": "Author chosen",
+      "checkEnglish": "English version (optional)",
+      "needPermission": "You need permission to edit posts to create the draft.",
+      "needAuthor": "Choose an author to create the draft post.",
+      "hint": "Creates a draft in All Posts. Publishing happens there, in the post editor.",
+      "confirmTitle": "Send to All Posts as a draft?",
+      "confirmBody": "A draft post appears in All Posts. Review and publish it from the post editor. The studio copy becomes read-only.",
+      "confirmNoEnglish": "There is no English version, so the post will be Japanese only for now.",
+      "confirmStaleEnglish": "{count, plural, one {# section's English is out of date and is left out.} other {# sections' English is out of date and is left out.}} You can translate it in the post editor."
     }
   }
 }

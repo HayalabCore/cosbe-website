@@ -13,13 +13,22 @@ export type ActiveRunDTO = {
   targets: number | null;
 };
 
-export type PieceDTO = Omit<PieceData, 'createdAt' | 'updatedAt' | 'handedOffAt'> & {
+export type PieceDTO = Omit<
+  PieceData,
+  'createdAt' | 'updatedAt' | 'handedOffAt'
+> & {
   createdAt: string;
   updatedAt: string;
   handedOffAt: string | null;
   activeRun: ActiveRunDTO | null;
   lastRunError: string | null;
-  article: { id: string; status: string; slug: string; category: string } | null;
+  article: {
+    id: string;
+    status: string;
+    slug: string;
+    category: string;
+  } | null;
+  projectName: string;
 };
 
 export type PieceListItemDTO = {
@@ -33,9 +42,7 @@ export type PieceListItemDTO = {
 
 function prepareTargets(steps: RunWithSteps['steps']): number | null {
   const output = steps.find((s) => s.key === 'prepare')?.output as
-    | { targets?: unknown }
-    | null
-    | undefined;
+    { targets?: unknown } | null | undefined;
   return typeof output?.targets === 'number' ? output.targets : null;
 }
 
@@ -53,7 +60,10 @@ export function toActiveRunDTO(run: RunWithSteps | null): ActiveRunDTO | null {
 
 export function toPieceDTO(
   data: PieceData,
-  extras: Pick<PieceDTO, 'activeRun' | 'lastRunError' | 'article'>
+  extras: Pick<
+    PieceDTO,
+    'activeRun' | 'lastRunError' | 'article' | 'projectName'
+  >
 ): PieceDTO {
   return {
     ...data,
