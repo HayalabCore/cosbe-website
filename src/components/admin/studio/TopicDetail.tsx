@@ -27,9 +27,11 @@ import NewArticleDialog from './pieces/NewArticleDialog';
 import { stepOf } from './pieces/steps';
 import { Button, Card, Skeleton, TextInput } from './ui';
 
-export default function ProjectDetail({ projectId }: { projectId: string }) {
+export default function TopicDetail({ topicId }: { topicId: string }) {
+  // Topics are stored as studio projects; the server still calls the id projectId.
+  const projectId = topicId;
   const t = useTranslations('admin.studio');
-  const [project, setProject] = useState<{
+  const [topic, setTopic] = useState<{
     name: string;
     description: string;
   } | null>(null);
@@ -48,11 +50,11 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
     void getProjectAction(projectId).then((result) => {
       if (cancelled) return;
       if (!result.ok) return setMissing(true);
-      setProject(result.data.project);
+      setTopic(result.data.project);
       setSources(result.data.sources);
     });
     void listPiecesAction({ projectId }).then(
-      (r) => !cancelled && r.ok && setPieces(r.data)
+      (r) => !cancelled && r.ok && setPieces(r.data.filter((p) => !p.archived))
     );
     return () => {
       cancelled = true;
@@ -81,14 +83,14 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
     <div className="space-y-6">
       <div className="space-y-3">
         <Link
-          href="/admin/studio/projects"
+          href="/admin/studio/topics"
           className="inline-flex items-center gap-0.5 text-sm text-slate-500 hover:text-slate-900"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
-          {t('projects.back')}
+          {t('topics.back')}
         </Link>
         <div className="flex flex-wrap items-start justify-between gap-4">
-          {!project ? (
+          {!topic ? (
             <Skeleton className="h-7 w-64" />
           ) : renaming !== null ? (
             <form
@@ -105,7 +107,7 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
             >
               <TextInput
                 autoFocus
-                aria-label={t('projects.name')}
+                aria-label={t('topics.name')}
                 value={renaming}
                 onChange={(e) => setRenaming(e.target.value)}
                 className="w-72"
@@ -124,19 +126,19 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
           ) : (
             <div>
               <h2 className="group flex items-center gap-2 text-xl font-bold text-slate-900">
-                {project.name}
+                {topic.name}
                 <button
                   type="button"
-                  aria-label={t('projects.rename')}
-                  onClick={() => setRenaming(project.name)}
+                  aria-label={t('topics.rename')}
+                  onClick={() => setRenaming(topic.name)}
                   className="rounded-md p-1 text-slate-300 hover:bg-slate-100 hover:text-slate-600"
                 >
                   <Pencil className="h-4 w-4" aria-hidden />
                 </button>
               </h2>
-              {project.description && (
+              {topic.description && (
                 <p className="mt-1 text-sm text-slate-500">
-                  {project.description}
+                  {topic.description}
                 </p>
               )}
             </div>
@@ -153,8 +155,7 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Card
-          title={t('projects.material')}
-          description={t('projects.materialDescription')}
+          title={t('topics.material')}
           actions={
             <>
               <Button
@@ -163,7 +164,7 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
                 icon={<Library className="h-3.5 w-3.5" aria-hidden />}
                 onClick={() => setDialog('library')}
               >
-                {t('projects.linkExisting')}
+                {t('topics.linkExisting')}
               </Button>
               <Button
                 size="sm"
@@ -176,11 +177,11 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
           }
           className="self-start"
         >
-          {!project ? (
+          {!topic ? (
             <Skeleton className="h-5 w-full" />
           ) : sources.length === 0 ? (
             <p className="py-6 text-center text-sm text-slate-500">
-              {t('projects.noSources')}
+              {t('topics.noSources')}
             </p>
           ) : (
             <ul className="-mx-2 divide-y divide-slate-100">
@@ -200,8 +201,8 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
                   <SourceStatusBadge status={s.status} error={s.error} />
                   <button
                     type="button"
-                    aria-label={t('projects.unlinkNamed', { title: s.title })}
-                    title={t('projects.unlink')}
+                    aria-label={t('topics.unlinkNamed', { title: s.title })}
+                    title={t('topics.unlink')}
                     onClick={() =>
                       void unlinkSourceAction(projectId, s.id).then(reload)
                     }
@@ -215,7 +216,7 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
           )}
         </Card>
 
-        <Card title={t('projects.articles')} className="self-start">
+        <Card title={t('topics.articles')} className="self-start">
           {pieces.length === 0 ? (
             <div className="py-6 text-center">
               <FilePenLine
@@ -223,7 +224,7 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
                 aria-hidden
               />
               <p className="mt-2 text-sm text-slate-500">
-                {t('projects.noArticles')}
+                {t('topics.noArticles')}
               </p>
             </div>
           ) : (
@@ -262,7 +263,7 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
       )}
       {dialog === 'library' && (
         <AdminDialog
-          title={t('projects.linkExisting')}
+          title={t('topics.linkExisting')}
           onClose={() => setDialog(null)}
         >
           <SourceLibrary
@@ -273,10 +274,7 @@ export default function ProjectDetail({ projectId }: { projectId: string }) {
         </AdminDialog>
       )}
       {dialog === 'article' && (
-        <NewArticleDialog
-          projectId={projectId}
-          onClose={() => setDialog(null)}
-        />
+        <NewArticleDialog topicId={projectId} onClose={() => setDialog(null)} />
       )}
     </div>
   );

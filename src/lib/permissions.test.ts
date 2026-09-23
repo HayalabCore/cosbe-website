@@ -9,8 +9,8 @@ import {
 } from './permissions';
 
 describe('permission catalog', () => {
-  it('has the 19 permissions (16 access/content + 3 studio)', () => {
-    expect(ALL_PERMISSIONS).toHaveLength(19);
+  it('has the 20 permissions (16 access/content + 4 studio)', () => {
+    expect(ALL_PERMISSIONS).toHaveLength(20);
     expect(ALL_PERMISSIONS).toContain('users.delete');
     expect(ALL_PERMISSIONS).toContain('translations.history.delete');
     expect(ALL_PERMISSIONS).toEqual(
@@ -18,8 +18,15 @@ describe('permission catalog', () => {
         'studio.use',
         'studio.templates.manage',
         'studio.sources.delete',
+        'studio.system',
       ])
     );
+  });
+
+  it('gives the system check to admins and developers, not marketing', () => {
+    expect(DEFAULT_ROLE_PERMISSIONS.admin).toContain('studio.system');
+    expect(DEFAULT_ROLE_PERMISSIONS.developer).toContain('studio.system');
+    expect(DEFAULT_ROLE_PERMISSIONS.marketing).not.toContain('studio.system');
   });
 
   it('developer and marketing can use studio but not delete sources', () => {

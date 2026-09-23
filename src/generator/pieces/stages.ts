@@ -47,8 +47,7 @@ export function canStartOutline(
     if (!p.selection.sourceIds.some((id) => ready.has(id)))
       return 'SOURCES_NOT_READY';
   }
-  if (!p.brief.goal.trim())
-    return 'NO_GOAL';
+  if (!p.brief.goal.trim()) return 'NO_GOAL';
   return null;
 }
 
@@ -119,4 +118,22 @@ export function stageAfterOutlineEdit(stage: PieceStage): PieceStage {
   return STAGE_ORDER.indexOf(stage) > STAGE_ORDER.indexOf('outline')
     ? 'outline'
     : stage;
+}
+
+/** Below this share of the target, the outline is worth flagging as short. */
+const SHORT_OF_TARGET = 0.8;
+
+/**
+ * How far the outline falls short of a numeric length target, or null when
+ * it is close enough, the target is automatic, or there is nothing yet.
+ */
+export function lengthShortfall(
+  outline: ReadonlyArray<Pick<OutlineSection, 'estChars'>>,
+  targetLength: Brief['targetLength']
+): { supported: number; target: number } | null {
+  if (typeof targetLength !== 'number' || outline.length === 0) return null;
+  const supported = outline.reduce((n, s) => n + s.estChars, 0);
+  return supported < targetLength * SHORT_OF_TARGET
+    ? { supported, target: targetLength }
+    : null;
 }

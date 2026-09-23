@@ -18,6 +18,7 @@ import {
   useSensors,
   type DragEndEvent,
   type DraggableAttributes,
+  type Modifier,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -30,6 +31,9 @@ import { CSS } from '@dnd-kit/utilities';
 import type { ContentBlock } from '@/types';
 import { createEmptyBlock } from '@/lib/article-utils';
 import { hasTranslatablePrimaryContent } from '@/lib/block-translation-utils';
+
+/** Blocks only move up and down. */
+const verticalOnly: Modifier = ({ transform }) => ({ ...transform, x: 0 });
 import HeadingBlockEditor from './blocks/HeadingBlockEditor';
 import ParagraphBlockEditor from './blocks/ParagraphBlockEditor';
 import ListBlockEditor from './blocks/ListBlockEditor';
@@ -494,7 +498,8 @@ function SortableBlockRow({
   });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    // Translate only: a scale would stretch the block to its neighbour's size.
+    transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.65 : 1,
     zIndex: isDragging ? 30 : undefined,
@@ -829,6 +834,7 @@ export default function BlockEditor({
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          modifiers={[verticalOnly]}
           onDragEnd={handleDragEnd}
         >
           <SortableContext

@@ -8,7 +8,7 @@ import {
   Check,
   CheckCircle2,
   Circle,
-  Copy,
+  FilePlus2,
   ExternalLink,
   Languages,
   Plus,
@@ -113,7 +113,7 @@ function HandedOff() {
         )}
         <Button
           busy={duplicating}
-          icon={<Copy className="h-4 w-4" aria-hidden />}
+          icon={<FilePlus2 className="h-4 w-4" aria-hidden />}
           onClick={async () => {
             setDuplicating(true);
             const r = await duplicatePieceAction(piece.id);
@@ -124,9 +124,6 @@ function HandedOff() {
           {t('handoff.duplicate')}
         </Button>
       </div>
-      <p className="mt-6 text-xs leading-relaxed text-slate-500">
-        {t('handoff.readOnly')}
-      </p>
     </div>
   );
 }
@@ -233,9 +230,10 @@ export default function HandoffStep() {
     );
   }, [piece.id]);
 
-  if (locked) return <HandedOff />;
+  if (piece.stage === 'handed_off') return <HandedOff />;
 
-  const disabled = busy || pending;
+  // Archived pieces are read-only until restored.
+  const disabled = busy || pending || locked;
   const canPost = can('articles.edit');
   const translating = piece.activeRun?.kind === 'translate';
   const translated =
@@ -288,6 +286,7 @@ export default function HandoffStep() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <Card
           title={t('handoffStep.englishTitle')}
+          info={t('info.english')}
           description={t('handoffStep.englishDescription')}
           actions={
             hasTranslation && (
@@ -377,12 +376,9 @@ export default function HandoffStep() {
         </Card>
 
         <div className="space-y-6">
-          <Card
-            title={t('handoffStep.detailsTitle')}
-            description={t('handoffStep.detailsDescription')}
-          >
+          <Card title={t('handoffStep.detailsTitle')}>
             <div className="space-y-4">
-              <Field label={t('brief.category')}>
+              <Field label={t('brief.category')} info={t('info.category')}>
                 {(p) => (
                   <Select
                     {...p}
@@ -400,6 +396,7 @@ export default function HandoffStep() {
               </Field>
               <Field
                 label={t('brief.author')}
+                info={t('info.author')}
                 required
                 hint={
                   authors?.length === 0 ? t('handoffStep.noAuthors') : undefined
@@ -458,10 +455,7 @@ export default function HandoffStep() {
                   )
                 }
               </Field>
-              <Field
-                label={t('handoffStep.excerpt')}
-                hint={t('handoffStep.excerptHint')}
-              >
+              <Field label={t('handoffStep.excerpt')} info={t('info.excerpt')}>
                 {(p) => (
                   <TextArea
                     {...p}
@@ -482,6 +476,7 @@ export default function HandoffStep() {
                 <div className="mt-3 space-y-4 pb-1">
                   <Field
                     label={t('handoffStep.seoTitle')}
+                    info={t('info.seoTitle')}
                     hint={t('handoffStep.chars', { count: seoTitle.length })}
                   >
                     {(p) => (
@@ -495,6 +490,7 @@ export default function HandoffStep() {
                   </Field>
                   <Field
                     label={t('handoffStep.seoDescription')}
+                    info={t('info.seoDescription')}
                     hint={t('handoffStep.chars', {
                       count: seoDescription.length,
                     })}
@@ -509,7 +505,10 @@ export default function HandoffStep() {
                       />
                     )}
                   </Field>
-                  <Field label={t('handoffStep.seoKeywords')}>
+                  <Field
+                    label={t('handoffStep.seoKeywords')}
+                    info={t('info.seoKeywords')}
+                  >
                     {(p) => (
                       <KeywordInput
                         {...p}
@@ -558,15 +557,17 @@ export default function HandoffStep() {
         </div>
       </div>
 
-      <CommandBar hint={blocked ?? t('handoffStep.hint')}>
-        <BarPrimary
-          busy={pending}
-          disabled={disabled || Boolean(blocked)}
-          onClick={() => setConfirming(true)}
-        >
-          {t('review.handoff')}
-        </BarPrimary>
-      </CommandBar>
+      {!locked && (
+        <CommandBar hint={blocked ?? t('handoffStep.hint')}>
+          <BarPrimary
+            busy={pending}
+            disabled={disabled || Boolean(blocked)}
+            onClick={() => setConfirming(true)}
+          >
+            {t('review.handoff')}
+          </BarPrimary>
+        </CommandBar>
+      )}
 
       {confirming && (
         <ConfirmDialog

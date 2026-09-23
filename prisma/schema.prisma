@@ -353,6 +353,8 @@ model StudioPiece {
   articleId    String?               @map("article_id") @db.Uuid
   article      Article?              @relation(fields: [articleId], references: [id], onDelete: SetNull)
   handedOffAt  DateTime?             @map("handed_off_at") @db.Timestamptz(6)
+  /// Archived pieces leave the studio list and are read-only until restored.
+  archivedAt   DateTime?             @map("archived_at") @db.Timestamptz(6)
   createdById  String?               @map("created_by") @db.Uuid
   createdBy    AdminUser?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
   createdAt    DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)

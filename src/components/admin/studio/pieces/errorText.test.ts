@@ -4,7 +4,7 @@ import adminEn from '../../../../../messages/admin-en.json';
 import adminJa from '../../../../../messages/admin-ja.json';
 import { BLOCK_REASONS } from '@/generator/pieces/stages';
 import { RUN_ERROR_CODES } from '@/generator/runs/run-types';
-import { errorText, historyLabel, runErrorText } from './errorText';
+import { errorText, gapText, historyLabel, runErrorText } from './errorText';
 
 const tr = (locale: 'en' | 'ja') =>
   createTranslator({
@@ -21,16 +21,18 @@ describe('studio error text', () => {
   });
 
   it('falls back to a generic message for unknown reasons and codes', () => {
-    expect(errorText(tr('en'), { error: 'BLOCKED', reason: 'An English sentence.' })).toBe(
-      adminEn.studio.workspace.errors.FAILED
-    );
+    expect(
+      errorText(tr('en'), { error: 'BLOCKED', reason: 'An English sentence.' })
+    ).toBe(adminEn.studio.workspace.errors.FAILED);
     expect(errorText(tr('en'), { error: 'INVALID_INPUT' })).toBe(
       adminEn.studio.workspace.errors.INVALID_INPUT
     );
   });
 
   it('translates run errors, keeping the section heading', () => {
-    expect(runErrorText(tr('ja'), 'NO_MATERIAL:導入効果')).toContain('導入効果');
+    expect(runErrorText(tr('ja'), 'NO_MATERIAL:導入効果')).toContain(
+      '導入効果'
+    );
     expect(runErrorText(tr('en'), 'FORBIDDEN')).toBe(
       adminEn.studio.workspace.runErrors.FORBIDDEN
     );
@@ -48,11 +50,43 @@ describe('studio error text', () => {
 
   it('has every code in both locales', () => {
     for (const messages of [adminEn, adminJa]) {
-      const w = messages.studio.workspace as unknown as Record<string, Record<string, string>>;
+      const w = messages.studio.workspace as unknown as Record<
+        string,
+        Record<string, string>
+      >;
       for (const r of BLOCK_REASONS) expect(w.reasons[r], r).toBeTruthy();
       for (const r of RUN_ERROR_CODES) expect(w.runErrors[r], r).toBeTruthy();
-      for (const k of ['outline', 'write', 'translate', 'rewrite', 'edit_outline', 'change_sources', 'before_undo'])
+      for (const k of [
+        'outline',
+        'write',
+        'translate',
+        'rewrite',
+        'edit_outline',
+        'change_sources',
+        'before_undo',
+      ])
         expect(w.history[k], k).toBeTruthy();
     }
+  });
+});
+
+describe('outline gap text', () => {
+  it('words a section without material in the admin language', () => {
+    expect(gapText(tr('ja'), 'NO_MATERIAL:料金')).toBe(
+      '「料金」に使える資料がありません。'
+    );
+    expect(gapText(tr('en'), 'No source material for 「料金」.')).toBe(
+      'No material for “料金”.'
+    );
+  });
+
+  it('keeps what the model wrote and hides the old length sentence', () => {
+    expect(gapText(tr('en'), '事例がない')).toBe('事例がない');
+    expect(
+      gapText(
+        tr('en'),
+        'The sources support about 1300 characters; the target is 2000. Add sources or lower the target.'
+      )
+    ).toBeNull();
   });
 });

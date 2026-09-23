@@ -135,7 +135,9 @@ export async function planOutline(
       .map((ref) => aliases.toId.get(ref.replace(/[[\]]/g, '')))
       .filter((id): id is string => Boolean(id));
     if (section.kind === 'source' && chunkIds.length === 0) {
-      gaps.push(`No source material for 「${section.heading}」.`);
+      // A code the UI words in the admin's language; the model's own gaps
+      // are free text and stay as written.
+      gaps.push(`NO_MATERIAL:${section.heading}`);
       continue;
     }
     outline.push({
@@ -148,14 +150,7 @@ export async function planOutline(
       stale: false,
     });
   }
-  const supported = outline.reduce((n, s) => n + s.estChars, 0);
-  if (
-    typeof input.brief.targetLength === 'number' &&
-    supported < input.brief.targetLength * 0.8
-  ) {
-    gaps.push(
-      `The sources support about ${supported} characters; the target is ${input.brief.targetLength}. Add sources or lower the target.`
-    );
-  }
+  // Length against the target is not a gap: the editor sees it computed
+  // live from the outline (lengthShortfall) as sections change.
   return { title: result.titleOptions[0] ?? '', outline, gaps };
 }

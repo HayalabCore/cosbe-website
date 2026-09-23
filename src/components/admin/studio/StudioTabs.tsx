@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 
 const TABS = [
   { key: 'overview', href: '/admin/studio', match: ['/admin/studio/pieces'] },
-  { key: 'projects', href: '/admin/studio/projects', match: [] },
+  { key: 'topics', href: '/admin/studio/topics', match: [] },
   { key: 'library', href: '/admin/studio/library', match: [] },
   { key: 'templates', href: '/admin/studio/templates', match: [] },
 ] as const;

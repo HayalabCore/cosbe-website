@@ -7,6 +7,7 @@ import {
   isComplete,
   isLocked,
   isTranslated,
+  lengthShortfall,
   settledStage,
   stageAfterOutlineEdit,
 } from './stages';
@@ -185,9 +186,9 @@ describe('stage rules', () => {
     expect(canHandOff({ ...complete(), stage: 'review', title: '' })).toBe(
       'NO_TITLE'
     );
-    expect(
-      canHandOff({ ...complete(), stage: 'writing', title: 'T' })
-    ).toBe('NOT_REVIEWED');
+    expect(canHandOff({ ...complete(), stage: 'writing', title: 'T' })).toBe(
+      'NOT_REVIEWED'
+    );
     expect(
       canHandOff({ ...complete(), stage: 'ready', title: 'T' })
     ).toBeNull();
@@ -205,5 +206,30 @@ describe('stage rules', () => {
     expect(isLocked('review')).toBe(false);
     expect(stageAfterOutlineEdit('review')).toBe('outline');
     expect(stageAfterOutlineEdit('brief')).toBe('brief');
+  });
+});
+
+describe('lengthShortfall', () => {
+  const section = (estChars: number) => ({
+    id: 'o',
+    heading: 'h',
+    intent: '',
+    chunkIds: [],
+    estChars,
+    kind: 'source' as const,
+    stale: false,
+  });
+
+  it('reports what the outline supports when it falls well short of the target', () => {
+    expect(lengthShortfall([section(700), section(600)], 2000)).toEqual({
+      supported: 1300,
+      target: 2000,
+    });
+  });
+
+  it('stays quiet near the target or when the length is automatic', () => {
+    expect(lengthShortfall([section(1700)], 2000)).toBeNull();
+    expect(lengthShortfall([section(100)], 'auto')).toBeNull();
+    expect(lengthShortfall([], 2000)).toBeNull();
   });
 });

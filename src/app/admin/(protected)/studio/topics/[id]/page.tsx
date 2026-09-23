@@ -1,9 +1,9 @@
 import PermissionNeeded from '@/components/admin/PermissionNeeded';
-import ProjectDetail from '@/components/admin/studio/ProjectDetail';
+import TopicDetail from '@/components/admin/studio/TopicDetail';
 import StudioHome from '@/components/admin/studio/StudioHome';
 import { hasPermission } from '@/lib/authz';
 
-export default async function StudioProjectPage({
+export default async function StudioTopicPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -14,7 +14,7 @@ export default async function StudioProjectPage({
   const { id } = await params;
   return (
     <StudioHome>
-      <ProjectDetail projectId={id} />
+      <TopicDetail topicId={id} />
     </StudioHome>
   );
 }

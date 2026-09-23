@@ -28,6 +28,7 @@ export const PERMISSIONS = {
   'studio.use': { group: 'studio' },
   'studio.templates.manage': { group: 'studio' },
   'studio.sources.delete': { group: 'studio' },
+  'studio.system': { group: 'studio' },
   'users.view': { group: 'access' },
   'users.create': { group: 'access' },
   'users.assign-roles': { group: 'access' },
@@ -44,7 +45,7 @@ export const SUPER_ADMIN_ROLE_KEY = 'super-admin';
 
 /**
  * Must match the seed SQL in the add_user_management and
- * add_studio_permissions migrations.
+ * add_studio_permissions and add_studio_system_permission migrations.
  */
 export const DEFAULT_ROLE_PERMISSIONS: Record<
   'admin' | 'developer' | 'marketing',
@@ -64,6 +65,7 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<
     'translations.history.delete',
     'studio.use',
     'studio.templates.manage',
+    'studio.system',
   ],
   marketing: [
     'dashboard.view',

@@ -26,6 +26,9 @@ import {
   unpublishArticleAction,
   unpublishArticlesAction,
 } from '@/actions/articles';
+import AdminBulkBar, {
+  AdminBulkBarButton,
+} from '@/components/admin/AdminBulkBar';
 import AdminCheckbox from '@/components/admin/AdminCheckbox';
 import { usePermissions } from '@/components/admin/PermissionsContext';
 import { useSyncedList } from '@/hooks';
@@ -687,91 +690,68 @@ export default function DashboardClient({ items }: Props) {
           Outer wrapper spans the content area (offset by the sidebar on lg) and
           flex-centers the bar; the bar animates vertically only (no transform
           conflict / horizontal jump). */}
-      {selectedCount > 0 && (
-        <div className="pointer-events-none fixed inset-x-0 lg:left-56 bottom-6 z-40 flex justify-center px-4">
-          <div className="animate-bulkbar pointer-events-auto flex max-w-full flex-wrap items-center justify-center gap-1.5 rounded-2xl bg-slate-900 px-3 py-2.5 shadow-2xl ring-1 ring-black/10">
-            <span className="inline-flex items-center gap-2 px-2 text-sm font-semibold text-white">
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primaryColor px-1.5 text-xs font-bold text-white tabular-nums">
-                {selectedCount}
-              </span>
-              {t('selectedCount', { count: selectedCount })}
-            </span>
-            <span className="mx-1 h-5 w-px bg-white/15" />
-            {can('articles.publish') && (
-              <>
-                {canBulkPublish && (
-                  <button
-                    type="button"
-                    disabled={bulkPending}
-                    onClick={() =>
-                      void runBulk(publishArticlesAction, (ids) =>
-                        patchMany(ids, articleListPatch('publish'))
-                      )
-                    }
-                    className="rounded-lg px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
-                  >
-                    {t('bulkPublish')}
-                  </button>
-                )}
-                <button
-                  type="button"
-                  disabled={bulkPending}
-                  onClick={() =>
-                    void runBulk(unpublishArticlesAction, (ids) =>
-                      patchMany(ids, articleListPatch('unpublish'))
-                    )
-                  }
-                  className="rounded-lg px-3 py-1.5 text-xs font-semibold text-amber-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
-                >
-                  {t('bulkUnpublish')}
-                </button>
-              </>
-            )}
-            {can('articles.archive') && (
-              <button
-                type="button"
+      <AdminBulkBar
+        count={selectedCount}
+        label={t('selectedCount', { count: selectedCount })}
+        clearLabel={t('clearSelection')}
+        onClear={() => table.resetRowSelection()}
+      >
+        {can('articles.publish') && (
+          <>
+            {canBulkPublish && (
+              <AdminBulkBarButton
+                tone="positive"
                 disabled={bulkPending}
-                onClick={() => {
-                  if (
-                    !confirm(t('bulkArchiveConfirm', { count: selectedCount }))
+                onClick={() =>
+                  void runBulk(publishArticlesAction, (ids) =>
+                    patchMany(ids, articleListPatch('publish'))
                   )
-                    return;
-                  void runBulk(archiveArticlesAction, (ids) =>
-                    patchMany(ids, articleListPatch('archive'))
-                  );
-                }}
-                className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10 disabled:opacity-50 transition-colors"
+                }
               >
-                {t('bulkArchive')}
-              </button>
+                {t('bulkPublish')}
+              </AdminBulkBarButton>
             )}
-            {can('articles.delete') && (
-              <button
-                type="button"
-                disabled={bulkPending}
-                onClick={() => {
-                  if (
-                    !confirm(t('bulkDeleteConfirm', { count: selectedCount }))
-                  )
-                    return;
-                  void runBulk(deleteArticlesAction, (ids) => removeMany(ids));
-                }}
-                className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
-              >
-                {t('bulkDelete')}
-              </button>
-            )}
-            <span className="mx-1 h-5 w-px bg-white/15" />
-            <button
-              type="button"
-              onClick={() => table.resetRowSelection()}
-              className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
+            <AdminBulkBarButton
+              tone="warning"
+              disabled={bulkPending}
+              onClick={() =>
+                void runBulk(unpublishArticlesAction, (ids) =>
+                  patchMany(ids, articleListPatch('unpublish'))
+                )
+              }
             >
-              {t('clearSelection')}
-            </button>
-          </div>
-        </div>
-      )}
+              {t('bulkUnpublish')}
+            </AdminBulkBarButton>
+          </>
+        )}
+        {can('articles.archive') && (
+          <AdminBulkBarButton
+            disabled={bulkPending}
+            onClick={() => {
+              if (!confirm(t('bulkArchiveConfirm', { count: selectedCount })))
+                return;
+              void runBulk(archiveArticlesAction, (ids) =>
+                patchMany(ids, articleListPatch('archive'))
+              );
+            }}
+          >
+            {t('bulkArchive')}
+          </AdminBulkBarButton>
+        )}
+        {can('articles.delete') && (
+          <AdminBulkBarButton
+            tone="danger"
+            disabled={bulkPending}
+            onClick={() => {
+              if (!confirm(t('bulkDeleteConfirm', { count: selectedCount })))
+                return;
+              void runBulk(deleteArticlesAction, (ids) => removeMany(ids));
+            }}
+          >
+            {t('bulkDelete')}
+          </AdminBulkBarButton>
+        )}
+      </AdminBulkBar>
 
       {/* Table */}
       <div

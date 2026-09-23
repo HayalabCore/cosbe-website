@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft } from 'lucide-react';
 import { cancelRunAction, listSnapshotsAction } from '@/actions/studio-pieces';
-import { EmptyState, Skeleton } from '../ui';
+import { Badge, EmptyState, Skeleton } from '../ui';
 import { errorText } from './errorText';
 import StepNav from './StepNav';
+import TitleEditor from './TitleEditor';
+import ArchivedBanner from './ArchivedBanner';
 import { stepOf, type Step } from './steps';
 import { usePiece } from './usePiece';
 import { WorkspaceProvider, type Snapshot } from './workspace-context';
@@ -96,7 +98,7 @@ export default function PieceWorkspace({ pieceId }: { pieceId: string }) {
       value={{
         piece,
         busy,
-        locked: piece.stage === 'handed_off',
+        locked: piece.stage === 'handed_off' || Boolean(piece.archivedAt),
         refresh,
         notify: setNotice,
         notice,
@@ -105,7 +107,7 @@ export default function PieceWorkspace({ pieceId }: { pieceId: string }) {
         go,
       }}
     >
-      <div className="mx-auto max-w-7xl px-6 pb-32 pt-6">
+      <div className="mx-auto max-w-7xl px-6 pb-24 pt-6">
         <header className="mb-6 space-y-4">
           <nav
             className="flex items-center gap-1 text-sm text-slate-500"
@@ -122,23 +124,35 @@ export default function PieceWorkspace({ pieceId }: { pieceId: string }) {
               /
             </span>
             <Link
-              href={`/admin/studio/projects/${piece.projectId}`}
+              href={`/admin/studio/topics/${piece.projectId}`}
               className="truncate hover:text-slate-900"
             >
               {piece.projectName}
             </Link>
           </nav>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <h1
-              className={`min-w-0 max-w-3xl truncate text-xl font-bold ${piece.title ? 'text-slate-900' : 'text-slate-400'}`}
-            >
-              {piece.title || t('pieces.untitled')}
-            </h1>
-            <StepNav stage={piece.stage} viewing={viewing} onView={go} />
+          {/* One row on desktop: the title takes what the steps leave and
+              truncates, so a long title never pushes the page down. */}
+          <div className="flex flex-wrap items-center justify-between gap-4 lg:flex-nowrap lg:gap-8">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+              <TitleEditor />
+              {/* The outline proposes a title; the draft writes the final one. */}
+              {piece.title && piece.excerpt === null && (
+                <span
+                  className="shrink-0"
+                  title={t('workspace.workingTitleHint')}
+                >
+                  <Badge>{t('workspace.workingTitle')}</Badge>
+                </span>
+              )}
+            </div>
+            <div className="shrink-0">
+              <StepNav stage={piece.stage} viewing={viewing} onView={go} />
+            </div>
           </div>
           {error && (
             <p className="text-xs text-amber-700">{t('workspace.stale')}</p>
           )}
+          {piece.archivedAt && <ArchivedBanner />}
         </header>
         {viewing === 'setup' && <SetupStep key={key} />}
         {viewing === 'outline' && <OutlineStep key={key} />}

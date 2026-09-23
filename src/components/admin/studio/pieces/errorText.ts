@@ -60,3 +60,20 @@ export function historyLabel(t: T, reason: string): string {
   const key = LEGACY_HISTORY[reason] ?? reason;
   return HISTORY.includes(key) ? t(`workspace.history.${key}`) : reason;
 }
+
+/** Rows written before gaps became codes, and a check that now runs live. */
+const LEGACY_NO_MATERIAL = /^No source material for 「(.+)」\.$/;
+const LEGACY_LENGTH = /^The sources support about \d+ characters/;
+
+/**
+ * One outline gap for display. The model's own gaps are shown as written;
+ * codes are worded in the admin's language; the old length sentence is
+ * dropped because the outline step computes that warning itself.
+ */
+export function gapText(t: T, gap: string): string | null {
+  if (LEGACY_LENGTH.test(gap)) return null;
+  const heading = gap.startsWith('NO_MATERIAL:')
+    ? gap.slice('NO_MATERIAL:'.length)
+    : LEGACY_NO_MATERIAL.exec(gap)?.[1];
+  return heading === undefined ? gap : t('outline.gapNoMaterial', { heading });
+}

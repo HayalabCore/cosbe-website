@@ -30,7 +30,14 @@ vi.mock('@/generator/pieces/scope', () => ({
   buildScope: vi.fn(async () => ({ sourceIds: ['source'], charRanges: {} })),
   // A source section needs at least one in-scope passage to be written.
   getChunks: vi.fn(async () => [
-    { id: 'k', sourceId: 'source', sourceTitle: 'S', ordinal: 0, text: 't', locator: {} },
+    {
+      id: 'k',
+      sourceId: 'source',
+      sourceTitle: 'S',
+      ordinal: 0,
+      text: 't',
+      locator: {},
+    },
   ]),
 }));
 vi.mock('@/generator/retrieval/search', () => ({

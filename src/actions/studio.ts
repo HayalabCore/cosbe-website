@@ -8,10 +8,11 @@ import { getRun } from '@/generator/runs/runs-repository';
 import { toRunStatusDTO } from '@/lib/studio/run-dto';
 import type { RunStatusDTO, StudioResult } from '@/lib/studio/action-types';
 
+/** A deployment check for whoever runs the worker, not an editing tool. */
 export async function startSystemCheckAction(): Promise<
   StudioResult<{ runId: string }>
 > {
-  const ctx = await requirePermission('studio.use');
+  const ctx = await requirePermission('studio.system');
   try {
     const run = await createAndEnqueueRun(await getWebBoss(), {
       kind: 'system_check',

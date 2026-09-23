@@ -21,8 +21,8 @@ import {
   relativeTime,
 } from './ui';
 
-function NewProjectDialog({ onClose }: { onClose: () => void }) {
-  const t = useTranslations('admin.studio.projects');
+function NewTopicDialog({ onClose }: { onClose: () => void }) {
+  const t = useTranslations('admin.studio.topics');
   const router = useRouter();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -42,7 +42,7 @@ function NewProjectDialog({ onClose }: { onClose: () => void }) {
               description: description.trim(),
             });
             if (r.ok)
-              return router.push(`/admin/studio/projects/${r.data.projectId}`);
+              return router.push(`/admin/studio/topics/${r.data.projectId}`);
           } catch {}
           setError(true);
           setBusy(false);
@@ -92,14 +92,14 @@ function NewProjectDialog({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default function ProjectList() {
-  const t = useTranslations('admin.studio.projects');
+export default function TopicList() {
+  const t = useTranslations('admin.studio.topics');
   const locale = useLocale();
-  const [projects, setProjects] = useState<ProjectDTO[] | null>(null);
+  const [topics, setTopics] = useState<ProjectDTO[] | null>(null);
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
-    void listProjectsAction().then((r) => setProjects(r.ok ? r.data : []));
+    void listProjectsAction().then((r) => setTopics(r.ok ? r.data : []));
   }, []);
 
   const newButton = (
@@ -114,9 +114,9 @@ export default function ProjectList() {
 
   return (
     <section className="space-y-4">
-      {projects === null ? (
+      {topics === null ? (
         <AdminTableSkeleton rows={3} columns={3} aria-label={t('title')} />
-      ) : projects.length === 0 ? (
+      ) : topics.length === 0 ? (
         <EmptyState
           icon={<FolderOpen className="h-5 w-5" aria-hidden />}
           title={t('emptyTitle')}
@@ -127,14 +127,14 @@ export default function ProjectList() {
       ) : (
         <>
           <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-slate-500">{t('intro')}</p>
+            <span />
             {newButton}
           </div>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((p) => (
+            {topics.map((p) => (
               <li key={p.id}>
                 <Link
-                  href={`/admin/studio/projects/${p.id}`}
+                  href={`/admin/studio/topics/${p.id}`}
                   className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-primaryColor/50 hover:bg-slate-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryColor/40"
                 >
                   <span className="font-semibold text-slate-900">{p.name}</span>
@@ -151,7 +151,7 @@ export default function ProjectList() {
           </ul>
         </>
       )}
-      {creating && <NewProjectDialog onClose={() => setCreating(false)} />}
+      {creating && <NewTopicDialog onClose={() => setCreating(false)} />}
     </section>
   );
 }

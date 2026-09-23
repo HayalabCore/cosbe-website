@@ -117,7 +117,9 @@ describe('studio source actions', () => {
 
   it('accepts a maximum-size Japanese source and sizes its ingest ceiling', async () => {
     const text = 'あ'.repeat(400_000);
-    expect((await createTextSourceAction({ title: '長い書き起こし', text })).ok).toBe(true);
+    expect(
+      (await createTextSourceAction({ title: '長い書き起こし', text })).ok
+    ).toBe(true);
     expect(enqueueIngest).toHaveBeenCalledWith(
       expect.anything(),
       's1',
@@ -241,7 +243,9 @@ describe('studio source actions', () => {
       result: 'OK',
       storagePath: 'pdf/x.pdf',
     });
-    vi.mocked(removeSourceObject).mockRejectedValueOnce(new Error('storage down'));
+    vi.mocked(removeSourceObject).mockRejectedValueOnce(
+      new Error('storage down')
+    );
     vi.spyOn(console, 'error').mockImplementation(() => {});
     expect((await deleteSourceAction(SOURCE)).ok).toBe(true);
   });
