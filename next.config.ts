@@ -5,6 +5,10 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    // A maximum-size Japanese text source (400k chars) is ~1.2 MB of UTF-8.
+    serverActions: { bodySizeLimit: '3mb' },
+  },
   images: {
     // Firebase App Hosting disables Next.js' built-in image optimizer, so the
     // `/_next/image` endpoint 404s in production and any <Image src={remoteUrl}>

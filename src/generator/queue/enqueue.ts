@@ -5,7 +5,7 @@ import { lockPiece } from '../pieces/piece-lock';
 
 import { createRun, type CreateRunInput } from '../runs/runs-repository';
 import type { RunJobData } from './job-data';
-import { queueForKind } from './queues';
+import { JOB_EXPIRE_SECONDS, queueForKind } from './queues';
 
 export class PieceRunConflictError extends Error {
   constructor(readonly reason: 'BUSY' | 'LOCKED' | 'NOT_FOUND') {
@@ -41,6 +41,7 @@ export function createAndEnqueueRun(
     const data: RunJobData = { runId: run.id };
     const jobId = await boss.send(queueForKind(input.kind), data, {
       singletonKey: input.pieceId ? run.id : (input.sourceId ?? run.id),
+      expireInSeconds: JOB_EXPIRE_SECONDS[input.kind],
       db: fromPrisma(tx),
     });
     if (!jobId) throw new Error(`The queue refused the job for run ${run.id}`);

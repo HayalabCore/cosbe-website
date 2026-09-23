@@ -4,9 +4,13 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { listSnapshotsAction, undoAction } from '@/actions/studio-pieces';
 import type { PanelProps } from './panel-props';
+import { useStudioAction } from './useStudioAction';
+import { historyLabel } from './errorText';
 
-export default function HistoryList({ piece, busy, refresh }: PanelProps) {
+export default function HistoryList({ piece, busy, refresh, notify }: PanelProps) {
+  const { run, pending, message } = useStudioAction(refresh, notify);
   const t = useTranslations('admin.studio.workspace');
+  const ts = useTranslations('admin.studio');
   const [items, setItems] = useState<Array<{ id: string; reason: string; createdAt: string }>>([]);
   useEffect(() => {
     void listSnapshotsAction(piece.id).then((r) => r.ok && setItems(r.data));
@@ -19,15 +23,16 @@ export default function HistoryList({ piece, busy, refresh }: PanelProps) {
       <ul className="space-y-1">
         {items.map((s) => (
           <li key={s.id} className="flex items-center justify-between gap-2">
-            <span className="truncate text-slate-600">{s.reason} · {new Date(s.createdAt).toLocaleTimeString()}</span>
+            <span className="truncate text-slate-600">{historyLabel(ts, s.reason)} · {new Date(s.createdAt).toLocaleTimeString()}</span>
             {!locked && (
-              <button type="button" disabled={busy} onClick={() => void undoAction(piece.id, s.id).then(refresh)} className="shrink-0 text-xs underline">
+              <button type="button" disabled={busy || pending} onClick={() => void run(() => undoAction(piece.id, s.id))} className="shrink-0 text-xs underline">
                 {t('undoButton')}
               </button>
             )}
           </li>
         ))}
       </ul>
+      {message && <p className="text-xs text-red-600">{message}</p>}
     </section>
   );
 }

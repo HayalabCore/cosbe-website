@@ -11,7 +11,7 @@ vi.mock('@/actions/studio-templates', () => ({
   deleteTemplateAction: vi.fn(),
 }));
 
-import { updateTemplateAction } from '@/actions/studio-templates';
+import { deleteTemplateAction, listTemplatesAction, updateTemplateAction } from '@/actions/studio-templates';
 import TemplateManager from './TemplateManager';
 
 describe('TemplateManager', () => {
@@ -32,5 +32,21 @@ describe('TemplateManager', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     expect(updateTemplateAction).toHaveBeenCalledWith('t1', expect.objectContaining({ name: 'コラム（改）', defaultCategory: 'useful-info' }));
     expect(screen.queryByRole('button', { name: 'Delete' })).toBeNull();
+  });
+
+  it('shows why a save failed', async () => {
+    vi.mocked(updateTemplateAction).mockResolvedValueOnce({ ok: false, error: 'INVALID_INPUT' });
+    renderAdmin(<TemplateManager />, { permissions: ['studio.use', 'studio.templates.manage'] });
+    await userEvent.click(await screen.findByRole('button', { name: 'Save' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Check the values and try again.');
+  });
+
+  it('shows why a delete was refused', async () => {
+    vi.mocked(listTemplatesAction).mockResolvedValue({ ok: true, data: [{ ...T, id: 't2', isDefault: false }] } as never);
+    vi.mocked(deleteTemplateAction).mockResolvedValueOnce({ ok: false, error: 'BLOCKED', reason: 'DEFAULT_TEMPLATE' });
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    renderAdmin(<TemplateManager />, { permissions: ['studio.use', 'studio.templates.manage'] });
+    await userEvent.click(await screen.findByRole('button', { name: 'Delete' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('The default template cannot be deleted.');
   });
 });

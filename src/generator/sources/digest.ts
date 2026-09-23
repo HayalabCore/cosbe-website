@@ -2,9 +2,11 @@ import { z } from 'zod';
 import { generateStructured, type AiCallOptions } from '@/ai/generate';
 import type { DigestPoint, DigestSection } from './source-types';
 
+export const VERSION = 'digest.v1';
+
 const GROUP_SIZE = 12;
 
-const digestSchema = z.object({
+export const digestSchema = z.object({
   points: z.array(
     z.object({ text: z.string(), chunkOrdinals: z.array(z.number().int()) })
   ),
@@ -20,7 +22,7 @@ const INSTRUCTIONS = [
 
 type DigestChunk = { ordinal: number; text: string; label: string };
 
-function groups(chunks: DigestChunk[]): DigestChunk[][] {
+export function digestGroups(chunks: DigestChunk[]): DigestChunk[][] {
   const out: DigestChunk[][] = [];
   for (const c of chunks) {
     const last = out[out.length - 1];
@@ -56,19 +58,27 @@ async function extract(
     .filter((p) => p.text && p.chunkOrdinals.length > 0);
 }
 
+/** One group's section; every passage is covered by at least one point. */
+export async function digestGroup(
+  group: DigestChunk[],
+  options: AiCallOptions = {}
+): Promise<DigestSection> {
+  const points = await extract(group, options);
+  const covered = new Set(points.flatMap((p) => p.chunkOrdinals));
+  const missed = group.filter((c) => !covered.has(c.ordinal));
+  if (missed.length > 0) points.push(...(await extract(missed, options)));
+  points.sort((a, b) => a.chunkOrdinals[0] - b.chunkOrdinals[0]);
+  return { label: group[0].label, points };
+}
+
 /** One cached summary per chapter/range, every point tied to chunk ordinals. */
 export async function buildDigest(
   chunks: DigestChunk[],
   options: AiCallOptions = {}
 ): Promise<DigestSection[]> {
   const sections: DigestSection[] = [];
-  for (const group of groups(chunks)) {
-    const points = await extract(group, options);
-    const covered = new Set(points.flatMap((p) => p.chunkOrdinals));
-    const missed = group.filter((c) => !covered.has(c.ordinal));
-    if (missed.length > 0) points.push(...(await extract(missed, options)));
-    points.sort((a, b) => a.chunkOrdinals[0] - b.chunkOrdinals[0]);
-    sections.push({ label: group[0].label, points });
+  for (const group of digestGroups(chunks)) {
+    sections.push(await digestGroup(group, options));
   }
   return sections;
 }

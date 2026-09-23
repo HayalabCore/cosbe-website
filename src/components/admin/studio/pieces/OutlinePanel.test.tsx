@@ -12,7 +12,7 @@ import { saveOutlineAction, startRunAction } from '@/actions/studio-pieces';
 import OutlinePanel from './OutlinePanel';
 
 const piece = {
-  id: 'p1', stage: 'outline', gaps: ['事例がない'],
+  id: 'p1', stage: 'outline', gaps: ['事例がない'], sections: [],
   outline: [
     { id: 'a', heading: '課題', intent: 'why', chunkIds: ['k1', 'k2'], estChars: 300, kind: 'source', stale: false },
     { id: 'b', heading: '手順', intent: 'how', chunkIds: ['k3'], estChars: 300, kind: 'source', stale: false },
@@ -42,5 +42,25 @@ describe('OutlinePanel', () => {
     ]);
     await userEvent.click(screen.getByRole('button', { name: 'Write article' }));
     expect(startRunAction).toHaveBeenCalledWith('p1', 'write');
+  });
+
+  it('offers to continue writing when some sections are already written', () => {
+    renderAdmin(
+      <OutlinePanel
+        piece={{ ...(piece as object), sections: [{ outlineId: 'a' }] } as never}
+        busy={false}
+        refresh={vi.fn()}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Continue writing' })).toBeInTheDocument();
+  });
+
+  it('disables editing controls on a handed-off piece', () => {
+    renderAdmin(<OutlinePanel piece={piece} busy={false} locked refresh={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Save outline' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Write article' })).toBeDisabled();
+    for (const input of screen.getAllByLabelText('Heading')) expect(input).toBeDisabled();
+    for (const button of screen.getAllByRole('button', { name: 'Remove' })) expect(button).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Add section' })).toBeDisabled();
   });
 });

@@ -6,6 +6,18 @@ import type {
   Selection,
 } from './piece-types';
 
+/** Why a stage rule blocks an action. The UI translates these codes. */
+export const BLOCK_REASONS = [
+  'NO_SOURCES',
+  'SOURCES_NOT_READY',
+  'NO_GOAL',
+  'NO_OUTLINE',
+  'INCOMPLETE',
+  'NOT_REVIEWED',
+  'NO_TITLE',
+] as const;
+export type BlockReason = (typeof BLOCK_REASONS)[number];
+
 export const STAGE_ORDER: readonly PieceStage[] = [
   'sources',
   'brief',
@@ -20,46 +32,82 @@ export const STAGE_ORDER: readonly PieceStage[] = [
 export function canStartOutline(
   p: { selection: Selection; brief: Brief },
   sources?: Array<{ id: string; status: string }>
-): string | null {
-  if (p.selection.sourceIds.length === 0) return 'Select at least one source.';
+): BlockReason | null {
+  if (p.selection.sourceIds.length === 0) return 'NO_SOURCES';
   if (sources) {
+    // Ids unlinked from the project since selection are ignored, not fatal.
     const linked = new Set(sources.map((source) => source.id));
-    if (p.selection.sourceIds.some((id) => !linked.has(id)))
-      return 'A selected source is not in this project.';
+    if (!p.selection.sourceIds.some((id) => linked.has(id)))
+      return 'NO_SOURCES';
     const ready = new Set(
       sources
         .filter((source) => source.status === 'ready')
         .map((source) => source.id)
     );
     if (!p.selection.sourceIds.some((id) => ready.has(id)))
-      return 'Wait until a selected source has finished processing.';
+      return 'SOURCES_NOT_READY';
   }
   if (!p.brief.goal.trim())
-    return 'Describe the goal of the article in the brief.';
+    return 'NO_GOAL';
   return null;
 }
 
 export function canStartWriting(p: {
   outline: OutlineSection[];
-}): string | null {
-  return p.outline.length === 0 ? 'The outline has no sections.' : null;
+}): BlockReason | null {
+  return p.outline.length === 0 ? 'NO_OUTLINE' : null;
 }
 
-export function canTranslate(p: { sections: Section[] }): string | null {
-  return p.sections.length === 0
-    ? 'Write the article before translating it.'
-    : null;
-}
-
-export function canHandOff(p: {
-  stage: PieceStage;
+type CompletenessInput = {
+  outline: OutlineSection[];
   sections: Section[];
-  title: string;
-}): string | null {
-  if (p.stage !== 'review' && p.stage !== 'ready')
-    return 'Finish writing before creating the draft post.';
-  if (!p.title.trim()) return 'The article needs a title.';
-  if (p.sections.length === 0) return 'The article has no sections.';
+  excerpt: string | null;
+};
+
+/** Every outline section written and fresh, and the finish step ran. */
+export function isComplete(p: CompletenessInput): boolean {
+  if (p.outline.length === 0 || p.excerpt === null) return false;
+  const written = new Set(p.sections.map((s) => s.outlineId));
+  return p.outline.every((o) => !o.stale && written.has(o.id));
+}
+
+export function isTranslated(p: {
+  sections: Section[];
+  titleEn: string | null;
+}): boolean {
+  return (
+    Boolean(p.titleEn?.trim()) &&
+    p.sections.length > 0 &&
+    p.sections.every((s) => s.en !== null && !s.enStale)
+  );
+}
+
+/**
+ * The stage a piece belongs in once the run that set a transient stage ended
+ * without finishing (failed or cancelled). Derived from the content, not from
+ * where the run started, so it is right however far the run got.
+ */
+export function settledStage(
+  p: CompletenessInput & { stage: PieceStage; titleEn: string | null }
+): PieceStage {
+  if (p.stage === 'writing') return isComplete(p) ? 'review' : 'outline';
+  if (p.stage === 'translating') {
+    if (!isComplete(p)) return 'outline';
+    return isTranslated(p) ? 'ready' : 'review';
+  }
+  return p.stage;
+}
+
+export function canTranslate(p: CompletenessInput): BlockReason | null {
+  return isComplete(p) ? null : 'INCOMPLETE';
+}
+
+export function canHandOff(
+  p: CompletenessInput & { stage: PieceStage; title: string }
+): BlockReason | null {
+  if (p.stage !== 'review' && p.stage !== 'ready') return 'NOT_REVIEWED';
+  if (!p.title.trim()) return 'NO_TITLE';
+  if (!isComplete(p)) return 'INCOMPLETE';
   return null;
 }
 

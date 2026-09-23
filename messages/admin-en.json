@@ -740,7 +740,7 @@
       "delete": "Delete",
       "link": "Link",
       "confirmDelete": "Delete “{title}”? This cannot be undone.",
-      "linkedError": "This source is used by a project. Only users who can delete studio sources can remove it."
+      "linkedError": "This source is used by a project or was added by someone else. Only its creator (once it is unlinked) or users who can delete studio sources can remove it."
     },
     "addSource": {
       "title": "Add source",
@@ -817,7 +817,36 @@
         "BUSY": "Wait for the current step to finish.",
         "LOCKED": "This piece was already handed off.",
         "NO_AUTHOR": "Choose an author in the brief first.",
-        "FAILED": "Something went wrong. Try again."
+        "FAILED": "Something went wrong. Try again.",
+        "INVALID_INPUT": "Check the values and try again.",
+        "NOT_FOUND": "It no longer exists. Reload the page.",
+        "FORBIDDEN": "You do not have permission to do this."
+      },
+      "reasons": {
+        "NO_SOURCES": "Select at least one source.",
+        "SOURCES_NOT_READY": "Wait until a selected source has finished processing.",
+        "NO_GOAL": "Describe the goal of the article in the brief.",
+        "NO_OUTLINE": "The outline has no sections.",
+        "INCOMPLETE": "Finish writing every section first.",
+        "NOT_REVIEWED": "Finish writing before creating the draft post.",
+        "NO_TITLE": "The article needs a title.",
+        "DEFAULT_TEMPLATE": "The default template cannot be deleted."
+      },
+      "runErrors": {
+        "FORBIDDEN": "You no longer have permission to run this step.",
+        "NO_MATERIAL": "“{detail}” has no source passages in the current selection. Edit the outline or the sources.",
+        "TRANSLATION_SHAPE": "The translation of “{detail}” did not keep the Japanese structure. Try again.",
+        "TOKEN_CEILING": "This step used more tokens than allowed ({detail}). Narrow the sources or ask an admin to raise the limit.",
+        "RUN_FAILED": "The step failed. Try again."
+      },
+      "history": {
+        "outline": "Before new outline",
+        "write": "Before writing",
+        "translate": "Before translation",
+        "rewrite": "Before rewriting “{heading}”",
+        "edit_outline": "Before outline edit",
+        "change_sources": "Before source change",
+        "before_undo": "Before restore"
       }
     },
     "sourcesPanel": {
@@ -854,7 +883,8 @@
       "stale": "Changed — will be rewritten",
       "gaps": "Not covered by the sources",
       "save": "Save outline",
-      "write": "Write article"
+      "write": "Write article",
+      "continue": "Continue writing"
     },
     "writing": {
       "title": "Writing",

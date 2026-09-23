@@ -42,10 +42,16 @@ export default function AddSourceDialog({
   async function run(action: () => Promise<{ ok: boolean; error?: string }>) {
     setBusy(true);
     setError(null);
-    const result = await action();
-    setBusy(false);
-    if (result.ok) onAdded();
-    else setError(result.error === 'TOO_LARGE' ? t('tooLarge') : t('failed'));
+    try {
+      const result = await action();
+      if (result.ok) onAdded();
+      else setError(result.error === 'TOO_LARGE' ? t('tooLarge') : t('failed'));
+    } catch {
+      // A thrown action (network, request too large) must not freeze the form.
+      setError(t('failed'));
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function uploadPdf(file: File) {
@@ -194,7 +200,11 @@ export default function AddSourceDialog({
           </div>
         )}
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <p role="alert" className="text-sm text-red-600">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

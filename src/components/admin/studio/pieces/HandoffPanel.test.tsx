@@ -18,4 +18,10 @@ describe('HandoffPanel', () => {
     renderAdmin(<HandoffPanel piece={{ id: 'p1', articleId: null, article: null, category: 'notice' } as never} busy={false} refresh={vi.fn()} />);
     expect(screen.getByText('Post status: Post deleted')).toBeInTheDocument();
   });
+
+  it('links to the public page in the category the post has now', () => {
+    renderAdmin(<HandoffPanel piece={{ id: 'p1', articleId: 'a1', article: { id: 'a1', status: 'published', slug: 'ai', category: 'case-study' }, category: 'notice' } as never} busy={false} refresh={vi.fn()} />);
+    expect(screen.getByRole('link', { name: 'View on site' }).getAttribute('href')).toContain('ai');
+    expect(screen.getByRole('link', { name: 'View on site' }).getAttribute('href')).not.toContain('notice');
+  });
 });

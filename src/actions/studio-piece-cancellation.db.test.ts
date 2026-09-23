@@ -28,7 +28,10 @@ vi.mock('@/generator/pieces/translate', () => ({
 }));
 vi.mock('@/generator/pieces/scope', () => ({
   buildScope: vi.fn(async () => ({ sourceIds: ['source'], charRanges: {} })),
-  getChunks: vi.fn(async () => []),
+  // A source section needs at least one in-scope passage to be written.
+  getChunks: vi.fn(async () => [
+    { id: 'k', sourceId: 'source', sourceTitle: 'S', ordinal: 0, text: 't', locator: {} },
+  ]),
 }));
 vi.mock('@/generator/retrieval/search', () => ({
   searchSources: vi.fn(async () => []),
@@ -150,7 +153,12 @@ it.each([
     await updatePiece(piece.id, {
       stage: 'review',
       title: 'Original',
-      outline,
+      excerpt: 'Original excerpt',
+      // A stale row gives write work to do; translate needs a complete article.
+      outline:
+        kind === 'translate'
+          ? outline.map((o) => ({ ...o, stale: false }))
+          : outline,
       sections: [section],
       selection: { sourceIds: [randomUUID()], chapters: {} },
       brief: {

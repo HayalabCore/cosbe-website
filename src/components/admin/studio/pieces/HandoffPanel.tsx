@@ -17,8 +17,9 @@ export default function HandoffPanel({ piece }: PanelProps) {
   const t = useTranslations('admin.studio');
   const router = useRouter();
   const status = piece.article?.status ?? 'removed';
-  const publicHref = piece.article && piece.article.status === 'published' && isCategory(piece.category)
-    ? `/ja${articleDetailHref(piece.category, piece.article.slug)}`
+  // The editor may have moved the post to another category after handoff.
+  const publicHref = piece.article && piece.article.status === 'published' && isCategory(piece.article.category)
+    ? `/ja${articleDetailHref(piece.article.category, piece.article.slug)}`
     : null;
   return (
     <section className="space-y-3">

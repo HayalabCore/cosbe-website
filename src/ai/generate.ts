@@ -39,15 +39,20 @@ const MAX_RETRIES = 2;
 const TIMEOUT_MS = 120_000;
 const OUTPUT_RESERVE = 4_096;
 
-function estimateTokens(text: string): number {
-  return Math.ceil(text.length / 4) + OUTPUT_RESERVE;
+const CJK = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu;
+
+/** Japanese runs about one token per character; Latin text about four characters per token. */
+export function estimateTokens(text: string): number {
+  const cjk = text.match(CJK)?.length ?? 0;
+  return cjk + Math.ceil((text.length - cjk) / 4);
 }
 
 async function guardBudget(
   ensureBudget: BudgetCheck | undefined,
-  text: string
+  text: string,
+  outputReserve: number
 ): Promise<void> {
-  if (ensureBudget) await ensureBudget(estimateTokens(text));
+  if (ensureBudget) await ensureBudget(estimateTokens(text) + outputReserve);
 }
 
 async function reportUsage(
@@ -74,7 +79,8 @@ export async function generateStructured<T>(
 ): Promise<T> {
   await guardBudget(
     options.ensureBudget,
-    `${request.instructions}\n${request.prompt}`
+    `${request.instructions}\n${request.prompt}`,
+    OUTPUT_RESERVE
   );
   const result = await generateText({
     model: options.model ?? languageModelForTask(task),
@@ -96,7 +102,8 @@ export async function generatePlainText(
 ): Promise<string> {
   await guardBudget(
     options.ensureBudget,
-    `${request.instructions}\n${request.prompt}`
+    `${request.instructions}\n${request.prompt}`,
+    OUTPUT_RESERVE
   );
   const result = await generateText({
     model: options.model ?? languageModelForTask(task),
@@ -115,7 +122,7 @@ export async function embedTexts(
   options: EmbedOptions = {}
 ): Promise<number[][]> {
   if (values.length === 0) return [];
-  await guardBudget(options.ensureBudget, values.join('\n'));
+  await guardBudget(options.ensureBudget, values.join('\n'), 0);
   const timeout = AbortSignal.timeout(TIMEOUT_MS);
   const result = await embedMany({
     model: options.model ?? embeddingModel(),

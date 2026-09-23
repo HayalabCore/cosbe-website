@@ -175,6 +175,25 @@ describe('studio runs repository', () => {
     await expect(assertRunBudget(run.id, 10)).resolves.toBeUndefined();
   });
 
+  it('records prompt version and token usage on the step as well as the run', async () => {
+    const run = await newRun();
+    await runStep(
+      run.id,
+      { key: 'section:a', ordinal: 1, promptVersion: 'write.v1' },
+      async () => {
+        await addRunUsage(run.id, { inputTokens: 10, outputTokens: 5 }, 'section:a');
+        return {};
+      }
+    );
+    const after = await getRun(run.id);
+    expect(after).toMatchObject({ tokensIn: 10, tokensOut: 5 });
+    expect(after?.steps[0]).toMatchObject({
+      promptVersion: 'write.v1',
+      tokensIn: 10,
+      tokensOut: 5,
+    });
+  });
+
   it('addRunUsage never throws without a ceiling', async () => {
     const run = await newRun();
     await addRunUsage(run.id, { inputTokens: 1_000_000, outputTokens: 1 });

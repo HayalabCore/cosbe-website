@@ -49,7 +49,7 @@ export async function deleteTemplateAction(id: string): Promise<StudioResult<und
   if (!uuid.safeParse(id).success) return { ok: false, error: 'INVALID_INPUT' };
   const template = await getTemplate(id);
   if (!template) return { ok: false, error: 'NOT_FOUND' };
-  if (template.isDefault) return { ok: false, error: 'BLOCKED', reason: 'The default template cannot be deleted.' };
+  if (template.isDefault) return { ok: false, error: 'BLOCKED', reason: 'DEFAULT_TEMPLATE' };
   await deleteTemplate(id);
   return { ok: true, data: undefined };
 }

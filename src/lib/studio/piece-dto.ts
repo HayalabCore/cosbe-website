@@ -9,6 +9,8 @@ export type ActiveRunDTO = {
   status: RunStatus;
   error: string | null;
   steps: Array<{ key: string; status: string }>;
+  /** Sections a write run will write (from its prepare step); step rows appear only as each starts. */
+  targets: number | null;
 };
 
 export type PieceDTO = Omit<PieceData, 'createdAt' | 'updatedAt' | 'handedOffAt'> & {
@@ -17,7 +19,7 @@ export type PieceDTO = Omit<PieceData, 'createdAt' | 'updatedAt' | 'handedOffAt'
   handedOffAt: string | null;
   activeRun: ActiveRunDTO | null;
   lastRunError: string | null;
-  article: { id: string; status: string; slug: string } | null;
+  article: { id: string; status: string; slug: string; category: string } | null;
 };
 
 export type PieceListItemDTO = {
@@ -29,6 +31,14 @@ export type PieceListItemDTO = {
   updatedAt: string;
 };
 
+function prepareTargets(steps: RunWithSteps['steps']): number | null {
+  const output = steps.find((s) => s.key === 'prepare')?.output as
+    | { targets?: unknown }
+    | null
+    | undefined;
+  return typeof output?.targets === 'number' ? output.targets : null;
+}
+
 export function toActiveRunDTO(run: RunWithSteps | null): ActiveRunDTO | null {
   if (!run) return null;
   return {
@@ -37,6 +47,7 @@ export function toActiveRunDTO(run: RunWithSteps | null): ActiveRunDTO | null {
     status: run.status as RunStatus,
     error: run.error,
     steps: run.steps.map((s) => ({ key: s.key, status: s.status })),
+    targets: prepareTargets(run.steps),
   };
 }
 

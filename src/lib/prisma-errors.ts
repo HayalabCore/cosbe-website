@@ -15,3 +15,11 @@ export function isSlugUniqueConflict(error: unknown): boolean {
 export function isEmailUniqueConflict(error: unknown): boolean {
   return isUniqueConflict(error, 'email');
 }
+
+/** A missing row (P2025) or a foreign key pointing at a missing row (P2003). */
+export function isMissingRecord(error: unknown): boolean {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    (error.code === 'P2025' || error.code === 'P2003')
+  );
+}

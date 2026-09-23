@@ -73,6 +73,29 @@ describe('SourceLibrary', () => {
     expect(retryIngestAction).toHaveBeenCalledWith('s1');
   });
 
+  it('offers retry for a PDF upload that never finished', async () => {
+    vi.mocked(listSourcesAction).mockResolvedValue({
+      ok: true,
+      data: [
+        source({
+          kind: 'pdf',
+          status: 'pending',
+          createdAt: new Date(Date.now() - 20 * 60_000).toISOString(),
+        }),
+        source({
+          id: 's2',
+          kind: 'pdf',
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+        }),
+      ],
+    });
+    renderAdmin(<SourceLibrary />);
+    expect(
+      await screen.findAllByRole('button', { name: 'Retry' })
+    ).toHaveLength(1);
+  });
+
   it('explains when a linked source cannot be deleted', async () => {
     vi.mocked(listSourcesAction).mockResolvedValue({
       ok: true,
@@ -89,7 +112,7 @@ describe('SourceLibrary', () => {
     );
     await waitFor(() =>
       expect(
-        screen.getByText(/Only users who can delete studio sources/)
+        screen.getByText(/users who can delete studio sources/)
       ).toBeInTheDocument()
     );
   });

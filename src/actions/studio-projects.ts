@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { requirePermission } from '@/lib/authz';
+import { isMissingRecord } from '@/lib/prisma-errors';
 import type { StudioResult } from '@/lib/studio/action-types';
 import {
   archiveProject,
@@ -58,6 +59,18 @@ export async function listProjectsAction(): Promise<
   };
 }
 
+async function notFoundOnMissing(
+  write: () => Promise<unknown>
+): Promise<StudioResult<undefined>> {
+  try {
+    await write();
+    return { ok: true, data: undefined };
+  } catch (error) {
+    if (isMissingRecord(error)) return { ok: false, error: 'NOT_FOUND' };
+    throw error;
+  }
+}
+
 export async function createProjectAction(input: {
   name: string;
   description?: string;
@@ -80,8 +93,7 @@ export async function updateProjectAction(
   const parsed = fields.partial().safeParse(input);
   if (!id.safeParse(projectId).success || !parsed.success)
     return { ok: false, error: 'INVALID_INPUT' };
-  await updateProject(projectId, parsed.data);
-  return { ok: true, data: undefined };
+  return notFoundOnMissing(() => updateProject(projectId, parsed.data));
 }
 
 export async function archiveProjectAction(
@@ -90,8 +102,7 @@ export async function archiveProjectAction(
   await requirePermission('studio.use');
   if (!id.safeParse(projectId).success)
     return { ok: false, error: 'INVALID_INPUT' };
-  await archiveProject(projectId);
-  return { ok: true, data: undefined };
+  return notFoundOnMissing(() => archiveProject(projectId));
 }
 
 export async function getProjectAction(projectId: string): Promise<
@@ -136,8 +147,7 @@ export async function linkSourceAction(
     return { ok: false, error: 'INVALID_INPUT' };
   const project = await getProject(projectId);
   if (!project || project.archivedAt) return { ok: false, error: 'NOT_FOUND' };
-  await linkSource(projectId, sourceId, ctx.admin.id);
-  return { ok: true, data: undefined };
+  return notFoundOnMissing(() => linkSource(projectId, sourceId, ctx.admin.id));
 }
 
 export async function unlinkSourceAction(

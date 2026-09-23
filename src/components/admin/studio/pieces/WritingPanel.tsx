@@ -13,7 +13,7 @@ export default function WritingPanel({ piece }: PanelProps) {
     <section className="space-y-3">
       <h3 className="font-semibold text-slate-900">{t('writing.title')}</h3>
       {sections.length > 0 && !finishing && (
-        <p className="text-sm text-slate-700">{t('writing.section', { n: (current === -1 ? sections.length : current + 1), total: piece.outline.length })}</p>
+        <p className="text-sm text-slate-700">{t('writing.section', { n: (current === -1 ? sections.length : current + 1), total: piece.activeRun?.targets ?? piece.outline.length })}</p>
       )}
       {finishing && <p className="text-sm text-slate-700">{t('writing.finishing')}</p>}
       <ol className="space-y-1 text-sm">

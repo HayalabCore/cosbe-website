@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Job } from 'pg-boss';
+import { APICallError } from 'ai';
 
 vi.mock('./runs-repository', () => ({
   getRun: vi.fn(),
@@ -139,13 +140,55 @@ describe('handleRunJob', () => {
     await handleRunJob(job(), { system_check: executor });
     expect(runStep).toHaveBeenCalledWith(
       RUN_ID,
-      { key: 'ping', ordinal: 0 },
+      { key: 'ping', ordinal: 0, promptVersion: undefined },
       expect.any(Function)
     );
-    expect(addRunUsage).toHaveBeenCalledWith(RUN_ID, {
-      inputTokens: 3,
-      outputTokens: 4,
+    expect(addRunUsage).toHaveBeenCalledWith(
+      RUN_ID,
+      { inputTokens: 3, outputTokens: 4 },
+      undefined
+    );
+  });
+
+  it('attributes usage inside a step to that step, with its prompt version', async () => {
+    vi.mocked(runStep).mockImplementation(async (_id, _step, fn) => fn());
+    executor.mockImplementation(async (ctx) => {
+      await ctx.step(
+        'section:a',
+        1,
+        async () => {
+          await ctx.recordUsage({ inputTokens: 10, outputTokens: 5 });
+          return {};
+        },
+        { promptVersion: 'write.v1' }
+      );
     });
+    await handleRunJob(job(), { system_check: executor });
+    expect(runStep).toHaveBeenCalledWith(
+      RUN_ID,
+      { key: 'section:a', ordinal: 1, promptVersion: 'write.v1' },
+      expect.any(Function)
+    );
+    expect(addRunUsage).toHaveBeenCalledWith(
+      RUN_ID,
+      { inputTokens: 10, outputTokens: 5 },
+      'section:a'
+    );
+  });
+
+  it('checks for cancellation at most every two seconds', async () => {
+    vi.useFakeTimers();
+    try {
+      executor.mockImplementation(
+        () => new Promise((resolve) => setTimeout(resolve, 1900))
+      );
+      const done = handleRunJob(job(), { system_check: executor });
+      await vi.advanceTimersByTimeAsync(1900);
+      await done;
+      expect(isRunCancelled).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('fails without retry on NonRetryableRunError', async () => {
@@ -184,6 +227,40 @@ describe('handleRunJob', () => {
       handleRunJob(job(), { system_check: executor })
     ).rejects.toThrow('provider timeout');
     expect(recordRunError).toHaveBeenCalledWith(RUN_ID, 'provider timeout');
+    expect(markRunFailed).not.toHaveBeenCalled();
+  });
+
+  it('fails at once on a provider error the provider says will not succeed on retry', async () => {
+    executor.mockRejectedValue(
+      new APICallError({
+        message: "Invalid schema for response_format 'article_section'",
+        url: 'https://api.openai.com/v1/responses',
+        requestBodyValues: {},
+        statusCode: 400,
+        isRetryable: false,
+      })
+    );
+    await handleRunJob(job(), { system_check: executor });
+    expect(markRunFailed).toHaveBeenCalledWith(
+      RUN_ID,
+      expect.stringContaining('Invalid schema')
+    );
+    expect(recordRunError).not.toHaveBeenCalled();
+  });
+
+  it('still retries a provider error marked retryable', async () => {
+    executor.mockRejectedValue(
+      new APICallError({
+        message: 'Rate limited',
+        url: 'https://api.openai.com/v1/responses',
+        requestBodyValues: {},
+        statusCode: 429,
+        isRetryable: true,
+      })
+    );
+    await expect(
+      handleRunJob(job(), { system_check: executor })
+    ).rejects.toThrow('Rate limited');
     expect(markRunFailed).not.toHaveBeenCalled();
   });
 });

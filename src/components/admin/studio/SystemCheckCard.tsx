@@ -30,17 +30,25 @@ export default function SystemCheckCard() {
   const t = useTranslations('admin.studio.systemCheck');
   const [state, setState] = useState<State>({ phase: 'idle' });
   const timer = useRef<number | null>(null);
+  const mounted = useRef(true);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
       if (timer.current !== null) window.clearTimeout(timer.current);
-    },
-    []
-  );
+    };
+  }, []);
 
   function poll(runId: string, count: number) {
     timer.current = window.setTimeout(async () => {
-      const result = await getRunStatusAction(runId);
+      let result: Awaited<ReturnType<typeof getRunStatusAction>>;
+      try {
+        result = await getRunStatusAction(runId);
+      } catch {
+        result = { ok: false, error: 'FAILED' };
+      }
+      if (!mounted.current) return;
       if (!result.ok) {
         setState({ phase: 'failed', error: result.error });
         return;
@@ -61,7 +69,13 @@ export default function SystemCheckCard() {
 
   async function start() {
     setState({ phase: 'waiting', status: 'queued' });
-    const result = await startSystemCheckAction();
+    let result: Awaited<ReturnType<typeof startSystemCheckAction>>;
+    try {
+      result = await startSystemCheckAction();
+    } catch {
+      result = { ok: false, error: 'FAILED' };
+    }
+    if (!mounted.current) return;
     if (!result.ok) {
       setState({ phase: 'start-error' });
       return;

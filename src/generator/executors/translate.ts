@@ -12,6 +12,7 @@ import {
 import { canTranslate } from '../pieces/stages';
 import { translateMeta, translateSection } from '../pieces/translate';
 import { loadPiece } from './piece-context';
+import { VERSION as TRANSLATE_VERSION } from '@/ai/prompts/translate.v1';
 
 export const translateExecutor: RunExecutor = async ({
   run,
@@ -34,27 +35,37 @@ export const translateExecutor: RunExecutor = async ({
     if (await isRunCancelled(run.id)) {
       throw new NonRetryableRunError('The run was cancelled.');
     }
-    await step(`section:${section.outlineId}`, index + 1, async () => {
-      const en = await translateSection(section, usage);
-      await saveSection(piece.id, { ...section, en, enStale: false }, run.id);
-      return { blocks: en.blocks.length };
-    });
-  }
-  await step('meta', targets.length + 1, async () => {
-    const latest = readPiece((await getPiece(piece.id))!);
-    const meta = await translateMeta(
-      { title: latest.title, excerpt: latest.excerpt ?? '' },
-      usage
-    );
-    await updatePiece(
-      piece.id,
-      {
-        titleEn: meta.titleEn,
-        excerptEn: meta.excerptEn,
-        stage: 'ready',
+    await step(
+      `section:${section.outlineId}`,
+      index + 1,
+      async () => {
+        const en = await translateSection(section, usage);
+        await saveSection(piece.id, { ...section, en, enStale: false }, run.id);
+        return { blocks: en.blocks.length };
       },
-      run.id
+      { promptVersion: TRANSLATE_VERSION }
     );
-    return {};
-  });
+  }
+  await step(
+    'meta',
+    targets.length + 1,
+    async () => {
+      const latest = readPiece((await getPiece(piece.id))!);
+      const meta = await translateMeta(
+        { title: latest.title, excerpt: latest.excerpt ?? '' },
+        usage
+      );
+      await updatePiece(
+        piece.id,
+        {
+          titleEn: meta.titleEn,
+          excerptEn: meta.excerptEn,
+          stage: 'ready',
+        },
+        run.id
+      );
+      return {};
+    },
+    { promptVersion: TRANSLATE_VERSION }
+  );
 };

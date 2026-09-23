@@ -11,6 +11,8 @@ import {
 } from '@/actions/studio-templates';
 import { usePermissions } from '@/components/admin/PermissionsContext';
 import { ARTICLE_CREATE_CATEGORIES } from '@/lib/api/article-create-metadata';
+import type { StudioResult } from '@/lib/studio/action-types';
+import { errorText } from './pieces/errorText';
 
 type Draft = Omit<TemplateDTO, 'id' | 'isDefault'> & { id?: string; isDefault: boolean };
 const EMPTY: Draft = { name: '', description: '', instructions: '', defaultCategory: 'useful-info', isDefault: false };
@@ -18,6 +20,21 @@ const EMPTY: Draft = { name: '', description: '', instructions: '', defaultCateg
 function Card({ template, canManage, onChanged }: { template: Draft; canManage: boolean; onChanged: () => void }) {
   const t = useTranslations('admin.studio');
   const [draft, setDraft] = useState(template);
+  const [message, setMessage] = useState<string | null>(null);
+  async function act(action: () => Promise<StudioResult<unknown>>) {
+    setMessage(null);
+    try {
+      const result = await action();
+      if (!result.ok) {
+        setMessage(errorText(t, result));
+        return;
+      }
+    } catch {
+      setMessage(errorText(t, { error: 'FAILED' }));
+      return;
+    }
+    onChanged();
+  }
   const field = 'mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm';
   const input = {
     name: draft.name,
@@ -45,12 +62,13 @@ function Card({ template, canManage, onChanged }: { template: Draft; canManage: 
           {ARTICLE_CREATE_CATEGORIES.map((c) => <option key={c} value={c}>{t(`category.${c}`)}</option>)}
         </select>
       </label>
+      {message && <p role="alert" className="text-sm text-red-600">{message}</p>}
       <div className="flex gap-2">
-        <button type="button" onClick={async () => { await (draft.id ? updateTemplateAction(draft.id, input) : createTemplateAction(input)); onChanged(); }} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover">
+        <button type="button" onClick={() => void act(() => (draft.id ? updateTemplateAction(draft.id, input) : createTemplateAction(input)))} className="rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover">
           {t('templates.save')}
         </button>
         {draft.id && !draft.isDefault && (
-          <button type="button" onClick={async () => { if (window.confirm(t('templates.delete'))) { await deleteTemplateAction(draft.id!); onChanged(); } }} className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-red-600">
+          <button type="button" onClick={() => { if (window.confirm(t('templates.delete'))) void act(() => deleteTemplateAction(draft.id!)); }} className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-red-600">
             {t('templates.delete')}
           </button>
         )}

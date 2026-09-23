@@ -15,6 +15,18 @@ import SourceStatusBadge from './SourceStatusBadge';
 const POLL_MS = 3000;
 const ACTIVE = new Set(['pending', 'processing']);
 
+/** A PDF upload unconfirmed for this long is settled by Retry. */
+const STALE_UPLOAD_MS = 10 * 60_000;
+
+function canRetry(s: SourceDTO): boolean {
+  if (s.status === 'failed') return s.kind !== 'pdf';
+  return (
+    s.kind === 'pdf' &&
+    s.status === 'pending' &&
+    Date.now() - new Date(s.createdAt).getTime() > STALE_UPLOAD_MS
+  );
+}
+
 export default function SourceLibrary({
   projectId,
   linkedIds = [],
@@ -134,7 +146,7 @@ export default function SourceLibrary({
                       {t('library.link')}
                     </button>
                   )}
-                  {s.status === 'failed' && (
+                  {canRetry(s) && (
                     <button
                       type="button"
                       onClick={() => void retryIngestAction(s.id).then(reload)}

@@ -41,7 +41,12 @@ const eslintConfig = defineConfig([
               message: 'Engine code must not import UI or server actions.',
             },
             {
-              group: ['@/lib/authz', '@/lib/supabase/server', 'server-only'],
+              group: [
+                '@/lib/authz',
+                '@/lib/supabase/server',
+                '@/lib/studio/web-boss',
+                'server-only',
+              ],
               message:
                 'Engine code has no request session; use src/generator/authz.ts.',
             },
