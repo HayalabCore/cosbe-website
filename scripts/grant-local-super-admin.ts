@@ -2,13 +2,13 @@
  * Local test databases only: make a Supabase Auth user super-admin, so a fresh
  * local database works right after sign-in. Refuses any non-localhost DB.
  *
- * Usage (DATABASE_URL on the command line wins over .env):
- *   DATABASE_URL='postgresql://postgres:postgres@localhost:55432/cosbe_test?schema=public' yarn db:local-super-admin [email]
+ * Usage (reads .env.local, or .env.test with APP_ENV=test):
+ *   yarn db:local-super-admin [email]
  * Email defaults to BOOTSTRAP_SUPER_ADMIN_EMAIL. Needs NEXT_PUBLIC_SUPABASE_URL
  * and SUPABASE_SERVICE_ROLE_KEY (from .env) to look up the user's auth id.
  */
 
-import { loadEnvConfig } from '@next/env';
+import '../src/lib/env/register';
 import { prisma } from '../src/lib/prisma';
 import { listAuthUsers } from '../src/lib/supabase/admin-core';
 import { BOOTSTRAP_SUPER_ADMIN_EMAIL } from '../src/lib/admin-bootstrap-plan';
@@ -16,10 +16,9 @@ import { isLocalDatabaseUrl } from '../src/lib/local-db-guard';
 import { SUPER_ADMIN_ROLE_KEY } from '../src/lib/permissions';
 
 async function main() {
-  loadEnvConfig(process.cwd());
   if (!isLocalDatabaseUrl(process.env.DATABASE_URL)) {
     throw new Error(
-      'Refusing: DATABASE_URL is not a localhost database. Pass the local test DB URL on the command line.'
+      'Refusing: DATABASE_URL is not a localhost database. Point .env.local at your local database.'
     );
   }
 

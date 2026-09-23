@@ -11,7 +11,8 @@
  *   yarn db:bootstrap-admins
  */
 
-import { loadEnvConfig } from '@next/env';
+import { appEnv } from '../src/lib/env/register';
+import { confirmRemote } from '../src/lib/env/confirm-remote';
 import { prisma } from '../src/lib/prisma';
 import { authUserExists, listAuthUsers } from '../src/lib/supabase/admin-core';
 import { adoptAdminUserId } from '../src/lib/admin-users-repository';
@@ -23,8 +24,8 @@ import {
 import { SUPER_ADMIN_ROLE_KEY } from '../src/lib/permissions';
 
 async function main() {
-  loadEnvConfig(process.cwd());
   const { dryRun, force, superAdminEmail } = parseBootstrapArgs(process.argv);
+  if (!dryRun) await confirmRemote(appEnv);
 
   const [superRole, adminRole] = await Promise.all([
     prisma.role.findUnique({ where: { key: SUPER_ADMIN_ROLE_KEY } }),
