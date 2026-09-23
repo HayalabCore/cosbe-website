@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderAdmin } from '@/test/render-admin';
 import { listItem } from '@/test/fixtures/articles';
@@ -288,6 +294,40 @@ describe('PostEditor', () => {
     expect(screen.getByText('Autosave failed')).toBeInTheDocument();
   });
 
+  it('autosaves edits typed while an autosave was in flight', async () => {
+    vi.useFakeTimers();
+    let finish: (value: { ok: true; id: string; slug: string }) => void;
+    updateArticleAction.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    );
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'T' })} />
+    );
+    fireEvent.change(screen.getByDisplayValue('T'), {
+      target: { value: 'Tx' },
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_INTERVAL_MS + 50);
+    });
+    expect(updateArticleAction).toHaveBeenCalledTimes(1);
+
+    // Typed before the first save came back: it must not count as saved.
+    fireEvent.change(screen.getByDisplayValue('Tx'), {
+      target: { value: 'Txy' },
+    });
+    await act(async () => {
+      finish!({ ok: true, id: 'art-1', slug: 'hello' });
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_INTERVAL_MS + 50);
+    });
+    expect(updateArticleAction).toHaveBeenCalledTimes(2);
+    expect(updateArticleAction.mock.calls[1][1]).toMatchObject({
+      title: 'Txy',
+    });
+  });
+
   it('shows an inline notice when autosave hits a slug conflict', async () => {
     vi.useFakeTimers();
     updateArticleAction.mockResolvedValue({
@@ -397,12 +437,19 @@ describe('PostEditor', () => {
       titleEn: 'Hello EN',
       excerptEn: '',
       blocks: [
-        { id: 'p1', type: 'paragraph', content: '<p>Hi</p>', contentEn: '<p>Hi EN</p>' },
+        {
+          id: 'p1',
+          type: 'paragraph',
+          content: '<p>Hi</p>',
+          contentEn: '<p>Hi EN</p>',
+        },
       ],
       errors: [],
     });
     renderAdmin(
-      <PostEditor initialArticle={article({ id: 'art-1', title: 'こんにちは' })} />
+      <PostEditor
+        initialArticle={article({ id: 'art-1', title: 'こんにちは' })}
+      />
     );
     await user.click(translateButtons()[0]);
     await waitFor(() =>

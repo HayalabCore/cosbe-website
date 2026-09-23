@@ -7,10 +7,15 @@ import type { HeadingBlock } from '@/types';
 import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
 import { useLocaleEditTab } from '@/hooks';
 
-const INPUT_CLS =
-  'w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
+/** Typed at the size it is published in, so the outline reads at a glance. */
+const LEVEL_TEXT: Record<HeadingBlock['level'], string> = {
+  1: 'text-3xl font-bold leading-snug',
+  2: 'text-2xl font-bold leading-snug',
+  3: 'text-xl font-bold leading-snug',
+  4: 'text-lg font-semibold leading-snug',
+};
 const SELECT_CLS =
-  'rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
+  'shrink-0 cursor-pointer appearance-none rounded-md bg-slate-100 px-1.5 py-0.5 text-center text-[11px] font-bold tabular-nums text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primaryColor/40';
 
 export default function HeadingBlockEditor({
   block,
@@ -59,9 +64,11 @@ export default function HeadingBlockEditor({
         bulkTranslating={bulkTranslating}
         generateDisabled={!block.content.trim()}
       />
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2.5">
         <select
-          className={`${SELECT_CLS} w-20 flex-shrink-0`}
+          aria-label={t('level')}
+          title={t('level')}
+          className={SELECT_CLS}
           value={block.level}
           onChange={(e) =>
             onChange({
@@ -75,7 +82,7 @@ export default function HeadingBlockEditor({
           <option value={4}>H4</option>
         </select>
         <input
-          className={INPUT_CLS}
+          className={`w-full min-w-0 border-0 bg-transparent py-0.5 text-slate-900 placeholder:text-slate-300 focus:outline-none ${LEVEL_TEXT[block.level]}`}
           placeholder={
             tab === 'original' ? t('placeholder') : te('englishPlaceholder')
           }
