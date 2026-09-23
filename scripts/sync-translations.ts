@@ -13,9 +13,10 @@
  *   yarn db:sync-translations --dry-run   # preview only, no writes
  */
 
+import { appEnv } from '../src/lib/env/register';
+import { confirmRemote } from '../src/lib/env/confirm-remote';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { loadEnvConfig } from '@next/env';
 import { prisma } from '../src/lib/prisma';
 import {
   flattenMessages,
@@ -208,7 +209,7 @@ async function syncLocale(locale: Locale): Promise<SyncStats> {
 }
 
 async function main() {
-  loadEnvConfig(process.cwd());
+  if (!DRY_RUN) await confirmRemote(appEnv);
 
   if (DRY_RUN) {
     console.log('── DRY RUN: no files or DB rows will be written ──\n');

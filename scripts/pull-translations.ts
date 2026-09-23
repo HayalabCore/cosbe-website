@@ -10,9 +10,9 @@
  *   yarn db:pull-translations --dry-run   # preview diff only, no file writes
  */
 
+import '../src/lib/env/register';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { loadEnvConfig } from '@next/env';
 import { prisma } from '../src/lib/prisma';
 import {
   flattenMessages,
@@ -40,7 +40,6 @@ function formatJson(obj: Record<string, unknown>): string {
 }
 
 async function main() {
-  loadEnvConfig(process.cwd());
 
   if (DRY_RUN) {
     console.log('-- DRY RUN: no files will be written --\n');

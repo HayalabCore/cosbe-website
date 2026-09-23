@@ -1,3 +1,4 @@
+import '@/lib/env/register';
 import { PgBoss } from 'pg-boss';
 import { RUN_EXECUTORS } from '@/generator/executors';
 import {

@@ -9,9 +9,10 @@
  *   yarn db:seed-translations --force
  */
 
+import { appEnv } from '../src/lib/env/register';
+import { confirmRemote } from '../src/lib/env/confirm-remote';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { loadEnvConfig } from '@next/env';
 import { prisma } from '../src/lib/prisma';
 import {
   flattenMessages,
@@ -21,7 +22,7 @@ import {
 const BATCH = 500;
 
 async function main() {
-  loadEnvConfig(process.cwd());
+  await confirmRemote(appEnv);
   const force = process.argv.includes('--force');
 
   const jaPath = join(process.cwd(), 'messages', 'ja.json');

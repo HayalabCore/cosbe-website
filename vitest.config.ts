@@ -30,7 +30,7 @@ export default defineConfig({
           name: 'unit',
           environment: 'node',
           env: dummySupabaseEnv,
-          include: ['src/**/*.test.ts', 'worker/**/*.test.ts'],
+          include: ['src/**/*.test.ts', 'worker/**/*.test.ts', 'scripts/**/*.test.ts'],
           exclude: [
             'src/**/*.db.test.ts',
             'src/lib/translations/flatten.roundtrip.test.ts',
@@ -52,7 +52,8 @@ export default defineConfig({
         test: {
           name: 'db',
           environment: 'node',
-          env: dummySupabaseEnv,
+          // Loads .env.test (local test DB); variables already set, as in CI, win.
+          env: { ...dummySupabaseEnv, APP_ENV: 'test' },
           include: ['src/**/*.db.test.ts'],
           setupFiles: ['src/test/setup-db.ts'],
         },
