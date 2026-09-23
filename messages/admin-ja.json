@@ -692,7 +692,7 @@
   },
   "studio": {
     "title": "コンテンツスタジオ",
-    "subtitle": "ソースに基づいた記事の下書きを生成します。",
+    "subtitle": "手持ちの資料から、事実ごとに出典の付いた原稿を作成します。",
     "systemCheck": {
       "title": "システムチェック",
       "description": "スタジオのワーカーが稼働し、データベースに接続できることを確認します。",
@@ -702,19 +702,21 @@
       "succeeded": "ワーカー {worker} が {seconds} 秒でチェックを完了しました。",
       "failed": "チェックに失敗しました: {error}",
       "timeout": "90秒経っても応答がありません。スタジオのワーカーは稼働していますか？",
-      "startError": "チェックを開始できませんでした。"
+      "startError": "チェックを開始できませんでした。",
+      "open": "ワーカーを確認"
     },
     "tabs": {
-      "overview": "記事",
-      "library": "ソースライブラリ",
+      "overview": "原稿",
+      "library": "資料ライブラリ",
       "projects": "プロジェクト",
-      "templates": "テンプレート"
+      "templates": "テンプレート",
+      "label": "コンテンツスタジオのセクション"
     },
     "status": {
       "pending": "待機中",
       "processing": "処理中",
       "ready": "利用可能",
-      "stored": "保存済み（まだ生成には使用されません）",
+      "stored": "保存済み（未使用）",
       "needs_transcript": "文字起こしが必要",
       "failed": "失敗"
     },
@@ -725,50 +727,75 @@
       "youtube": "YouTube"
     },
     "library": {
-      "title": "ソースライブラリ",
-      "search": "ソースを検索…",
-      "add": "ソースを追加",
-      "empty": "ソースはまだありません。メモ、記事、PDFを追加してください。",
+      "title": "資料ライブラリ",
+      "search": "資料を検索…",
+      "add": "資料を追加",
+      "empty": "ここに追加した資料（メモ、CosBE記事、PDF）はどのプロジェクトでも使えます。",
       "columns": {
         "title": "タイトル",
         "kind": "種類",
         "status": "状態",
         "size": "文字数",
-        "projects": "プロジェクト"
+        "projects": "プロジェクト",
+        "actions": "操作"
       },
       "retry": "再試行",
       "delete": "削除",
       "link": "追加",
       "confirmDelete": "「{title}」を削除しますか？元に戻せません。",
-      "linkedError": "このソースはプロジェクトで使用中か、別のユーザーが追加したものです。削除できるのは、プロジェクトから外した後の作成者か、スタジオソースの削除権限を持つユーザーのみです。"
+      "linkedError": "この資料はプロジェクトで使用中か、別のユーザーが追加したものです。削除できるのは、プロジェクトから外した後の作成者か、スタジオ資料の削除権限を持つユーザーのみです。",
+      "emptyTitle": "ライブラリは空です",
+      "deleteTitle": "この資料を削除しますか？",
+      "allLinked": "ライブラリの資料はすべてこのプロジェクトに追加済みです。",
+      "noMatch": "該当する資料はありません。"
     },
     "addSource": {
-      "title": "ソースを追加",
+      "title": "資料を追加",
       "text": "テキストを貼り付け",
       "article": "CosBE記事",
       "pdf": "PDFをアップロード",
       "titleLabel": "タイトル",
       "textLabel": "テキスト",
       "articleSearch": "記事を検索…",
-      "pdfHint": "PDF（50MBまで）。PDFは保存のみで、まだ生成には使用されません。",
+      "pdfHint": "PDFは保存されますが、PDFの読み取りに対応するまでは引用に使えません。",
       "save": "追加",
       "cancel": "キャンセル",
       "tooLarge": "ファイルが50MBを超えています。",
-      "failed": "ソースを追加できませんでした。"
+      "failed": "資料を追加できませんでした。",
+      "titlePlaceholder": "例：3月のヒアリングメモ",
+      "textHint": "{count, number} 文字",
+      "textPlaceholder": "メモ、文字起こし、文書などを貼り付けてください。",
+      "articleHint": "公開済みのCosBE記事を資料として使います。",
+      "noArticles": "記事が見つかりません。",
+      "pdfLimit": "PDF、50MBまで",
+      "uploading": "アップロード中…"
     },
     "projects": {
       "title": "プロジェクト",
-      "new": "新規プロジェクト",
+      "new": "新しいプロジェクト",
       "name": "名前",
       "description": "説明",
-      "create": "作成",
-      "empty": "プロジェクトはまだありません。",
-      "sources": "{count, plural, =0 {ソースなし} other {#件のソース}}",
+      "create": "プロジェクトを作成",
+      "empty": "プロジェクトには、関連する原稿が使う資料（メモ、過去の記事、文書）をまとめます。",
+      "sources": "{count, plural, =0 {資料なし} other {資料 # 件}}",
       "linkExisting": "ライブラリから追加",
       "unlink": "プロジェクトから外す",
       "archive": "プロジェクトをアーカイブ",
-      "back": "プロジェクト一覧",
-      "noSources": "ソースを追加すると、このプロジェクトで使用できます。"
+      "back": "プロジェクト",
+      "noSources": "資料がまだありません。メモ、記事、PDFを追加してください。",
+      "namePlaceholder": "例：生成AI導入事例",
+      "descriptionHint": "任意。資料の内容について。",
+      "cancel": "キャンセル",
+      "failed": "プロジェクトを作成できませんでした。もう一度お試しください。",
+      "emptyTitle": "プロジェクトはまだありません",
+      "intro": "プロジェクトごとに、原稿が引用できる資料をまとめます。",
+      "noDescription": "説明なし",
+      "rename": "プロジェクト名を変更",
+      "material": "資料",
+      "materialDescription": "このプロジェクトの原稿は、これらの資料を引用できます。",
+      "unlinkNamed": "「{title}」をこのプロジェクトから外す",
+      "articles": "原稿",
+      "noArticles": "原稿はまだありません。"
     },
     "category": {
       "useful-info": "コラム",
@@ -777,54 +804,64 @@
       "notice": "お知らせ"
     },
     "stages": {
-      "sources": "ソース",
-      "brief": "概要",
+      "sources": "準備",
+      "brief": "準備",
       "outline": "構成",
-      "writing": "執筆",
-      "review": "確認",
-      "translating": "翻訳",
-      "ready": "下書き作成",
-      "handed_off": "公開"
+      "writing": "執筆中…",
+      "review": "下書き",
+      "translating": "翻訳中…",
+      "ready": "送信準備完了",
+      "handed_off": "記事一覧へ送信済み"
     },
     "pieces": {
-      "title": "記事",
-      "new": "新しい記事",
+      "title": "原稿",
+      "new": "新しい原稿",
       "chooseProject": "プロジェクトを選択",
-      "empty": "記事はまだありません。",
+      "empty": "原稿はまだありません。",
       "columns": {
-        "title": "タイトル",
+        "title": "原稿",
         "project": "プロジェクト",
-        "stage": "段階",
-        "updated": "更新日時"
+        "stage": "進捗",
+        "updated": "更新"
       },
-      "untitled": "無題",
+      "untitled": "無題の原稿",
       "tracked": {
-        "draft": "下書き",
-        "published": "公開済み",
-        "archived": "アーカイブ",
-        "removed": "投稿は削除されました"
-      }
+        "draft": "記事の下書き",
+        "published": "公開中",
+        "archived": "アーカイブ済み",
+        "removed": "記事は削除済み"
+      },
+      "loading": "原稿を読み込み中",
+      "emptyTitle": "最初の原稿を作成しましょう",
+      "emptyBody": "元にする資料を選び、記事の目的を書くと、事実ごとに出典の付いた原稿をスタジオが作成します。",
+      "search": "原稿を検索",
+      "filters": {
+        "all": "すべて",
+        "active": "作成中",
+        "sent": "記事一覧へ送信済み"
+      },
+      "noMatch": "該当する原稿はありません。"
     },
     "workspace": {
-      "back": "記事一覧",
+      "back": "原稿",
       "busy": "処理中…",
       "cancel": "中止",
       "failed": "直前の処理に失敗しました: {error}",
       "undo": "履歴",
       "undoButton": "この状態に戻す",
-      "noHistory": "履歴はまだありません。",
+      "noHistory": "以前のバージョンはまだありません。",
       "errors": {
         "BUSY": "現在の処理が終わるまでお待ちください。",
-        "LOCKED": "この記事はすでに下書き投稿済みです。",
-        "NO_AUTHOR": "先に概要で著者を選択してください。",
+        "LOCKED": "この原稿はすでに記事一覧へ送信済みです。",
+        "NO_AUTHOR": "先に「記事一覧へ送る」で著者を選んでください。",
         "FAILED": "問題が発生しました。もう一度お試しください。",
         "INVALID_INPUT": "入力内容を確認して、もう一度お試しください。",
         "NOT_FOUND": "すでに存在しません。ページを再読み込みしてください。",
         "FORBIDDEN": "この操作を行う権限がありません。"
       },
       "reasons": {
-        "NO_SOURCES": "ソースを1つ以上選択してください。",
-        "SOURCES_NOT_READY": "選択したソースの処理が終わるまでお待ちください。",
+        "NO_SOURCES": "資料を1つ以上選択してください。",
+        "SOURCES_NOT_READY": "選択した資料の処理が終わるまでお待ちください。",
         "NO_GOAL": "ブリーフに記事の目的を入力してください。",
         "NO_OUTLINE": "構成にセクションがありません。",
         "INCOMPLETE": "すべてのセクションを書き終えてください。",
@@ -834,9 +871,9 @@
       },
       "runErrors": {
         "FORBIDDEN": "このステップを実行する権限がなくなりました。",
-        "NO_MATERIAL": "「{detail}」には現在の選択範囲にソースの記述がありません。構成またはソースを見直してください。",
+        "NO_MATERIAL": "「{detail}」には現在の選択範囲に資料の記述がありません。構成または資料を見直してください。",
         "TRANSLATION_SHAPE": "「{detail}」の翻訳が日本語の構造と一致しませんでした。もう一度お試しください。",
-        "TOKEN_CEILING": "このステップのトークン使用量が上限を超えました（{detail}）。ソースを絞るか、管理者に上限の引き上げを依頼してください。",
+        "TOKEN_CEILING": "このステップのトークン使用量が上限を超えました（{detail}）。資料を絞るか、管理者に上限の引き上げを依頼してください。",
         "RUN_FAILED": "ステップが失敗しました。もう一度お試しください。"
       },
       "history": {
@@ -845,15 +882,13 @@
         "translate": "翻訳前",
         "rewrite": "「{heading}」の書き直し前",
         "edit_outline": "構成の編集前",
-        "change_sources": "ソース変更前",
-        "before_undo": "復元前"
-      }
-    },
-    "sourcesPanel": {
-      "title": "ソースを選択",
-      "none": "先にこのプロジェクトへソースを追加してください。",
-      "notReady": "未処理",
-      "next": "概要へ進む"
+        "change_sources": "資料変更前",
+        "before_undo": "復元前",
+        "edit_text": "本文編集前"
+      },
+      "breadcrumb": "パンくずリスト",
+      "notFound": "この原稿は存在しません。",
+      "stale": "更新できませんでした。最後に読み込んだ内容を表示しています。"
     },
     "brief": {
       "title": "概要",
@@ -862,7 +897,7 @@
       "keywords": "キーワード（カンマ区切り）",
       "tone": "トーン",
       "length": "文字数",
-      "auto": "ソースに応じて",
+      "auto": "資料に応じて",
       "chars": "目標文字数",
       "template": "テンプレート",
       "category": "カテゴリー",
@@ -873,27 +908,33 @@
     "outline": {
       "title": "構成",
       "heading": "見出し",
-      "intent": "この節で扱う内容",
-      "sources": "{count, plural, =0 {ソース箇所なし} other {#件のソース箇所}}",
-      "boilerplate": "テンプレートの節（ソース不要）",
-      "add": "節を追加",
+      "intent": "このセクションの内容",
+      "sources": "{count, plural, other {出典 # 件}}",
+      "boilerplate": "出典なし",
+      "add": "セクションを追加",
       "remove": "削除",
       "up": "上へ",
       "down": "下へ",
-      "stale": "変更あり — 書き直されます",
-      "gaps": "ソースに含まれていない内容",
+      "stale": "書き直し対象",
+      "gaps": "資料にない内容：",
       "save": "構成を保存",
       "write": "記事を執筆",
-      "continue": "続きを執筆"
-    },
-    "writing": {
-      "title": "執筆",
-      "section": "{total}節中 {n}節目",
-      "finishing": "タイトル・要約・SEO"
+      "continue": "残りのセクションを執筆",
+      "headingPlaceholder": "セクションの見出し",
+      "intentPlaceholder": "このセクションで書くこと",
+      "drag": "セクション {n} を移動",
+      "boilerplateHint": "概要とテンプレートだけから書くため、事実を引用できません。",
+      "removeSection": "「{heading}」を削除",
+      "gapsHint": "「準備」で資料を追加するか、その内容に頼るセクションを削除してください。",
+      "needHeadings": "すべてのセクションに見出しが必要です。",
+      "upToDate": "下書きはこの構成どおりです。",
+      "resumeHint": "残り {count} セクションを執筆します。",
+      "writeHint": "{count} セクションを、それぞれ出典付きで執筆します。",
+      "toDraft": "下書きへ"
     },
     "review": {
       "title": "確認",
-      "flags": "要確認",
+      "flags": "このセクションを確認してください",
       "citation": "出典",
       "connective": "つなぎの文（事実なし）",
       "actions": {
@@ -909,20 +950,24 @@
         "shorten": "この節を約半分の長さにしてください。",
         "formal": "よりフォーマルな文体にしてください。"
       },
-      "customPrompt": "この節をどう変更しますか？",
+      "customPrompt": "どう変えますか？",
       "translate": "英語に翻訳",
-      "handoff": "下書き投稿を作成"
+      "handoff": "下書き記事を作成",
+      "rewrite": "書き直す",
+      "customPlaceholder": "例：費用の数字から書き始める",
+      "customSubmit": "セクションを書き直す"
     },
     "translate": {
       "title": "翻訳",
-      "stale": "翻訳後に変更されました — 再翻訳してください"
+      "stale": "更新が必要"
     },
     "handoff": {
-      "title": "下書き投稿",
-      "open": "エディターで開く",
+      "title": "「すべての記事」に下書きを作成しました",
+      "open": "記事エディタで開く",
       "view": "サイトで見る",
-      "duplicate": "記事を複製",
-      "status": "投稿の状態: {status}"
+      "duplicate": "新しいバージョンを作成",
+      "status": "記事の状態：{status}",
+      "readOnly": "公開は記事エディタで行ってください。スタジオ側は閲覧のみです。新しいバージョンは同じ概要と資料から始まります。"
     },
     "templates": {
       "title": "テンプレート",
@@ -933,7 +978,160 @@
       "defaultCategory": "既定のカテゴリー",
       "default": "既定",
       "save": "保存",
-      "delete": "削除"
+      "delete": "削除",
+      "intro": "テンプレートで、書き手が従う構成と文体を決めます。",
+      "edit": "テンプレートを編集",
+      "editNamed": "{name} を編集",
+      "descriptionHint": "テンプレートを選ぶときに表示されます。",
+      "instructionsHint": "書き手への指示（読者、文体、構成）を普通の文章で書いてください。",
+      "deleteTitle": "このテンプレートを削除しますか？",
+      "confirmDelete": "「{name}」を削除しますか？使用した原稿の本文はそのまま残ります。",
+      "empty": "テンプレートはまだありません。"
+    },
+    "steps": {
+      "label": "進捗",
+      "setup": "準備",
+      "outline": "構成",
+      "draft": "下書き",
+      "handoff": "記事一覧へ送る",
+      "notYet": "前のステップを先に完了してください。"
+    },
+    "newArticle": {
+      "title": "新しい原稿",
+      "goal": "この記事の目的は？",
+      "goalHint": "1〜2文で、誰に向けて何を伝えるかを書いてください。",
+      "goalPlaceholder": "例：製造業の経営者に、生成AIを提案書作成に導入した企業で何が変わったかを、費用や課題も含めて伝える",
+      "project": "プロジェクト",
+      "projectHint": "このプロジェクト内の資料を原稿に使えます。",
+      "newProject": "新しいプロジェクト…",
+      "projectName": "プロジェクト名",
+      "projectNamePlaceholder": "例：生成AI導入事例",
+      "cancel": "キャンセル",
+      "create": "原稿を作成",
+      "failed": "原稿を作成できませんでした。もう一度お試しください。"
+    },
+    "run": {
+      "queued": "ワーカーを待っています…",
+      "writing": "セクション {n}/{total} を執筆中…",
+      "finishing": "タイトル・抜粋・SEOを作成中…",
+      "outline": "構成を作成中…",
+      "translate": "英語に翻訳中…",
+      "rewrite_section": "セクションを書き直し中…",
+      "working": "処理中…"
+    },
+    "bar": {
+      "dismiss": "閉じる",
+      "unsaved": "未保存の変更があります",
+      "save": "保存"
+    },
+    "confirm": {
+      "cancel": "キャンセル"
+    },
+    "setup": {
+      "briefTitle": "概要",
+      "briefDescription": "記事の目的です。構成と各セクションはこれに沿って書かれます。",
+      "goalHint": "必須項目はこれだけです。誰に向けて何を伝えるかを書いてください。",
+      "audienceHint": "想定読者",
+      "audiencePlaceholder": "例：中堅製造業の経営者",
+      "toneHint": "文章の雰囲気",
+      "tonePlaceholder": "例：実務的で丁寧（です・ます）",
+      "keywords": "キーワード",
+      "keywordsHint": "Enter または読点で追加します。表現とSEOに使われます。",
+      "removeKeyword": "{keyword} を削除",
+      "length": "文字数",
+      "lengthAuto": "資料に応じて",
+      "lengthChars": "約{count, number}字",
+      "lengthCustom": "指定",
+      "lengthHint": "日本語の文字数の目安です。資料が少ないと長い記事にはなりません。",
+      "noTemplate": "テンプレートなし",
+      "templateHint": "書き手が従う構成と文体のルールです。",
+      "materialTitle": "資料",
+      "materialDescription": "記事の元になる資料です。すべての事実はこのいずれかを出典にします。",
+      "addMaterial": "資料を追加",
+      "noMaterial": "資料がまだありません",
+      "noMaterialHint": "メモを貼り付けるか、CosBE記事を選ぶか、PDFをアップロードしてください。",
+      "pdfNotUsed": "未使用",
+      "chapters": "{picked}/{total} 章",
+      "needGoal": "構成を作るには目的を入力してください。",
+      "needSource": "準備完了の資料を1つ以上選んでください。",
+      "outlineExists": "構成は作成済みです。",
+      "nextHint": "次に、編集できる構成案をスタジオが作成します。",
+      "recreateOutline": "構成を作り直す",
+      "toOutline": "構成へ",
+      "confirmTitle": "構成を置き換えますか？",
+      "confirmOutline": "新しい構成で現在の構成を置き換えます。",
+      "confirmDraft": "新しい構成で、現在の構成と書き上がった下書きを置き換えます。",
+      "confirmHistory": "現在の内容は履歴に残るので、あとで復元できます。"
+    },
+    "draft": {
+      "citationTitle": "[{n}] の出典",
+      "closeCitation": "出典を閉じる",
+      "citationFrom": "出典",
+      "railHelp": "本文中の番号をクリックすると、その文の元になった箇所が表示されます。文をクリックすると表現を修正できます。",
+      "statCited": "出典付きの文",
+      "statTransitions": "つなぎの文",
+      "statFlagged": "要確認セクション",
+      "legendCited": "番号で出典箇所を表示",
+      "legendTransition": "つなぎの文（出典なし）",
+      "tabSources": "出典",
+      "tabHistory": "履歴",
+      "editLabel": "本文を編集",
+      "editKeys": "Enterで保存、Escでキャンセル",
+      "cancel": "キャンセル",
+      "save": "保存",
+      "transitionTitle": "つなぎの文：出典はありません",
+      "clickToEdit": "クリックして編集",
+      "citationLabel": "出典 {n}",
+      "writingNow": "執筆中…",
+      "editTitle": "タイトルを編集",
+      "editExcerpt": "抜粋を編集",
+      "noExcerpt": "抜粋なし",
+      "excerptLater": "タイトルと抜粋は最後に作成されます。",
+      "rewritten": "セクションを書き直しました。",
+      "undoRewrite": "元に戻す",
+      "hint": "文をクリックして編集するか、セクションの「書き直す」を使ってください。",
+      "incomplete": "まだ書かれていないセクションがあります。",
+      "toHandoff": "次へ",
+      "lockedHint": "この原稿は記事一覧へ送信済みです。記事エディタで編集してください。スタジオ側は閲覧のみです。"
+    },
+    "history": {
+      "help": "各項目は、その変更の直前の原稿の状態です。",
+      "restore": "復元",
+      "confirmTitle": "このバージョンを復元しますか？",
+      "confirmBody": "「{label}」に保存したバージョンを復元しますか？現在の内容は先に履歴へ保存されます。"
+    },
+    "handoffStep": {
+      "englishTitle": "英語版",
+      "englishDescription": "任意です。日本語と一緒に下書き記事へ引き継がれます。",
+      "translateAgain": "翻訳し直す",
+      "updateTranslation": "{count} セクションを更新",
+      "noEnglish": "英語版はまだありません",
+      "noEnglishHint": "今翻訳するか、日本語のみで記事を作成し、あとで記事エディタで翻訳できます。",
+      "detailsTitle": "記事の情報",
+      "detailsDescription": "下書き記事に引き継がれます。記事エディタでいつでも変更できます。",
+      "chooseAuthor": "著者を選択",
+      "noAuthors": "著者がまだいません。＋から追加してください。",
+      "addAuthor": "著者を追加",
+      "authorName": "名前",
+      "authorRole": "肩書き（例：編集部）",
+      "excerpt": "抜粋",
+      "excerptHint": "記事一覧や検索結果に表示されます。",
+      "seo": "SEO",
+      "seoTitle": "SEOタイトル",
+      "seoDescription": "メタディスクリプション",
+      "seoKeywords": "SEOキーワード",
+      "chars": "{count, number} 文字",
+      "checklist": "送信前の確認",
+      "checkWritten": "原稿の執筆",
+      "checkAuthor": "著者の選択",
+      "checkEnglish": "英語版（任意）",
+      "needPermission": "下書きを作成するには記事の編集権限が必要です。",
+      "needAuthor": "下書き記事を作成するには著者を選んでください。",
+      "hint": "「すべての記事」に下書きを作成します。公開は記事エディタで行います。",
+      "confirmTitle": "下書きとして「すべての記事」へ送りますか？",
+      "confirmBody": "「すべての記事」に下書き記事が作成されます。確認と公開は記事エディタで行ってください。スタジオ側は閲覧のみになります。",
+      "confirmNoEnglish": "英語版がないため、記事はひとまず日本語のみになります。",
+      "confirmStaleEnglish": "英語が古くなっている {count} セクションは英語なしで送られます。記事エディタで翻訳できます。"
     }
   }
 }

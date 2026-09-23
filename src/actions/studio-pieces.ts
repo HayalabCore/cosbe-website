@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { requirePermission } from '@/lib/authz';
 import { prisma } from '@/lib/prisma';
 import { createArticleRecord } from '@/lib/articles';
-import { allocateUniqueSlug } from '@/lib/articles-repository';
+import { allocateUniqueSlug, upsertAuthor } from '@/lib/articles-repository';
 import { createFallbackSlug, generateSlug } from '@/lib/article-utils';
 import { revalidateArticlePaths } from '@/lib/article-revalidation';
 import {
@@ -42,12 +42,16 @@ import {
   type PieceData,
 } from '@/generator/pieces/pieces-repository';
 import {
+  MAX_SELECTED_SOURCES,
   briefInputSchema,
   sameSelection,
   selectionInputSchema,
+  seoSchema,
   type OutlineSection,
   type PieceStage,
+  type Section,
   type Selection,
+  type StudioBlock,
 } from '@/generator/pieces/piece-types';
 import {
   canHandOff,
@@ -122,7 +126,10 @@ export async function listPiecesAction(
   filter: { projectId?: string } = {}
 ): Promise<StudioResult<PieceListItemDTO[]>> {
   await requirePermission('studio.use');
-  if (filter.projectId !== undefined && !uuid.safeParse(filter.projectId).success)
+  if (
+    filter.projectId !== undefined &&
+    !uuid.safeParse(filter.projectId).success
+  )
     return { ok: false, error: 'INVALID_INPUT' };
   const rows = await listPieces(filter);
   return {
@@ -140,10 +147,13 @@ export async function listPiecesAction(
 
 export async function createPieceAction(input: {
   projectId: string;
+  goal?: string;
 }): Promise<StudioResult<{ pieceId: string }>> {
   const ctx = await requirePermission('studio.use');
   if (!uuid.safeParse(input.projectId).success)
     return { ok: false, error: 'INVALID_INPUT' };
+  const goal = briefInputSchema.shape.goal.safeParse(input.goal?.trim() ?? '');
+  if (!goal.success) return { ok: false, error: 'INVALID_INPUT' };
   const project = await prisma.studioProject.findUnique({
     where: { id: input.projectId },
   });
@@ -155,6 +165,19 @@ export async function createPieceAction(input: {
     templateId: template?.id ?? null,
     category: template?.defaultCategory ?? 'useful-info',
   });
+  // Start with every source that can already be used; the editor unticks
+  // what does not belong instead of hunting for what does.
+  const ready = (await listProjectSources(project.id))
+    .filter((source) => source.status === 'ready')
+    .slice(0, MAX_SELECTED_SOURCES)
+    .map((source) => source.id);
+  if (ready.length > 0 || goal.data) {
+    await updatePiece(piece.id, {
+      selection: { sourceIds: ready, chapters: {} },
+      brief: briefInputSchema.parse({ goal: goal.data }),
+      stage: ready.length > 0 ? 'brief' : 'sources',
+    });
+  }
   return { ok: true, data: { pieceId: piece.id } };
 }
 
@@ -166,7 +189,7 @@ export async function getPieceAction(
   const row = await getPiece(id);
   if (!row) return { ok: false, error: 'NOT_FOUND' };
   const piece = readPiece(row);
-  const [run, last, article] = await Promise.all([
+  const [run, last, article, project] = await Promise.all([
     activeRun(id),
     prisma.studioRun.findFirst({
       where: { pieceId: id },
@@ -179,6 +202,10 @@ export async function getPieceAction(
           select: { id: true, status: true, slug: true, category: true },
         })
       : null,
+    prisma.studioProject.findUnique({
+      where: { id: piece.projectId },
+      select: { name: true },
+    }),
   ]);
   return {
     ok: true,
@@ -186,6 +213,7 @@ export async function getPieceAction(
       activeRun: toActiveRunDTO(run),
       lastRunError: last?.status === 'failed' ? last.error : null,
       article,
+      projectName: project?.name ?? '',
     }),
   };
 }
@@ -366,7 +394,9 @@ export async function saveOutlineAction(
     const kept = new Set(outline.map((o) => o.id));
     // Stale sections will be rewritten; the old excerpt must not let the
     // piece count as finished before the finish step runs again.
-    const edited = outline.some((o) => o.stale && !previous.get(o.id)?.section.stale);
+    const edited = outline.some(
+      (o) => o.stale && !previous.get(o.id)?.section.stale
+    );
     await takeSnapshot(id, 'edit_outline', undefined, tx);
     await updatePiece(
       id,
@@ -596,4 +626,125 @@ export async function duplicatePieceAction(
     stage: source.selection.sourceIds.length > 0 ? 'brief' : 'sources',
   });
   return { ok: true, data: { pieceId: copy.id } };
+}
+
+const sentenceEditSchema = z.object({
+  outlineId: z.string().min(1),
+  block: z.number().int().nonnegative(),
+  index: z.number().int().nonnegative(),
+  text: z.string().trim().min(1).max(2000),
+});
+
+/** The block with one sentence replaced, or null when there is no such sentence. */
+function withSentence(
+  block: StudioBlock,
+  index: number,
+  text: string
+): StudioBlock | null {
+  if (block.type === 'list') {
+    if (!block.items[index]) return null;
+    return {
+      ...block,
+      items: block.items.map((s, i) => (i === index ? { ...s, text } : s)),
+    };
+  }
+  if (
+    block.type === 'paragraph' ||
+    block.type === 'quote' ||
+    block.type === 'callout'
+  ) {
+    if (!block.sentences[index]) return null;
+    return {
+      ...block,
+      sentences: block.sentences.map((s, i) =>
+        i === index ? { ...s, text } : s
+      ),
+    };
+  }
+  return null;
+}
+
+/**
+ * The editor's own wording for one sentence. The citation stays: the editor
+ * is correcting phrasing, and the source panel still shows what it rests on.
+ * The English of that section no longer matches, so it is marked stale.
+ */
+export async function editSentenceAction(
+  id: string,
+  input: z.input<typeof sentenceEditSchema>
+): Promise<StudioResult<undefined>> {
+  await requirePermission('studio.use');
+  const parsed = sentenceEditSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'INVALID_INPUT' };
+  if (!uuid.safeParse(id).success) return { ok: false, error: 'INVALID_INPUT' };
+  const { outlineId, block, index, text } = parsed.data;
+  return withPieceLock(id, async (tx) => {
+    const piece = await loadEditable(id, {}, tx);
+    if (isFail(piece)) return piece;
+    const section = piece.sections.find((s) => s.outlineId === outlineId);
+    const target = section?.blocks[block];
+    const replaced = target ? withSentence(target, index, text) : null;
+    if (!section || !replaced) return { ok: false, error: 'NOT_FOUND' };
+    const sections: Section[] = piece.sections.map((s) =>
+      s === section
+        ? {
+            ...s,
+            blocks: s.blocks.map((b, i) => (i === block ? replaced : b)),
+            enStale: s.en !== null || s.enStale,
+          }
+        : s
+    );
+    await takeSnapshot(id, 'edit_text', undefined, tx);
+    await updatePiece(
+      id,
+      {
+        sections,
+        ...(piece.stage === 'ready' ? { stage: 'review' as const } : {}),
+      },
+      undefined,
+      tx
+    );
+    return { ok: true, data: undefined };
+  });
+}
+
+const metaSchema = z.object({
+  title: z.string().trim().min(1).max(200).optional(),
+  excerpt: z.string().trim().max(1000).optional(),
+  seo: seoSchema.optional(),
+});
+
+export async function updatePieceMetaAction(
+  id: string,
+  patch: z.input<typeof metaSchema>
+): Promise<StudioResult<undefined>> {
+  await requirePermission('studio.use');
+  const parsed = metaSchema.safeParse(patch);
+  if (!parsed.success) return { ok: false, error: 'INVALID_INPUT' };
+  if (!uuid.safeParse(id).success) return { ok: false, error: 'INVALID_INPUT' };
+  return withPieceLock(id, async (tx) => {
+    const piece = await loadEditable(id, {}, tx);
+    if (isFail(piece)) return piece;
+    await updatePiece(id, parsed.data, undefined, tx);
+    return { ok: true, data: undefined };
+  });
+}
+
+const authorSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  designation: z.string().trim().min(1).max(100),
+});
+
+/** Authors belong to posts, so adding one needs the post permission. */
+export async function addAuthorAction(
+  input: z.input<typeof authorSchema>
+): Promise<StudioResult<{ id: string; name: string; designation: string }>> {
+  const ctx = await requirePermission('studio.use');
+  if (!ctx.actor.permissions.has('articles.edit'))
+    return { ok: false, error: 'FORBIDDEN' };
+  const parsed = authorSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'INVALID_INPUT' };
+  const { name, designation } = parsed.data;
+  const authorId = await upsertAuthor(name, designation);
+  return { ok: true, data: { id: authorId, name, designation } };
 }

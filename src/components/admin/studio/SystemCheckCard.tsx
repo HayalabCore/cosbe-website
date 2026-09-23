@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getRunStatusAction, startSystemCheckAction } from '@/actions/studio';
 import type { RunStatusDTO } from '@/lib/studio/action-types';
+import { Button } from './ui';
 
 const POLL_MS = 2000;
 const MAX_POLLS = 45;
@@ -85,19 +86,20 @@ export default function SystemCheckCard() {
 
   const busy = state.phase === 'waiting';
 
+  const tone =
+    state.phase === 'succeeded'
+      ? 'text-emerald-700'
+      : state.phase === 'idle' || state.phase === 'waiting'
+        ? 'text-slate-600'
+        : 'text-red-700';
+
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5">
-      <h2 className="text-base font-semibold text-slate-900">{t('title')}</h2>
-      <p className="mt-1 text-sm text-slate-500">{t('description')}</p>
-      <button
-        type="button"
-        onClick={() => void start()}
-        disabled={busy}
-        className="mt-4 rounded-lg bg-primaryColor px-4 py-2 text-sm font-semibold text-white hover:bg-primaryHover disabled:opacity-40 disabled:cursor-not-allowed"
-      >
+    <div className="space-y-4">
+      <p className="text-sm text-slate-500">{t('description')}</p>
+      <Button variant="primary" busy={busy} onClick={() => void start()}>
         {t('run')}
-      </button>
-      <p className="mt-3 text-sm text-slate-700" aria-live="polite">
+      </Button>
+      <p className={`min-h-5 text-sm ${tone}`} aria-live="polite">
         {state.phase === 'waiting' && t(state.status)}
         {state.phase === 'succeeded' &&
           t('succeeded', { worker: state.worker, seconds: state.seconds })}
@@ -105,6 +107,6 @@ export default function SystemCheckCard() {
         {state.phase === 'timeout' && t('timeout')}
         {state.phase === 'start-error' && t('startError')}
       </p>
-    </section>
+    </div>
   );
 }
