@@ -138,7 +138,9 @@
     "english": "英語",
     "generateEnglish": "英語を生成",
     "generating": "生成中…",
-    "englishPlaceholder": "英語テキスト…"
+    "englishPlaceholder": "英語テキスト…",
+    "originalShort": "JA",
+    "englishShort": "EN"
   },
   "meta": {
     "publishing": "公開設定",
@@ -196,7 +198,6 @@
     "moveDown": "下へ",
     "removeBlock": "ブロックを削除",
     "noBlocksTitle": "ブロックがありません",
-    "noBlocksHint": "下から最初のブロックを追加してください",
     "addBlock": "ブロックを追加",
     "types": {
       "heading": {
@@ -239,7 +240,9 @@
         "label": "テーブル",
         "description": "行と列のデータ"
       }
-    }
+    },
+    "searchBlocks": "ブロックを検索",
+    "noMatch": "一致するブロックがありません"
   },
   "paragraph": {
     "placeholder": "段落のテキストを入力…",
@@ -287,7 +290,8 @@
     }
   },
   "heading": {
-    "placeholder": "見出しテキスト…"
+    "placeholder": "見出しテキスト…",
+    "level": "見出しレベル"
   },
   "list": {
     "bullet": "• 箇条書き",

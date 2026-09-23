@@ -298,6 +298,9 @@ export default function PostEditor({
       return;
     }
     autoSavingRef.current = true;
+    // Cleared now, not after the request: anything typed while it is in
+    // flight marks the post dirty again and is picked up by the next save.
+    isDirtyRef.current = false;
     setSaveNotice(null);
     setAutoSavingUi(true);
     const sentSlug = slug;
@@ -326,6 +329,7 @@ export default function PostEditor({
       });
       const result = await updateArticleAction(id, payload);
       if (!result.ok) {
+        isDirtyRef.current = true;
         console.error('Autosave failed', result.error);
         setSaveNotice(
           result.error === SLUG_CONFLICT_ERROR
@@ -335,10 +339,10 @@ export default function PostEditor({
         return;
       }
       applySavedSlug(sentSlug, result.slug);
-      isDirtyRef.current = false;
       setSaveNotice('auto');
       setTimeout(() => setSaveNotice(null), 2000);
     } catch (e) {
+      isDirtyRef.current = true;
       console.error('Autosave failed', e);
       setSaveNotice('auto-error');
     } finally {
@@ -409,9 +413,11 @@ export default function PostEditor({
         caseStudy,
       });
       const sentSlug = slug;
+      isDirtyRef.current = false;
       if (persistedId) {
         const result = await updateArticleAction(persistedId, payload);
         if (!result.ok) {
+          isDirtyRef.current = true;
           alertSaveFailure(result);
           return;
         }
@@ -421,6 +427,7 @@ export default function PostEditor({
           autoSuffixSlug: !slug.trim(),
         });
         if (!result.ok) {
+          isDirtyRef.current = true;
           alertSaveFailure(result);
           return;
         }
@@ -435,11 +442,11 @@ export default function PostEditor({
       } else if (st !== 'published') {
         setPublishedAt(null);
       }
-      isDirtyRef.current = false;
       setSaveNotice('manual');
       setTimeout(() => setSaveNotice(null), 2000);
       router.refresh();
     } catch (e) {
+      isDirtyRef.current = true;
       alertSaveFailure(e);
     } finally {
       savingRef.current = false;
@@ -625,59 +632,49 @@ export default function PostEditor({
         </div>
       ) : (
         <div className="flex flex-1 items-start min-w-0">
-          {/* Content area — uses full width between nav and settings sidebar */}
-          <div className="flex-1 min-w-0 w-full px-4 md:px-8 lg:px-10 py-8">
-            <ArticleMetaLocaleFields
-              title={title}
-              titleEn={titleEn}
-              excerpt={excerpt}
-              localeViewKey={localeViewKey}
-              localeViewTab={articleLocaleViewTab}
-              bulkTranslating={translatingArticle}
-              onTitleChange={(value) => {
-                isDirtyRef.current = true;
-                setTitle(value);
-              }}
-              onTitleEnChange={(value) => {
-                isDirtyRef.current = true;
-                setTitleEn(value);
-              }}
-              onExcerptEnChange={(value) => {
-                isDirtyRef.current = true;
-                setExcerptEn(value);
-              }}
-            />
+          {/* Content area: the article on a reading-width sheet whose side
+              padding holds the block gutter. */}
+          <div className="flex-1 min-w-0 w-full px-3 md:px-6 py-6 lg:py-8">
+            <div className="mx-auto w-full max-w-[56rem] rounded-2xl border border-slate-200 bg-white px-5 py-8 shadow-sm md:px-10 lg:px-16 lg:py-12">
+              <ArticleMetaLocaleFields
+                title={title}
+                titleEn={titleEn}
+                excerpt={excerpt}
+                localeViewKey={localeViewKey}
+                localeViewTab={articleLocaleViewTab}
+                bulkTranslating={translatingArticle}
+                onTitleChange={(value) => {
+                  isDirtyRef.current = true;
+                  setTitle(value);
+                }}
+                onTitleEnChange={(value) => {
+                  isDirtyRef.current = true;
+                  setTitleEn(value);
+                }}
+                onExcerptEnChange={(value) => {
+                  isDirtyRef.current = true;
+                  setExcerptEn(value);
+                }}
+              />
 
-            {/* Word count */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-6 pb-6 border-b border-slate-100">
-              <span className="text-[11px] font-medium text-slate-400">
-                {t('words', { count: words })}
-              </span>
-              <span className="text-slate-200" aria-hidden>
-                ·
-              </span>
-              <span className="text-[11px] font-medium text-slate-400">
-                {t('minRead', { count: readingMins })}
-              </span>
-              <span className="text-slate-200" aria-hidden>
-                ·
-              </span>
-              <span className="text-[11px] font-medium text-slate-400">
-                {t('blocksLabel', { count: blocks.length })}
-              </span>
+              <p className="-mt-3 mb-6 flex flex-wrap gap-x-4 gap-y-1 text-xs tabular-nums text-slate-400">
+                <span>{t('words', { count: words })}</span>
+                <span>{t('minRead', { count: readingMins })}</span>
+                <span>{t('blocksLabel', { count: blocks.length })}</span>
+              </p>
+
+              <BlockEditor
+                blocks={blocks}
+                localeViewKey={localeViewKey}
+                localeViewTab={articleLocaleViewTab}
+                bulkTranslating={translatingArticle}
+                onChange={(next) => {
+                  isDirtyRef.current = true;
+                  setBlocks(next);
+                }}
+                onParagraphBlur={() => void runAutoSave()}
+              />
             </div>
-
-            <BlockEditor
-              blocks={blocks}
-              localeViewKey={localeViewKey}
-              localeViewTab={articleLocaleViewTab}
-              bulkTranslating={translatingArticle}
-              onChange={(next) => {
-                isDirtyRef.current = true;
-                setBlocks(next);
-              }}
-              onParagraphBlur={() => void runAutoSave()}
-            />
           </div>
 
           {/* Settings sidebar */}

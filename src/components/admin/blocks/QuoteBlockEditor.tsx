@@ -7,22 +7,10 @@ import type { QuoteBlock } from '@/types';
 import BlockLocaleTabs from '@/components/admin/BlockLocaleTabs';
 import { useLocaleEditTab } from '@/hooks';
 
-const INPUT_CLS =
-  'w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 transition-all';
-
-const QUOTE_ICON_SVG = (
-  <svg
-    className="absolute left-3 top-3 w-4 h-4 text-slate-300 pointer-events-none"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    aria-hidden
-  >
-    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-  </svg>
-);
-
-const QUOTE_BODY_TEXTAREA_CLS =
-  'w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primaryColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-primaryColor/15 min-h-[80px] resize-y transition-all italic';
+const QUOTE_CLS =
+  'w-full resize-none border-0 bg-transparent p-0 text-lg italic leading-8 text-slate-700 placeholder:text-slate-300 focus:outline-none [field-sizing:content] min-h-8';
+const CITATION_CLS =
+  'w-full border-0 bg-transparent p-0 text-sm text-slate-500 placeholder:text-slate-300 focus:outline-none';
 
 export default function QuoteBlockEditor({
   block,
@@ -76,11 +64,11 @@ export default function QuoteBlockEditor({
         bulkTranslating={bulkTranslating}
         generateDisabled={!block.content.trim()}
       />
-      <div className="space-y-2.5">
-        <div className="relative">
-          {QUOTE_ICON_SVG}
+      <div className="space-y-1.5 border-l-[3px] border-primaryColor/60 py-1 pl-4">
+        <div>
           <textarea
-            className={QUOTE_BODY_TEXTAREA_CLS}
+            rows={1}
+            className={QUOTE_CLS}
             placeholder={
               tab === 'original' ? t('placeholder') : te('englishPlaceholder')
             }
@@ -93,7 +81,7 @@ export default function QuoteBlockEditor({
           />
         </div>
         <input
-          className={INPUT_CLS}
+          className={CITATION_CLS}
           placeholder={t('citationPlaceholder')}
           value={
             tab === 'original'

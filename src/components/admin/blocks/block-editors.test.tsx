@@ -149,9 +149,11 @@ describe('block editors', () => {
     expect(onChange).toHaveBeenCalled();
   });
 
-  it('divider renders its label', () => {
+  it('divider is a labelled separator', () => {
     renderAdmin(<DividerBlockEditor />);
-    expect(screen.getByText('Horizontal divider')).toBeInTheDocument();
+    expect(
+      screen.getByRole('separator', { name: 'Horizontal divider' })
+    ).toBeInTheDocument();
   });
 
   it('embed emits onChange', async () => {

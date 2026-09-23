@@ -1,6 +1,9 @@
 'use client';
 
+import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
+import { Languages, Loader2 } from 'lucide-react';
+import { useBlockToolbarSlot } from './block-canvas-context';
 
 export type LocaleEditTab = 'original' | 'english';
 
@@ -25,6 +28,19 @@ export default function BlockLocaleTabs({
   className = '',
 }: Props) {
   const t = useTranslations('admin.blockLocale');
+  const slot = useBlockToolbarSlot();
+
+  if (slot)
+    return createPortal(
+      <CompactLocaleTabs
+        tab={tab}
+        onTabChange={onTabChange}
+        onGenerateEnglish={onGenerateEnglish}
+        generating={generating}
+        disabled={generating || generateDisabled || bulkTranslating}
+      />,
+      slot
+    );
 
   return (
     <div className={`flex flex-wrap items-center gap-2 mb-2 ${className}`}>
@@ -87,6 +103,62 @@ export default function BlockLocaleTabs({
         )}
       </button>
     </div>
+  );
+}
+
+/** The same controls, sized for a block's floating toolbar. */
+function CompactLocaleTabs({
+  tab,
+  onTabChange,
+  onGenerateEnglish,
+  generating,
+  disabled,
+}: {
+  tab: LocaleEditTab;
+  onTabChange: (tab: LocaleEditTab) => void;
+  onGenerateEnglish: () => void | Promise<void>;
+  generating: boolean;
+  disabled: boolean;
+}) {
+  const t = useTranslations('admin.blockLocale');
+  const option = (value: LocaleEditTab, short: string, full: string) => (
+    <button
+      type="button"
+      aria-label={full}
+      aria-pressed={tab === value}
+      title={full}
+      onClick={() => onTabChange(value)}
+      className={`rounded px-1.5 py-0.5 text-[11px] font-semibold tabular-nums transition-colors ${
+        tab === value
+          ? 'bg-slate-900 text-white'
+          : 'text-slate-500 hover:text-slate-900'
+      }`}
+    >
+      {short}
+    </button>
+  );
+  const label = generating ? t('generating') : t('generateEnglish');
+  return (
+    <span className="flex items-center gap-0.5">
+      <span className="flex items-center gap-0.5 rounded-md bg-slate-100 p-0.5">
+        {option('original', t('originalShort'), t('original'))}
+        {option('english', t('englishShort'), t('english'))}
+      </span>
+      <button
+        type="button"
+        aria-label={label}
+        title={label}
+        disabled={disabled}
+        onClick={() => void onGenerateEnglish()}
+        className="inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-primaryColor disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        {generating ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+        ) : (
+          <Languages className="h-3.5 w-3.5" aria-hidden />
+        )}
+      </button>
+    </span>
   );
 }
 

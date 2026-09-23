@@ -138,7 +138,9 @@
     "english": "English",
     "generateEnglish": "Generate English",
     "generating": "Generating…",
-    "englishPlaceholder": "English text…"
+    "englishPlaceholder": "English text…",
+    "originalShort": "JA",
+    "englishShort": "EN"
   },
   "meta": {
     "publishing": "Publishing",
@@ -196,7 +198,6 @@
     "moveDown": "Move down",
     "removeBlock": "Remove block",
     "noBlocksTitle": "No blocks yet",
-    "noBlocksHint": "Add your first content block below",
     "addBlock": "Add block",
     "types": {
       "heading": {
@@ -239,7 +240,9 @@
         "label": "Table",
         "description": "Rows and columns of data"
       }
-    }
+    },
+    "searchBlocks": "Search blocks",
+    "noMatch": "No matching blocks"
   },
   "paragraph": {
     "placeholder": "Write paragraph text…",
@@ -287,7 +290,8 @@
     }
   },
   "heading": {
-    "placeholder": "Heading text…"
+    "placeholder": "Heading text…",
+    "level": "Heading level"
   },
   "list": {
     "bullet": "• Bullet",
