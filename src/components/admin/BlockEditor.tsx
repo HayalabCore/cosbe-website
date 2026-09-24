@@ -413,8 +413,12 @@ function FormatBar({
   enabled,
   barRef,
   onLeave,
+  label,
+  hidden,
   children,
 }: {
+  label: string;
+  hidden: boolean;
   editor: Editor | null;
   enabled: boolean;
   barRef: RefObject<HTMLDivElement | null>;
@@ -432,23 +436,33 @@ function FormatBar({
 
   const live = enabled && editor && !editor.isDestroyed ? editor : null;
   return (
+    // Floats at the bottom of the writing area, centred between the admin
+    // sidebar (lg) and the post settings panel (xl), like the posts bulk bar.
     <div
-      ref={barRef}
-      onBlur={(e) => {
-        const next = e.relatedTarget as Node | null;
-        if (e.currentTarget.contains(next)) return;
-        if (editor && !editor.isDestroyed && editor.view.dom.contains(next))
-          return;
-        onLeave();
-      }}
-      className="sticky top-14 z-20 -mx-3 mb-6 flex items-center gap-2 rounded-xl border border-slate-200 bg-white/95 px-2 py-1 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80"
+      hidden={hidden}
+      className="pointer-events-none fixed inset-x-0 bottom-6 z-30 flex justify-center px-4 lg:left-56 xl:right-72"
     >
-      <RichToolbar
-        editor={live}
-        className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto [scrollbar-width:none]"
-      />
-      <span className="h-5 w-px shrink-0 bg-slate-200" aria-hidden />
-      {children}
+      <div
+        ref={barRef}
+        role="toolbar"
+        aria-label={label}
+        onBlur={(e) => {
+          const next = e.relatedTarget as Node | null;
+          if (e.currentTarget.contains(next)) return;
+          if (editor && !editor.isDestroyed && editor.view.dom.contains(next))
+            return;
+          onLeave();
+        }}
+        className="pointer-events-auto flex max-w-full items-center gap-2 rounded-2xl bg-slate-900 p-1.5 pl-2.5 shadow-2xl ring-1 ring-black/10"
+      >
+        <RichToolbar
+          editor={live}
+          tone="dark"
+          className="flex min-w-0 items-center gap-0.5 overflow-x-auto [scrollbar-width:none]"
+        />
+        <span className="h-5 w-px shrink-0 bg-white/15" aria-hidden />
+        {children}
+      </div>
     </div>
   );
 }
@@ -746,6 +760,20 @@ export default function BlockEditor({
     };
   }, [formatEditor]);
 
+  // The floating bar belongs to the article: hide it once the document has
+  // scrolled away (below xl the post settings follow it on the same page).
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(true);
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting)
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, {
@@ -796,97 +824,101 @@ export default function BlockEditor({
 
   return (
     <FormatBarContext.Provider value={formatApi}>
-      <FormatBar
-        editor={formatEditor}
-        enabled={formatOn}
-        barRef={barRef}
-        onLeave={() => setFormatOn(false)}
-      >
-        <InsertButton
-          menuKey="bar"
-          at={barInsertAt}
-          open={menu}
-          setOpen={setMenu}
-          onInsert={insertAt}
-          blockMeta={blockMeta}
-          className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-slate-900 px-2.5 text-xs font-semibold text-white transition-colors hover:bg-slate-700"
+      <div ref={canvasRef}>
+        <FormatBar
+          hidden={!inView}
+          editor={formatEditor}
+          enabled={formatOn}
+          barRef={barRef}
+          onLeave={() => setFormatOn(false)}
+          label={t('formatting')}
         >
-          <Plus className="h-3.5 w-3.5" aria-hidden />
-          {t('insertBlock')}
-        </InsertButton>
-      </FormatBar>
-
-      {blocks.length === 0 ? (
-        <div className="flex flex-col items-center rounded-xl border border-dashed border-slate-300 py-14 text-center">
-          <p className="mb-4 text-sm font-medium text-slate-500">
-            {t('noBlocksTitle')}
-          </p>
           <InsertButton
-            menuKey="empty"
-            at={0}
+            menuKey="bar"
+            at={barInsertAt}
             open={menu}
             setOpen={setMenu}
             onInsert={insertAt}
             blockMeta={blockMeta}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primaryColor px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primaryHover"
+            className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-primaryColor px-3 text-xs font-semibold text-white transition-colors hover:bg-primaryHover"
+          >
+            <Plus className="h-3.5 w-3.5" aria-hidden />
+            {t('insertBlock')}
+          </InsertButton>
+        </FormatBar>
+
+        {blocks.length === 0 ? (
+          <div className="flex flex-col items-center rounded-xl border border-dashed border-slate-300 py-14 text-center">
+            <p className="mb-4 text-sm font-medium text-slate-500">
+              {t('noBlocksTitle')}
+            </p>
+            <InsertButton
+              menuKey="empty"
+              at={0}
+              open={menu}
+              setOpen={setMenu}
+              onInsert={insertAt}
+              blockMeta={blockMeta}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primaryColor px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primaryHover"
+            >
+              <Plus className="h-4 w-4" aria-hidden />
+              {t('addBlock')}
+            </InsertButton>
+          </div>
+        ) : (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            modifiers={[verticalOnly]}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={blocks.map((b) => b.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-1.5">
+                {blocks.map((block, i) => (
+                  <SortableBlockRow
+                    key={block.id}
+                    block={block}
+                    index={i}
+                    count={blocks.length}
+                    menu={menu}
+                    setMenu={setMenu}
+                    updateAt={updateAt}
+                    removeAt={removeAt}
+                    move={move}
+                    insertAt={insertAt}
+                    onFocusBlock={(id) => {
+                      if (id !== focusedId) setFocusedId(id);
+                    }}
+                    blockMeta={blockMeta}
+                    onParagraphBlur={onParagraphBlur}
+                    localeViewKey={localeViewKey}
+                    bulkTranslating={bulkTranslating}
+                    localeViewTab={localeViewTab}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        )}
+
+        {blocks.length > 0 && (
+          <InsertButton
+            menuKey="end"
+            at={blocks.length}
+            open={menu}
+            setOpen={setMenu}
+            onInsert={insertAt}
+            blockMeta={blockMeta}
+            className="mb-16 mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-700"
           >
             <Plus className="h-4 w-4" aria-hidden />
             {t('addBlock')}
           </InsertButton>
-        </div>
-      ) : (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          modifiers={[verticalOnly]}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={blocks.map((b) => b.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="space-y-1.5">
-              {blocks.map((block, i) => (
-                <SortableBlockRow
-                  key={block.id}
-                  block={block}
-                  index={i}
-                  count={blocks.length}
-                  menu={menu}
-                  setMenu={setMenu}
-                  updateAt={updateAt}
-                  removeAt={removeAt}
-                  move={move}
-                  insertAt={insertAt}
-                  onFocusBlock={(id) => {
-                    if (id !== focusedId) setFocusedId(id);
-                  }}
-                  blockMeta={blockMeta}
-                  onParagraphBlur={onParagraphBlur}
-                  localeViewKey={localeViewKey}
-                  bulkTranslating={bulkTranslating}
-                  localeViewTab={localeViewTab}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
-      )}
-
-      {blocks.length > 0 && (
-        <InsertButton
-          menuKey="end"
-          at={blocks.length}
-          open={menu}
-          setOpen={setMenu}
-          onInsert={insertAt}
-          blockMeta={blockMeta}
-          className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-700"
-        >
-          <Plus className="h-4 w-4" aria-hidden />
-          {t('addBlock')}
-        </InsertButton>
-      )}
+        )}
+      </div>
     </FormatBarContext.Provider>
   );
 }

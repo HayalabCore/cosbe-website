@@ -64,7 +64,9 @@ const emptyCaseStudyMeta: CaseStudyMeta = {
   aiModels: [],
 };
 
-/** Autosave interval when the article has unsaved edits (idle saves are no-ops). */
+/** Autosave runs this long after the last edit to any field or block. */
+export const AUTOSAVE_DELAY_MS = 2_000;
+/** While edits keep coming, a save still happens at least this often. */
 export const AUTOSAVE_INTERVAL_MS = 10_000;
 
 function wordCount(blocks: ContentBlock[]): number {
@@ -118,6 +120,10 @@ export default function PostEditor({
   const { setViewArticleHref } = useAdminViewArticleLink();
   const router = useRouter();
   const isDirtyRef = useRef(false);
+  /** When the oldest unsaved edit was made; caps how long saving can wait. */
+  const dirtySinceRef = useRef<number | null>(null);
+  /** Bumped to schedule another autosave for edits made during a save. */
+  const [autosaveTick, setAutosaveTick] = useState(0);
   const autoSavingRef = useRef(false);
   const savingRef = useRef(false);
   const isEditing = Boolean(initialArticle);
@@ -298,6 +304,8 @@ export default function PostEditor({
       return;
     }
     autoSavingRef.current = true;
+    dirtySinceRef.current = null;
+    let failed = false;
     // Cleared now, not after the request: anything typed while it is in
     // flight marks the post dirty again and is picked up by the next save.
     isDirtyRef.current = false;
@@ -329,6 +337,7 @@ export default function PostEditor({
       });
       const result = await updateArticleAction(id, payload);
       if (!result.ok) {
+        failed = true;
         isDirtyRef.current = true;
         console.error('Autosave failed', result.error);
         setSaveNotice(
@@ -342,12 +351,16 @@ export default function PostEditor({
       setSaveNotice('auto');
       setTimeout(() => setSaveNotice(null), 2000);
     } catch (e) {
+      failed = true;
       isDirtyRef.current = true;
       console.error('Autosave failed', e);
       setSaveNotice('auto-error');
     } finally {
       autoSavingRef.current = false;
       setAutoSavingUi(false);
+      // Edits made while this save was in flight get their own save. A
+      // failure waits for the next edit instead of retrying in a loop.
+      if (!failed && isDirtyRef.current) setAutosaveTick((n) => n + 1);
     }
   }, [
     persistedId,
@@ -371,17 +384,48 @@ export default function PostEditor({
     t,
   ]);
 
+  // Every edit changes runAutoSave (it closes over the post), so this effect
+  // re-runs on each one: save shortly after the last edit, and at least every
+  // AUTOSAVE_INTERVAL_MS while edits keep coming. Covers every field and
+  // block, not only paragraphs (which also save when they lose focus).
   useEffect(() => {
-    if (!persistedId) return;
-    const timer = window.setInterval(
-      () => void runAutoSave(),
-      AUTOSAVE_INTERVAL_MS
+    if (!persistedId || !isDirtyRef.current) return;
+    dirtySinceRef.current ??= Date.now();
+    const deadline = dirtySinceRef.current + AUTOSAVE_INTERVAL_MS;
+    const wait = Math.max(
+      0,
+      Math.min(AUTOSAVE_DELAY_MS, deadline - Date.now())
     );
-    return () => window.clearInterval(timer);
-  }, [persistedId, runAutoSave]);
+    const timer = window.setTimeout(() => void runAutoSave(), wait);
+    return () => window.clearTimeout(timer);
+  }, [persistedId, runAutoSave, autosaveTick]);
+
+  // Leaving the tab or the page saves at once; closing with a save still
+  // pending asks first.
+  const runAutoSaveRef = useRef(runAutoSave);
+  useEffect(() => {
+    runAutoSaveRef.current = runAutoSave;
+  }, [runAutoSave]);
+  useEffect(() => {
+    const onHide = () => {
+      if (document.visibilityState === 'hidden') void runAutoSaveRef.current();
+    };
+    const onUnload = (e: BeforeUnloadEvent) => {
+      if (isDirtyRef.current || autoSavingRef.current || savingRef.current)
+        e.preventDefault();
+    };
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('beforeunload', onUnload);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('beforeunload', onUnload);
+    };
+  }, []);
 
   async function save(publish: boolean) {
     savingRef.current = true;
+    dirtySinceRef.current = null;
+    let saved = false;
     setSavingKind(publish ? 'publish' : 'draft');
     setSaveNotice(null);
     try {
@@ -442,6 +486,7 @@ export default function PostEditor({
       } else if (st !== 'published') {
         setPublishedAt(null);
       }
+      saved = true;
       setSaveNotice('manual');
       setTimeout(() => setSaveNotice(null), 2000);
       router.refresh();
@@ -451,6 +496,7 @@ export default function PostEditor({
     } finally {
       savingRef.current = false;
       setSavingKind(null);
+      if (saved && isDirtyRef.current) setAutosaveTick((n) => n + 1);
     }
   }
 
@@ -631,7 +677,8 @@ export default function PostEditor({
           </div>
         </div>
       ) : (
-        <div className="flex flex-1 items-start min-w-0">
+        <div className="flex flex-1 flex-col xl:flex-row xl:items-start min-w-0">
+          {/* Below xl the settings stack under the article instead of beside it. */}
           {/* Content area: the article on a reading-width sheet whose side
               padding holds the block gutter. */}
           <div className="flex-1 min-w-0 w-full px-3 md:px-6 py-6 lg:py-8">
@@ -704,7 +751,7 @@ export default function PostEditor({
           </aside>
 
           {/* Mobile: settings below blocks */}
-          <div className="xl:hidden w-full px-4 pb-8 mt-4 border-t border-slate-100 pt-6">
+          <div className="xl:hidden w-full px-3 md:px-6 pb-8">
             <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
               <PostMetaForm
                 title={title}

@@ -10,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 import { renderAdmin } from '@/test/render-admin';
 import { listItem } from '@/test/fixtures/articles';
 import type { Article } from '@/types';
-import { AUTOSAVE_INTERVAL_MS } from './PostEditor';
+import { AUTOSAVE_DELAY_MS, AUTOSAVE_INTERVAL_MS } from './PostEditor';
 
 const replace = vi.fn();
 const refresh = vi.fn();
@@ -292,6 +292,62 @@ describe('PostEditor', () => {
     expect(updateArticleAction).toHaveBeenCalled();
     expect(window.alert).not.toHaveBeenCalled();
     expect(screen.getByText('Autosave failed')).toBeInTheDocument();
+  });
+
+  it('autosaves a title edit shortly after typing stops', async () => {
+    vi.useFakeTimers();
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'T' })} />
+    );
+    fireEvent.change(screen.getByDisplayValue('T'), {
+      target: { value: 'Tx' },
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS - 100);
+    });
+    expect(updateArticleAction).not.toHaveBeenCalled();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+    expect(updateArticleAction).toHaveBeenCalledTimes(1);
+    expect(updateArticleAction.mock.calls[0][1]).toMatchObject({
+      title: 'Tx',
+    });
+  });
+
+  it('still saves regularly while edits keep coming', async () => {
+    vi.useFakeTimers();
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'T' })} />
+    );
+    let value = 'T';
+    // An edit every second never leaves a quiet gap for the short delay.
+    for (let i = 0; i < 11; i++) {
+      value += 'x';
+      fireEvent.change(screen.getByDisplayValue(value.slice(0, -1)), {
+        target: { value },
+      });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1_000);
+      });
+    }
+    // A pure debounce would not have saved yet; the 10s cap did.
+    expect(updateArticleAction).toHaveBeenCalled();
+  });
+
+  it('does not retry a failed autosave in a loop', async () => {
+    vi.useFakeTimers();
+    updateArticleAction.mockRejectedValue(new Error('down'));
+    renderAdmin(
+      <PostEditor initialArticle={article({ id: 'art-1', title: 'T' })} />
+    );
+    fireEvent.change(screen.getByDisplayValue('T'), {
+      target: { value: 'Tx' },
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(AUTOSAVE_INTERVAL_MS * 3);
+    });
+    expect(updateArticleAction).toHaveBeenCalledTimes(1);
   });
 
   it('autosaves edits typed while an autosave was in flight', async () => {

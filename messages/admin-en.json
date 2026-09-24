@@ -242,7 +242,8 @@
       }
     },
     "searchBlocks": "Search blocks",
-    "noMatch": "No matching blocks"
+    "noMatch": "No matching blocks",
+    "formatting": "Formatting"
   },
   "paragraph": {
     "placeholder": "Write paragraph text…",

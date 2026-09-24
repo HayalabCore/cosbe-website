@@ -1,6 +1,13 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import type { Editor } from '@tiptap/core';
 import { useTranslations } from 'next-intl';
@@ -74,6 +81,27 @@ const EDITOR_CANVAS_CLASS = EDITOR_CHROME_CLASS.replace(
   'prose max-w-none focus:outline-none min-h-[1.75rem] py-1 text-[15px] leading-7 prose-p:my-2 first:[&>*]:mt-0 last:[&>*]:mb-0'
 );
 
+/** Light inside a paragraph box; dark on the canvas's floating bar. */
+type Tone = 'light' | 'dark';
+const ToneContext = createContext<Tone>('light');
+
+const TONE = {
+  light: {
+    idle: 'text-slate-500 hover:bg-slate-100 hover:text-slate-800',
+    active: 'bg-primaryColor/15 text-primaryColor',
+    sep: 'bg-slate-200',
+    select:
+      'border-slate-200 bg-white text-slate-600 focus:border-primaryColor',
+  },
+  dark: {
+    idle: 'text-slate-300 hover:bg-white/10 hover:text-white',
+    active: 'bg-primaryColor text-white',
+    sep: 'bg-white/15',
+    select:
+      'border-white/15 bg-white/10 text-slate-100 focus:border-primaryColor [&>option]:text-slate-900',
+  },
+} as const;
+
 function Btn({
   onClick,
   active,
@@ -87,6 +115,7 @@ function Btn({
   title: string;
   children: React.ReactNode;
 }) {
+  const tone = TONE[useContext(ToneContext)];
   return (
     <button
       type="button"
@@ -98,9 +127,7 @@ function Btn({
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors shrink-0 ${
-        active
-          ? 'bg-primaryColor/15 text-primaryColor'
-          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+        active ? tone.active : tone.idle
       } disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent`}
     >
       {children}
@@ -109,11 +136,12 @@ function Btn({
 }
 
 function Sep() {
-  return <div className="w-px h-4 bg-slate-200 mx-1 shrink-0" aria-hidden />;
+  const tone = TONE[useContext(ToneContext)];
+  return <div className={`w-px h-4 mx-1 shrink-0 ${tone.sep}`} aria-hidden />;
 }
 
-const selectCls =
-  'h-7 max-w-[5.5rem] rounded-md border border-slate-200 bg-white px-1.5 text-[11px] text-slate-600 focus:outline-none focus:border-primaryColor cursor-pointer shrink-0 disabled:cursor-not-allowed disabled:opacity-40';
+const SELECT_CLS =
+  'h-7 max-w-[5.5rem] rounded-md border px-1.5 text-[11px] focus:outline-none cursor-pointer shrink-0 disabled:cursor-not-allowed disabled:opacity-40';
 
 type Chain = ReturnType<Editor['chain']>;
 
@@ -125,10 +153,13 @@ type Chain = ReturnType<Editor['chain']>;
 export function RichToolbar({
   editor,
   className = 'flex flex-wrap items-center gap-0.5 border-b border-slate-200 bg-slate-50/80 rounded-t-lg px-2 py-1.5',
+  tone = 'light',
 }: {
   editor: Editor | null;
   className?: string;
+  tone?: Tone;
 }) {
+  const selectCls = `${SELECT_CLS} ${TONE[tone].select}`;
   const tt = useTranslations('admin.paragraph.toolbar');
   const tc = useTranslations('admin.paragraph.textColors');
   const th = useTranslations('admin.paragraph.highlights');
@@ -167,229 +198,229 @@ export function RichToolbar({
     (editor?.getAttributes('highlight').color as string | undefined) ?? '';
 
   return (
-    <div className={className}>
-      <Btn
-        title={tt('bold')}
-        disabled={off}
-        active={is('bold')}
-        onClick={() => run((c) => c.toggleBold())}
-      >
-        <Bold size={14} strokeWidth={2.5} />
-      </Btn>
-      <Btn
-        title={tt('italic')}
-        disabled={off}
-        active={is('italic')}
-        onClick={() => run((c) => c.toggleItalic())}
-      >
-        <Italic size={14} strokeWidth={2.5} />
-      </Btn>
-      <Btn
-        title={tt('underline')}
-        disabled={off}
-        active={is('underline')}
-        onClick={() => run((c) => c.toggleUnderline())}
-      >
-        <UnderlineIcon size={14} strokeWidth={2.5} />
-      </Btn>
-      <Btn
-        title={tt('strike')}
-        disabled={off}
-        active={is('strike')}
-        onClick={() => run((c) => c.toggleStrike())}
-      >
-        <Strikethrough size={14} strokeWidth={2.5} />
-      </Btn>
+    <ToneContext.Provider value={tone}>
+      <div className={className}>
+        <Btn
+          title={tt('bold')}
+          disabled={off}
+          active={is('bold')}
+          onClick={() => run((c) => c.toggleBold())}
+        >
+          <Bold size={14} strokeWidth={2.5} />
+        </Btn>
+        <Btn
+          title={tt('italic')}
+          disabled={off}
+          active={is('italic')}
+          onClick={() => run((c) => c.toggleItalic())}
+        >
+          <Italic size={14} strokeWidth={2.5} />
+        </Btn>
+        <Btn
+          title={tt('underline')}
+          disabled={off}
+          active={is('underline')}
+          onClick={() => run((c) => c.toggleUnderline())}
+        >
+          <UnderlineIcon size={14} strokeWidth={2.5} />
+        </Btn>
+        <Btn
+          title={tt('strike')}
+          disabled={off}
+          active={is('strike')}
+          onClick={() => run((c) => c.toggleStrike())}
+        >
+          <Strikethrough size={14} strokeWidth={2.5} />
+        </Btn>
 
-      <Sep />
+        <Sep />
 
-      <label
-        className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors shrink-0 text-slate-500 ${
-          off
-            ? 'cursor-not-allowed opacity-30'
-            : 'cursor-pointer hover:bg-slate-100 hover:text-slate-800'
-        }`}
-        title={tt('customTextColor')}
-      >
-        <div className="flex flex-col items-center gap-[2px]">
-          <Baseline size={12} strokeWidth={2} />
-          <span
-            className="h-[3px] w-[14px] rounded-full"
-            style={{ backgroundColor: currentColor || '#374151' }}
+        <label
+          className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors shrink-0 ${TONE[tone].idle} ${
+            off ? 'cursor-not-allowed opacity-30' : 'cursor-pointer'
+          }`}
+          title={tt('customTextColor')}
+        >
+          <div className="flex flex-col items-center gap-[2px]">
+            <Baseline size={12} strokeWidth={2} />
+            <span
+              className="h-[3px] w-[14px] rounded-full"
+              style={{ backgroundColor: currentColor || '#374151' }}
+            />
+          </div>
+          <input
+            type="color"
+            className="sr-only"
+            disabled={off}
+            value={
+              currentColor && /^#/.test(currentColor) ? currentColor : '#374151'
+            }
+            onInput={(e) =>
+              run((c) => c.setColor((e.target as HTMLInputElement).value))
+            }
           />
-        </div>
-        <input
-          type="color"
-          className="sr-only"
+        </label>
+        <select
+          title={tt('textColorPreset')}
+          aria-label={tt('textColorPreset')}
+          className={selectCls}
           disabled={off}
           value={
-            currentColor && /^#/.test(currentColor) ? currentColor : '#374151'
+            TEXT_COLOR_KEYS.some((c) => c.value === currentColor)
+              ? currentColor
+              : '__custom__'
           }
-          onInput={(e) =>
-            run((c) => c.setColor((e.target as HTMLInputElement).value))
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v === '__custom__') return;
+            if (v === '') run((c) => c.unsetColor());
+            else run((c) => c.setColor(v));
+          }}
+        >
+          <option value="__custom__">{t('colorPicker')}</option>
+          {TEXT_COLOR_KEYS.map((c) => (
+            <option key={c.key} value={c.value}>
+              {tc(c.key)}
+            </option>
+          ))}
+        </select>
+
+        <Sep />
+
+        <Btn
+          title={tt('toggleHighlight')}
+          disabled={off}
+          active={is('highlight')}
+          onClick={() =>
+            run((c) =>
+              is('highlight')
+                ? c.unsetHighlight()
+                : c.setHighlight({ color: '#fef08a' })
+            )
           }
-        />
-      </label>
-      <select
-        title={tt('textColorPreset')}
-        aria-label={tt('textColorPreset')}
-        className={selectCls}
-        disabled={off}
-        value={
-          TEXT_COLOR_KEYS.some((c) => c.value === currentColor)
-            ? currentColor
-            : '__custom__'
-        }
-        onChange={(e) => {
-          const v = e.target.value;
-          if (v === '__custom__') return;
-          if (v === '') run((c) => c.unsetColor());
-          else run((c) => c.setColor(v));
-        }}
-      >
-        <option value="__custom__">{t('colorPicker')}</option>
-        {TEXT_COLOR_KEYS.map((c) => (
-          <option key={c.key} value={c.value}>
-            {tc(c.key)}
-          </option>
-        ))}
-      </select>
+        >
+          <Highlighter
+            size={14}
+            strokeWidth={2}
+            style={{ color: highlightColor || undefined }}
+          />
+        </Btn>
+        <select
+          title={tt('highlightColor')}
+          aria-label={tt('highlightColor')}
+          className={selectCls}
+          disabled={off}
+          value={
+            HIGHLIGHT_KEYS.some((h) => h.value === highlightColor)
+              ? highlightColor
+              : '__custom__'
+          }
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v === '__custom__') return;
+            if (v === '') run((c) => c.unsetHighlight());
+            else run((c) => c.setHighlight({ color: v }));
+          }}
+        >
+          <option value="__custom__">{t('highlightPicker')}</option>
+          {HIGHLIGHT_KEYS.map((h) => (
+            <option key={h.key} value={h.value}>
+              {th(h.key)}
+            </option>
+          ))}
+        </select>
 
-      <Sep />
+        <Sep />
 
-      <Btn
-        title={tt('toggleHighlight')}
-        disabled={off}
-        active={is('highlight')}
-        onClick={() =>
-          run((c) =>
-            is('highlight')
-              ? c.unsetHighlight()
-              : c.setHighlight({ color: '#fef08a' })
-          )
-        }
-      >
-        <Highlighter
-          size={14}
-          strokeWidth={2}
-          style={{ color: highlightColor || undefined }}
-        />
-      </Btn>
-      <select
-        title={tt('highlightColor')}
-        aria-label={tt('highlightColor')}
-        className={selectCls}
-        disabled={off}
-        value={
-          HIGHLIGHT_KEYS.some((h) => h.value === highlightColor)
-            ? highlightColor
-            : '__custom__'
-        }
-        onChange={(e) => {
-          const v = e.target.value;
-          if (v === '__custom__') return;
-          if (v === '') run((c) => c.unsetHighlight());
-          else run((c) => c.setHighlight({ color: v }));
-        }}
-      >
-        <option value="__custom__">{t('highlightPicker')}</option>
-        {HIGHLIGHT_KEYS.map((h) => (
-          <option key={h.key} value={h.value}>
-            {th(h.key)}
-          </option>
-        ))}
-      </select>
+        <Btn
+          title={tt('alignLeft')}
+          disabled={off}
+          active={is({ textAlign: 'left' })}
+          onClick={() => run((c) => c.setTextAlign('left'))}
+        >
+          <AlignLeft size={14} strokeWidth={2} />
+        </Btn>
+        <Btn
+          title={tt('alignCenter')}
+          disabled={off}
+          active={is({ textAlign: 'center' })}
+          onClick={() => run((c) => c.setTextAlign('center'))}
+        >
+          <AlignCenter size={14} strokeWidth={2} />
+        </Btn>
+        <Btn
+          title={tt('alignRight')}
+          disabled={off}
+          active={is({ textAlign: 'right' })}
+          onClick={() => run((c) => c.setTextAlign('right'))}
+        >
+          <AlignRight size={14} strokeWidth={2} />
+        </Btn>
+        <Btn
+          title={tt('justify')}
+          disabled={off}
+          active={is({ textAlign: 'justify' })}
+          onClick={() => run((c) => c.setTextAlign('justify'))}
+        >
+          <AlignJustify size={14} strokeWidth={2} />
+        </Btn>
 
-      <Sep />
+        <Sep />
 
-      <Btn
-        title={tt('alignLeft')}
-        disabled={off}
-        active={is({ textAlign: 'left' })}
-        onClick={() => run((c) => c.setTextAlign('left'))}
-      >
-        <AlignLeft size={14} strokeWidth={2} />
-      </Btn>
-      <Btn
-        title={tt('alignCenter')}
-        disabled={off}
-        active={is({ textAlign: 'center' })}
-        onClick={() => run((c) => c.setTextAlign('center'))}
-      >
-        <AlignCenter size={14} strokeWidth={2} />
-      </Btn>
-      <Btn
-        title={tt('alignRight')}
-        disabled={off}
-        active={is({ textAlign: 'right' })}
-        onClick={() => run((c) => c.setTextAlign('right'))}
-      >
-        <AlignRight size={14} strokeWidth={2} />
-      </Btn>
-      <Btn
-        title={tt('justify')}
-        disabled={off}
-        active={is({ textAlign: 'justify' })}
-        onClick={() => run((c) => c.setTextAlign('justify'))}
-      >
-        <AlignJustify size={14} strokeWidth={2} />
-      </Btn>
+        <Btn
+          title={tt('bulletList')}
+          disabled={off}
+          active={is('bulletList')}
+          onClick={() => run((c) => c.toggleBulletList())}
+        >
+          <List size={14} strokeWidth={2} />
+        </Btn>
+        <Btn
+          title={tt('numberedList')}
+          disabled={off}
+          active={is('orderedList')}
+          onClick={() => run((c) => c.toggleOrderedList())}
+        >
+          <ListOrdered size={14} strokeWidth={2} />
+        </Btn>
+        <Btn
+          title={tt('blockquote')}
+          disabled={off}
+          active={is('blockquote')}
+          onClick={() => run((c) => c.toggleBlockquote())}
+        >
+          <TextQuote size={14} strokeWidth={2} />
+        </Btn>
 
-      <Sep />
+        <Sep />
 
-      <Btn
-        title={tt('bulletList')}
-        disabled={off}
-        active={is('bulletList')}
-        onClick={() => run((c) => c.toggleBulletList())}
-      >
-        <List size={14} strokeWidth={2} />
-      </Btn>
-      <Btn
-        title={tt('numberedList')}
-        disabled={off}
-        active={is('orderedList')}
-        onClick={() => run((c) => c.toggleOrderedList())}
-      >
-        <ListOrdered size={14} strokeWidth={2} />
-      </Btn>
-      <Btn
-        title={tt('blockquote')}
-        disabled={off}
-        active={is('blockquote')}
-        onClick={() => run((c) => c.toggleBlockquote())}
-      >
-        <TextQuote size={14} strokeWidth={2} />
-      </Btn>
+        <Btn
+          title={tt('addLink')}
+          disabled={off}
+          active={is('link')}
+          onClick={setLink}
+        >
+          <LinkIcon size={14} strokeWidth={2} />
+        </Btn>
+        <Btn
+          title={tt('removeLink')}
+          disabled={off || !is('link')}
+          onClick={() => run((c) => c.unsetLink())}
+        >
+          <Link2Off size={14} strokeWidth={2} />
+        </Btn>
 
-      <Sep />
+        <Sep />
 
-      <Btn
-        title={tt('addLink')}
-        disabled={off}
-        active={is('link')}
-        onClick={setLink}
-      >
-        <LinkIcon size={14} strokeWidth={2} />
-      </Btn>
-      <Btn
-        title={tt('removeLink')}
-        disabled={off || !is('link')}
-        onClick={() => run((c) => c.unsetLink())}
-      >
-        <Link2Off size={14} strokeWidth={2} />
-      </Btn>
-
-      <Sep />
-
-      <Btn
-        title={tt('clearFormatting')}
-        disabled={off}
-        onClick={() => run((c) => c.unsetAllMarks())}
-      >
-        <RemoveFormatting size={14} strokeWidth={2} />
-      </Btn>
-    </div>
+        <Btn
+          title={tt('clearFormatting')}
+          disabled={off}
+          onClick={() => run((c) => c.unsetAllMarks())}
+        >
+          <RemoveFormatting size={14} strokeWidth={2} />
+        </Btn>
+      </div>
+    </ToneContext.Provider>
   );
 }
 
