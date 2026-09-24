@@ -16,6 +16,23 @@ const intlMiddleware = createMiddleware(routing);
 //
 // Deliberately a blocklist, not an allowlist: if these headers are ever missing
 // or renamed, the fallback is "indexable", which is the safe direction to fail.
+const CANONICAL_HOST = 'cosbe.inc';
+
+// www.cosbe.inc must 301 to the apex. Firebase's custom-domain redirect currently
+// answers first with a 302; this still covers any request that reaches the app.
+function wwwRedirect(request: NextRequest): NextResponse | null {
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
+  if (!host) return null;
+  const hostname = host.split(',')[0].trim().split(':')[0].toLowerCase();
+  if (hostname !== `www.${CANONICAL_HOST}`) return null;
+
+  const url = request.nextUrl.clone();
+  url.protocol = 'https:';
+  url.hostname = CANONICAL_HOST;
+  url.port = '';
+  return NextResponse.redirect(url, 301);
+}
+
 function isPreviewHost(request: NextRequest): boolean {
   const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
   if (!host) return false;
@@ -25,6 +42,9 @@ function isPreviewHost(request: NextRequest): boolean {
 }
 
 export default async function proxy(request: NextRequest) {
+  const redirect = wwwRedirect(request);
+  if (redirect) return redirect;
+
   const response = request.nextUrl.pathname.startsWith('/admin')
     ? updateSession(request, NextResponse.next({ request }))
     : intlMiddleware(request);

@@ -10,6 +10,12 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://cosbe.inc'),
+  alternates: {
+    // Relative to the current path, so every page canonicalizes to its own
+    // non-www URL (https://cosbe.inc/ja, /ja/company, and so on).
+    canonical: './',
+  },
   title: {
     default: 'CosBE - AI Transformation Consulting',
     template: '%s | CosBE',
