@@ -36,9 +36,18 @@ vi.mock('@/ai/models', async (importOriginal) => {
 
 import { prisma } from '@/lib/prisma';
 import { EMBEDDING_DIMENSIONS } from '@/ai/models';
-import { createSource, replaceChunks, setSourceStatus } from '../sources/sources-repository';
+import {
+  createSource,
+  replaceChunks,
+  setSourceStatus,
+} from '../sources/sources-repository';
 import { linkSource } from '../sources/projects-repository';
-import { createPiece, getPiece, readPiece, updatePiece } from '../pieces/pieces-repository';
+import {
+  createPiece,
+  getPiece,
+  readPiece,
+  updatePiece,
+} from '../pieces/pieces-repository';
 import { createRun, getRun } from '../runs/runs-repository';
 import { handleRunJob } from '../runs/run-handler';
 import { RUN_EXECUTORS } from '.';
@@ -62,7 +71,12 @@ async function run(
   kind: 'outline' | 'write' | 'translate' | 'rewrite_section',
   input = {}
 ) {
-  const r = await createRun(prisma, { kind, createdById: adminId, pieceId, input });
+  const r = await createRun(prisma, {
+    kind,
+    createdById: adminId,
+    pieceId,
+    input,
+  });
   await handleRunJob(job(kind, r.id), RUN_EXECUTORS);
   return getRun(r.id);
 }
@@ -71,7 +85,9 @@ beforeAll(async () => {
   await prisma.adminUser.create({
     data: { id: adminId, email: `gen-${adminId}@test.local` },
   });
-  const role = await prisma.role.findUniqueOrThrow({ where: { key: 'super-admin' } });
+  const role = await prisma.role.findUniqueOrThrow({
+    where: { key: 'super-admin' },
+  });
   await prisma.userRole.create({ data: { userId: adminId, roleId: role.id } });
   const project = await prisma.studioProject.create({
     data: { name: 'gen', createdById: adminId },
@@ -109,7 +125,13 @@ beforeAll(async () => {
   await updatePiece(pieceId, {
     stage: 'brief',
     selection: { sourceIds: [source.id], chapters: {} },
-    brief: { goal: '導入手順', audience: '', keywords: [], tone: '', targetLength: 'auto' },
+    brief: {
+      goal: '導入手順',
+      audience: '',
+      keywords: [],
+      tone: '',
+      targetLength: 'auto',
+    },
   });
 });
 
@@ -144,7 +166,13 @@ describe('generation runs', () => {
         blocks: [
           {
             type: 'paragraph',
-            sentences: [{ text: '課題を一つに絞ります。', cite: ['c1'], connective: false }],
+            sentences: [
+              {
+                text: '課題を一つに絞ります。',
+                cite: ['c1'],
+                connective: false,
+              },
+            ],
           },
         ],
       },
@@ -161,7 +189,10 @@ describe('generation runs', () => {
     expect(piece.title).toBe('AI導入の始め方');
 
     queue.push(
-      { heading: 'The problem', blocks: [{ type: 'paragraph', text: 'Narrow it down.' }] },
+      {
+        heading: 'The problem',
+        blocks: [{ type: 'paragraph', text: 'Narrow it down.' }],
+      },
       { titleEn: 'Getting started', excerptEn: 'Summary' }
     );
     expect((await run('translate'))?.status).toBe('succeeded');
@@ -173,7 +204,9 @@ describe('generation runs', () => {
       blocks: [
         {
           type: 'paragraph',
-          sentences: [{ text: '課題を絞ります。', cite: ['c1'], connective: false }],
+          sentences: [
+            { text: '課題を絞ります。', cite: ['c1'], connective: false },
+          ],
         },
       ],
     });
@@ -187,9 +220,9 @@ describe('generation runs', () => {
     ).toBe('succeeded');
     piece = readPiece((await getPiece(pieceId))!);
     expect(piece.sections[0].enStale).toBe(true);
-    expect(await prisma.studioPieceSnapshot.count({ where: { pieceId } })).toBeGreaterThanOrEqual(
-      4
-    );
+    expect(
+      await prisma.studioPieceSnapshot.count({ where: { pieceId } })
+    ).toBeGreaterThanOrEqual(4);
   });
 
   it('fails rewrite without retry on invalid input', async () => {

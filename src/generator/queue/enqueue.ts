@@ -27,7 +27,9 @@ export function createAndEnqueueRun(
         where: { id: input.pieceId },
       });
       if (!piece) throw new PieceRunConflictError('NOT_FOUND');
-      if (piece.stage === 'handed_off')
+      // Checked under the lock: the web action's own check ran before it,
+      // so a piece archived in between must not get a job.
+      if (piece.stage === 'handed_off' || piece.archivedAt)
         throw new PieceRunConflictError('LOCKED');
       const active = await tx.studioRun.findFirst({
         where: {

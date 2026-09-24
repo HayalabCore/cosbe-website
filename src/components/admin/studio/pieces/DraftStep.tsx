@@ -524,7 +524,11 @@ function EditableMeta({
         multiline={false}
         className={className}
         onCancel={() => setEditing(false)}
-        onSave={onSave}
+        onSave={async (text) => {
+          const saved = await onSave(text);
+          if (saved) setEditing(false);
+          return saved;
+        }}
       />
     );
   return (

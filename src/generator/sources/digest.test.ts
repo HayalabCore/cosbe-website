@@ -15,9 +15,7 @@ describe('buildDigest', () => {
   it('groups by label and by 12 chunks, one call per group', async () => {
     const m = jsonModel([
       {
-        points: [
-          { text: 'A', chunkOrdinals: allOrdinals(0, 11) },
-        ],
+        points: [{ text: 'A', chunkOrdinals: allOrdinals(0, 11) }],
       },
       { points: [{ text: 'B', chunkOrdinals: [12] }] },
       { points: [{ text: 'C', chunkOrdinals: [13] }] },

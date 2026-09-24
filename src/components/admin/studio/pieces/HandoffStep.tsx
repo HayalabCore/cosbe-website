@@ -266,9 +266,9 @@ export default function HandoffStep() {
     if (metaDirty) {
       const r = await updatePieceMetaAction(piece.id, {
         excerpt: excerpt.trim(),
-        ...(seo.title || seo.description || seo.keywords.length > 0
-          ? { seo }
-          : {}),
+        // All three emptied means no SEO, not "leave it as it was".
+        seo:
+          seo.title || seo.description || seo.keywords.length > 0 ? seo : null,
       });
       if (!r.ok) return r;
     }

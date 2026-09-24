@@ -11,11 +11,15 @@ describe('studio piece tables', () => {
   });
 
   it('seed exactly one default template', async () => {
-    expect(await prisma.studioTemplate.count({ where: { isDefault: true } })).toBe(1);
+    expect(
+      await prisma.studioTemplate.count({ where: { isDefault: true } })
+    ).toBe(1);
   });
 
   it('reject unknown stages', async () => {
-    const project = await prisma.studioProject.create({ data: { name: 'schema-test' } });
+    const project = await prisma.studioProject.create({
+      data: { name: 'schema-test' },
+    });
     try {
       await expect(
         prisma.$executeRaw`INSERT INTO studio_pieces (project_id, stage) VALUES (${project.id}::uuid, 'bogus')`

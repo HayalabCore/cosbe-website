@@ -22,7 +22,10 @@ describe('ingest budget for the largest allowed source', () => {
     let estimate = 0;
     for (let i = 0; i < chunks.length; i += EMBED_BATCH) {
       estimate += estimateTokens(
-        chunks.slice(i, i + EMBED_BATCH).map((c) => c.text).join('\n')
+        chunks
+          .slice(i, i + EMBED_BATCH)
+          .map((c) => c.text)
+          .join('\n')
       );
     }
     const groups = digestGroups(
@@ -33,6 +36,8 @@ describe('ingest budget for the largest allowed source', () => {
       // First pass plus a worst-case follow-up over the same passages.
       estimate += 2 * (estimateTokens(prompt) + OUTPUT_RESERVE);
     }
-    expect(estimate).toBeLessThan(ingestTokenCeiling(MAX_TEXT_SOURCE_CHARS, {}));
+    expect(estimate).toBeLessThan(
+      ingestTokenCeiling(MAX_TEXT_SOURCE_CHARS, {})
+    );
   });
 });

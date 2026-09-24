@@ -11,8 +11,12 @@ export type ActiveRunDTO = {
   steps: Array<{ key: string; status: string }>;
   /** Sections a write run will write (from its prepare step); step rows appear only as each starts. */
   targets: number | null;
-  /** When the run was queued; a run still queued long after is not being picked up. */
-  createdAt: string;
+  /**
+   * How long the run has existed, measured on the server when the piece was
+   * read (the browser's clock may be off). A run still queued long after it
+   * was created is not being picked up.
+   */
+  ageMs: number;
 };
 
 export type PieceDTO = Omit<
@@ -50,7 +54,10 @@ function prepareTargets(steps: RunWithSteps['steps']): number | null {
   return typeof output?.targets === 'number' ? output.targets : null;
 }
 
-export function toActiveRunDTO(run: RunWithSteps | null): ActiveRunDTO | null {
+export function toActiveRunDTO(
+  run: RunWithSteps | null,
+  now: Date = new Date()
+): ActiveRunDTO | null {
   if (!run) return null;
   return {
     id: run.id,
@@ -59,7 +66,7 @@ export function toActiveRunDTO(run: RunWithSteps | null): ActiveRunDTO | null {
     error: run.error,
     steps: run.steps.map((s) => ({ key: s.key, status: s.status })),
     targets: prepareTargets(run.steps),
-    createdAt: run.createdAt.toISOString(),
+    ageMs: Math.max(0, now.getTime() - run.createdAt.getTime()),
   };
 }
 

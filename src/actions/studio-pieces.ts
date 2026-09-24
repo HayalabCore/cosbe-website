@@ -722,7 +722,8 @@ export async function editSentenceAction(
 const metaSchema = z.object({
   title: z.string().trim().min(1).max(200).optional(),
   excerpt: z.string().trim().max(1000).optional(),
-  seo: seoSchema.optional(),
+  /** null clears it: the editor emptied every SEO field. */
+  seo: seoSchema.nullable().optional(),
 });
 
 export async function updatePieceMetaAction(

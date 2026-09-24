@@ -182,8 +182,9 @@ describe('ingestExecutor', () => {
       meta: {},
     } as never);
     const context = ctx();
-    context.step = vi.fn(async (key: string, _o: number, fn: () => Promise<unknown>) =>
-      key === 'extract' ? { charCount: stored.length } : fn()
+    context.step = vi.fn(
+      async (key: string, _o: number, fn: () => Promise<unknown>) =>
+        key === 'extract' ? { charCount: stored.length } : fn()
     ) as RunContext['step'];
     await ingestExecutor(context);
     expect(replaceChunks).toHaveBeenCalledWith(

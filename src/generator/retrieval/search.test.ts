@@ -8,7 +8,9 @@ import { searchSources } from './search';
 
 describe('searchSources', () => {
   it('does not pay for an embedding when the scope is empty', async () => {
-    expect(await searchSources({ scope: { sourceIds: [] }, query: 'x' })).toEqual([]);
+    expect(
+      await searchSources({ scope: { sourceIds: [] }, query: 'x' })
+    ).toEqual([]);
     expect(embedTexts).not.toHaveBeenCalled();
   });
 });

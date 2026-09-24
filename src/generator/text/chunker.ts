@@ -26,7 +26,12 @@ export function chunkSegments(
   const { target, max, overlap } = { ...DEFAULTS, ...options };
   const chunks: Chunk[] = [];
   for (const segment of segments) {
-    const pieces = splitLong(segment.text, splitSentences(segment.text), max, overlap);
+    const pieces = splitLong(
+      segment.text,
+      splitSentences(segment.text),
+      max,
+      overlap
+    );
     let i = 0;
     while (i < pieces.length) {
       let j = i;

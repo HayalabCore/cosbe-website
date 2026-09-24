@@ -151,10 +151,17 @@ describe('validateSection', () => {
   it('treats all-caps company names in connectives as facts, but not common acronyms', () => {
     const connective = (text: string) =>
       validateSection(
-        [{ type: 'paragraph', sentences: [s(text, [], true), s('本文。', ['k1'])] }],
+        [
+          {
+            type: 'paragraph',
+            sentences: [s(text, [], true), s('本文。', ['k1'])],
+          },
+        ],
         { allowedIds: allowed, kind: 'source' }
       );
-    expect(connective('次にNTTの取り組みです。')).toEqual([expect.stringContaining('Connective')]);
+    expect(connective('次にNTTの取り組みです。')).toEqual([
+      expect.stringContaining('Connective'),
+    ]);
     expect(connective('次にSEOとKPIの考え方を見ます。')).toEqual([]);
   });
 });

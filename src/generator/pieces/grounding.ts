@@ -7,7 +7,17 @@ const DIGITS = /[0-9０-９]/;
  */
 const PROPER_NOUN = /\b[A-Z][a-z]+|\b[A-Z]{3,}\b|[ァ-ヺー]{5,}/;
 /** Generic business acronyms that name no one; fine in a transition. */
-const COMMON_ACRONYMS = ['SEO', 'KPI', 'ROI', 'CRM', 'API', 'FAQ', 'PDF', 'URL', 'SNS'];
+const COMMON_ACRONYMS = [
+  'SEO',
+  'KPI',
+  'ROI',
+  'CRM',
+  'API',
+  'FAQ',
+  'PDF',
+  'URL',
+  'SNS',
+];
 
 type Opts = {
   allowedIds: Set<string>;

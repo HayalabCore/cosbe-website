@@ -5,6 +5,21 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      // Studio "projects" were renamed to topics; keep old links working.
+      {
+        source: '/admin/studio/projects',
+        destination: '/admin/studio/topics',
+        permanent: true,
+      },
+      {
+        source: '/admin/studio/projects/:id',
+        destination: '/admin/studio/topics/:id',
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     // A maximum-size Japanese text source (400k chars) is ~1.2 MB of UTF-8.
     serverActions: { bodySizeLimit: '3mb' },

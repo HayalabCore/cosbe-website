@@ -595,6 +595,20 @@ describe('piece actions', () => {
     );
   });
 
+  it('clears SEO when the editor empties every SEO field', async () => {
+    vi.mocked(getPiece).mockResolvedValue(piece({ stage: 'review' }) as never);
+    expect(await updatePieceMetaAction(ID, { seo: null })).toEqual({
+      ok: true,
+      data: undefined,
+    });
+    expect(updatePiece).toHaveBeenCalledWith(
+      ID,
+      { seo: null },
+      undefined,
+      prisma
+    );
+  });
+
   it('refuses an empty title', async () => {
     vi.mocked(getPiece).mockResolvedValue(piece({ stage: 'review' }) as never);
     expect(await updatePieceMetaAction(ID, { title: ' ' })).toMatchObject({
@@ -710,9 +724,8 @@ describe('piece actions', () => {
 
   it('archives several pieces and reports the ones a running job kept', async () => {
     const B = '7f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
-    vi.mocked(getPiece).mockImplementation(
-      (async (id: string) => piece({ id })) as never
-    );
+    vi.mocked(getPiece).mockImplementation((async (id: string) =>
+      piece({ id })) as never);
     vi.mocked(prisma.studioRun.findFirst).mockImplementation((async (args: {
       where: { pieceId: string };
     }) => (args.where.pieceId === B ? { id: 'run' } : null)) as never);
@@ -729,10 +742,8 @@ describe('piece actions', () => {
 
   it('deletes only the archived ones among several', async () => {
     const B = '7f1c2b0e-8a8e-4f5e-9d4c-1f2a3b4c5d6e';
-    vi.mocked(getPiece).mockImplementation(
-      (async (id: string) =>
-        piece({ id, archivedAt: id === ID ? new Date() : null })) as never
-    );
+    vi.mocked(getPiece).mockImplementation((async (id: string) =>
+      piece({ id, archivedAt: id === ID ? new Date() : null })) as never);
     vi.mocked(prisma.studioRun.findFirst).mockImplementation(
       (async () => null) as never
     );
