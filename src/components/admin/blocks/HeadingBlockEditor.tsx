@@ -15,7 +15,7 @@ const LEVEL_TEXT: Record<HeadingBlock['level'], string> = {
   4: 'text-lg font-semibold leading-snug',
 };
 const SELECT_CLS =
-  'shrink-0 cursor-pointer appearance-none rounded-md bg-slate-100 px-1.5 py-0.5 text-center text-[11px] font-bold tabular-nums text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primaryColor/40';
+  'mt-1.5 shrink-0 cursor-pointer appearance-none rounded-md bg-slate-100 px-1.5 py-0.5 text-center text-[11px] font-bold tabular-nums text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primaryColor/40';
 
 export default function HeadingBlockEditor({
   block,
@@ -64,7 +64,7 @@ export default function HeadingBlockEditor({
         bulkTranslating={bulkTranslating}
         generateDisabled={!block.content.trim()}
       />
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-start gap-2.5">
         <select
           aria-label={t('level')}
           title={t('level')}
@@ -81,17 +81,23 @@ export default function HeadingBlockEditor({
           <option value={3}>H3</option>
           <option value={4}>H4</option>
         </select>
-        <input
-          className={`w-full min-w-0 border-0 bg-transparent py-0.5 text-slate-900 placeholder:text-slate-300 focus:outline-none ${LEVEL_TEXT[block.level]}`}
+        {/* A textarea so a long heading wraps on narrow screens; it stays one
+            line of text (Enter does nothing, pasted newlines become spaces). */}
+        <textarea
+          rows={1}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') e.preventDefault();
+          }}
+          className={`w-full min-w-0 resize-none border-0 bg-transparent py-0.5 text-slate-900 placeholder:text-slate-300 focus:outline-none [field-sizing:content] ${LEVEL_TEXT[block.level]}`}
           placeholder={
             tab === 'original' ? t('placeholder') : te('englishPlaceholder')
           }
           value={tab === 'original' ? block.content : (block.contentEn ?? '')}
-          onChange={(e) =>
-            tab === 'original'
-              ? onChange({ ...block, content: e.target.value })
-              : onChange({ ...block, contentEn: e.target.value })
-          }
+          onChange={(e) => {
+            const text = e.target.value.replace(/\r?\n/g, ' ');
+            if (tab === 'original') onChange({ ...block, content: text });
+            else onChange({ ...block, contentEn: text });
+          }}
         />
       </div>
     </div>

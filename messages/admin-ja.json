@@ -242,7 +242,8 @@
       }
     },
     "searchBlocks": "ブロックを検索",
-    "noMatch": "一致するブロックがありません"
+    "noMatch": "一致するブロックがありません",
+    "formatting": "書式"
   },
   "paragraph": {
     "placeholder": "段落のテキストを入力…",
