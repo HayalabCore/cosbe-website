@@ -6,7 +6,8 @@ const MAX_TERMS = 10;
  * katakana and Latin runs between them become terms. Terms are matched
  * literally, so model-written text can never inject query syntax.
  */
-const SEPARATORS = /[\s、。，．,.!?！？「」『』（）()[\]{}・:：;；"'`“”‘’〜~\-+*/\\|<>=&^%$#@]+|[ぁ-ゖ]+/u;
+const SEPARATORS =
+  /[\s、。，．,.!?！？「」『』（）()[\]{}・:：;；"'`“”‘’〜~\-+*/\\|<>=&^%$#@]+|[ぁ-ゖ]+/u;
 
 export function keywordTerms(query: string): string[] {
   const terms: string[] = [];

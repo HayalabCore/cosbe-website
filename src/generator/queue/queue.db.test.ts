@@ -222,6 +222,29 @@ it('serializes competing kinds and permits a replacement after cancellation', as
   ).rejects.toMatchObject({ reason: 'LOCKED' });
 });
 
+it('refuses a job for an archived piece', async () => {
+  const project = await prisma.studioProject.create({
+    data: { name: 'archived', createdById: allowedId },
+  });
+  const piece = await createPiece({
+    projectId: project.id,
+    createdById: allowedId,
+    templateId: null,
+    category: 'notice',
+  });
+  await prisma.studioPiece.update({
+    where: { id: piece.id },
+    data: { archivedAt: new Date() },
+  });
+  await expect(
+    createAndEnqueueRun(webBoss, {
+      kind: 'outline',
+      pieceId: piece.id,
+      createdById: allowedId,
+    })
+  ).rejects.toMatchObject({ reason: 'LOCKED' });
+});
+
 it('gives long-running kinds a longer job expiry', async () => {
   const project = await prisma.studioProject.create({
     data: { name: 'expiry', createdById: allowedId },
@@ -244,9 +267,13 @@ it('gives long-running kinds a longer job expiry', async () => {
 });
 
 it('restarting the worker updates existing queues instead of failing', async () => {
-  await expect(ensureQueues(workerBoss, ['system_check'])).resolves.toBeUndefined();
-  await expect(ensureQueues(workerBoss, ['system_check'])).resolves.toBeUndefined();
-  expect((await workerBoss.getQueue(queueForKind('system_check')))?.policy).toBe(
-    'singleton'
-  );
+  await expect(
+    ensureQueues(workerBoss, ['system_check'])
+  ).resolves.toBeUndefined();
+  await expect(
+    ensureQueues(workerBoss, ['system_check'])
+  ).resolves.toBeUndefined();
+  expect(
+    (await workerBoss.getQueue(queueForKind('system_check')))?.policy
+  ).toBe('singleton');
 });

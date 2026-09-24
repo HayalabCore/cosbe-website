@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { AlertCircle, AlertTriangle, Loader2 } from 'lucide-react';
 import type { ActiveRunDTO } from '@/lib/studio/piece-dto';
@@ -34,22 +34,15 @@ export function useRunLabel(
 
 /** A job still queued after this long is not being picked up by the worker. */
 const STALL_MS = 30_000;
-const TICK_MS = 5_000;
 
 /**
  * True when the run has sat in the queue so long that the worker is most
  * likely down. Editors learn it where it affects them, instead of from a
- * diagnostic button they would never think to press.
+ * diagnostic button they would never think to press. The age comes from the
+ * server, which the workspace polls every few seconds while a run exists.
  */
-function useStalled(run: ActiveRunDTO | null): boolean {
-  const queuedAt = run?.status === 'queued' ? Date.parse(run.createdAt) : null;
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (queuedAt === null) return;
-    const timer = window.setInterval(() => setNow(Date.now()), TICK_MS);
-    return () => window.clearInterval(timer);
-  }, [queuedAt]);
-  return queuedAt !== null && now - queuedAt > STALL_MS;
+function isStalled(run: ActiveRunDTO | null): boolean {
+  return run?.status === 'queued' && run.ageMs > STALL_MS;
 }
 
 /**
@@ -69,7 +62,7 @@ export default function CommandBar({
   const t = useTranslations('admin.studio');
   const { piece, busy, notice, notify, cancel } = useWorkspace();
   const runLabel = useRunLabel(piece.activeRun, piece.outline.length);
-  const stalled = useStalled(piece.activeRun);
+  const stalled = isStalled(piece.activeRun);
   const runError =
     !busy && piece.lastRunError ? runErrorText(t, piece.lastRunError) : null;
 

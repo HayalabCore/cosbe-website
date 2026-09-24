@@ -424,6 +424,11 @@ export default function OutlineStep() {
         brief: { ...piece.brief, targetLength: length },
       });
     });
+  // Setup is another step: keep the outline edits instead of dropping them.
+  async function addMaterial() {
+    if (edited && !(await save())) return;
+    go('setup');
+  }
   const supportedRounded = short
     ? Math.max(100, Math.round(short.supported / 100) * 100)
     : 0;
@@ -448,7 +453,7 @@ export default function OutlineStep() {
                   size="sm"
                   variant="secondary"
                   disabled={disabled}
-                  onClick={() => go('setup')}
+                  onClick={() => void addMaterial()}
                 >
                   {t('setup.addMaterial')}
                 </Button>

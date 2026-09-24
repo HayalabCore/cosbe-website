@@ -132,22 +132,48 @@ describe('sources repository', () => {
       data: { id: otherId, email: `src-o-${otherId}@test.local` },
     });
     try {
-      const mine = await createSource({ kind: 'text', title: 'm', text: 'x', createdById: adminId });
-      const theirs = await createSource({ kind: 'text', title: 't', text: 'x', createdById: otherId });
+      const mine = await createSource({
+        kind: 'text',
+        title: 'm',
+        text: 'x',
+        createdById: adminId,
+      });
+      const theirs = await createSource({
+        kind: 'text',
+        title: 't',
+        text: 'x',
+        createdById: otherId,
+      });
       const plain = { id: adminId, canDeleteShared: false };
-      expect(await deleteSourceGuarded(theirs.id, plain)).toMatchObject({ result: 'LINKED' });
+      expect(await deleteSourceGuarded(theirs.id, plain)).toMatchObject({
+        result: 'LINKED',
+      });
       expect(await getSource(theirs.id)).not.toBeNull();
-      expect(await deleteSourceGuarded(mine.id, plain)).toMatchObject({ result: 'OK' });
+      expect(await deleteSourceGuarded(mine.id, plain)).toMatchObject({
+        result: 'OK',
+      });
       expect(await getSource(mine.id)).toBeNull();
 
       const project = await createProject({ name: 'p', createdById: adminId });
-      const linked = await createSource({ kind: 'text', title: 'l', text: 'x', createdById: adminId });
+      const linked = await createSource({
+        kind: 'text',
+        title: 'l',
+        text: 'x',
+        createdById: adminId,
+      });
       await linkSource(project.id, linked.id, adminId);
-      expect(await deleteSourceGuarded(linked.id, plain)).toMatchObject({ result: 'LINKED' });
+      expect(await deleteSourceGuarded(linked.id, plain)).toMatchObject({
+        result: 'LINKED',
+      });
       expect(
-        await deleteSourceGuarded(linked.id, { id: adminId, canDeleteShared: true })
+        await deleteSourceGuarded(linked.id, {
+          id: adminId,
+          canDeleteShared: true,
+        })
       ).toMatchObject({ result: 'OK' });
-      expect(await deleteSourceGuarded(randomUUID(), plain)).toMatchObject({ result: 'NOT_FOUND' });
+      expect(await deleteSourceGuarded(randomUUID(), plain)).toMatchObject({
+        result: 'NOT_FOUND',
+      });
     } finally {
       await prisma.studioSource.deleteMany({ where: { createdById: otherId } });
       await prisma.adminUser.delete({ where: { id: otherId } });
@@ -155,11 +181,19 @@ describe('sources repository', () => {
   });
 
   it('claims only failed sources for a retry, once', async () => {
-    const s = await createSource({ kind: 'text', title: 'r', text: 'x', createdById: adminId });
+    const s = await createSource({
+      kind: 'text',
+      title: 'r',
+      text: 'x',
+      createdById: adminId,
+    });
     await setSourceStatus(s.id, 'ready');
     expect(await claimFailedSource(s.id)).toBe(false);
     await setSourceStatus(s.id, 'failed', 'boom');
-    const claims = await Promise.all([claimFailedSource(s.id), claimFailedSource(s.id)]);
+    const claims = await Promise.all([
+      claimFailedSource(s.id),
+      claimFailedSource(s.id),
+    ]);
     expect(claims.filter(Boolean)).toHaveLength(1);
     expect((await getSource(s.id))?.status).toBe('pending');
   });

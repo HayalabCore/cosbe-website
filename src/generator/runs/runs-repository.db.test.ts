@@ -181,7 +181,11 @@ describe('studio runs repository', () => {
       run.id,
       { key: 'section:a', ordinal: 1, promptVersion: 'write.v1' },
       async () => {
-        await addRunUsage(run.id, { inputTokens: 10, outputTokens: 5 }, 'section:a');
+        await addRunUsage(
+          run.id,
+          { inputTokens: 10, outputTokens: 5 },
+          'section:a'
+        );
         return {};
       }
     );

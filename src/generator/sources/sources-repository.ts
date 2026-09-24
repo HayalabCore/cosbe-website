@@ -170,7 +170,9 @@ export function deleteSourceGuarded(
     const row = rows[0];
     if (!row) return { result: 'NOT_FOUND', storagePath: null };
     if (!actor.canDeleteShared) {
-      const links = await tx.studioProjectSource.count({ where: { sourceId: id } });
+      const links = await tx.studioProjectSource.count({
+        where: { sourceId: id },
+      });
       if (links > 0 || row.created_by !== actor.id)
         return { result: 'LINKED', storagePath: null };
     }

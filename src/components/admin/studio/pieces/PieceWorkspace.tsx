@@ -13,10 +13,30 @@ import ArchivedBanner from './ArchivedBanner';
 import { stepOf, type Step } from './steps';
 import { usePiece } from './usePiece';
 import { WorkspaceProvider, type Snapshot } from './workspace-context';
+import type { PieceDTO } from '@/lib/studio/piece-dto';
 import SetupStep from './SetupStep';
 import OutlineStep from './OutlineStep';
 import DraftStep from './DraftStep';
 import HandoffStep from './HandoffStep';
+
+/**
+ * A short fingerprint of everything the steps hold in local state. The title
+ * (edited in the header) and live run status are left out on purpose.
+ */
+function contentVersion(piece: PieceDTO): string {
+  const content = {
+    ...piece,
+    title: null,
+    updatedAt: null,
+    activeRun: null,
+    lastRunError: null,
+  };
+  const text = JSON.stringify(content);
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++)
+    hash = Math.imul(hash ^ text.charCodeAt(i), 0x01000193);
+  return (hash >>> 0).toString(36);
+}
 
 function LoadingWorkspace() {
   return (
@@ -89,9 +109,11 @@ export default function PieceWorkspace({ pieceId }: { pieceId: string }) {
     await refresh();
   }
 
-  // Steps copy the piece into local state; a new version (restore, save, run
-  // output) must remount them instead of leaving stale edits to be saved.
-  const key = `${viewing}:${piece.updatedAt}`;
+  // Steps copy the piece into local state; a new version of what they edit
+  // (restore, save, run output) must remount them instead of leaving stale
+  // edits to be saved. A title rename is not such a version: remounting on it
+  // would throw away the step's unsaved changes.
+  const key = `${viewing}:${contentVersion(piece)}`;
 
   return (
     <WorkspaceProvider

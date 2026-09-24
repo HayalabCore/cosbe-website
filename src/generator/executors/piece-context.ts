@@ -1,14 +1,20 @@
 import { z } from 'zod';
 import { NonRetryableRunError } from '../runs/run-types';
 import { isLocked } from '../pieces/stages';
-import { getPiece, getTemplate, readPiece, type PieceData } from '../pieces/pieces-repository';
+import {
+  getPiece,
+  getTemplate,
+  readPiece,
+  type PieceData,
+} from '../pieces/pieces-repository';
 
 export async function loadPiece(pieceId: string | null): Promise<PieceData> {
   if (!pieceId) throw new NonRetryableRunError('The run has no piece.');
   const row = await getPiece(pieceId);
   if (!row) throw new NonRetryableRunError('The piece no longer exists.');
   const piece = readPiece(row);
-  if (isLocked(piece.stage)) throw new NonRetryableRunError('The piece was already handed off.');
+  if (isLocked(piece.stage))
+    throw new NonRetryableRunError('The piece was already handed off.');
   return piece;
 }
 

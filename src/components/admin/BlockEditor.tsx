@@ -513,7 +513,7 @@ function SortableBlockRow({
   removeAt: (index: number) => void;
   move: (index: number, dir: -1 | 1) => void;
   insertAt: (at: number, type: BlockType) => void;
-  onFocusBlock: (index: number) => void;
+  onFocusBlock: (id: string) => void;
   blockMeta: Record<BlockType, BlockMeta>;
   onParagraphBlur?: () => void;
   localeViewKey?: number;
@@ -555,7 +555,7 @@ function SortableBlockRow({
       ref={setNodeRef}
       style={style}
       data-block-id={block.id}
-      onFocus={() => onFocusBlock(i)}
+      onFocus={() => onFocusBlock(block.id)}
       className="group/block relative flex items-start lg:-ml-12"
     >
       {/* Gutter: insert below and drag, outside the text column. */}
@@ -715,7 +715,8 @@ export default function BlockEditor({
   const t = useTranslations('admin.blocks');
   const blockMeta = useBlockMeta();
   const [menu, setMenu] = useState<string | null>(null);
-  const [focused, setFocused] = useState<number | null>(null);
+  // By id, not index: the block can move after it had focus.
+  const [focusedId, setFocusedId] = useState<string | null>(null);
 
   // The shared formatting bar and the paragraph it currently serves.
   const barRef = useRef<HTMLDivElement>(null);
@@ -790,8 +791,8 @@ export default function BlockEditor({
   );
 
   // The bar's insert goes below the block being edited, or at the end.
-  const barInsertAt =
-    focused === null ? blocks.length : Math.min(focused + 1, blocks.length);
+  const focusedIndex = blocks.findIndex((b) => b.id === focusedId);
+  const barInsertAt = focusedIndex === -1 ? blocks.length : focusedIndex + 1;
 
   return (
     <FormatBarContext.Provider value={formatApi}>
@@ -857,8 +858,8 @@ export default function BlockEditor({
                   removeAt={removeAt}
                   move={move}
                   insertAt={insertAt}
-                  onFocusBlock={(index) => {
-                    if (index !== focused) setFocused(index);
+                  onFocusBlock={(id) => {
+                    if (id !== focusedId) setFocusedId(id);
                   }}
                   blockMeta={blockMeta}
                   onParagraphBlur={onParagraphBlur}

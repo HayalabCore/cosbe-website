@@ -165,14 +165,15 @@ describe('searchChunks', () => {
   });
 
   it('materializes only ids and distances for the scope, not chunk text or vectors', async () => {
-    const plan = await prisma.$queryRaw<Array<{ 'QUERY PLAN': string }>>`EXPLAIN (VERBOSE) ${semanticSql(
-      { sourceIds: [ready] },
-      vec(1)
-    )}`;
+    const plan = await prisma.$queryRaw<
+      Array<{ 'QUERY PLAN': string }>
+    >`EXPLAIN (VERBOSE) ${semanticSql({ sourceIds: [ready] }, vec(1))}`;
     const lines = plan.map((r) => r['QUERY PLAN']);
     const cte = lines.findIndex((l) => l.includes('CTE scoped'));
     expect(cte).toBeGreaterThanOrEqual(0);
-    const output = lines.slice(cte).find((l) => l.trim().startsWith('Output:'))!;
+    const output = lines
+      .slice(cte)
+      .find((l) => l.trim().startsWith('Output:'))!;
     expect(output).not.toMatch(/\bc\.text\b/);
     expect(output).not.toMatch(/\bc\.embedding\b(?!\s*<=>)/);
   });

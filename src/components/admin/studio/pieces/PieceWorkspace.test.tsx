@@ -481,7 +481,7 @@ describe('PieceWorkspace', () => {
         error: null,
         targets: null,
         steps: [],
-        createdAt: new Date(Date.now() - secondsAgo * 1000).toISOString(),
+        ageMs: secondsAgo * 1000,
       },
     });
     vi.mocked(getPieceAction).mockResolvedValue({
@@ -520,6 +520,39 @@ describe('PieceWorkspace', () => {
     expect(updatePieceMetaAction).toHaveBeenCalledWith('p1', {
       title: '導入事例',
     });
+  });
+
+  it('keeps unsaved setup edits when the title is renamed', async () => {
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: idle({ stage: 'brief', outline: [], title: 'Old' }),
+    } as never);
+    renderAdmin(<PieceWorkspace pieceId="p1" />);
+    const goal = await screen.findByRole('textbox', {
+      name: /^Goal of the article/,
+    });
+    await userEvent.clear(goal);
+    await userEvent.type(goal, 'Unsaved goal');
+
+    // The rename comes back as a newer version that differs only in title.
+    vi.mocked(getPieceAction).mockResolvedValue({
+      ok: true,
+      data: idle({
+        stage: 'brief',
+        outline: [],
+        title: 'New',
+        updatedAt: '2026-09-24T00:00:00Z',
+      }),
+    } as never);
+    await userEvent.click(screen.getByRole('button', { name: 'Old' }));
+    await userEvent.type(
+      screen.getByLabelText('Edit title'),
+      '{Control>}a{/Control}New{Enter}'
+    );
+    expect(await screen.findByRole('button', { name: 'New' })).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: /^Goal of the article/ })
+    ).toHaveValue('Unsaved goal');
   });
 
   it('shows an archived article read-only with a way back', async () => {

@@ -46,7 +46,10 @@ const COLUMNS = Prisma.sql`c.id, c.source_id AS "sourceId", c.ordinal, c.text,
  * nearest-neighbour search, so a project's few sources inside a large library
  * would get few or no hits. Scopes are small (≤ 40 sources).
  */
-export function semanticSql(scope: SearchScope, queryEmbedding: number[]): Prisma.Sql {
+export function semanticSql(
+  scope: SearchScope,
+  queryEmbedding: number[]
+): Prisma.Sql {
   const vector = `[${queryEmbedding.join(',')}]`;
   // Only ids and distances are materialized; text and columns are joined
   // back for the few winners, so a large scope never copies every chunk.

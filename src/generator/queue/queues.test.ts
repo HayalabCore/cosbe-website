@@ -52,7 +52,9 @@ describe('studio queues', () => {
       (c) => c[0] === 'studio.run.system_check'
     )?.[1] as Record<string, unknown>;
     expect(updated).not.toHaveProperty('policy');
-    expect(updated).toMatchObject({ retryLimit: RUN_QUEUE_SETTINGS.retryLimit });
+    expect(updated).toMatchObject({
+      retryLimit: RUN_QUEUE_SETTINGS.retryLimit,
+    });
   });
 
   it('retries the dead-letter handler so a run is never left running', async () => {

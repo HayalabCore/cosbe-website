@@ -101,7 +101,10 @@ export async function translateSection(
   return en;
 }
 
-export const metaSchema = z.object({ titleEn: z.string(), excerptEn: z.string() });
+export const metaSchema = z.object({
+  titleEn: z.string(),
+  excerptEn: z.string(),
+});
 
 export function translateMeta(
   input: { title: string; excerpt: string },

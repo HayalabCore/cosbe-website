@@ -88,16 +88,28 @@ export function getPiece(id: string, db: Prisma.TransactionClient = prisma) {
   return db.studioPiece.findUnique({ where: { id } });
 }
 
-export function listPieces(filter: { projectId?: string } = {}) {
-  return prisma.studioPiece.findMany({
-    where: { projectId: filter.projectId },
-    orderBy: { updatedAt: 'desc' },
-    take: 200,
-    include: {
-      project: { select: { name: true } },
-      article: { select: { status: true, slug: true, category: true } },
-    },
-  });
+const LIST_LIMIT = 200;
+
+/**
+ * The most recent live pieces and, separately, the most recent archived ones,
+ * so a long archive never pushes current work out of the list.
+ */
+export async function listPieces(filter: { projectId?: string } = {}) {
+  const page = (archived: boolean) =>
+    prisma.studioPiece.findMany({
+      where: {
+        projectId: filter.projectId,
+        archivedAt: archived ? { not: null } : null,
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: LIST_LIMIT,
+      include: {
+        project: { select: { name: true } },
+        article: { select: { status: true, slug: true, category: true } },
+      },
+    });
+  const [live, archived] = await Promise.all([page(false), page(true)]);
+  return [...live, ...archived];
 }
 
 export type PiecePatch = Partial<{
