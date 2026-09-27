@@ -42,6 +42,18 @@ export type RunContext = {
 export type RunExecutor = (ctx: RunContext) => Promise<void>;
 export type RunExecutors = Partial<Record<RunKind, RunExecutor>>;
 
+/** Progress lines for the worker's terminal; the database stays the record. */
+export type RunLogger = {
+  info(message: string): void;
+  error(message: string): void;
+};
+
+const silentLogger: RunLogger = { info() {}, error() {} };
+
+function seconds(since: number): string {
+  return `${((Date.now() - since) / 1000).toFixed(1)}s`;
+}
+
 /**
  * One job = one run. Returning completes the job; throwing makes pg-boss retry
  * it (and dead-letter it after the last retry).
@@ -59,30 +71,38 @@ function isPermanentProviderError(error: unknown): boolean {
 
 export async function handleRunJob(
   job: Job<unknown>,
-  executors: RunExecutors
+  executors: RunExecutors,
+  log: RunLogger = silentLogger
 ): Promise<void> {
   const parsed = runJobDataSchema.safeParse(job.data);
   if (!parsed.success) return;
   const { runId } = parsed.data;
   const run = await getRun(runId);
   if (!run || isTerminalRunStatus(run.status)) return;
+  const label = `${run.kind} ${runId.slice(0, 8)}`;
+  const fail = async (message: string) => {
+    await markRunFailed(runId, message);
+    log.error(`${label} failed: ${message}`);
+  };
 
   if (!isRunKind(run.kind)) {
-    await markRunFailed(runId, `Unknown run kind "${run.kind}"`);
+    await fail(`Unknown run kind "${run.kind}"`);
     return;
   }
   const executor = executors[run.kind];
   if (!executor) {
-    await markRunFailed(runId, `No executor registered for "${run.kind}"`);
+    await fail(`No executor registered for "${run.kind}"`);
     return;
   }
   if (
     !(await actorHasPermission(run.createdById, RUN_KIND_PERMISSION[run.kind]))
   ) {
-    await markRunFailed(runId, 'FORBIDDEN');
+    await fail('FORBIDDEN');
     return;
   }
   if (!(await markRunStarted(runId))) return;
+  const startedAt = Date.now();
+  log.info(`${label} started`);
 
   const cancellation = new AbortController();
   const signal = AbortSignal.any([job.signal, cancellation.signal]);
@@ -109,12 +129,15 @@ export async function handleRunJob(
       signal,
       step: async (key, ordinal, fn, opts) => {
         currentStep = key;
+        const stepStartedAt = Date.now();
         try {
-          return await runStep(
+          const result = await runStep(
             runId,
             { key, ordinal, promptVersion: opts?.promptVersion },
             fn
           );
+          log.info(`${label} step ${key} done in ${seconds(stepStartedAt)}`);
+          return result;
         } finally {
           currentStep = undefined;
         }
@@ -123,39 +146,45 @@ export async function handleRunJob(
       ensureBudget: (estimated) => assertRunBudget(runId, estimated),
     });
     await markRunSucceeded(runId);
+    log.info(`${label} succeeded in ${seconds(startedAt)}`);
   } catch (error) {
-    if (cancellation.signal.aborted || (await isRunCancelled(runId))) return;
+    if (cancellation.signal.aborted || (await isRunCancelled(runId))) {
+      log.info(`${label} cancelled after ${seconds(startedAt)}`);
+      return;
+    }
     if (
       error instanceof NonRetryableRunError ||
       error instanceof TokenCeilingExceededError ||
       isPermanentProviderError(error)
     ) {
-      await markRunFailed(runId, errorMessage(error));
+      await fail(errorMessage(error));
       return;
     }
     await recordRunError(runId, errorMessage(error));
+    log.error(`${label} error, will retry: ${errorMessage(error)}`);
     throw error;
   } finally {
     clearInterval(watch);
   }
 }
 
-export function createRunHandler(executors: RunExecutors) {
+export function createRunHandler(executors: RunExecutors, log?: RunLogger) {
   return async (jobs: Job<unknown>[]): Promise<void> => {
-    for (const job of jobs) await handleRunJob(job, executors);
+    for (const job of jobs) await handleRunJob(job, executors, log);
   };
 }
 
 /** Jobs land here after their last retry (or after expiring / missing heartbeats). */
-export function createDeadLetterHandler() {
+export function createDeadLetterHandler(log: RunLogger = silentLogger) {
   return async (jobs: Job<unknown>[]): Promise<void> => {
     for (const job of jobs) {
       const parsed = runJobDataSchema.safeParse(job.data);
       if (!parsed.success) continue;
       const run = await getRun(parsed.data.runId);
-      await markRunFailed(
-        parsed.data.runId,
-        run?.error ?? 'The job failed after all retries.'
+      const message = run?.error ?? 'The job failed after all retries.';
+      await markRunFailed(parsed.data.runId, message);
+      log.error(
+        `${run?.kind ?? 'run'} ${parsed.data.runId.slice(0, 8)} dead-lettered: ${message}`
       );
     }
   };

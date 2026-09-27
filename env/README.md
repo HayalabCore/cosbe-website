@@ -5,12 +5,12 @@ database URLs in the terminal. Deployed services (App Hosting, the Cloud Run
 worker) use **no files**: their values are set in the platform console or Secret
 Manager, and anything already set in the process always wins over a file.
 
-| `APP_ENV` | Files read (first wins) | Used by |
-| --- | --- | --- |
+| `APP_ENV`         | Files read (first wins)                                    | Used by                                             |
+| ----------------- | ---------------------------------------------------------- | --------------------------------------------------- |
 | `local` (default) | `.env.development.local`, `.env.local`, `.env.development` | `yarn dev`, `yarn worker:dev`, `yarn db:*`, scripts |
-| `test` | `.env.test` (committed, no secrets) | `yarn test:db` |
-| `staging` | `env/staging.env` | `yarn db:*:staging` |
-| `production` | `env/production.env` | `yarn db:*:prod` |
+| `test`            | `.env.test` (committed, no secrets)                        | `yarn test:db`                                      |
+| `staging`         | `env/staging.env`                                          | `yarn db:*:staging`                                 |
+| `production`      | `env/production.env`                                       | `yarn db:*:prod`                                    |
 
 `.env.local` and `env/*.env` are gitignored. Copy `.env.example` to start one.
 
@@ -42,6 +42,12 @@ write (`db:deploy:*`, bootstrap, translation push/sync/seed) show the target hos
 and ask you to type the environment name; pass `--yes` in non-interactive runs.
 A missing `env/<name>.env`, or one without `DATABASE_URL`, stops the command
 instead of falling back to local values.
+
+Staging mirrors production: `yarn dev:staging`, `yarn db:deploy:staging`,
+`yarn db:status:staging`, `yarn db:bootstrap-admins:staging`, and
+`yarn worker:staging` (a worker on your machine attached to the staging
+database, for when no staging worker is deployed). The deployed staging backend
+sets `SITE_ENV=staging`, which makes the site noindex.
 
 The remote files are not named `.env.production`, because Next loads that name
 automatically on every `next build`.

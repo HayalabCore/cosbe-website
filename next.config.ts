@@ -3,8 +3,20 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
+// Staging is a public URL with test content; keep it out of search results.
+const isStaging = process.env.SITE_ENV === 'staging';
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  async headers() {
+    if (!isStaging) return [];
+    return [
+      {
+        source: '/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Studio "projects" were renamed to topics; keep old links working.

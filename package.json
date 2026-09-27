@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "tsx scripts/with-env.ts next dev",
     "dev:prod": "APP_ENV=production tsx scripts/with-env.ts next dev",
+    "dev:staging": "APP_ENV=staging tsx scripts/with-env.ts next dev",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
@@ -17,7 +18,9 @@
     "db:deploy": "prisma migrate deploy",
     "db:deploy:staging": "APP_ENV=staging tsx scripts/confirm-remote.ts && APP_ENV=staging prisma migrate deploy",
     "db:deploy:prod": "APP_ENV=production tsx scripts/confirm-remote.ts && APP_ENV=production prisma migrate deploy",
+    "db:status:staging": "APP_ENV=staging prisma migrate status",
     "db:status:prod": "APP_ENV=production prisma migrate status",
+    "db:bootstrap-admins:staging": "APP_ENV=staging tsx scripts/bootstrap-admin-users.ts",
     "db:bootstrap-admins:prod": "APP_ENV=production tsx scripts/bootstrap-admin-users.ts",
     "db:pull-translations:prod": "APP_ENV=production tsx scripts/pull-translations.ts",
     "db:sync-translations:prod": "APP_ENV=production tsx scripts/sync-translations.ts",
@@ -37,6 +40,7 @@
     "test:db": "vitest run --project db",
     "worker:dev": "tsx watch worker/main.ts",
     "worker:start": "tsx worker/main.ts",
+    "worker:staging": "APP_ENV=staging STUDIO_WORKER_ALLOW_REMOTE=1 tsx worker/main.ts",
     "test:translations-flatten": "tsx src/lib/translations/flatten.roundtrip.test.ts",
     "prepare": "husky",
     "format": "prettier --write ."
