@@ -11,6 +11,7 @@ import {
   createDeadLetterHandler,
   createRunHandler,
 } from '@/generator/runs/run-handler';
+import type { RunLogger } from '@/generator/runs/run-handler';
 import { RUN_KINDS } from '@/generator/runs/run-types';
 import { prisma } from '@/lib/prisma';
 import { loadWorkerEnv } from './env';
@@ -22,6 +23,11 @@ import { startHealthServer } from './health-server';
  * their last finished step) instead of waiting for heartbeat expiry.
  */
 const SHUTDOWN_TIMEOUT_MS = 8_000;
+
+const runLog: RunLogger = {
+  info: (message) => console.log(`[studio-worker] ${message}`),
+  error: (message) => console.error(`[studio-worker] ${message}`),
+};
 
 async function main(): Promise<void> {
   const env = loadWorkerEnv();
@@ -37,7 +43,7 @@ async function main(): Promise<void> {
   await boss.start();
   await ensureQueues(boss, RUN_KINDS);
 
-  const handleRuns = createRunHandler(RUN_EXECUTORS);
+  const handleRuns = createRunHandler(RUN_EXECUTORS, runLog);
   for (const kind of RUN_KINDS) {
     await boss.work(
       queueForKind(kind),
@@ -48,7 +54,7 @@ async function main(): Promise<void> {
   await boss.work(
     DEAD_LETTER_QUEUE,
     { batchSize: 1 },
-    createDeadLetterHandler()
+    createDeadLetterHandler(runLog)
   );
 
   health.ready = true;
