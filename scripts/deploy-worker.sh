@@ -12,32 +12,17 @@
 # are passed as plain variables on every deploy.
 set -euo pipefail
 
-PROJECT=cosbe-website-ed97c
-# Same region as the App Hosting backends.
-REGION=asia-east1
+cd "$(dirname "$0")/.."
+# shellcheck source=worker-config.sh
+source scripts/worker-config.sh
 REPO=studio
 
 ENVIRONMENT=${1:-}
 MODE=${2:-}
-case "$ENVIRONMENT" in
-  staging)
-    SERVICE=studio-worker-staging
-    SECRET_PREFIX=studio-staging
-    # Cloud Run needs a whole CPU when it is always allocated.
-    CPU=1
-    MEMORY=1Gi
-    ;;
-  production)
-    SERVICE=studio-worker
-    SECRET_PREFIX=studio
-    CPU=1
-    MEMORY=2Gi
-    ;;
-  *)
-    echo "Usage: $0 <staging|production> [--setup|--secrets]" >&2
-    exit 1
-    ;;
-esac
+if ! worker_config "$ENVIRONMENT"; then
+  echo "Usage: $0 <staging|production> [--setup|--secrets]" >&2
+  exit 1
+fi
 case "$MODE" in
   '' | --setup | --secrets) ;;
   *)
@@ -46,7 +31,6 @@ case "$MODE" in
     ;;
 esac
 
-cd "$(dirname "$0")/.."
 ENV_FILE="env/$ENVIRONMENT.env"
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "Missing $ENV_FILE" >&2
@@ -63,8 +47,7 @@ env_value() {
 }
 
 if [[ "$ENVIRONMENT" == production ]]; then
-  read -r -p "This deploys the PRODUCTION worker ($SERVICE). Type \"production\" to continue: " answer
-  [[ "$answer" == production ]] || { echo "Cancelled." >&2; exit 1; }
+  confirm_production deploys
 fi
 
 PROJECT_NUMBER=$(gcloud projects describe "$PROJECT" --format='value(projectNumber)')

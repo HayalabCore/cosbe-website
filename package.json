@@ -43,6 +43,12 @@
     "worker:staging": "APP_ENV=staging STUDIO_WORKER_ALLOW_REMOTE=1 tsx worker/main.ts",
     "worker:deploy:staging": "bash scripts/deploy-worker.sh staging",
     "worker:deploy:prod": "bash scripts/deploy-worker.sh production",
+    "worker:status": "bash scripts/worker-ctl.sh status",
+    "worker:logs": "bash scripts/worker-ctl.sh logs",
+    "worker:tail": "bash scripts/worker-ctl.sh tail",
+    "worker:up": "bash scripts/worker-ctl.sh up",
+    "worker:down": "bash scripts/worker-ctl.sh down",
+    "worker:restart": "bash scripts/worker-ctl.sh restart",
     "test:translations-flatten": "tsx src/lib/translations/flatten.roundtrip.test.ts",
     "prepare": "husky",
     "format": "prettier --write ."
