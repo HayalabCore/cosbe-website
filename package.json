@@ -41,6 +41,8 @@
     "worker:dev": "tsx watch worker/main.ts",
     "worker:start": "tsx worker/main.ts",
     "worker:staging": "APP_ENV=staging STUDIO_WORKER_ALLOW_REMOTE=1 tsx worker/main.ts",
+    "worker:deploy:staging": "bash scripts/deploy-worker.sh staging",
+    "worker:deploy:prod": "bash scripts/deploy-worker.sh production",
     "test:translations-flatten": "tsx src/lib/translations/flatten.roundtrip.test.ts",
     "prepare": "husky",
     "format": "prettier --write ."
