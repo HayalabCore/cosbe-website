@@ -1,0 +1,9 @@
+# Only worker/Dockerfile uses this. It copies named paths, so this just keeps
+# the build context small and env files out of it.
+.git
+.next
+node_modules
+coverage
+.env*
+!.env.example
+env/*.env
