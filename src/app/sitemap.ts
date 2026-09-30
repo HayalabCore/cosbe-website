@@ -39,13 +39,30 @@ function alternates(path: string): Record<string, string> {
   );
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticEntries: MetadataRoute.Sitemap = STATIC_PATHS.map((path) => ({
-    url: `${BASE_URL}/en${path}`,
-    changeFrequency: 'weekly',
-    priority: path === '' ? 1.0 : 0.8,
+function localizedEntries(
+  path: string,
+  options: {
+    changeFrequency: 'weekly' | 'monthly';
+    priority: number;
+    lastModified?: Date;
+  }
+): MetadataRoute.Sitemap {
+  return LOCALES.map((locale) => ({
+    url: `${BASE_URL}/${locale}${path}`,
+    changeFrequency: options.changeFrequency,
+    priority: options.priority,
+    lastModified: options.lastModified,
     alternates: { languages: alternates(path) },
   }));
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticEntries: MetadataRoute.Sitemap = STATIC_PATHS.flatMap((path) =>
+    localizedEntries(path, {
+      changeFrequency: 'weekly',
+      priority: path === '' ? 1.0 : 0.8,
+    })
+  );
 
   const articles = await Promise.all(
     ARTICLE_CATEGORIES.map((category) => getArticles({ category }))
@@ -53,17 +70,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const articleEntries: MetadataRoute.Sitemap = articles
     .flat()
-    .map((article) => {
+    .flatMap((article) => {
       const path = `${articleDetailBasePath(article.category)}/${article.slug}`;
-      return {
-        url: `${BASE_URL}/en${path}`,
+      return localizedEntries(path, {
+        changeFrequency: 'monthly',
+        priority: 0.6,
         lastModified: article.publishedAt
           ? new Date(article.publishedAt)
           : undefined,
-        changeFrequency: 'monthly' as const,
-        priority: 0.6,
-        alternates: { languages: alternates(path) },
-      };
+      });
     });
 
   return [...staticEntries, ...articleEntries];

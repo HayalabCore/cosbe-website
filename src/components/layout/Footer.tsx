@@ -90,6 +90,15 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/useful-video"
+                  className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
+                >
+                  <span className="mr-2 text-primaryColor">▸</span>
+                  {t('videoArticles')}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/notice"
                   className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
                 >
