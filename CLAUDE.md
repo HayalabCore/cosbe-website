@@ -45,10 +45,12 @@ yarn worker:staging # local worker attached to the staging database
 # Deployed workers (Cloud Run; <env> = staging | production)
 yarn worker:deploy:staging         # build + deploy (worker:deploy:prod for production)
 yarn worker:status <env>           # revision, min instances (1 running / 0 stopped), image
-yarn worker:logs <env> [lines]     # recent log lines (default 100); worker:tail <env> streams
+yarn worker:logs <env> [lines]     # recent log lines (default 100)
+yarn worker:tail <env>             # stream logs
 yarn worker:down <env>             # stop: min instances 0, runs wait in the queue
 yarn worker:up <env>               # start again
 yarn worker:restart <env>          # new revision of the same image; jobs resume
+yarn worker:schedule <env>         # Cloud Scheduler: up 08:00, down 18:00 Asia/Tokyo (--remove deletes the jobs)
 ```
 
 ### Translation commands cheat-sheet
