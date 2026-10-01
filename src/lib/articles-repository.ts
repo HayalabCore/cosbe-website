@@ -4,7 +4,12 @@ import {
   type Author as DbAuthor,
 } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { generateTOC, pickUniqueSlug, sanitizeSlug } from '@/lib/article-utils';
+import {
+  extractYoutubeId,
+  generateTOC,
+  pickUniqueSlug,
+  sanitizeSlug,
+} from '@/lib/article-utils';
 import type {
   Article,
   ArticleListItem,
@@ -14,31 +19,59 @@ import type {
   ArticleStatus,
   AuthorReference,
   ArticleSEO,
+  CaseStudyCardItem,
+  VideoItem,
 } from '@/types';
 
-function caseStudyFromRow(row: {
-  clientName: string | null;
-  clientLocation: string | null;
-  clientUrl: string | null;
-  aiModels: string[];
-  mainChallenges: string | null;
-}): import('@/types').CaseStudyMeta | undefined {
+/** Bilingual case-study card copy, stored as plain nullable text columns. */
+const CASE_STUDY_TEXT_FIELDS = [
+  'mainChallengesEn',
+  'industry',
+  'industryEn',
+  'uniqueValue',
+  'uniqueValueEn',
+  'solution',
+  'solutionEn',
+  'result',
+  'resultEn',
+] as const;
+
+function caseStudyFromRow(
+  row: {
+    clientName: string | null;
+    clientLocation: string | null;
+    clientUrl: string | null;
+    aiModels: string[];
+    mainChallenges: string | null;
+  } & Record<(typeof CASE_STUDY_TEXT_FIELDS)[number], string | null>
+): import('@/types').CaseStudyMeta | undefined {
   if (
     !row.clientName &&
     !row.clientLocation &&
     !row.clientUrl &&
     !row.aiModels.length &&
-    !row.mainChallenges
+    !row.mainChallenges &&
+    CASE_STUDY_TEXT_FIELDS.every((f) => !row[f])
   ) {
     return undefined;
   }
-  return {
+  const meta: import('@/types').CaseStudyMeta = {
     clientName: row.clientName ?? undefined,
     clientLocation: row.clientLocation ?? undefined,
     clientUrl: row.clientUrl ?? undefined,
     aiModels: row.aiModels,
     mainChallenges: row.mainChallenges ?? undefined,
   };
+  for (const f of CASE_STUDY_TEXT_FIELDS) meta[f] = row[f] ?? undefined;
+  return meta;
+}
+
+function caseStudyTextColumns(
+  meta: import('@/types').CaseStudyMeta | undefined
+) {
+  return Object.fromEntries(
+    CASE_STUDY_TEXT_FIELDS.map((f) => [f, meta?.[f]?.trim() || null])
+  ) as Record<(typeof CASE_STUDY_TEXT_FIELDS)[number], string | null>;
 }
 
 function toJson(value: unknown): Prisma.InputJsonValue {
@@ -334,6 +367,85 @@ export async function getArticles(
   return rows.map(toListItem);
 }
 
+/** Latest published case studies with the copy their summary cards need. */
+export async function getCaseStudyCards(
+  limit = 3
+): Promise<CaseStudyCardItem[]> {
+  const rows = await prisma.article.findMany({
+    where: buildArticleWhere({ category: 'case-study' }, false),
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      titleEn: true,
+      excerpt: true,
+      excerptEn: true,
+      tags: true,
+      mainChallenges: true,
+      mainChallengesEn: true,
+      industry: true,
+      industryEn: true,
+      uniqueValue: true,
+      uniqueValueEn: true,
+      solution: true,
+      solutionEn: true,
+      result: true,
+      resultEn: true,
+    },
+    orderBy: { publishedAt: 'desc' },
+    take: limit,
+  });
+
+  return rows.map(({ id, slug, title, titleEn, tags, ...copy }) => ({
+    id,
+    slug,
+    title,
+    titleEn: titleEn ?? undefined,
+    tags,
+    ...(Object.fromEntries(
+      Object.entries(copy).map(([k, v]) => [k, v ?? undefined])
+    ) as Omit<CaseStudyCardItem, 'id' | 'slug' | 'title' | 'titleEn' | 'tags'>),
+  }));
+}
+
+/** Latest published videos that have a YouTube embed, newest first. */
+export async function getLatestVideos(limit = 5): Promise<VideoItem[]> {
+  const rows = await prisma.article.findMany({
+    where: buildArticleWhere({ category: 'video' }, false),
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      titleEn: true,
+      featuredImage: true,
+      blocks: true,
+    },
+    orderBy: { publishedAt: 'desc' },
+    // Some videos may lack an embed; over-fetch so `limit` still fills.
+    take: limit * 2,
+  });
+
+  const items: VideoItem[] = [];
+  for (const row of rows) {
+    const embed = asBlocks(row.blocks).find(
+      (b) => b.type === 'embed' && b.embedType === 'youtube' && b.url
+    );
+    const youtubeId =
+      embed?.type === 'embed' ? extractYoutubeId(embed.url) : null;
+    if (!youtubeId) continue;
+    items.push({
+      id: row.id,
+      slug: row.slug,
+      title: row.title,
+      titleEn: row.titleEn ?? undefined,
+      featuredImage: row.featuredImage ?? undefined,
+      youtubeId,
+    });
+    if (items.length === limit) break;
+  }
+  return items;
+}
+
 export async function countArticles(
   options: Pick<
     GetArticlesOptions,
@@ -471,6 +583,7 @@ export async function createArticleRecord(
       clientUrl: data.caseStudy?.clientUrl?.trim() || null,
       aiModels: data.caseStudy?.aiModels ?? [],
       mainChallenges: data.caseStudy?.mainChallenges?.trim() || null,
+      ...caseStudyTextColumns(data.caseStudy),
     },
   });
   return row.id;
@@ -523,6 +636,7 @@ export async function updateArticleRecord(
     patch.clientUrl = data.caseStudy?.clientUrl?.trim() || null;
     patch.aiModels = data.caseStudy?.aiModels ?? [];
     patch.mainChallenges = data.caseStudy?.mainChallenges?.trim() || null;
+    Object.assign(patch, caseStudyTextColumns(data.caseStudy));
   }
 
   await prisma.article.update({ where: { id }, data: patch });

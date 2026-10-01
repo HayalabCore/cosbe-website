@@ -10,6 +10,8 @@ import {
 import {
   getCachedArticleBySlug,
   getCachedArticles,
+  getCachedCaseStudyCards,
+  getCachedLatestVideos,
   getCachedCountArticles,
   getCachedRelatedArticles,
 } from './articles-cache';
@@ -54,6 +56,16 @@ export async function getArticles(
     return getArticlesUncached(options, true);
   }
   return getCachedArticles(options);
+}
+
+/** Latest published case studies for the summary cards (cached). */
+export async function getCaseStudyCards(limit = 3) {
+  return getCachedCaseStudyCards(limit);
+}
+
+/** Latest published YouTube videos (cached). */
+export async function getLatestVideos(limit = 5) {
+  return getCachedLatestVideos(limit);
 }
 
 /** Public reads are cached; pass `admin: true` for live admin counts. */

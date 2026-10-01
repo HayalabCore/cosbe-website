@@ -47,6 +47,15 @@ const caseStudySchema = z.looseObject({
   clientUrl: z.string().optional(),
   aiModels: z.array(z.string()).optional(),
   mainChallenges: z.string().optional(),
+  mainChallengesEn: z.string().optional(),
+  industry: z.string().optional(),
+  industryEn: z.string().optional(),
+  uniqueValue: z.string().optional(),
+  uniqueValueEn: z.string().optional(),
+  solution: z.string().optional(),
+  solutionEn: z.string().optional(),
+  result: z.string().optional(),
+  resultEn: z.string().optional(),
 });
 
 const seoSchema = z.looseObject({

@@ -162,6 +162,16 @@ export interface CaseStudyMeta {
   /** AI models / technologies adopted; e.g. ["AIエージェント", "LLM"]. */
   aiModels: string[];
   mainChallenges?: string;
+  mainChallengesEn?: string;
+  /** Card copy: industry label and the 独自価値/課題/解決/結果 bullets. */
+  industry?: string;
+  industryEn?: string;
+  uniqueValue?: string;
+  uniqueValueEn?: string;
+  solution?: string;
+  solutionEn?: string;
+  result?: string;
+  resultEn?: string;
 }
 
 /** Returns true if at least one case-study field is set (used by the public page). */
@@ -225,6 +235,40 @@ export interface ArticleListItem {
   sourceUrl?: string;
   /** Only set for case-study category; used on the listing card to show the client. */
   clientName?: string;
+}
+
+/** A published case study as shown on the summary cards (home, AX, partners). */
+export type CaseStudyCardItem = Pick<
+  CaseStudyMeta,
+  | 'mainChallenges'
+  | 'mainChallengesEn'
+  | 'industry'
+  | 'industryEn'
+  | 'uniqueValue'
+  | 'uniqueValueEn'
+  | 'solution'
+  | 'solutionEn'
+  | 'result'
+  | 'resultEn'
+> & {
+  id: string;
+  slug: string;
+  title: string;
+  titleEn?: string;
+  /** Shown when none of the bullet fields are filled in. */
+  excerpt?: string;
+  excerptEn?: string;
+  tags: string[];
+};
+
+/** A published video article with its YouTube id (home learning section). */
+export interface VideoItem {
+  id: string;
+  slug: string;
+  title: string;
+  titleEn?: string;
+  featuredImage?: string;
+  youtubeId: string;
 }
 
 // ============================================

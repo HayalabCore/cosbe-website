@@ -172,3 +172,19 @@ export function createEmptyBlock(type: ContentBlock['type']): ContentBlock {
       return { id, type: 'paragraph', content: '' };
   }
 }
+
+/** Video id from a youtube.com/watch?v= or youtu.be/ URL. */
+export function extractYoutubeId(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtu.be')) {
+      return u.pathname.slice(1) || null;
+    }
+    if (u.hostname.includes('youtube.com')) {
+      return u.searchParams.get('v');
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}

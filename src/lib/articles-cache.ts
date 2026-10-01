@@ -6,6 +6,8 @@ import {
   countArticles as countArticlesUncached,
   getArticleBySlug as getArticleBySlugUncached,
   getArticles as getArticlesUncached,
+  getCaseStudyCards as getCaseStudyCardsUncached,
+  getLatestVideos as getLatestVideosUncached,
   getRelatedArticles as getRelatedArticlesUncached,
 } from './articles-repository';
 
@@ -61,6 +63,22 @@ export function getCachedCountArticles(
     {
       tags: [ARTICLES_CACHE_TAG, `articles-count-${key}`],
     }
+  )();
+}
+
+export function getCachedCaseStudyCards(limit: number) {
+  return unstable_cache(
+    async () => getCaseStudyCardsUncached(limit),
+    ['case-study-cards', String(limit)],
+    { tags: [ARTICLES_CACHE_TAG] }
+  )();
+}
+
+export function getCachedLatestVideos(limit: number) {
+  return unstable_cache(
+    async () => getLatestVideosUncached(limit),
+    ['latest-videos', String(limit)],
+    { tags: [ARTICLES_CACHE_TAG] }
   )();
 }
 

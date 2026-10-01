@@ -326,7 +326,13 @@
     "aiModelsPlaceholder": "AIエージェント, LLM",
     "aiModelsHint": "カンマ区切りで導入したAI技術を入力します。",
     "mainChallenges": "主な課題",
-    "mainChallengesPlaceholder": "顧客の主な課題を簡潔に記述します。"
+    "mainChallengesPlaceholder": "顧客の主な課題を簡潔に記述します。",
+    "cardSection": "事例カード",
+    "industry": "業種",
+    "industryPlaceholder": "例：製造業",
+    "uniqueValue": "独自価値",
+    "solution": "解決",
+    "result": "結果"
   },
   "image": {
     "previewAlt": "プレビュー",

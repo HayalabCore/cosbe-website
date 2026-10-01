@@ -17,6 +17,7 @@
   --color-bgSecondary: #f9fafb;
   --color-bgTertiary: #f3f4f6;
   --color-bgAccent: #ebf7ff;
+  --color-bgSoft: #e6f2fd;
   --color-bgFooter: #263238;
 
   /* Text Colors */
@@ -26,6 +27,7 @@
   --color-textDisabled: #9ca3af;
   --color-textHeading: #0f172a;
   --color-textBody: #334155;
+  --color-textDark: #263238;
 
   /* Border Colors */
   --color-borderPrimary: #e5e7eb;

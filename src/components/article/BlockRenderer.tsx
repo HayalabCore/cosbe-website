@@ -1,6 +1,6 @@
 import type { ElementType } from 'react';
 import Image from 'next/image';
-import { imageSrcOrFallback } from '@/lib/article-utils';
+import { extractYoutubeId, imageSrcOrFallback } from '@/lib/article-utils';
 import {
   paragraphContentToHtml,
   inlineHtmlToPlainText,
@@ -274,19 +274,4 @@ export default function BlockRenderer({ block }: { block: ContentBlock }) {
     default:
       return null;
   }
-}
-
-function extractYoutubeId(url: string): string | null {
-  try {
-    const u = new URL(url);
-    if (u.hostname.includes('youtu.be')) {
-      return u.pathname.slice(1) || null;
-    }
-    if (u.hostname.includes('youtube.com')) {
-      return u.searchParams.get('v');
-    }
-  } catch {
-    return null;
-  }
-  return null;
 }

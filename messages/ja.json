@@ -32,67 +32,72 @@
   },
   "hero": {
     "eyebrow": "経営者の未来を切り拓く",
-    "headline": "AIトランスフォーメーションパートナー",
-    "ctaDownload": "CosBE説明資料ダウンロード(無料)",
-    "illustrationAlt": "AIトランスフォーメーションのイメージイラスト",
-    "nav": {
-      "aboutCosbe": "CosBEとは？",
-      "fastAiLab": "速AIラボ",
-      "caseStudies": "導入事例",
-      "notice": "お知らせ"
-    }
+    "headline": "AIトランスフォーメーションパートナー"
   },
   "homePage": {
-    "about": {
-      "section": "CosBEとは？",
-      "heading": "ビジネスを変革する、\n戦略的AI実装パートナー",
-      "p1": "CosBEは、トップ経営コンサルタントが率いる多国籍AI/ITエンジニア集団です。",
-      "p2": "我々の使命は、世界中の経営者の挑戦を加速させることです。",
-      "p3": "経営の視点に世界水準のAIとグローバルの視座をもたらし、実装を通じて企業変革を実現します。",
-      "viewMore": "詳しく見る",
-      "imageAlt": "CosBEチームのイメージ"
+    "hero": {
+      "title": "<accent>AI</accent>を入れるだけでなく、\n<accent>経営</accent>を変える。",
+      "subtitle": "中小企業のAIトランスフォーメーションならCosBE",
+      "consult": "相談する",
+      "materials": "資料請求",
+      "characterAlt": "CosBEのAIキャラクター"
     },
-    "service": {
-      "section": "サービス",
-      "eyebrow": "AI特化型MVP開発サービス “速AIラボ”",
-      "title": "速AIラボ",
-      "p1": "速AIラボは、AIに特化したMVP開発をスピーディに提供するサービスです。",
-      "p2": "新規事業に深い知見を持つAIコンサルタントと世界トップレベルのAIエンジニアがお客様とタッグを組むことで、アジャイルでスピーディーなMVP開発が実現します。",
-      "viewMore": "詳しく見る",
-      "imageAlt": "速AIラボサービス"
+    "sideTabs": {
+      "contact": "お問い合わせ",
+      "materials": "資料請求"
     },
-    "caseStudies": {
-      "section": "導入事例",
-      "title": "速AIラボが提供する、業界を超えたAIソリューション",
-      "description": "CosBEは、国際的に活躍するAIエンジニアによる高い技術力のもと、様々な案件に柔軟に対応いたします。製造業、建設、小売からITまで幅広く対応しています。",
-      "scrollHint": "スクロールできます",
-      "viewAll": "実績一覧へ"
+    "poem": {
+      "title": "「AIを入れても変わらない」には理由がある",
+      "body": "社内でChatGPTを使い始めた。\n便利だと感じる場面もある。\nでも、経営の数字は変わっていない。\nこの方向で正しいのか、誰にも確認できないでいる。",
+      "conclusion": "差はAIの使い方ではない。\n経営の設計から変えているかどうかだ。"
     },
-    "news": {
-      "section": "おしらせ",
-      "viewAll": "おしらせ一覧へ",
-      "fallback": {
-        "item1": {
-          "date": "2026年4月10日",
-          "title": "株式会社Revopp『AI開発依頼できる君』との紹介契約締結について"
+    "methodology": {
+      "title": "経営が変わる会社は、何が違うのか",
+      "subtitle": "CosBEが掲げる、AXメソドロジーについて",
+      "cta": "詳しく見る",
+      "imageAlt": "経営データを分析する人物のイラスト"
+    },
+    "strengths": {
+      "eyebrow": "経営の仕組みをAIで作り直す",
+      "title": "<accent>CosBE</accent>の3つの強み",
+      "items": [
+        {
+          "heading": "「<accent>経営視点</accent>」\nAIではなく、経営課題から始める。",
+          "body": "企業固有の価値を起点に、経営戦略・業務・組織まで見据えてAIの役割を設計",
+          "imageAlt": "会議でデータを共有するチームのイラスト"
         },
-        "item2": {
-          "date": "2026年2月10日",
-          "title": "株式会社ecloreが運営するメディア 「Rank-Quest」にて、CosBEが「AIコンサルおすすめ企業」として紹介されました。"
+        {
+          "heading": "「<accent>技術力</accent>」\nAIを選ぶだけでなく、\n必要な技術をつくる。",
+          "body": "LLM活用にとどまらず、画像認識・機械学習・データ基盤などを組み合わせ、複雑な経営課題を実際に動く仕組みへ",
+          "imageAlt": "上昇する矢印の上で手を取り合う二人のイラスト"
         },
-        "item3": {
-          "date": "2026年1月15日",
-          "title": "【受賞報告】CEO茂見憲治郎が世界的カンファレンス「Founders 2.0」にて「優秀起業家賞」を受賞"
-        },
-        "item4": {
-          "date": "2026年1月15日",
-          "title": "【無料公開】経営者のための「AIトランスフォーメーション」実践ホワイトペーパーをリリースいたしました"
-        },
-        "item5": {
-          "date": "2026年1月14日",
-          "title": "【1/22 仙台開催】AI超生産性時代のスタートアップ経営セミナー 登壇のお知らせ"
+        {
+          "heading": "「<accent>実証された方法論</accent>」\n一社ごとの違いを活かす\n再現可能な方法論",
+          "body": "中小企業の実案件から体系化した独自手法で、独自価値の明確化からMVP、現場定着、業務・組織の再設計まで",
+          "imageAlt": "ハイタッチするチームのイラスト"
         }
-      }
+      ]
+    },
+    "team": {
+      "title": "グローバルワンチーム",
+      "description": "CosBE inc. は2022年設立。デロイトトーマツで18年、製造業CEOを5年務めた茂見憲治郎が率いる多国籍チーム。\n世界水準のAI実装で、経営者の未来を切り拓く。",
+      "mapAlt": "CosBEの拠点：ロンドン、ソフィア、サンマテオ、バンガロール、仙台",
+      "cta": "会社概要を見る"
+    },
+    "partners": {
+      "title": "信頼できる専門パートナー",
+      "description": "CosBEは複数の専門パートナーと連携し、経営変革を支援します。",
+      "cta": "パートナーについて"
+    },
+    "learn": {
+      "title": "AIトランスフォーメーションを学ぶ",
+      "youtube": "Youtubeで学ぶ",
+      "columns": "コラムで学ぶ",
+      "materials": "資料で学ぶ",
+      "more": "もっと見る",
+      "previous": "前の動画",
+      "next": "次の動画",
+      "play": "再生"
     },
     "cta": {
       "title": "ご相談・お問い合わせ",
@@ -1531,5 +1536,20 @@
     "learnMore": "詳細",
     "accept": "同意する",
     "decline": "同意しない"
+  },
+  "caseStudiesSection": {
+    "title": "導入事例",
+    "viewAll": "事例一覧を見る",
+    "labels": {
+      "uniqueValue": "独自価値：",
+      "mainChallenges": "課題：",
+      "solution": "解決：",
+      "result": "結果："
+    }
+  },
+  "partnerNames": {
+    "lbp": "LBP（ロングブラックパートナーズ株式会社）",
+    "matTriangle": "MATトライアングル株式会社",
+    "revitalize": "株式会社Revitalize"
   }
 }

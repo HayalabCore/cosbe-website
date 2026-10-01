@@ -58,6 +58,16 @@ model Article {
   clientUrl         String?        @map("client_url")
   aiModels          String[]       @default([]) @map("ai_models")
   mainChallenges    String?        @map("main_challenges")
+  mainChallengesEn  String?        @map("main_challenges_en")
+  // Case-study card copy (industry + 独自価値/課題/解決/結果 bullets)
+  industry          String?
+  industryEn        String?        @map("industry_en")
+  uniqueValue       String?        @map("unique_value")
+  uniqueValueEn     String?        @map("unique_value_en")
+  solution          String?
+  solutionEn        String?        @map("solution_en")
+  result            String?
+  resultEn          String?        @map("result_en")
   relatedArticleIds String[]       @default([]) @map("related_article_ids")
   viewCount         Int            @default(0) @map("view_count")
   publishedAt       DateTime?      @map("published_at") @db.Timestamptz(6)

@@ -33,67 +33,72 @@
   },
   "hero": {
     "eyebrow": "Opening up the future for business leaders",
-    "headline": "AI Transformation Partner",
-    "ctaDownload": "Download CosBE Information Materials (Free)",
-    "illustrationAlt": "AI transformation illustration",
-    "nav": {
-      "aboutCosbe": "What is CosBE?",
-      "fastAiLab": "Fast AI Lab",
-      "caseStudies": "Case Studies",
-      "notice": "News"
-    }
+    "headline": "AI Transformation Partner"
   },
   "homePage": {
-    "about": {
-      "section": "About",
-      "heading": "A strategic AI implementation partner\nthat transforms your business",
-      "p1": "CosBE is a multinational team of AI/IT engineers led by top management consultants.",
-      "p2": "Our mission is to accelerate the challenges of business leaders around the world.",
-      "p3": "We bring world-class AI and a global perspective to management, and achieve corporate transformation through implementation.",
-      "viewMore": "Learn more",
-      "imageAlt": "CosBE team illustration"
+    "hero": {
+      "title": "<accent>Don’t just adopt AI.\nTransform the business.</accent>",
+      "subtitle": "CosBE: AI transformation for small and mid-sized companies",
+      "consult": "Book a Consultation",
+      "materials": "Request Materials",
+      "characterAlt": "CosBE AI character"
     },
-    "service": {
-      "section": "Service",
-      "eyebrow": "AI-focused MVP development service \"Fast AI Lab\"",
-      "title": "Fast AI Lab",
-      "p1": "Fast AI Lab provides speedy, AI-focused MVP development.",
-      "p2": "AI consultants with deep expertise in new businesses and world-class AI engineers team up with you to deliver agile, rapid MVP development.",
-      "viewMore": "Learn more",
-      "imageAlt": "Fast AI Lab service"
+    "sideTabs": {
+      "contact": "Send an Inquiry",
+      "materials": "Request Materials"
     },
-    "caseStudies": {
-      "section": "Case Studies",
-      "title": "Cross-industry AI solutions from Fast AI Lab",
-      "description": "With highly skilled AI engineers active internationally, CosBE flexibly handles a wide range of projects—from manufacturing and construction to retail and IT.",
-      "scrollHint": "Scroll horizontally",
-      "viewAll": "View all case studies"
+    "poem": {
+      "title": "There’s a reason AI alone changes nothing",
+      "body": "You’ve started using ChatGPT at work.\nIt’s useful in places.\nBut the numbers haven’t moved,\nand no one can tell you whether this is the right direction.",
+      "conclusion": "The difference isn’t how you use AI. It’s whether you redesign the business around it."
     },
-    "news": {
-      "section": "News",
-      "viewAll": "All news",
-      "fallback": {
-        "item1": {
-          "date": "April 10, 2026",
-          "title": "Partnership agreement with Revopp's \"AI Development Request Platform\""
+    "methodology": {
+      "title": "What sets apart the companies that actually change?",
+      "subtitle": "The CosBE AX methodology",
+      "cta": "Learn More",
+      "imageAlt": "Illustration of a person reviewing business analytics"
+    },
+    "strengths": {
+      "eyebrow": "Rebuild how the business runs, with AI",
+      "title": "<accent>Three strengths of CosBE</accent>",
+      "items": [
+        {
+          "heading": "“Business perspective”\nWe start with the business problem, not with AI.",
+          "body": "We design AI’s role around what makes your company distinctive, across strategy, operations and organization.",
+          "imageAlt": "Illustration of a team sharing data in a meeting"
         },
-        "item2": {
-          "date": "February 10, 2026",
-          "title": "CosBE featured as a recommended AI consulting firm on Rank-Quest media operated by eclore Inc."
+        {
+          "heading": "“Technical capability”\nWe don’t just pick AI tools.\nWe build what’s needed.",
+          "body": "Beyond LLMs, we combine image recognition, machine learning and data infrastructure to turn complex business problems into systems that actually run.",
+          "imageAlt": "Illustration of two people helping each other up a rising arrow"
         },
-        "item3": {
-          "date": "January 15, 2026",
-          "title": "[Award] CEO Kenjiro Momi receives Excellent Entrepreneur Award at Founders 2.0"
-        },
-        "item4": {
-          "date": "January 15, 2026",
-          "title": "[Free release] Practical white paper on AI Transformation for business leaders"
-        },
-        "item5": {
-          "date": "January 14, 2026",
-          "title": "[Jan 22, Sendai] Speaking at startup management seminar on the AI hyper-productivity era"
+        {
+          "heading": "“Proven methodology”\nA repeatable method that works with what makes each company different.",
+          "body": "A method built from real projects with small and mid-sized companies: from defining your distinctive value to MVP, adoption on the ground, and redesigning operations and organization.",
+          "imageAlt": "Illustration of a team giving each other a high five"
         }
-      }
+      ]
+    },
+    "team": {
+      "title": "One global team",
+      "description": "CosBE Inc. was founded in 2022.\nA multinational team led by Kenjiro Momi, who spent 18 years at Deloitte Tohmatsu and five years as CEO of a manufacturing company.\nWorld-class AI implementation that opens up the future for business owners.",
+      "mapAlt": "CosBE locations: London, Sofia, San Mateo, Bangalore and Sendai",
+      "cta": "About CosBE"
+    },
+    "partners": {
+      "title": "Trusted specialist partners",
+      "description": "CosBE works with a network of specialist partners to drive business transformation.",
+      "cta": "About Our Partners"
+    },
+    "learn": {
+      "title": "Learn about AI transformation",
+      "youtube": "Watch on YouTube",
+      "columns": "Read our articles",
+      "materials": "Download materials",
+      "more": "View More",
+      "previous": "Previous video",
+      "next": "Next video",
+      "play": "Play"
     },
     "cta": {
       "title": "Get in Touch",
@@ -1532,5 +1537,20 @@
     "learnMore": "Learn more",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "caseStudiesSection": {
+    "title": "Case Studies",
+    "viewAll": "View All Case Studies",
+    "labels": {
+      "uniqueValue": "Distinctive value: ",
+      "mainChallenges": "Challenge: ",
+      "solution": "Solution: ",
+      "result": "Result: "
+    }
+  },
+  "partnerNames": {
+    "lbp": "LBP (Long Black Partners Inc.)",
+    "matTriangle": "MAT Triangle Inc.",
+    "revitalize": "Revitalize Inc."
   }
 }
