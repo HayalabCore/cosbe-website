@@ -326,7 +326,13 @@
     "aiModelsPlaceholder": "AI agent, LLM",
     "aiModelsHint": "Comma-separated list of AI technologies used.",
     "mainChallenges": "Main challenges",
-    "mainChallengesPlaceholder": "Short description of the customer's main pain point."
+    "mainChallengesPlaceholder": "Short description of the customer's main pain point.",
+    "cardSection": "Case card",
+    "industry": "Industry",
+    "industryPlaceholder": "e.g. Manufacturing",
+    "uniqueValue": "Unique value",
+    "solution": "Solution",
+    "result": "Result"
   },
   "image": {
     "previewAlt": "Preview",

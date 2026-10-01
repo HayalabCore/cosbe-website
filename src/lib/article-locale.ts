@@ -21,7 +21,7 @@ export function isEnglishLocale(locale: string): boolean {
 }
 
 /** Prefer the field for `locale`, then the other language if the first is empty. */
-function pickForLocale(
+export function pickForLocale(
   locale: string,
   primary: string | undefined,
   en: string | undefined

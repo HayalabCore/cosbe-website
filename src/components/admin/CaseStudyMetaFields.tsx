@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { translateBlockEnAction } from '@/actions/block-translation';
+import BlockLocaleTabs, { type LocaleEditTab } from './BlockLocaleTabs';
 import type { CaseStudyMeta } from '@/types';
 
 type Props = {
@@ -69,15 +72,88 @@ export default function CaseStudyMetaFields({ value, onChange }: Props) {
         <p className="mt-1 text-[10px] text-slate-400">{t('aiModelsHint')}</p>
       </div>
 
-      <div>
-        <label className={LABEL_CLS}>{t('mainChallenges')}</label>
-        <textarea
-          className={`${INPUT_CLS} min-h-[80px] resize-y`}
-          placeholder={t('mainChallengesPlaceholder')}
-          value={value.mainChallenges ?? ''}
-          onChange={(e) => onChange({ mainChallenges: e.target.value })}
-        />
-      </div>
+      <CaseStudyCardFields value={value} onChange={onChange} />
+    </div>
+  );
+}
+
+/** Japanese source fields of the summary card; each has an `*En` twin. */
+const CARD_FIELDS = [
+  'industry',
+  'uniqueValue',
+  'mainChallenges',
+  'solution',
+  'result',
+] as const;
+
+type CardField = (typeof CARD_FIELDS)[number];
+
+function CaseStudyCardFields({ value, onChange }: Props) {
+  const t = useTranslations('admin.caseStudyMeta');
+  const [tab, setTab] = useState<LocaleEditTab>('original');
+  const [generating, setGenerating] = useState(false);
+
+  const isOriginal = tab === 'original';
+  const keyFor = (field: CardField) =>
+    isOriginal ? field : (`${field}En` as const);
+  const hasSource = CARD_FIELDS.some((f) => value[f]?.trim());
+
+  async function handleGenerate() {
+    const fields = CARD_FIELDS.filter((f) => value[f]?.trim());
+    if (!fields.length || generating) return;
+    setGenerating(true);
+    try {
+      const result = await translateBlockEnAction({
+        type: 'list',
+        items: fields.map((f) => value[f]!.trim()),
+      });
+      if (result.type !== 'list') return;
+      onChange(
+        Object.fromEntries(
+          fields.map((f, i) => [`${f}En`, result.itemsEn[i] ?? ''])
+        )
+      );
+      setTab('english');
+    } catch (e) {
+      console.error(e);
+      alert(e instanceof Error ? e.message : 'Translation failed');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3 border-t border-slate-100 pt-3">
+      <p className={LABEL_CLS}>{t('cardSection')}</p>
+      <BlockLocaleTabs
+        tab={tab}
+        onTabChange={setTab}
+        onGenerateEnglish={handleGenerate}
+        generating={generating}
+        generateDisabled={!hasSource}
+      />
+      {CARD_FIELDS.map((field) => {
+        const key = keyFor(field);
+        return (
+          <div key={field}>
+            <label className={LABEL_CLS}>{t(field)}</label>
+            {field === 'industry' ? (
+              <input
+                className={INPUT_CLS}
+                placeholder={t('industryPlaceholder')}
+                value={value[key] ?? ''}
+                onChange={(e) => onChange({ [key]: e.target.value })}
+              />
+            ) : (
+              <textarea
+                className={`${INPUT_CLS} min-h-[64px] resize-y`}
+                value={value[key] ?? ''}
+                onChange={(e) => onChange({ [key]: e.target.value })}
+              />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
