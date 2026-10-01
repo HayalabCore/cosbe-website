@@ -88,7 +88,7 @@ const navItems: NavItem[] = [
     ],
   },
   { href: '/company', labelKey: 'nav.company' },
-  { href: '/#partners', labelKey: 'nav.partners' },
+  { href: '/partners', labelKey: 'nav.partners' },
 ];
 
 export default function Navbar() {
@@ -228,7 +228,10 @@ export default function Navbar() {
                 if (item.children && item.dropdownKey) {
                   const key = item.dropdownKey;
                   return (
-                    <div key={item.labelKey} className="border-b border-borderPrimary">
+                    <div
+                      key={item.labelKey}
+                      className="border-b border-borderPrimary"
+                    >
                       <button
                         onClick={() => toggleMobileDropdown(key)}
                         className="flex w-full items-center justify-between py-3 text-base font-medium text-textSecondary transition-colors hover:text-primaryColor md:py-4 md:text-lg"

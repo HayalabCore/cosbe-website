@@ -1,9 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
-import AxHeroSection from '@/components/ax/AxHeroSection';
-import AxComparisonSection from '@/components/ax/AxComparisonSection';
-import AxPhasesSection from '@/components/ax/AxPhasesSection';
-import AxPrinciplesSection from '@/components/ax/AxPrinciplesSection';
+import PartnersHeroSection from '@/components/partners/PartnersHeroSection';
+import PartnersWhySection from '@/components/partners/PartnersWhySection';
+import PartnersLbpAxSection from '@/components/partners/PartnersLbpAxSection';
+import PartnersSpecialtiesSection from '@/components/partners/PartnersSpecialtiesSection';
 import CaseStudiesSection from '@/components/shared/CaseStudiesSection';
 import CtaSection from '@/components/shared/CtaSection';
 
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'axPage' });
+  const t = await getTranslations({ locale, namespace: 'partnersPage' });
 
   return {
     title: t('metaTitle'),
@@ -28,16 +28,16 @@ export async function generateMetadata({
   };
 }
 
-export default async function AiTransformationPage({ params }: PageProps) {
+export default async function PartnersPage({ params }: PageProps) {
   const { locale } = await params;
   const tCta = await getTranslations('homePage.cta');
 
   return (
     <div className="min-h-screen bg-white pt-16 md:pt-20">
-      <AxHeroSection />
-      <AxComparisonSection />
-      <AxPhasesSection />
-      <AxPrinciplesSection />
+      <PartnersHeroSection />
+      <PartnersWhySection />
+      <PartnersLbpAxSection />
+      <PartnersSpecialtiesSection />
       <CaseStudiesSection locale={locale} />
       <CtaSection
         title={tCta('title')}

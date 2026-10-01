@@ -26,7 +26,7 @@ export default function Footer() {
                 <FooterLink href="/case-studies">{t('caseStudies')}</FooterLink>
               </li>
               <li>
-                <FooterLink href="/#partners">{t('partners')}</FooterLink>
+                <FooterLink href="/partners">{t('partners')}</FooterLink>
               </li>
               <li>
                 <FooterLink href="/company">{t('company')}</FooterLink>
