@@ -299,51 +299,6 @@
       "button": "Contact us about Hayaku AI Lab"
     }
   },
-  "aiTransformationPage": {
-    "home": "Home",
-    "breadcrumb": "CosBE's AI Transformation",
-    "title": "CosBE's AI Transformation",
-    "subtitle": "From solving management and business issues to introducing cutting-edge technology, CosBE has unique strengths that will lead our customers to successful utilization of AI.",
-    "strengths": {
-      "title": "CosBE's Strengths"
-    },
-    "section1": {
-      "title": "Planning and conceptual capabilities for realizing AI from a management perspective",
-      "description": "Rather than just introducing AI superficially, we pursue the use of AI to contribute to solving essential management and business issues for our customers.",
-      "point1": "Strategic planning incorporating the perspective of management and business consultants",
-      "point2": "Reduce risks and maximize benefits through thorough consulting from the PoC (proof of concept) stage",
-      "point3": "We work closely with our customers to understand their business challenges and propose truly valuable AI applications.",
-      "imageAlt": "Strategic AI Planning"
-    },
-    "section2": {
-      "title": "Flexibility and speed through agile development",
-      "description": "We employ a fast and flexible development process to adapt to the ever-changing business environment.",
-      "point1": "An agile development system that easily reflects customer situations and feedback",
-      "point2": "Faster value delivery with prioritized phased releases",
-      "point3": "Responding flexibly to specification changes and leading projects to success",
-      "imageAlt": "Agile Development"
-    },
-    "section3": {
-      "title": "Cutting-edge technology and unique knowledge",
-      "description": "We always keep up with the latest technological trends and work to solve problems with our unique perspectives and technical capabilities that other companies do not have.",
-      "point1": "The latest technical information and knowledge available from global networks, including Silicon Valley",
-      "point2": "Unique solutions based on a research approach that goes beyond the limits of existing technology",
-      "point3": "Solid implementation capabilities by a team of engineers with advanced expertise",
-      "imageAlt": "Cutting-edge Technology"
-    },
-    "info": {
-      "title": "Learn more about CosBE's AI solutions",
-      "description": "We have prepared a document summarizing specific examples and service details on how CosBE can support your company's AI transformation.",
-      "button": "Download CosBE materials (free)"
-    },
-    "cta2": {
-      "title": "We will support your business in various aspects.",
-      "subtitle": "Please feel free to contact us.",
-      "description": "For more information about our services or to request a quote, please fill out the form.",
-      "additionalText": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about HAYAI Lab"
-    }
-  },
   "aiLab": {
     "hero": {
       "badge": "HAYAI Lab",
@@ -1541,8 +1496,145 @@
     }
   },
   "partnerNames": {
-    "lbp": "LBP (Long Black Partners Inc.)",
-    "matTriangle": "MAT Triangle Inc.",
-    "revitalize": "Revitalize Inc."
+    "lbp": "LBP (Long Black Partners Co., Ltd.)",
+    "matTriangle": "MAT Triangle Co., Ltd.",
+    "revitalize": "Revitalize Co., Ltd."
+  },
+  "axPage": {
+    "metaTitle": "CosBE AI transformation",
+    "metaDescription": "Strengthen your distinctive value with AI and rebuild how the business runs. CosBE delivers business change step by step with the CosBE AX methodology.",
+    "hero": {
+      "title": "We translate an owner’s ambition\ninto a blueprint for change.",
+      "subtitle": "Strengthen your distinctive value with AI.\nRebuild how the business runs with AI.\nBecause we translate an owner’s ambition into a blueprint for change."
+    },
+    "comparison": {
+      "title": "Adopting AI and transforming the business\nwith AI are not the same thing",
+      "typical": {
+        "heading": "Typical AI adoption",
+        "items": [
+          "Aims to make existing work more efficient",
+          "Used by individuals or single departments",
+          "AI applied at isolated points",
+          "Work processes and the business model stay the same"
+        ],
+        "imageAlt": "Illustration of a person working at a computer"
+      },
+      "transformation": {
+        "heading": "AI Transformation",
+        "items": [
+          "Aims to solve business problems",
+          "Extends to customer touchpoints and new businesses",
+          "AI applied across whole processes and functions",
+          "The business model and organizational design change"
+        ],
+        "imageAlt": "Illustration of business partners shaking hands"
+      }
+    },
+    "phases": {
+      "eyebrow": "How CosBE AI transformation works",
+      "title": "We move step by step, based on the CosBE AX methodology,\nto deliver real business change.",
+      "items": [
+        {
+          "name": "Strategy",
+          "body": "Re-examine what makes your company distinctive and set the direction for AI. Translate the owner’s ambition into a blueprint for change."
+        },
+        {
+          "name": "Pilot (MVP validation)",
+          "body": "Build a small AI that actually runs and test it in real operations. The first cycle gives you the evidence that this will work."
+        },
+        {
+          "name": "Scaling",
+          "body": "Take what you learned across departments and company-wide. Connect multiple AIs and redesign the whole workflow."
+        },
+        {
+          "name": "Business model transformation",
+          "body": "Move to a business structure and model built on AI, where your distinctive value keeps getting stronger."
+        }
+      ]
+    },
+    "principles": {
+      "eyebrow": "CosBE AI Transformation",
+      "title": "Four principles of success",
+      "items": [
+        {
+          "name": "Issue First",
+          "tagline": "Start with the problem",
+          "body": "Start from the business problem to be solved, not the technology. Work backwards from “what should change”, not “what can be built”."
+        },
+        {
+          "name": "Lean & Agile",
+          "tagline": "Start small and improve fast",
+          "body": "Build a minimum viable prototype quickly and iterate. Not a grand plan, but a way of building conviction step by step."
+        },
+        {
+          "name": "A network of small AIs",
+          "tagline": "Combine small, specialized AIs",
+          "body": "Connect AIs built for specific tasks instead of one all-purpose AI. Flexible, easy to update and cost-efficient."
+        },
+        {
+          "name": "Built around the people who use it",
+          "tagline": "Improved by feedback from the front line",
+          "body": "Feedback from the field feeds back into AI learning, so accuracy keeps improving. Designed to grow through use."
+        }
+      ]
+    }
+  },
+  "partnersPage": {
+    "metaTitle": "Partners",
+    "metaDescription": "Execution power for AI transformation, through the advisors you already trust. CosBE works with specialist partners to drive business transformation.",
+    "hero": {
+      "title": "Execution power for <accent>AI transformation</accent>,\nthrough the advisors you already trust.",
+      "description": "The experts you already trust work alongside CosBE as partners in your AI transformation.\nFrom strategy through to implementation, with one team you can rely on.",
+      "owners": {
+        "label": "For business owners",
+        "cta": "Talk to us about the right support structure"
+      },
+      "consultants": {
+        "label": "For consultants",
+        "cta": "Talk to us about partnering with CosBE"
+      },
+      "imageAlt": "Illustration of business people discussing strategy"
+    },
+    "why": {
+      "title": "Why we work with partners",
+      "description": "AI transformation doesn’t end with AI implementation.\nWe work with specialists in each field so change reaches every part of the business.",
+      "items": [
+        {
+          "title": "Build on the trust\nthat’s already there",
+          "body": "We start from the trust an owner has built with their advisors, so change moves forward without losing the understanding of the company."
+        },
+        {
+          "title": "Combine expertise\nwith the AX Methodology",
+          "body": "We combine specialists who know the industry, the region and the company with the CosBE AX Methodology, to pin down what makes each company distinctive and what stands in its way."
+        },
+        {
+          "title": "One team\nfor business and technology",
+          "body": "Strategy and AI development stay connected. CosBE’s multinational AI engineers build the MVP, refine it, and see it adopted on the ground with you."
+        }
+      ]
+    },
+    "lbpAx": {
+      "title": "Guiding owners through AI transformation,\ntogether with LBP.",
+      "body": "LBP consultants work with regional financial institutions to guide business owners through AI transformation, built on the proven, repeatable CosBE AX methodology.",
+      "logoAlt": "LBP-AX Powered by CosBE"
+    },
+    "specialties": {
+      "title": "What each partner brings",
+      "description": "CosBE works with a network of specialist partners to drive business transformation.\nFeel free to reach out to any of them.",
+      "items": {
+        "lbp": {
+          "tagline": "Consulting for small and mid-sized companies, from a team of corporate turnaround specialists",
+          "body": "A professional firm covering the full range of issues facing small and mid-sized companies, from business turnaround, growth support and succession through to DX and organizational change. The team brings together accountants, certified SME consultants, and people from financial institutions and funds, with hands-on experience running its own fund. Working with CosBE, it supports clients end to end, from strategy to AI implementation."
+        },
+        "matTriangle": {
+          "tagline": "Mentoring and strategic counsel for owners",
+          "body": "A companion and strategic counsel to the owner, connecting the owner’s intent with the organization’s mission through mentoring and consulting. The firm has its own method for supporting owners around three elements: ambition, the future they want, and the story of the challenge. Working with CosBE, it drives change in the AI era from within the owner."
+        },
+        "revitalize": {
+          "tagline": "Business producers and management support",
+          "body": "A platform of business producers working to bring the Japanese economy back from long stagnation. Experienced professionals deliver advanced solutions such as strategy, DX, cost improvement and export support to small and mid-sized companies and startups. Working with CosBE, they add execution power to change."
+        }
+      }
+    }
   }
 }
