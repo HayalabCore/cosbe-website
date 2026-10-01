@@ -49,6 +49,7 @@
     "worker:up": "bash scripts/worker-ctl.sh up",
     "worker:down": "bash scripts/worker-ctl.sh down",
     "worker:restart": "bash scripts/worker-ctl.sh restart",
+    "worker:schedule": "bash scripts/schedule-worker.sh",
     "test:translations-flatten": "tsx src/lib/translations/flatten.roundtrip.test.ts",
     "prepare": "husky",
     "format": "prettier --write ."
