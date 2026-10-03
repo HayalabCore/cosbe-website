@@ -16,7 +16,8 @@ export default async function PartnersLbpAxSection() {
         />
         <div>
           <h2 className="text-2xl font-medium! leading-[1.35] sm:whitespace-pre-line sm:text-[32px] sm:leading-[43px]">
-            {t('title')}
+            {/* Word joiner stops the line from breaking after 「、」. */}
+            {t('title').replaceAll('、', '、\u2060')}
           </h2>
           <p className="mt-9 text-base leading-[22px]">{t('body')}</p>
         </div>
