@@ -18,7 +18,6 @@ import { parseEnv } from 'node:util';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { appEnv } from '../src/lib/env/register';
 import { confirmRemote } from '../src/lib/env/confirm-remote';
-import { generateTOC } from '../src/lib/article-utils';
 import { prisma as staging } from '../src/lib/prisma';
 
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -134,9 +133,6 @@ async function main(): Promise<void> {
       if (DRY_RUN) continue;
 
       const authorId = await upsertAuthor(staging, src.author);
-      const toc = Array.isArray(src.blocks)
-        ? generateTOC(src.blocks as Parameters<typeof generateTOC>[0])
-        : src.toc;
       const data = {
         title: src.title,
         titleEn: src.titleEn,
@@ -150,7 +146,7 @@ async function main(): Promise<void> {
         tags: src.tags,
         authorId,
         blocks: toJson(src.blocks),
-        toc: toJson(toc),
+        toc: toJson(src.toc),
         seo: src.seo == null ? Prisma.JsonNull : toJson(src.seo),
         relatedArticleIds: [] as string[],
         publishedAt: src.publishedAt,
