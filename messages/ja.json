@@ -1230,7 +1230,8 @@
     "homePage": "トップページ",
     "privacyPolicy": "プライバシーポリシー",
     "inquiry": "お問い合わせ",
-    "copyright": "© CosBE Incorporated"
+    "copyright": "© CosBE Incorporated",
+    "cookieSettings": "Cookie設定"
   },
   "usefulColumnPage": {
     "heroTitle": "お役立ち情報",
@@ -1505,5 +1506,12 @@
       "description2": "状況にあわせて柔軟に対応しますので、まずは、お気軽にお問い合わせください。",
       "button": "速AIラボについてのお問い合わせ"
     }
+  },
+  "cookieConsent": {
+    "title": "Cookie",
+    "message": "当サイトでは、サイトの利用状況の把握とコンテンツ改善のためにCookieを使用します。",
+    "learnMore": "詳細",
+    "accept": "同意する",
+    "decline": "同意しない"
   }
 }

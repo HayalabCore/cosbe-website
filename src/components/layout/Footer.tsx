@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { CONSENT_OPEN_EVENT, GA_MEASUREMENT_ID } from '@/lib/analytics';
 
 export default function Footer() {
   const t = useTranslations('footer');
@@ -130,6 +131,20 @@ export default function Footer() {
                   {t('privacyPolicy')}
                 </Link>
               </li>
+              {GA_MEASUREMENT_ID && (
+                <li>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.dispatchEvent(new Event(CONSENT_OPEN_EVENT))
+                    }
+                    className="text-textSecondary hover:text-primaryColor text-sm flex items-center"
+                  >
+                    <span className="mr-2 text-primaryColor">▸</span>
+                    {t('cookieSettings')}
+                  </button>
+                </li>
+              )}
               <li>
                 <Link
                   href="/contact"

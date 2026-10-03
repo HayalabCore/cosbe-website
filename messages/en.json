@@ -1231,7 +1231,8 @@
     "homePage": "Top Page",
     "privacyPolicy": "Privacy Policy",
     "inquiry": "inquiry",
-    "copyright": "© CosBE Incorporated"
+    "copyright": "© CosBE Incorporated",
+    "cookieSettings": "Cookie settings"
   },
   "usefulColumnPage": {
     "heroTitle": "Useful Information",
@@ -1506,5 +1507,12 @@
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
       "button": "Inquiries about HAYAI Lab"
     }
+  },
+  "cookieConsent": {
+    "title": "Cookies",
+    "message": "We use cookies to measure site usage and improve our content.",
+    "learnMore": "Learn more",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

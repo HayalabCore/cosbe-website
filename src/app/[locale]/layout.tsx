@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { Navbar, Footer } from '@/components';
 import LocaleHtmlLang from '@/components/shared/LocaleHtmlLang';
+import Analytics from '@/components/shared/Analytics';
 
 export const metadata: Metadata = {
   keywords: [
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
       <Navbar />
       {children}
       <Footer />
+      <Analytics />
     </NextIntlClientProvider>
   );
 }

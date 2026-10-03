@@ -7,6 +7,7 @@
  * Usage (from repo root, DATABASE_URL set):
  *   yarn db:seed-translations
  *   yarn db:seed-translations --force
+ *   yarn db:seed-translations --dry-run   (report only, no writes)
  */
 
 import { readFileSync } from 'node:fs';
@@ -23,6 +24,13 @@ const BATCH = 500;
 async function main() {
   loadEnvConfig(process.cwd());
   const force = process.argv.includes('--force');
+  const dryRun = process.argv.includes('--dry-run');
+  try {
+    const url = new URL(process.env.DATABASE_URL ?? '');
+    console.log(`Target: ${url.hostname}:${url.port || '5432'}${url.pathname}`);
+  } catch {
+    console.log('Target: DATABASE_URL missing or unparseable');
+  }
 
   const jaPath = join(process.cwd(), 'messages', 'ja.json');
   const enPath = join(process.cwd(), 'messages', 'en.json');
@@ -42,6 +50,24 @@ async function main() {
     namespace: namespaceFromKeyPath(r.keyPath),
   }));
   const all = [...jaRows, ...enRows];
+
+  if (dryRun) {
+    if (force) {
+      console.log(
+        `[dry-run] --force would wipe translations + history and insert ${all.length} rows.`
+      );
+      return;
+    }
+    const existing = await prisma.translation.findMany({
+      select: { keyPath: true, locale: true },
+    });
+    const have = new Set(existing.map((r) => `${r.locale}:${r.keyPath}`));
+    const missing = all.filter((r) => !have.has(`${r.locale}:${r.keyPath}`));
+    console.log(
+      `[dry-run] Would insert ${missing.length} new row(s); ${all.length - missing.length} already present.`
+    );
+    return;
+  }
 
   if (force) {
     await prisma.translationHistory.deleteMany();
