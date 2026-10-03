@@ -24,17 +24,29 @@ export default async function PartnersSpecialtiesSection() {
               i > 0 ? 'pt-[75px]' : ''
             }`}
           >
-            <div className="flex h-[134px] w-full shrink-0 items-center justify-center bg-white md:mt-3 md:w-[277px]">
+            <a
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-[134px] w-full shrink-0 items-center justify-center bg-white md:mt-3 md:w-[277px]"
+            >
               <Image
                 src={p.logo}
                 alt={tNames(p.key)}
                 width={p.width}
                 height={p.height}
               />
-            </div>
+            </a>
             <div>
               <h3 className="text-xl font-medium! leading-6">
-                {tNames(p.key)}
+                <a
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primaryColor"
+                >
+                  {tNames(p.key)}
+                </a>
               </h3>
               <p className="mt-[11px] text-base font-medium leading-[1.2] text-primaryColor">
                 {t(`items.${p.key}.tagline`)}

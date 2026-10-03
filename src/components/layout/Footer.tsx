@@ -21,7 +21,11 @@ export default function Footer() {
           {/* Link columns */}
           <div className="flex flex-col gap-10 sm:flex-row sm:gap-16 lg:gap-24">
             <ul className="space-y-2 text-sm">
-              <li className="font-medium">{t('aiTransformation')}</li>
+              <li>
+                <FooterLink href="/ai-transformation">
+                  {t('aiTransformation')}
+                </FooterLink>
+              </li>
               <li>
                 <FooterLink href="/case-studies">{t('caseStudies')}</FooterLink>
               </li>

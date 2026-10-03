@@ -76,24 +76,24 @@ export default async function HomeLearnSection({ locale }: { locale: string }) {
   const t = await getTranslations('homePage.learn');
   const tDownload = await getTranslations('downloadPage');
 
-  const [videos, columns] = await Promise.all([
+  const [videos, videoArticles] = await Promise.all([
     getLatestVideos(5).catch((): VideoItem[] => []),
-    getArticles({ category: 'useful-info', pageSize: 3 }).catch(
+    getArticles({ category: 'video', pageSize: 3 }).catch(
       (): ArticleListItem[] => []
     ),
   ]);
 
   const columnRows = (
     <div className="space-y-[26px]">
-      {columns.map((article) => {
+      {videoArticles.map((article) => {
         const title = resolveArticleTitle(article, locale);
         return (
           <LearnRow
             key={article.id}
-            href={articleDetailHref('useful-info', article.slug)}
+            href={articleDetailHref('video', article.slug)}
             image={imageSrcOrFallback(
               article.featuredImage,
-              '/useful-column/article-01.png'
+              '/useful-video/video-thumbnail-01.jpg'
             )}
             imageAlt={title}
             date={formatArticleDate(article.publishedAt, locale)}
@@ -167,7 +167,7 @@ export default async function HomeLearnSection({ locale }: { locale: string }) {
                 key: 'columns',
                 label: t('columns'),
                 content: columnRows,
-                moreHref: '/useful-column',
+                moreHref: '/useful-video',
               },
               {
                 key: 'materials',
