@@ -4629,14 +4629,14 @@ perfect-debounce@^1.0.0:
   integrity sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==
 
 pg-boss@^12.33.5:
-  version "12.36.0"
-  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-12.36.0.tgz#5b21b4db664d4ebcd0be52fa50a8e20c950c9fc1"
-  integrity sha512-67Jj4xNuv8mkShTzfmsFtJeVa2ChXyrknjlw/WKZCIMuzRTwyHOUGjl2mf5Snrhmb0xglvFbkfAt5+hLtXukag==
+  version "12.33.5"
+  resolved "https://registry.yarnpkg.com/pg-boss/-/pg-boss-12.33.5.tgz#cb212c11609029e50cc7a4c084bf2f57b0d92dd8"
+  integrity sha512-gieZuH3PhqG1Xo51sm9YcA9yY0GyCtoFOXMU4vbhaU69mxWrszaHboxZ0yhJSj2Wg/I0j9dmSDXyUCYWTmE/Cg==
   dependencies:
     cron-parser "^5.10.1"
-    pg "^8.23.1"
-    rrule-temporal "^2.2.8"
-    serialize-error "^13.0.2"
+    pg "^8.23.0"
+    rrule-temporal "^2.2.6"
+    serialize-error "^13.0.1"
 
 pg-cloudflare@^1.4.1:
   version "1.4.1"
@@ -4674,7 +4674,7 @@ pg-types@2.2.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.23.1:
+pg@^8.23.0:
   version "8.23.1"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.23.1.tgz#e4848051a04aa2f968fd5671d075f89e5e7918b9"
   integrity sha512-aL96AHANtWjPLDOLqnhx+ngp9+UK7ETEU8VJrDCGvsSSi/mGLcWYsS6Herg7lmaBJe4uwrfqsa7gTEFaSizDoQ==
@@ -5088,7 +5088,7 @@ rope-sequence@^1.3.0:
   resolved "https://registry.yarnpkg.com/rope-sequence/-/rope-sequence-1.3.4.tgz#df85711aaecd32f1e756f76e43a415171235d425"
   integrity sha512-UT5EDe2cu2E/6O4igUr5PSFs23nvvukicWHx6GnOPlHAiiYbzNuCRQCuiUdHJQcqKalLKlrYJnjY0ySGsXNQXQ==
 
-rrule-temporal@^2.2.8:
+rrule-temporal@^2.2.6:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/rrule-temporal/-/rrule-temporal-2.2.8.tgz#094275ba6c6b871ea61f2679857bfd0ff9bb7e0f"
   integrity sha512-+wWUe0J02oMh1UWKIt1RTu2H0Cz+gP11O/iweK0MN2UP6JLGeepTUkbSBa90Hxq0W+ywSxM9IlJNouIUdMOwhg==
@@ -5170,7 +5170,7 @@ semver@^7.7.1, semver@^7.7.3, semver@^7.8.5:
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.5.tgz#39b646037dd50c14fb451e7e4cac58ed8b863f69"
   integrity sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==
 
-serialize-error@^13.0.2:
+serialize-error@^13.0.1:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-13.0.2.tgz#40b0b356b3979e6908b566eb8490d009ac03d912"
   integrity sha512-G+YKwp9I6IvWMe5RlwqxdmTPIcq/G8HK/sU51gdV1XAJznYkRSTB0ph+zB9AfSxG0fx6xrqYA6i9HeIcHFTXow==
