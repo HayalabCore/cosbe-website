@@ -74,7 +74,6 @@ function LearnRow({
 
 export default async function HomeLearnSection({ locale }: { locale: string }) {
   const t = await getTranslations('homePage.learn');
-  const tDownload = await getTranslations('downloadPage');
 
   const [videos, videoArticles] = await Promise.all([
     getLatestVideos(5).catch((): VideoItem[] => []),
@@ -104,17 +103,6 @@ export default async function HomeLearnSection({ locale }: { locale: string }) {
         );
       })}
     </div>
-  );
-
-  // Materials are not a CMS collection yet: the one document is on /download.
-  const materialRows = (
-    <LearnRow
-      href="/download"
-      image="/material-download/download-preview.png"
-      imageAlt={tDownload('documentTitle')}
-      title={tDownload('documentTitle')}
-      excerpt={tDownload('overview.description')}
-    />
   );
 
   return (
@@ -168,12 +156,6 @@ export default async function HomeLearnSection({ locale }: { locale: string }) {
                 label: t('columns'),
                 content: columnRows,
                 moreHref: '/useful-video',
-              },
-              {
-                key: 'materials',
-                label: t('materials'),
-                content: materialRows,
-                moreHref: '/download',
               },
             ]}
           />

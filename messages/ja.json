@@ -38,13 +38,11 @@
     "hero": {
       "title": "<accent>AI</accent>を入れるだけでなく、\n<accent>経営</accent>を変える。",
       "subtitle": "中小企業のAIトランスフォーメーションならCosBE",
-      "consult": "相談する",
-      "materials": "資料請求",
+      "consult": "問い合わせる",
       "characterAlt": "CosBEのAIキャラクター"
     },
     "sideTabs": {
-      "contact": "お問い合わせ",
-      "materials": "資料請求"
+      "contact": "お問い合わせ"
     },
     "poem": {
       "title": "「AIを入れても変わらない」には理由がある",
@@ -93,7 +91,6 @@
       "title": "AIトランスフォーメーションを学ぶ",
       "youtube": "Youtubeで学ぶ",
       "columns": "コラムで学ぶ",
-      "materials": "資料で学ぶ",
       "more": "もっと見る",
       "previous": "前の動画",
       "next": "次の動画",
@@ -102,8 +99,7 @@
     "cta": {
       "title": "ご相談・お問い合わせ",
       "description": "AI導入の効果が見えない・どこから変えればいいかわからない。\nその違和感が設計の出発点です。",
-      "button": "相談する",
-      "secondaryButton": "資料請求"
+      "button": "問い合わせる"
     }
   },
   "company": {
@@ -305,7 +301,6 @@
       "subtitle": "「これ、AIでできる？」というアイデアを、2カ月で“動くサービス”へ",
       "description": "速AIラボは、「AIを使ってみたいけれど、どこから始めれば良いか分からない」という経営者・事業責任者のための高速AI実験ラボです。2カ月という短期間で、経営課題に紐づいたAIアイデアをMVPとして形にし、実データで効果を検証します。",
       "primaryCta": "速AIラボについて相談する（無料）",
-      "secondaryCta": "詳しい資料をダウンロード",
       "imageAlt": "AIブレインがデジタル基盤と接続されているイメージ"
     },
     "offerings": {
@@ -1126,74 +1121,6 @@
       "button": "速AIラボへのお問い合わせ"
     }
   },
-  "downloadPage": {
-    "pageTitle": "資料詳細ページ",
-    "documentTitle": "3分でわかるCosBE",
-    "reveals": {
-      "title": "本資料で分かること",
-      "point1": "経営視点でのAIによるビジネス変革推進にCosBEの強み",
-      "point2": "様々な業界の課題を解決するAIソリューションの知見と事例",
-      "point3": "リスクを最小限に抑えながら、最短2ヶ月でAIのプロトタイプを作成する方法"
-    },
-    "overview": {
-      "title": "資料概要",
-      "description": "あなたのAIアイデア、眠っていませんか？CosBEなら、「AIで何ができる？」から「実際に使えるAI」へ、最短2ヶ月で実現します。経営課題の本質を見抜き、リスクを最小化しながら、あなたのビジネスに最適なAIソリューションを構築。本資料では、CosBEがどのようにAI導入を加速させるのか、その秘訣をわかりやすく解説します。"
-    },
-    "form": {
-      "lastname": {
-        "label": "姓",
-        "placeholder": "山田"
-      },
-      "givenname": {
-        "label": "名",
-        "placeholder": "太郎"
-      },
-      "company": {
-        "label": "会社名・組織名",
-        "placeholder": "株式会社〇〇"
-      },
-      "industry": {
-        "label": "業種",
-        "placeholder": "選択してください",
-        "options": {
-          "it": "IT・テクノロジー",
-          "manufacturing": "製造業",
-          "retail": "小売・EC",
-          "finance": "金融・銀行",
-          "healthcare": "医療・ヘルスケア",
-          "education": "教育",
-          "other": "その他"
-        }
-      },
-      "position": {
-        "label": "役職",
-        "placeholder": "選択してください",
-        "options": {
-          "executive": "経営者・役員",
-          "manager": "管理職",
-          "staff": "一般社員",
-          "other": "その他"
-        }
-      },
-      "email": {
-        "label": "メールアドレス",
-        "placeholder": "example@company.co.jp"
-      },
-      "phone": {
-        "label": "電話番号",
-        "placeholder": "03-1234-5678"
-      },
-      "privacyPolicy": "プライバシーポリシー",
-      "privacyAgree": "に同意したものとみなされます。",
-      "submitButton": "資料をダウンロードする（無料）"
-    },
-    "cta": {
-      "title": "様々な側面から貴社のビジネスをサポートいたします。",
-      "subtitle": "お気軽にご連絡ください。",
-      "description": "弊社サービスの詳細や、お見積りのご依頼など、フォームにご記入ください。お客様の状況に合わせて柔軟に対応いたしますので、まずはお気軽にご連絡ください。",
-      "button": "速AIラボのお問い合わせ"
-    }
-  },
   "footer": {
     "companyName": "CosBE Incorporated",
     "address": "3 East Third Ave, San Mateo, CA, United States of America",
@@ -1206,7 +1133,6 @@
     "resources": "お役立ち情報",
     "videos": "・お役立ち動画",
     "articles": "・お役立ちコラム",
-    "materials": "・お役立ち資料",
     "privacyPolicy": "プライバシーポリシー",
     "copyright": "© 2026 CosBE Inc. All rights reserved.",
     "cookieSettings": "Cookie設定"
@@ -1500,7 +1426,30 @@
       "mainChallenges": "課題：",
       "solution": "解決：",
       "result": "結果："
-    }
+    },
+    "items": [
+      {
+        "industry": "製造業",
+        "uniqueValue": "製造～納品の高品質短納期対応",
+        "mainChallenges": "ベテラン営業退職による営業力低下",
+        "solution": "AI営業による加工可否判断・見積・納期確定し受注まで実施",
+        "result": "小ロットの小口発注はAI営業、限られた営業力は複雑大口案件に注力"
+      },
+      {
+        "industry": "建設業",
+        "uniqueValue": "建設業におけるマネジメント力",
+        "mainChallenges": "新たな事業成長の柱の確立",
+        "solution": "AIによるマネジメント力の汎用化サービス開発",
+        "result": "短期間で新規事業の立ち上げに成功"
+      },
+      {
+        "industry": "コンサルティング業",
+        "uniqueValue": "ハンズオンによる企業再生",
+        "mainChallenges": "登記簿謄本からエクセルテーブルの作成に膨大な時間",
+        "solution": "LLMのみでは担保できない精度をルールベース×AIで実現、大量の登記簿をアップロードするだけ",
+        "result": "貴重なコンサルタントの単純作業からの解放"
+      }
+    ]
   },
   "partnerNames": {
     "lbp": "LBP（ロングブラックパートナーズ株式会社）",

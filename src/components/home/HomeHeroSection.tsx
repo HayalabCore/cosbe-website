@@ -45,7 +45,6 @@ export default async function HomeHeroSection() {
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-4 lg:mt-12">
             <HeroArrowLink href="/contact">{t('consult')}</HeroArrowLink>
-            <HeroArrowLink href="/download">{t('materials')}</HeroArrowLink>
           </div>
         </div>
 

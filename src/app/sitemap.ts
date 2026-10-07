@@ -19,7 +19,6 @@ const STATIC_PATHS = [
   '/ai-agent',
   '/ai-transformation',
   '/privacy-policy',
-  '/download',
   '/useful-column',
   '/useful-video',
   '/notice',

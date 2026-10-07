@@ -1,92 +1,33 @@
-import { getTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
-import { getCaseStudyCards } from '@/lib/articles';
-import { pickForLocale, resolveArticleTitle } from '@/lib/article-locale';
-import { articleDetailHref } from '@/lib/article-paths';
-import type { CaseStudyCardItem } from '@/types';
 
-const BULLETS = [
-  ['uniqueValue', 'uniqueValueEn'],
-  ['mainChallenges', 'mainChallengesEn'],
-  ['solution', 'solutionEn'],
-  ['result', 'resultEn'],
-] as const;
+const FIELDS = ['uniqueValue', 'mainChallenges', 'solution', 'result'] as const;
 
-async function CaseStudyCard({
-  item,
-  locale,
-}: {
-  item: CaseStudyCardItem;
-  locale: string;
-}) {
-  const t = await getTranslations('caseStudiesSection');
-  const bullets = BULLETS.map(([ja, en]) => ({
-    key: ja,
-    text: pickForLocale(locale, item[ja], item[en]),
-  })).filter((b) => b.text);
-  const excerpt = pickForLocale(locale, item.excerpt, item.excerptEn);
-  const industry = pickForLocale(locale, item.industry, item.industryEn);
+type CaseStudyItem = Record<(typeof FIELDS)[number] | 'industry', string>;
+
+function CaseStudyCard({ item }: { item: CaseStudyItem }) {
+  const t = useTranslations('caseStudiesSection');
 
   return (
-    <Link
-      href={articleDetailHref('case-study', item.slug)}
-      className="group flex min-h-[323px] flex-col rounded-tr-[14px] border border-textDark bg-white px-6 pb-[38px] pt-[39px] text-textDark transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] sm:px-12"
-    >
-      {industry && (
-        <p className="mb-[11px] text-base font-medium leading-[1.2]">
-          {industry}
-        </p>
-      )}
-      <h3 className="line-clamp-2 text-base font-medium! leading-[1.2] group-hover:text-primaryColor">
-        {resolveArticleTitle(item, locale)}
-      </h3>
-      {bullets.length > 0 ? (
-        <ul className="mt-[27px] list-disc pl-5 text-sm font-medium leading-[1.2] text-[#7b7b7b]">
-          {bullets.map((b) => (
-            <li key={b.key}>
-              {t(`labels.${b.key}`)}
-              {b.text}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        excerpt && (
-          <p className="mt-[27px] line-clamp-5 text-sm font-medium leading-[1.2] text-[#7b7b7b]">
-            {excerpt}
-          </p>
-        )
-      )}
-      {item.tags.length > 0 && (
-        <ul className="mt-auto flex flex-wrap gap-[10px] pt-6">
-          {item.tags.slice(0, 3).map((tag) => (
-            <li
-              key={tag}
-              className="rounded-full bg-primaryColor/20 px-[14px] py-1 text-xs font-medium leading-[1.2] text-primaryColor"
-            >
-              # {tag}
-            </li>
-          ))}
-        </ul>
-      )}
-    </Link>
+    <div className="flex min-h-[323px] flex-col rounded-tr-[14px] border border-textDark bg-white px-6 pb-[38px] pt-[39px] text-textDark sm:px-12">
+      <h3 className="text-base font-medium! leading-[1.2]">{item.industry}</h3>
+      <ul className="mt-[27px] list-disc space-y-2 pl-5 text-sm font-medium leading-[1.4] text-[#7b7b7b]">
+        {FIELDS.map((key) => (
+          <li key={key}>
+            {t(`labels.${key}`)}
+            {item[key]}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
-/** 導入事例: latest three published case studies (home, AX and partners pages). */
-export default async function CaseStudiesSection({
-  locale,
-}: {
-  locale: string;
-}) {
-  const t = await getTranslations('caseStudiesSection');
-
-  let items: CaseStudyCardItem[] = [];
-  try {
-    items = await getCaseStudyCards(3);
-  } catch {
-    items = [];
-  }
+/** 導入事例: three fixed, text-only cases (home, AX and partners pages). */
+export default function CaseStudiesSection() {
+  const t = useTranslations('caseStudiesSection');
+  const items = t.raw('items') as CaseStudyItem[];
 
   return (
     <section id="case-studies" className="scroll-mt-24">
@@ -122,7 +63,7 @@ export default async function CaseStudiesSection({
       <div className="border-y border-textDark">
         <div className="mx-auto grid max-w-[1352px] gap-6 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:gap-[43px] lg:px-0 lg:pb-[81px] lg:pt-[78px]">
           {items.map((item) => (
-            <CaseStudyCard key={item.id} item={item} locale={locale} />
+            <CaseStudyCard key={item.industry} item={item} />
           ))}
         </div>
       </div>

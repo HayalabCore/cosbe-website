@@ -39,13 +39,11 @@
     "hero": {
       "title": "<accent>Don’t just adopt AI.\nTransform the business.</accent>",
       "subtitle": "CosBE: AI transformation for small and mid-sized companies",
-      "consult": "Book a Consultation",
-      "materials": "Request Materials",
+      "consult": "Contact Us",
       "characterAlt": "CosBE AI character"
     },
     "sideTabs": {
-      "contact": "Send an Inquiry",
-      "materials": "Request Materials"
+      "contact": "Send an Inquiry"
     },
     "poem": {
       "title": "There’s a reason AI alone changes nothing",
@@ -94,7 +92,6 @@
       "title": "Learn about AI transformation",
       "youtube": "Watch on YouTube",
       "columns": "Read our articles",
-      "materials": "Download materials",
       "more": "View More",
       "previous": "Previous video",
       "next": "Next video",
@@ -103,8 +100,7 @@
     "cta": {
       "title": "Get in Touch",
       "description": "Not seeing results from AI? Not sure where to start? That doubt is where the design begins.",
-      "button": "Book a Consultation",
-      "secondaryButton": "Request Materials"
+      "button": "Contact Us"
     }
   },
   "company": {
@@ -306,7 +302,6 @@
       "subtitle": "From \"Can AI solve this?\" to a working MVP that proves value",
       "description": "HAYAI Lab is a rapid AI experimentation lab for executives who want to move from ideas to concrete results fast. In as little as two months, we turn your AI concepts into working services, validate them with real data, and create a foundation for full-scale rollout.",
       "primaryCta": "Consult about HAYAI Lab (Free)",
-      "secondaryCta": "Download detailed materials",
       "imageAlt": "Visual of AI brain connected to digital infrastructure"
     },
     "offerings": {
@@ -1127,74 +1122,6 @@
       "button": "Inquiries about HAYAI Lab"
     }
   },
-  "downloadPage": {
-    "pageTitle": "Material details page",
-    "documentTitle": "CosBE in 3 minutes",
-    "reveals": {
-      "title": "This document reveals the following",
-      "point1": "CosBE's strengths in promoting AI-driven business transformation from a management perspective",
-      "point2": "Gain insights and case studies into AI solutions that address challenges in a variety of industries",
-      "point3": "How to create an AI prototype in as little as two months while minimizing risk"
-    },
-    "overview": {
-      "title": "Document Overview",
-      "description": "Are your AI ideas lying dormant? CosBE promotes business transformation with a management perspective and cutting-edge technology. We can turn your MVP into reality in as little as two months and provide AI solutions to a variety of industry challenges. We will lead your business into the future."
-    },
-    "form": {
-      "lastname": {
-        "label": "Last name",
-        "placeholder": "Suzuki"
-      },
-      "givenname": {
-        "label": "given name",
-        "placeholder": "Taro"
-      },
-      "company": {
-        "label": "Company Name",
-        "placeholder": "Sample Corporation"
-      },
-      "industry": {
-        "label": "Industry",
-        "placeholder": "please select",
-        "options": {
-          "it": "IT / Technology",
-          "manufacturing": "Manufacturing",
-          "retail": "Retail / E-commerce",
-          "finance": "Finance / Banking",
-          "healthcare": "Healthcare",
-          "education": "Education",
-          "other": "Other"
-        }
-      },
-      "position": {
-        "label": "post",
-        "placeholder": "please select",
-        "options": {
-          "executive": "Executive / Management",
-          "manager": "Manager",
-          "staff": "Staff / Employee",
-          "other": "Other"
-        }
-      },
-      "email": {
-        "label": "email address",
-        "placeholder": "sample@cosbe.inc"
-      },
-      "phone": {
-        "label": "telephone number",
-        "placeholder": "090-1234-5678"
-      },
-      "privacyPolicy": "Privacy Policy",
-      "privacyAgree": " - You are deemed to have agreed to it.",
-      "submitButton": "Download the document (free)"
-    },
-    "cta": {
-      "title": "We will support your business in various aspects.",
-      "subtitle": "Please feel free to contact us.",
-      "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about HAYAI Lab"
-    }
-  },
   "footer": {
     "companyName": "CosBE Incorporated",
     "address": "3 East Third Ave, San Mateo, CA, United States of America",
@@ -1207,7 +1134,6 @@
     "resources": "Resources",
     "videos": "Videos",
     "articles": "Articles",
-    "materials": "Materials",
     "privacyPolicy": "Privacy Policy",
     "copyright": "© 2026 CosBE Inc. All rights reserved.",
     "cookieSettings": "Cookie settings"
@@ -1501,7 +1427,30 @@
       "mainChallenges": "Challenge: ",
       "solution": "Solution: ",
       "result": "Result: "
-    }
+    },
+    "items": [
+      {
+        "industry": "Manufacturing",
+        "uniqueValue": "High-quality, short-lead-time delivery from production to shipment",
+        "mainChallenges": "Sales capacity dropped after veteran salespeople retired",
+        "solution": "An AI sales agent judges machining feasibility, quotes, confirms delivery dates and takes the order",
+        "result": "AI handles small-lot, small-value orders while limited sales staff focus on complex, large deals"
+      },
+      {
+        "industry": "Construction",
+        "uniqueValue": "Management capability in construction",
+        "mainChallenges": "Establishing a new pillar of business growth",
+        "solution": "Developed a service that turns management know-how into a general-purpose AI offering",
+        "result": "Launched a new business in a short period"
+      },
+      {
+        "industry": "Consulting",
+        "uniqueValue": "Hands-on corporate turnaround",
+        "mainChallenges": "Creating Excel tables from certified copies of corporate registers took an enormous amount of time",
+        "solution": "Rule-based processing combined with AI delivers accuracy an LLM alone cannot guarantee; users just upload large batches of registers",
+        "result": "Freed valuable consultants from repetitive manual work"
+      }
+    ]
   },
   "partnerNames": {
     "lbp": "LBP (Long Black Partners Co., Ltd.)",

@@ -46,7 +46,7 @@ export default async function Home({ params }: PageProps) {
       <HomePoemSection />
       <HomeMethodologySection />
       <HomeStrengthsSection />
-      <CaseStudiesSection locale={locale} />
+      <CaseStudiesSection />
       <HomeTeamSection />
       <HomePartnersSection />
       <HomeLearnSection locale={locale} />
@@ -55,8 +55,6 @@ export default async function Home({ params }: PageProps) {
         description={tCta('description')}
         buttonText={tCta('button')}
         buttonHref="/contact"
-        secondaryButtonText={tCta('secondaryButton')}
-        secondaryButtonHref="/download"
       />
     </div>
   );

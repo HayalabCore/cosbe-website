@@ -57,11 +57,6 @@ export default function Footer() {
                   {t('articles')}
                 </FooterLink>
               </li>
-              <li>
-                <FooterLink href="/download" muted>
-                  {t('materials')}
-                </FooterLink>
-              </li>
             </ul>
           </div>
         </div>

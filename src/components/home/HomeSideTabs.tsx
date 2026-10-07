@@ -17,18 +17,6 @@ export default async function HomeSideTabs() {
         <Image src="/home/top/icon-mail.svg" alt="" width={14} height={10} />
         <span className="[writing-mode:vertical-rl]">{t('contact')}</span>
       </Link>
-      <Link
-        href="/download"
-        className={`${tabBase} border-2 border-l-0 border-primaryColor bg-white text-primaryColor hover:bg-bgAccent`}
-      >
-        <Image
-          src="/home/top/icon-document.svg"
-          alt=""
-          width={14}
-          height={19}
-        />
-        <span className="[writing-mode:vertical-rl]">{t('materials')}</span>
-      </Link>
     </div>
   );
 }

@@ -8,8 +8,6 @@ interface CtaSectionProps {
   additionalText?: string;
   buttonText: string;
   buttonHref?: string;
-  secondaryButtonText?: string;
-  secondaryButtonHref?: string;
 }
 
 function CtaButton({
@@ -39,8 +37,6 @@ export default function CtaSection({
   additionalText,
   buttonText,
   buttonHref = '/contact',
-  secondaryButtonText,
-  secondaryButtonHref = '/download',
 }: CtaSectionProps) {
   return (
     <section className="bg-primaryColor text-white">
@@ -64,11 +60,6 @@ export default function CtaSection({
 
         <div className="flex w-full flex-col gap-4 sm:flex-row lg:w-fit lg:shrink-0 lg:flex-col">
           <CtaButton href={buttonHref}>{buttonText}</CtaButton>
-          {secondaryButtonText && (
-            <CtaButton href={secondaryButtonHref}>
-              {secondaryButtonText}
-            </CtaButton>
-          )}
         </div>
       </div>
     </section>

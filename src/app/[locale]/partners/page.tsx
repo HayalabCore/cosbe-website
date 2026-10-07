@@ -28,8 +28,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function PartnersPage({ params }: PageProps) {
-  const { locale } = await params;
+export default async function PartnersPage() {
   const tCta = await getTranslations('homePage.cta');
 
   return (
@@ -38,14 +37,12 @@ export default async function PartnersPage({ params }: PageProps) {
       <PartnersWhySection />
       <PartnersLbpAxSection />
       <PartnersSpecialtiesSection />
-      <CaseStudiesSection locale={locale} />
+      <CaseStudiesSection />
       <CtaSection
         title={tCta('title')}
         description={tCta('description')}
         buttonText={tCta('button')}
         buttonHref="/contact"
-        secondaryButtonText={tCta('secondaryButton')}
-        secondaryButtonHref="/download"
       />
     </div>
   );
