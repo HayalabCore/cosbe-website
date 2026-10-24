@@ -199,3 +199,5 @@ Required vars are documented in `.env.example`. Which file a command reads is ch
 - `OPENAI_API_KEY` / `OPENAI_MODEL` (optional, defaults to `gpt-4o-mini`)
 - `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` and per-form IDs
 - `SUPABASE_SERVICE_ROLE_KEY` — server-only; the Supabase **secret key** (`sb_secret_...`). Admin user management and bootstrap script. Never `NEXT_PUBLIC_`.
+
+**Deployed website secrets** live in Google Secret Manager (`web-staging-*`, `web-*`), declared in `apphosting.<environment>.yaml` and pushed from `env/<env>.env` with `yarn secrets:push:staging` / `yarn secrets:push:prod` (`--dry-run` available). Production has no environment name yet, so it still uses console values until `apphosting.production.yaml` exists. See `env/README.md`.

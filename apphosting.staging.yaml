@@ -1,0 +1,31 @@
+# Staging overrides (backend cosbe-website-staging, environment name "staging").
+# Merged over apphosting.yaml. Secrets live in Google Secret Manager; create or
+# refresh them from env/staging.env with `yarn secrets:push:staging`.
+# Production does not read this file: its backend has no environment name.
+#
+# The build prerenders pages and the sitemap from the database, so the DB URLs
+# are available at build time too. Everything else is runtime only.
+
+env:
+  - variable: DATABASE_URL
+    secret: web-staging-database-url
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: DIRECT_URL
+    secret: web-staging-direct-url
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: SUPABASE_SERVICE_ROLE_KEY
+    secret: web-staging-supabase-service-role-key
+    availability:
+      - RUNTIME
+  - variable: OPENAI_API_KEY
+    secret: web-staging-openai-api-key
+    availability:
+      - RUNTIME
+  - variable: API_SECRET_KEY
+    secret: web-staging-api-secret-key
+    availability:
+      - RUNTIME

@@ -1,18 +1,18 @@
-# Firebase App Hosting configuration.
+# Firebase App Hosting configuration, shared by every backend.
 # Docs: https://firebase.google.com/docs/app-hosting/configure
 #
-# Environment variables are NOT listed here on purpose. They are set in the
-# Firebase console (App Hosting > backend > Settings), which is where the values
-# for this backend live. Console values always take precedence over this file,
-# and they are available at both build time and runtime — which Next.js needs,
-# since NEXT_PUBLIC_* are inlined during `next build` and the build prerenders
-# pages and the sitemap from the database.
+# Secrets (database URLs, service keys) live in Google Secret Manager and are
+# declared per environment in apphosting.<environment>.yaml, which a backend
+# reads when its environment name matches (set in the console under
+# Settings > Environment name). Create or refresh them from env/<env>.env with
+# `yarn secrets:push:staging` (see env/README.md).
 #
-# If you ever move a value out of the console and into Secret Manager, add it
-# back here as `secret: <NAME>` and create it with:
-#   firebase apphosting:secrets:set <NAME> --project cosbe-website-ed97c
-#   firebase apphosting:secrets:grantaccess <NAME> --backend cosbe-website --project cosbe-website-ed97c
-# Referencing a secret that does not exist fails the build, so create it first.
+# Public NEXT_PUBLIC_* values and the rest are still set in the Firebase console
+# (App Hosting > backend > Settings). They are needed at build time as well as
+# runtime, since Next.js inlines NEXT_PUBLIC_* during `next build` and the build
+# prerenders pages and the sitemap from the database.
+#
+# A backend without an environment name (production, for now) reads only this file.
 
 runConfig:
   # Scale to zero when idle so an unvisited site costs nothing. The trade-off is

@@ -51,3 +51,22 @@ sets `SITE_ENV=staging`, which makes the site noindex.
 
 The remote files are not named `.env.production`, because Next loads that name
 automatically on every `next build`.
+
+## Deployed secrets (Google Secret Manager)
+
+Database URLs and service keys of the deployed websites are not typed into the
+Firebase console. `scripts/push-secrets.sh <staging|production>` (`yarn
+secrets:push:staging`, `yarn secrets:push:prod`) writes `DATABASE_URL`,
+`DIRECT_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY` and `API_SECRET_KEY`
+from `env/<env>.env` to Secret Manager and grants the backend access. Names:
+`web-staging-<key>` for staging, `web-<key>` for production, kebab-case
+(`web-staging-database-url`). It only adds a version when a value changed, never
+prints values, and `--dry-run` shows what would change.
+
+`apphosting.<environment>.yaml` maps each secret to its variable. A backend reads
+the file named after its environment name (staging: `staging`). Production has no
+environment name yet, so it still takes these values from the console until
+`apphosting.production.yaml` exists.
+
+To rotate a secret: edit `env/<env>.env`, run the push script, then start a new
+rollout (a running backend keeps the version it started with).

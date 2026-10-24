@@ -38,6 +38,8 @@
     "test": "vitest run --project unit --project component",
     "test:watch": "vitest --project unit --project component",
     "test:db": "vitest run --project db",
+    "secrets:push:staging": "bash scripts/push-secrets.sh staging",
+    "secrets:push:prod": "bash scripts/push-secrets.sh production",
     "worker:dev": "tsx watch worker/main.ts",
     "worker:start": "tsx worker/main.ts",
     "worker:staging": "APP_ENV=staging STUDIO_WORKER_ALLOW_REMOTE=1 tsx worker/main.ts",
