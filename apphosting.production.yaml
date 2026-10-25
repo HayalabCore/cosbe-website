@@ -5,6 +5,11 @@
 # The build prerenders pages and the sitemap from the database, so the DB URLs
 # are available at build time too. Everything else is runtime only.
 
+runConfig:
+  # Always one warm instance: no cold start on the live site (billed 24/7).
+  # Staging inherits minInstances: 0 from apphosting.yaml.
+  minInstances: 1
+
 env:
   - variable: DATABASE_URL
     secret: web-database-url
