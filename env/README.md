@@ -64,9 +64,10 @@ from `env/<env>.env` to Secret Manager and grants the backend access. Names:
 prints values, and `--dry-run` shows what would change.
 
 `apphosting.<environment>.yaml` maps each secret to its variable. A backend reads
-the file named after its environment name (staging: `staging`). Production has no
-environment name yet, so it still takes these values from the console until
-`apphosting.production.yaml` exists.
+the file named after its environment name (`staging` or `production`, set in the
+console under Settings > Environment name). A backend with no environment name
+reads only `apphosting.yaml`. Console variables win over the yaml, so remove the
+secret-backed rows from the console, then start a new rollout.
 
 To rotate a secret: edit `env/<env>.env`, run the push script, then start a new
 rollout (a running backend keeps the version it started with).

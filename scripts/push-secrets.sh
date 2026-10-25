@@ -130,8 +130,13 @@ for entry in "${SECRETS[@]}"; do
       ;;
   esac
   # Runtime and build service accounts of the backend.
-  firebase apphosting:secrets:grantaccess "$name" --backend "$BACKEND" \
-    --location "$REGION" --project "$PROJECT" >/dev/null
+  if ! output=$(firebase apphosting:secrets:grantaccess "$name" --backend "$BACKEND" \
+    --location "$REGION" --project "$PROJECT" 2>&1); then
+    echo "$output" >&2
+    echo "Could not grant $BACKEND access to $name. Fix the error above (an expired login needs" >&2
+    echo "'firebase login --reauth') and run this script again; it is safe to repeat." >&2
+    exit 1
+  fi
 done
 
 [[ "$MODE" == --dry-run ]] && echo "Dry run: nothing changed." || echo "Done."

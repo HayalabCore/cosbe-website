@@ -1,0 +1,30 @@
+# Production overrides (backend cosbe-website, environment name "production").
+# Merged over apphosting.yaml. Secrets live in Google Secret Manager; create or
+# refresh them from env/production.env with `yarn secrets:push:prod`.
+#
+# The build prerenders pages and the sitemap from the database, so the DB URLs
+# are available at build time too. Everything else is runtime only.
+
+env:
+  - variable: DATABASE_URL
+    secret: web-database-url
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: DIRECT_URL
+    secret: web-direct-url
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: SUPABASE_SERVICE_ROLE_KEY
+    secret: web-supabase-service-role-key
+    availability:
+      - RUNTIME
+  - variable: OPENAI_API_KEY
+    secret: web-openai-api-key
+    availability:
+      - RUNTIME
+  - variable: API_SECRET_KEY
+    secret: web-api-secret-key
+    availability:
+      - RUNTIME

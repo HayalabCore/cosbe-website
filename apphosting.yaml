@@ -12,7 +12,7 @@
 # runtime, since Next.js inlines NEXT_PUBLIC_* during `next build` and the build
 # prerenders pages and the sitemap from the database.
 #
-# A backend without an environment name (production, for now) reads only this file.
+# A backend without an environment name reads only this file.
 
 runConfig:
   # Scale to zero when idle so an unvisited site costs nothing. The trade-off is
