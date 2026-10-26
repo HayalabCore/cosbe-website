@@ -12,13 +12,13 @@ worker_config() {
       SECRET_PREFIX=studio-staging
       # Cloud Run needs a whole CPU when it is always allocated.
       CPU=1
-      MEMORY=1Gi
+      MEMORY=512Mi
       ;;
     production)
       SERVICE=studio-worker
       SECRET_PREFIX=studio
       CPU=1
-      MEMORY=2Gi
+      MEMORY=1Gi
       ;;
     *)
       return 1
