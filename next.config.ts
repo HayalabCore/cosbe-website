@@ -19,6 +19,17 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Fast AI Lab and AI Agent pages were retired; AI Transformation replaces them.
+      {
+        source: '/:locale(en|ja)/ai-lab',
+        destination: '/:locale/ai-transformation',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|ja)/ai-agent',
+        destination: '/:locale/ai-transformation',
+        permanent: true,
+      },
       // Studio "projects" were renamed to topics; keep old links working.
       {
         source: '/admin/studio/projects',

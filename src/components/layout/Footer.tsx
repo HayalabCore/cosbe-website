@@ -27,6 +27,9 @@ export default function Footer() {
                 </FooterLink>
               </li>
               <li>
+                <FooterLink href="/about-ait">{t('aboutAit')}</FooterLink>
+              </li>
+              <li>
                 <FooterLink href="/case-studies">{t('caseStudies')}</FooterLink>
               </li>
               <li>
@@ -36,8 +39,11 @@ export default function Footer() {
                 <FooterLink href="/company">{t('company')}</FooterLink>
               </li>
               <li>
+                <FooterLink href="/notice">{t('news')}</FooterLink>
+              </li>
+              <li>
                 <FooterLink href="/recruit" muted>
-                  {t('careers')}
+                  {t('partnerRecruitment')}
                 </FooterLink>
               </li>
               <li>

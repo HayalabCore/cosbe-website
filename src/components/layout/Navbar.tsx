@@ -73,7 +73,6 @@ const navItems: NavItem[] = [
     children: [
       { href: '/about-ait', labelKey: 'nav.aboutAit' },
       { href: '/ai-transformation', labelKey: 'nav.cosbeAit' },
-      { href: '/ai-lab', labelKey: 'nav.fastAiLab' },
     ],
   },
   { href: '/case-studies', labelKey: 'nav.caseStudies' },
@@ -83,7 +82,6 @@ const navItems: NavItem[] = [
     children: [
       { href: '/useful-column', labelKey: 'nav.articles' },
       { href: '/useful-video', labelKey: 'nav.videos' },
-      { href: '/ai-agent', labelKey: 'nav.aiAgents' },
       { href: '/notice', labelKey: 'nav.news' },
     ],
   },

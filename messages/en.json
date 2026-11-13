@@ -52,7 +52,7 @@
     },
     "methodology": {
       "title": "What sets apart the companies that actually change?",
-      "subtitle": "The CosBE AX methodology",
+      "subtitle": "The CosBE AI Transformation Methodology",
       "cta": "Learn More",
       "imageAlt": "Illustration of a person reviewing business analytics"
     },
@@ -172,9 +172,8 @@
       "representative": "Representative",
       "representativeName": "Founder & CEO Kenjiro Momi",
       "business": "Business",
-      "business1": "HAYAI Lab (AI MVP Development)",
-      "business2": "AI Transformation Support",
-      "business3": "AI Consulting"
+      "business1": "AI Transformation Support",
+      "business2": "AI Consulting"
     },
     "globalTeam": {
       "title": "Global One Team",
@@ -189,7 +188,7 @@
       "title": "We will support your business in various aspects.",
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form. We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquire about HAYAI Lab"
+      "button": "Contact Us"
     }
   },
   "aiTransformation": {
@@ -292,7 +291,7 @@
       "title": "We support your business from many angles.\nPlease feel free to contact us.",
       "description": "For detailed service inquiries or quotes, please use the contact form.",
       "additionalText": "We respond flexibly to your situation, so please reach out anytime.",
-      "button": "Contact us about Hayaku AI Lab"
+      "button": "Contact Us"
     }
   },
   "aiLab": {
@@ -917,7 +916,7 @@
       "subtitle": "Please feel free to contact us.",
       "description": "For more information about our services or to request a quote, please fill out the form.",
       "message": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about HAYAI Lab"
+      "button": "Contact Us"
     }
   },
   "recruitPage": {
@@ -1063,7 +1062,7 @@
       "title": "We support your business from various perspectives. Please feel free to contact us first.",
       "description1": "Please use the form for consultations and quotes regarding detailed service content.",
       "description2": "We will respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about HAYAI Lab"
+      "button": "Contact Us"
     }
   },
   "noticePage": {
@@ -1119,7 +1118,7 @@
       "title": "We will support your business in various aspects. Please feel free to contact us.",
       "description1": "For more information about our services or to request a quote, please fill out the form.",
       "description2": "We will respond flexibly to your situation, so please feel free to contact us first.",
-      "button": "Inquiries about HAYAI Lab"
+      "button": "Contact Us"
     }
   },
   "footer": {
@@ -1129,7 +1128,9 @@
     "caseStudies": "Case Studies",
     "partners": "Partners",
     "company": "Company",
-    "careers": "Careers",
+    "partnerRecruitment": "Consulting Partner",
+    "news": "Announcement",
+    "aboutAit": "What is AI Transformation",
     "contact": "Contact",
     "resources": "Resources",
     "videos": "Videos",
@@ -1220,7 +1221,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about HAYAI Lab"
+      "button": "Contact Us"
     }
   },
   "privacyPolicyPage": {
@@ -1393,7 +1394,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about HAYAI Lab"
+      "button": "Contact Us"
     }
   },
   "articlePage": {
@@ -1409,7 +1410,7 @@
       "title": "We support your business from various perspectives.\nPlease feel free to contact us first.",
       "description1": "For detailed service inquiries and estimates, please use the form.",
       "description2": "We respond flexibly according to your situation, so please feel free to contact us.",
-      "button": "Inquiries about HAYAI Lab"
+      "button": "Contact Us"
     }
   },
   "cookieConsent": {
@@ -1459,7 +1460,7 @@
   },
   "axPage": {
     "metaTitle": "CosBE AI transformation",
-    "metaDescription": "Strengthen your distinctive value with AI and rebuild how the business runs. CosBE delivers business change step by step with the CosBE AX methodology.",
+    "metaDescription": "Strengthen your distinctive value with AI and rebuild how the business runs. CosBE delivers business change step by step with the CosBE AI Transformation Methodology.",
     "hero": {
       "title": "We translate an owner’s ambition\ninto a blueprint for change.",
       "subtitle": "Strengthen your distinctive value with AI.\nRebuild how the business runs with AI.\nBecause we translate an owner’s ambition into a blueprint for change."
@@ -1489,7 +1490,7 @@
     },
     "phases": {
       "eyebrow": "How CosBE AI transformation works",
-      "title": "We move step by step, based on the CosBE AX methodology,\nto deliver real business change.",
+      "title": "We move step by step, based on the CosBE AI Transformation Methodology,\nto deliver real business change.",
       "items": [
         {
           "name": "Strategy",
@@ -1561,8 +1562,8 @@
           "body": "We start from the trust an owner has built with their advisors, so change moves forward without losing the understanding of the company."
         },
         {
-          "title": "Combine expertise\nwith the AX Methodology",
-          "body": "We combine specialists who know the industry, the region and the company with the CosBE AX Methodology, to pin down what makes each company distinctive and what stands in its way."
+          "title": "Combine expertise\nwith the CosBE AI Transformation Methodology",
+          "body": "We combine specialists who know the industry, the region and the company with the CosBE AI Transformation Methodology, to pin down what makes each company distinctive and what stands in its way."
         },
         {
           "title": "One team\nfor business and technology",
@@ -1572,7 +1573,7 @@
     },
     "lbpAx": {
       "title": "Guiding owners through AI transformation,\ntogether with LBP.",
-      "body": "LBP consultants work with regional financial institutions to guide business owners through AI transformation, built on the proven, repeatable CosBE AX methodology.",
+      "body": "LBP consultants work with regional financial institutions to guide business owners through AI transformation, built on the proven, repeatable CosBE AI Transformation Methodology.",
       "logoAlt": "LBP-AX Powered by CosBE"
     },
     "specialties": {

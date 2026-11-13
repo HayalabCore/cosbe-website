@@ -223,7 +223,6 @@ export default async function CompanyPage() {
                     <td className="px-6 py-4 text-textSecondary">
                       <div>{t('overview.business1')}</div>
                       <div>{t('overview.business2')}</div>
-                      <div>{t('overview.business3')}</div>
                     </td>
                   </tr>
                 </tbody>
